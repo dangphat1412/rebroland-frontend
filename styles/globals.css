@@ -4,13 +4,16 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
+  height: 100%;
+  width: 100%;
 }
 
 * {
   box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/font-poppins/Poppins-Light.otf");
+  font-display: swap;
 }
