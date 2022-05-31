@@ -1,24 +1,17 @@
-import { Image } from "semantic-ui-react";
-import Header from "../components/header/Header.component";
+import Footer from "../components/footer/footer.component";
+import HomeBackground from "../components/home-background/home-background.component";
+import Milestones from "../components/milestones/milestones.component";
+import SearchBox from "../components/search-box/search-box.component";
+import Navigation from "../components/navigation/navigation.component";
 
 export default function Home() {
   return (
     <div>
-      <Header />
-      <div
-        style={{
-          height: "1500px",
-          width: "100%",
-          position: "relative",
-          padding: "0",
-          maxHeight: "680px",
-          overflow: "hidden",
-          backgroundImage: "url('./zyro-image.png')",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover"
-        }}
-      >
-      </div>
+      <Navigation />
+      <HomeBackground />
+      <SearchBox />
+      <Milestones />
+      <Footer />
     </div>
   );
 }

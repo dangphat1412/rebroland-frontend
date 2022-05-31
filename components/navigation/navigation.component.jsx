@@ -1,74 +1,27 @@
-import React, { useState, useReducer } from "react";
-import {
-  Grid,
-  Image,
-  List,
-  Modal,
-  TransitionablePortal,
-} from "semantic-ui-react";
-import LoginRegisterModal from "../login-register-modal/login-register-modal.component";
-import Login from "../login/login.component";
-import Register from "../register/register.component";
-import { NavContainer, Menu } from "./navigation.styles";
-
-const modalReducer = (state, action) => {
-  switch (action.type) {
-    case "close":
-      return { open: false };
-    case "open":
-      return { open: true, header: action.header, formName: action.formName };
-    default:
-      throw new Error("Unsupported action...");
-  }
-};
+import React, { useState, useEffect } from "react";
+import MainNavigation from "../main-navigation/main-navigation.component";
+import SubNavigation from "../sub-navigation/sub-navigation.component";
+import { NavigationContainer } from "./navigation.styles";
 
 const Navigation = () => {
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
+  const [showSubnavigation, setShowSubnavigation] = useState(true);
 
-  const [state, dispatch] = useReducer(modalReducer, {
-    open: false,
-    header: undefined,
-    formName: undefined,
-  });
+  const controlSubnavigation = () => {
+    setShowSubnavigation(window.scrollY > 0 ? false : true);
+  };
 
-  const { open, header, formName } = state;
+  useEffect(() => {
+    window.addEventListener("scroll", controlSubnavigation);
+    return () => {
+      window.removeEventListener("scroll", controlSubnavigation);
+    };
+  }, []);
 
   return (
-    <>
-      <NavContainer fluid>
-        <Menu>
-          <Grid>
-            <Grid.Column width={4} textAlign="left" verticalAlign="middle">
-              <Image src="/logo-slogan.png" alt="ReBroLand" size="medium" />
-            </Grid.Column>
-            <Grid.Column width={8} textAlign="center" verticalAlign="middle">
-              <List horizontal relaxed="very">
-                <List.Item as="a">Trang chủ</List.Item>
-                <List.Item as="a">Stevie Feliciano</List.Item>
-                <List.Item as="a">Nhà môi giới</List.Item>
-              </List>
-            </Grid.Column>
-            <Grid.Column width={4} textAlign="right" verticalAlign="middle">
-              <List horizontal relaxed="very">
-                <List.Item as="a" onClick={() => setLoginOpen(true)}>
-                  Đăng nhập
-                </List.Item>
-                <List.Item as="a" onClick={() => setRegisterOpen(true)}>
-                  Đăng ký
-                </List.Item>
-              </List>
-            </Grid.Column>
-          </Grid>
-        </Menu>
-      </NavContainer>
-      <LoginRegisterModal
-        loginOpen={loginOpen}
-        setLoginOpen={setLoginOpen}
-        registerOpen={registerOpen}
-        setRegisterOpen={setRegisterOpen}
-      />
-    </>
+    <NavigationContainer className={!showSubnavigation && "active"} fluid>
+      {showSubnavigation && <SubNavigation />}
+      <MainNavigation className={!showSubnavigation && "sticky"} />
+    </NavigationContainer>
   );
 };
 

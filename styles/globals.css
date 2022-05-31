@@ -2,10 +2,10 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   height: 100%;
   width: 100%;
+  font-family: "Tahoma", sans-serif !important;
+  background-color: rgb(249, 249, 249) !important;
 }
 
 * {
@@ -15,5 +15,12 @@ body {
 @font-face {
   font-family: "Poppins";
   src: url("/fonts/font-poppins/Poppins-Light.otf");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Tahoma";
+  src: url("/fonts/font-tahoma/Tahoma Regular font.ttf");
+  font-weight: normal;
   font-display: swap;
 }
