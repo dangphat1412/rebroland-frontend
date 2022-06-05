@@ -4,9 +4,9 @@ import { Card, Icon, Image } from "semantic-ui-react";
 
 const PropertyRecommendItem = () => {
   return (
-    <>
+    <Card>
       <Link href="/thong-tin-chi-tiet">
-        <Card>
+        <>
           <Image
             src="https://media.travelmag.vn/files/content/2021/04/30/173292019_315063713309362_6329146106221360649_n-00272556.jpg"
             wrapped
@@ -28,9 +28,9 @@ const PropertyRecommendItem = () => {
               22 Friends
             </a>
           </Card.Content>
-        </Card>
+        </>
       </Link>
-    </>
+    </Card>
   );
 };
 

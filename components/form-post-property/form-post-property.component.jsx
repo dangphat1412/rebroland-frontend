@@ -16,6 +16,7 @@ import {
 } from "../../actions/vietnam-provinces";
 import { FormPostPropertyContainer } from "./form-post-property.styles";
 import Map from "../map/map.component";
+import PictureUploadPreview from "../picture-upload-preview/picture-upload-preview.component";
 
 const HANOI_PROVINCE_ID = 1;
 const THACHTHAT_DISTRICT_ID = 276;
@@ -37,7 +38,7 @@ const FormPostProperty = () => {
     address: undefined,
     longitude: undefined,
     latitude: undefined,
-    images: undefined,
+    images: [],
     contactName: undefined,
     contactPhone: undefined,
     contactAddress: undefined,
@@ -49,8 +50,6 @@ const FormPostProperty = () => {
     districts: [],
     wards: [],
   });
-
-  const GOOGLE_MAP_API_KEY = "AIzaSyCMSkwBazeXabBmE9f6-foYr6JTDbIxO0U";
 
   useEffect(() => {
     fetchProvinceAPI();
@@ -257,35 +256,19 @@ const FormPostProperty = () => {
                     />
                   </Form.Group>
                   {/* missing loading */}
-                  {/* <Form.Field control={<></>} label="Vị trí trên bản đồ" /> */}
-                  <Map />
-                  <Form.Group widths={3}>
-                    <Form.Input
-                      fluid
-                      placeholder="Nhập kinh độ"
-                      name="longitude"
-                      value={postProperty.longitude}
-                      onChange={handleChange}
-                    />
-                    <Form.Input
-                      fluid
-                      placeholder="Nhập vĩ độ"
-                      name="latitude"
-                      value={postProperty.latitude}
-                      onChange={handleChange}
-                    />
-                    <Form.Button>Kiểm tra trên bản đồ</Form.Button>
-                  </Form.Group>
+                  {/* <Form.Field control={<Map />} label="Vị trí trên bản đồ" /> */}
+                  <Map
+                    postProperty={postProperty}
+                    setPostProperty={setPostProperty}
+                    handleChange={handleChange}
+                  />
                 </Segment>
                 <Segment>
                   <h1>Hình ảnh và Video</h1>
-                  <Segment placeholder>
-                    <Header icon>
-                      <Icon name="upload" />
-                      Không có Ảnh hay Video được chọn
-                    </Header>
-                    <Button primary>Chọn Ảnh hoặc Video</Button>
-                  </Segment>
+                  <PictureUploadPreview
+                    postProperty={postProperty}
+                    setPostProperty={setPostProperty}
+                  />
                 </Segment>
                 <Segment>
                   <h1>Thông tin liên hệ</h1>

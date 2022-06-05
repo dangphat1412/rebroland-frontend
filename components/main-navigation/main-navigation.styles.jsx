@@ -8,7 +8,6 @@ export const NavContainer = styled(Container)`
   margin: 80px auto;
   padding 0 10px;
   top: 0px;
-  z-index: 999999;
   background: rgba(255, 255, 255, 0);
   border-bottom: 1px groove rgba(255, 255, 255, 0);
   box-shadow: 5px 5px 2px rgba(23, 36, 52, 0);

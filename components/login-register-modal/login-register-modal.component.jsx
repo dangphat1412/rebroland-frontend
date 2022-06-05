@@ -1,11 +1,11 @@
 import React from "react";
-import { Divider, Modal, TransitionablePortal } from "semantic-ui-react";
+import { Modal, TransitionablePortal } from "semantic-ui-react";
 import ForgotPassword from "../forgot-password/forgot-password.component";
 import Login from "../login/login.component";
 import OtpResetPassword from "../otp-reset-password/otp-reset-password.component";
 import Register from "../register/register.component";
 import ResetPassword from "../reset-password/reset-password.component";
-import { ModalFooter } from "./login-register-modal.styles";
+import { ModalContainer, ModalFooter } from "./login-register-modal.styles";
 
 const LoginRegisterModal = ({
   loginOpen,
@@ -53,7 +53,7 @@ const LoginRegisterModal = ({
   };
 
   return (
-    <>
+    <ModalContainer>
       <TransitionablePortal
         open={loginOpen}
         transition={{ animation: "scale", duration: 300 }}
@@ -67,7 +67,9 @@ const LoginRegisterModal = ({
           }}
           closeIcon
         >
-          <Modal.Header>Đăng nhập</Modal.Header>
+          <Modal.Header style={{ fontFamily: "Tahoma" }}>
+            Đăng nhập
+          </Modal.Header>
           <Modal.Content>
             <Login handleOpenForgotPassword={handleOpenForgotPassword} />
           </Modal.Content>
@@ -184,7 +186,7 @@ const LoginRegisterModal = ({
           </Modal.Actions>
         </Modal>
       </TransitionablePortal>
-    </>
+    </ModalContainer>
   );
 };
 

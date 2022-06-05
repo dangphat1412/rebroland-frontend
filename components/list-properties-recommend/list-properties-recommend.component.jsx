@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Grid } from "semantic-ui-react";
 import PropertyRecommendItem from "../property-recommend-item/property-recommend-item.component";
 import { ListPropertiesRecommendContainer } from "./list-properties-recommend.styles";

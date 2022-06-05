@@ -34,7 +34,7 @@ const MainNavigation = ({ className }) => {
               </List>
             </Grid.Column>
             <Grid.Column width={4} textAlign="right" verticalAlign="middle">
-              <List horizontal relaxed="very">
+              <List horizontal relaxed>
                 <List.Item as="a" onClick={() => setLoginOpen(true)}>
                   Đăng nhập
                 </List.Item>

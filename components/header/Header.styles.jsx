@@ -6,7 +6,6 @@ export const HeaderContainer = styled(Container)`
   width: 100%;
   height: 140px;
   color: #fff;
-  font-family: "Poppins", sans-serif;
   background-color: rgba(28, 28, 28, 0.3);
   z-index: 999999;
 `;
