@@ -8,7 +8,7 @@ export const SearchContainer = styled.div`
   margin-top: -60px;
   padding: 50px;
   border-radius: 8px;
-  z-index: 2;
+  z-index: 1;
   background: #fcfcfc;
   background: linear-gradient(#fff, #fcfcfc);
   box-shadow: 0 7px 10px 2px rgb(0 0 0 / 6%);

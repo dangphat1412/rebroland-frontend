@@ -7,6 +7,9 @@ import { NavContainer, Menu, LogoContainer } from "./main-navigation.styles";
 const MainNavigation = ({ className }) => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+  const [otpResetPasswordOpen, setOtpResetPasswordOpen] = useState(false);
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
 
   return (
     <div>
@@ -15,7 +18,11 @@ const MainNavigation = ({ className }) => {
           <Grid>
             <Grid.Column width={4} textAlign="left" verticalAlign="middle">
               <Link href="/">
-                <LogoContainer src="/logo-slogan.png" alt="ReBroLand" size="medium" />
+                <LogoContainer
+                  src="/logo-slogan.png"
+                  alt="ReBroLand"
+                  size="medium"
+                />
               </Link>
             </Grid.Column>
             <Grid.Column width={8} textAlign="center" verticalAlign="middle">
@@ -51,6 +58,12 @@ const MainNavigation = ({ className }) => {
         setLoginOpen={setLoginOpen}
         registerOpen={registerOpen}
         setRegisterOpen={setRegisterOpen}
+        forgotPasswordOpen={forgotPasswordOpen}
+        setForgotPasswordOpen={setForgotPasswordOpen}
+        otpResetPasswordOpen={otpResetPasswordOpen}
+        setOtpResetPasswordOpen={setOtpResetPasswordOpen}
+        resetPasswordOpen={resetPasswordOpen}
+        setResetPasswordOpen={setResetPasswordOpen}
       />
     </div>
   );

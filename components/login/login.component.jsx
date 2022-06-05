@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Button, Form, Grid } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
+import { LoginContainer } from "./login.styles";
 
-const Login = () => {
+const Login = ({ handleOpenForgotPassword }) => {
   const [user, setUser] = useState({
-    emailOrPhone: "",
+    phone: "",
     password: "",
   });
 
@@ -13,31 +14,43 @@ const Login = () => {
     setUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => { };
-  
+  const handleSubmit = () => {};
+
   return (
-    <>
+    <LoginContainer>
       <Form>
         <InputField
-          label="Email hoặc số điện thoại"
-          name="emailOrPhone"
-          value={user.emailOrPhone}
-          errorMsg="Email hoặc số điện thoại không được để trống"
-          handleChange={handleChange} />
+          label="Số điện thoại"
+          name="phone"
+          value={user.phone}
+          errorMsg="Số điện thoại không được để trống"
+          handleChange={handleChange}
+          required
+        />
         <InputField
           type="password"
           label="Mật khẩu"
           name="password"
           value={user.password}
           errorMsg="Mật khẩu không được để trống"
-          handleChange={handleChange} />
+          handleChange={handleChange}
+          required
+        />
+        <Grid>
+          <Grid.Column width={8}>
+            <Form.Checkbox label="Duy trì đăng nhập" />
+          </Grid.Column>
+          <Grid.Column textAlign="right" width={8} className="forgot-password">
+            <div onClick={handleOpenForgotPassword}>Quên mật khẩu</div>
+          </Grid.Column>
+        </Grid>
         <Grid>
           <Grid.Column textAlign="center">
             <Button type="submit">Đăng nhập</Button>
           </Grid.Column>
         </Grid>
       </Form>
-    </>
+    </LoginContainer>
   );
 };
 

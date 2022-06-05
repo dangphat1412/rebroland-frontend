@@ -8,7 +8,7 @@ export const NavigationContainer = styled(Container)`
   color: #fff;
   font-family: "Poppins", sans-serif;
   background-color: rgba(28, 28, 28, 0.3);
-  z-index: 1;
+  z-index: 2;
   transition: all .5s cubic-bezier(.165, .84, .44, 1);
   &.active {
     height: 80px;

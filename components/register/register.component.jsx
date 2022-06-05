@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Grid } from "semantic-ui-react";
-import { getDistricts, getProvinces, getWards } from "../../actions/form";
+import { getDistricts, getProvinces, getWards } from "../../actions/vietnam-provinces";
 import DatePickerField from "../date-picker-field/date-picker-field.component";
 import InputField from "../input-field/input-field.component";
 

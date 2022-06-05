@@ -8,7 +8,7 @@ export const HeaderContainer = styled(Container)`
   color: #fff;
   font-family: "Poppins", sans-serif;
   background-color: rgba(28, 28, 28, 0.3);
-  z-index: 1;
+  z-index: 999999;
 `;
 
 export const NavContainer = styled.div`

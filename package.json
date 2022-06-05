@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@netojose/react-select-datepicker": "https://github.com/dangphat1412/react-select-datepicker/tarball/master",
-    "@react-google-maps/api": "^2.11.9",
+    "@react-google-maps/api": "^2.12.0",
     "axios": "^0.27.2",
     "next": "12.1.6",
     "react": "18.1.0",
