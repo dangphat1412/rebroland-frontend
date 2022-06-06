@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, TransitionablePortal } from "semantic-ui-react";
 import ForgotPassword from "../forgot-password/forgot-password.component";
 import Login from "../login/login.component";
+import OtpRegister from "../otp-register/otp-register.component";
 import OtpResetPassword from "../otp-reset-password/otp-reset-password.component";
 import Register from "../register/register.component";
 import ResetPassword from "../reset-password/reset-password.component";
@@ -18,6 +19,8 @@ const LoginRegisterModal = ({
   setOtpResetPasswordOpen,
   resetPasswordOpen,
   setResetPasswordOpen,
+  otpRegisterOpen,
+  setOtpRegisterOpen,
 }) => {
   const handleOpenRegister = () => {
     handleCloseAllModals();
@@ -44,12 +47,18 @@ const LoginRegisterModal = ({
     setResetPasswordOpen(true);
   };
 
+  const handleOpenOtpRegister = () => {
+    handleCloseAllModals();
+    setOtpRegisterOpen(true);
+  };
+
   const handleCloseAllModals = () => {
     setLoginOpen(false);
     setRegisterOpen(false);
     setForgotPasswordOpen(false);
     setOtpResetPasswordOpen(false);
     setResetPasswordOpen(false);
+    setOtpRegisterOpen(false);
   };
 
   return (
@@ -67,7 +76,7 @@ const LoginRegisterModal = ({
           }}
           closeIcon
         >
-          <Modal.Header style={{ fontFamily: "Tahoma" }}>
+          <Modal.Header style={{ fontFamily: "Tahoma, san-serif" }}>
             Đăng nhập
           </Modal.Header>
           <Modal.Content>
@@ -95,9 +104,11 @@ const LoginRegisterModal = ({
           }}
           closeIcon
         >
-          <Modal.Header>Đăng ký tài khoản</Modal.Header>
+          <Modal.Header style={{ fontFamily: "Tahoma, san-serif" }}>
+            Đăng ký tài khoản
+          </Modal.Header>
           <Modal.Content>
-            <Register />
+            <Register handleOpenOtpRegister={handleOpenOtpRegister}/>
           </Modal.Content>
           <Modal.Actions>
             <ModalFooter>
@@ -182,6 +193,31 @@ const LoginRegisterModal = ({
           <Modal.Actions>
             <ModalFooter>
               Quay lại trang <span onClick={handleOpenLogin}>Đăng nhập</span>
+            </ModalFooter>
+          </Modal.Actions>
+        </Modal>
+      </TransitionablePortal>
+
+      <TransitionablePortal
+        open={otpRegisterOpen}
+        transition={{ animation: "scale", duration: 300 }}
+      >
+        <Modal
+          centered={false}
+          size="mini"
+          open={otpRegisterOpen}
+          onClose={() => {
+            setOtpRegisterOpen(false);
+          }}
+          closeIcon
+        >
+          <Modal.Header>Xác nhận mã OTP</Modal.Header>
+          <Modal.Content>
+            <OtpRegister />
+          </Modal.Content>
+          <Modal.Actions>
+            <ModalFooter>
+              Quay lại trang <span onClick={handleOpenRegister}>Đăng ký</span>
             </ModalFooter>
           </Modal.Actions>
         </Modal>

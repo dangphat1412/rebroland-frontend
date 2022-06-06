@@ -10,6 +10,7 @@ const MainNavigation = ({ className }) => {
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const [otpResetPasswordOpen, setOtpResetPasswordOpen] = useState(false);
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
+  const [otpRegisterOpen, setOtpRegisterOpen] = useState(false);
 
   return (
     <div>
@@ -64,6 +65,8 @@ const MainNavigation = ({ className }) => {
         setOtpResetPasswordOpen={setOtpResetPasswordOpen}
         resetPasswordOpen={resetPasswordOpen}
         setResetPasswordOpen={setResetPasswordOpen}
+        otpRegisterOpen={otpRegisterOpen}
+        setOtpRegisterOpen={setOtpRegisterOpen}
       />
     </div>
   );

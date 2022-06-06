@@ -8,4 +8,7 @@ export const LoginContainer = styled.div`
         font-weight: bold;
     }
   }
+  .btn-login {
+    font-family: "Tahoma"
+  }
 `;

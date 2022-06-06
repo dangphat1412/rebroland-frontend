@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, Grid } from "semantic-ui-react";
+import CustomButton from "../custom-button/custom-button.component";
 import InputField from "../input-field/input-field.component";
 import { LoginContainer } from "./login.styles";
 
@@ -46,7 +47,7 @@ const Login = ({ handleOpenForgotPassword }) => {
         </Grid>
         <Grid>
           <Grid.Column textAlign="center">
-            <Button type="submit">Đăng nhập</Button>
+            <CustomButton type="submit">Đăng nhập</CustomButton>
           </Grid.Column>
         </Grid>
       </Form>
