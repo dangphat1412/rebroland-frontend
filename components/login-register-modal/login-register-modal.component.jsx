@@ -75,6 +75,7 @@ const LoginRegisterModal = ({
             setLoginOpen(false);
           }}
           closeIcon
+          dimmer="blurring"
         >
           <Modal.Header style={{ fontFamily: "Tahoma, san-serif" }}>
             Đăng nhập
@@ -108,7 +109,7 @@ const LoginRegisterModal = ({
             Đăng ký tài khoản
           </Modal.Header>
           <Modal.Content>
-            <Register handleOpenOtpRegister={handleOpenOtpRegister}/>
+            <Register handleOpenOtpRegister={handleOpenOtpRegister} />
           </Modal.Content>
           <Modal.Actions>
             <ModalFooter>

@@ -14,17 +14,14 @@ const Register = ({ handleOpenOtpRegister }) => {
     phone: "",
     password: "",
     confirmPassword: "",
-    province: "",
-    district: "",
-    ward: "",
     gender: "male",
   });
 
-  const [dataProvinces, setDataProvinces] = useState({
-    provinces: [],
-    districts: [],
-    wards: [],
-  });
+  // const [dataProvinces, setDataProvinces] = useState({
+  //   provinces: [],
+  //   districts: [],
+  //   wards: [],
+  // });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,61 +41,61 @@ const Register = ({ handleOpenOtpRegister }) => {
   //   setDob(date);
   // };
 
-  const handleSelectProvince = (e, { value }) => {
-    setUser((prev) => ({
-      ...prev,
-      province: e.target.innerText,
-      district: "",
-      ward: "",
-    }));
-    fetchDistrictsAPI(value);
-  };
+  // const handleSelectProvince = (e, { value }) => {
+  //   setUser((prev) => ({
+  //     ...prev,
+  //     province: e.target.innerText,
+  //     district: "",
+  //     ward: "",
+  //   }));
+  //   fetchDistrictsAPI(value);
+  // };
 
-  const handleSelectDistrict = (e, { value }) => {
-    setUser((prev) => ({ ...prev, district: e.target.innerText, ward: "" }));
-    fetchWardsAPI(value);
-  };
+  // const handleSelectDistrict = (e, { value }) => {
+  //   setUser((prev) => ({ ...prev, district: e.target.innerText, ward: "" }));
+  //   fetchWardsAPI(value);
+  // };
 
-  const handleSelectWard = (e) => {
-    setUser((prev) => ({ ...prev, ward: e.target.innerText }));
-  };
+  // const handleSelectWard = (e) => {
+  //   setUser((prev) => ({ ...prev, ward: e.target.innerText }));
+  // };
 
-  useEffect(() => {
-    fetchProvincesAPI();
-  }, []);
+  // useEffect(() => {
+  //   fetchProvincesAPI();
+  // }, []);
 
-  const fetchProvincesAPI = async () => {
-    const provincesData = await getProvinces();
+  // const fetchProvincesAPI = async () => {
+  //   const provincesData = await getProvinces();
 
-    setDataProvinces((prev) => ({
-      ...prev,
-      provinces: provincesData.map((p) => {
-        return { key: p.code, text: p.name, value: p.code };
-      }),
-    }));
-  };
+  //   setDataProvinces((prev) => ({
+  //     ...prev,
+  //     provinces: provincesData.map((p) => {
+  //       return { key: p.code, text: p.name, value: p.code };
+  //     }),
+  //   }));
+  // };
 
-  const fetchDistrictsAPI = async (provinceCode) => {
-    const districtsData = await getDistricts(provinceCode);
+  // const fetchDistrictsAPI = async (provinceCode) => {
+  //   const districtsData = await getDistricts(provinceCode);
 
-    setDataProvinces((prev) => ({
-      ...prev,
-      districts: districtsData.districts.map((d) => {
-        return { key: d.code, text: d.name, value: d.code };
-      }),
-    }));
-  };
+  //   setDataProvinces((prev) => ({
+  //     ...prev,
+  //     districts: districtsData.districts.map((d) => {
+  //       return { key: d.code, text: d.name, value: d.code };
+  //     }),
+  //   }));
+  // };
 
-  const fetchWardsAPI = async (districtCode) => {
-    const wardsData = await getWards(districtCode);
+  // const fetchWardsAPI = async (districtCode) => {
+  //   const wardsData = await getWards(districtCode);
 
-    setDataProvinces((prev) => ({
-      ...prev,
-      wards: wardsData.wards.map((w) => {
-        return { key: w.code, text: w.name, value: w.code };
-      }),
-    }));
-  };
+  //   setDataProvinces((prev) => ({
+  //     ...prev,
+  //     wards: wardsData.wards.map((w) => {
+  //       return { key: w.code, text: w.name, value: w.code };
+  //     }),
+  //   }));
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -118,7 +115,6 @@ const Register = ({ handleOpenOtpRegister }) => {
           value={user.fullName}
           errorMsg="Họ và tên không được để trống"
           handleChange={handleChange}
-          required
         />
         {/* <InputField
           label="Email"
@@ -163,7 +159,7 @@ const Register = ({ handleOpenOtpRegister }) => {
           maxDate={maxDate}
           errorMsg="It looks like you've entered the wrong date of birth."
         /> */}
-        <Form.Select
+        {/* <Form.Select
           fluid
           label="Tỉnh/Thành"
           options={dataProvinces.provinces}
@@ -183,7 +179,8 @@ const Register = ({ handleOpenOtpRegister }) => {
           options={dataProvinces.wards}
           placeholder="Phường/Xã"
           onChange={handleSelectWard}
-        />
+        /> */}
+
         <Form.Group inline>
           <label>Giới tính</label>
           <Form.Radio
