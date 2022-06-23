@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { Form, Header, Icon, Ref, Segment, Image } from "semantic-ui-react";
 import {
   ImageContainer,
@@ -7,25 +7,18 @@ import {
   RemoveIcon,
 } from "./picture-upload-preview.styles";
 
-const PictureUploadPreview = ({ postProperty, setPostProperty }) => {
+const PictureUploadPreview = ({ images, setImages }) => {
   const [imagesPreview, setImagesPreview] = useState([]);
   const mediaRef = useRef(null);
 
   const handleChange = (e) => {
     const { files } = e.target;
-    setPostProperty((prev) => ({
-      ...prev,
-      images: [...postProperty.images, ...files],
-    }));
+    setImages([...images, ...files]);
     setImagesPreview([
       ...imagesPreview,
       ...Object.values(files).map((f) => URL.createObjectURL(f)),
     ]);
   };
-
-  useEffect(() => {
-    console.log(imagesPreview);
-  });
 
   const handleClickPlaceholder = () => {
     mediaRef.current.querySelector("input").click();
@@ -35,12 +28,7 @@ const PictureUploadPreview = ({ postProperty, setPostProperty }) => {
     setImagesPreview(
       imagesPreview.filter((image, index) => pictureIndex !== index)
     );
-    setPostProperty((prev) => ({
-      ...prev,
-      images: postProperty.images.filter(
-        (image, index) => pictureIndex !== index
-      ),
-    }));
+    setImages(images.filter((image, index) => pictureIndex !== index));
   };
 
   return (

@@ -4,27 +4,28 @@ import {
   Polygon,
   useLoadScript,
 } from "@react-google-maps/api";
-import React, { useState, useEffect } from "react";
-import { Form } from "semantic-ui-react";
+import React, { useState } from "react";
+import { useFieldArray } from "react-hook-form";
+import { Button, Form, Grid } from "semantic-ui-react";
+import InputField from "../input-field/input-field.component";
 import { MapContainer } from "./map.styles";
 
-const Map = ({ postProperty, setPostProperty, handleChange }) => {
-  const [position, setPosition] = useState({ lat: 21.012639, lng: 105.526507 });
+const Map = ({ getValues, control }) => {
+  const {
+    fields: coordinatesFields,
+    append: coordinatesAppend,
+    remove: coordinatesRemove,
+  } = useFieldArray({ control, name: "coordinates" });
+
+  const [position, setPosition] = useState([
+    { lat: 21.01286, lng: 105.526657 },
+  ]);
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBPrWdOpVJ4LhAiLCLSfwK-0i3E1q27R7s",
+    googleMapsApiKey: "AIzaSyBJ_D4F8z-sZmHnyQ9hw_GJf7TyRbkzj8c",
   });
 
-  const paths = [
-    { lat: 21.024373, lng: 106.104876 },
-    { lat: 21.024373, lng: 106.104785 },
-    { lat: 21.024315, lng: 106.104789 },
-    { lat: 21.024326, lng: 106.104886 },
-  ];
-
   const options = {
-    fillOpacity: 1,
     strokeColor: "red",
-    strokeOpacity: 1,
     strokeWeight: 2,
     clickable: false,
     draggable: false,
@@ -33,10 +34,9 @@ const Map = ({ postProperty, setPostProperty, handleChange }) => {
     zIndex: 1,
   };
 
-  const handleClick = () => {
-    setPosition({
-      lat: parseFloat(postProperty.latitude),
-      lng: parseFloat(postProperty.longitude),
+  const handleCheck = () => {
+    getValues("coordinates").map((coordinate) => {
+      return { lat: coordinate.latitude, lng: coordinate.longitude };
     });
   };
 
@@ -45,28 +45,66 @@ const Map = ({ postProperty, setPostProperty, handleChange }) => {
     <MapContainer>
       <GoogleMap
         zoom={17}
-        center={position}
+        center={position[0]}
         mapContainerClassName="map-container"
       >
-        <Marker position={position} />
+        {position.length === 1 ? (
+          <Marker position={position[0]} />
+        ) : (
+          <Polygon path={position} options={options} />
+        )}
       </GoogleMap>
-      <Form.Group widths={3}>
-        <Form.Input
-          fluid
-          placeholder="Nhập vĩ độ"
-          name="latitude"
-          value={postProperty.latitude}
-          onChange={handleChange}
-        />
-        <Form.Input
-          fluid
-          placeholder="Nhập kinh độ"
-          name="longitude"
-          value={postProperty.longitude}
-          onChange={handleChange}
-        />
-        <Form.Button onClick={handleClick}>Kiểm tra trên bản đồ</Form.Button>
-      </Form.Group>
+
+      <Grid>
+        <Grid.Row>
+          <Grid.Column>
+            {coordinatesFields.map((field, index) => {
+              return (
+                <Form.Group widths="equal" key={field.id}>
+                  <InputField
+                    name={`coordinates[${index}].latitude`}
+                    placeholder="Nhập vĩ độ"
+                    onChange={(e) => {
+                      getValues("coordinates")[index].latitude = e.target.value;
+                    }}
+                  />
+                  <InputField
+                    name={`coordinates.[${index}].longitude`}
+                    placeholder="Nhập kinh độ"
+                    onChange={(e) => {
+                      getValues("coordinates")[index].longitude =
+                        e.target.value;
+                    }}
+                  />
+                  <Form.Field>
+                    <Button
+                      color="red"
+                      type="button"
+                      onClick={() => coordinatesRemove(index)}
+                    >
+                      Xoá toạ độ
+                    </Button>
+                  </Form.Field>
+                </Form.Group>
+              );
+            })}
+            <div>
+              <Button
+                primary
+                type="button"
+                onClick={() => {
+                  coordinatesAppend({});
+                }}
+              >
+                Thêm toạ độ
+              </Button>
+              <Button positive type="button" onClick={handleCheck}>
+                Kiểm tra trên bản đồ
+              </Button>
+            </div>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </MapContainer>
   );
 };

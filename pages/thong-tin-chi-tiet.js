@@ -6,7 +6,6 @@ import SubHeader from "../components/sub-header/sub-header.component";
 const PropertyDetail = () => {
   return (
     <div>
-      <Navigation />
       <SubHeader title="Thông tin chi tiết" />
       <FormPropertyDetail />
     </div>

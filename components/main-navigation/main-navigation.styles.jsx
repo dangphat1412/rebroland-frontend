@@ -20,6 +20,10 @@ export const NavContainer = styled(Container)`
     box-sizing: border-box;
     transition: all .3s cubic-bezier(.165, .84, .44, 1);
   }
+
+  .btn-radio {
+    padding-left: 16px !important;
+  }
 `;
 
 export const Menu = styled.div`
@@ -35,6 +39,12 @@ export const Menu = styled.div`
     &:hover {
       color: #fc9f1c !important;
     }
+  }
+
+  .drop-down {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    z-index: 900;
   }
 `;
 

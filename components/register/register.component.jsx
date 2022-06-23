@@ -1,128 +1,88 @@
-import React, { useState, useEffect } from "react";
-import { Button, Form, Grid } from "semantic-ui-react";
-import {
-  getDistricts,
-  getProvinces,
-  getWards,
-} from "../../actions/vietnam-provinces";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Form, Grid } from "semantic-ui-react";
+import { getOtpToken, registerUser } from "../../actions/auth";
 import CustomButton from "../custom-button/custom-button.component";
 import InputField from "../input-field/input-field.component";
 
-const Register = ({ handleOpenOtpRegister }) => {
-  const [user, setUser] = useState({
-    fullName: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-    gender: "male",
-  });
-
-  // const [dataProvinces, setDataProvinces] = useState({
-  //   provinces: [],
-  //   districts: [],
-  //   wards: [],
-  // });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleChangeGender = (e, { name, value }) => {
-    setUser((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // const [dob, setDob] = useState(new Date());
-  // const minDate = new Date(1900, 1, 1);
-  // const maxDate = new Date();
-  // maxDate.setFullYear(maxDate.getFullYear() - 18);
-  // const onDateChange = (date) => {
-  //   setUser((prev) => ({ ...prev, dob: date }));
-  //   setDob(date);
-  // };
-
-  // const handleSelectProvince = (e, { value }) => {
-  //   setUser((prev) => ({
-  //     ...prev,
-  //     province: e.target.innerText,
-  //     district: "",
-  //     ward: "",
-  //   }));
-  //   fetchDistrictsAPI(value);
-  // };
-
-  // const handleSelectDistrict = (e, { value }) => {
-  //   setUser((prev) => ({ ...prev, district: e.target.innerText, ward: "" }));
-  //   fetchWardsAPI(value);
-  // };
-
-  // const handleSelectWard = (e) => {
-  //   setUser((prev) => ({ ...prev, ward: e.target.innerText }));
-  // };
-
-  // useEffect(() => {
-  //   fetchProvincesAPI();
-  // }, []);
-
-  // const fetchProvincesAPI = async () => {
-  //   const provincesData = await getProvinces();
-
-  //   setDataProvinces((prev) => ({
-  //     ...prev,
-  //     provinces: provincesData.map((p) => {
-  //       return { key: p.code, text: p.name, value: p.code };
-  //     }),
-  //   }));
-  // };
-
-  // const fetchDistrictsAPI = async (provinceCode) => {
-  //   const districtsData = await getDistricts(provinceCode);
-
-  //   setDataProvinces((prev) => ({
-  //     ...prev,
-  //     districts: districtsData.districts.map((d) => {
-  //       return { key: d.code, text: d.name, value: d.code };
-  //     }),
-  //   }));
-  // };
-
-  // const fetchWardsAPI = async (districtCode) => {
-  //   const wardsData = await getWards(districtCode);
-
-  //   setDataProvinces((prev) => ({
-  //     ...prev,
-  //     wards: wardsData.wards.map((w) => {
-  //       return { key: w.code, text: w.name, value: w.code };
-  //     }),
-  //   }));
-  // };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    handleOpenOtpRegister();
-  };
+const Register = ({ handleOpenOtpRegister, setUserRegister }) => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
-    console.log(user);
-  });
+    register("fullName", { required: "Họ tên không được để trống" });
+    register("phone", { required: "Số điện thoại không được để trống" });
+    register("password", { required: "Mật khẩu không được để trống" });
+    register("confirmPassword", {
+      required: "Xác nhận mật khẩu không được để trống",
+    });
+  }, []);
+
+  const onSubmit = async (user) => {
+    const status = await getOtpToken(user);
+    if (status === 200) {
+      setUserRegister({ ...user });
+      handleOpenOtpRegister();
+    }
+  };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   await getOtpToken(user);
+  //   setUserRegister({ ...user });
+  //   handleOpenOtpRegister();
+  // };
 
   return (
     <>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <InputField
           label="Họ và tên"
           name="fullName"
-          value={user.fullName}
-          errorMsg="Họ và tên không được để trống"
-          handleChange={handleChange}
+          placeholder="Nhập họ và tên"
+          onChange={(e, { name, value }) => {
+            setValue(name, value);
+          }}
+          error={errors.fullName}
         />
-        {/* <InputField
-          label="Email"
-          name="email"
-          value={user.email}
-          errorMsg="Email không đúng định dạng"
-          regex="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"
-          handleChange={handleChange} /> */}
+
+        <InputField
+          label="Số điện thoại"
+          name="phone"
+          placeholder="Nhập số điện thoại"
+          onChange={(e, { name, value }) => {
+            setValue(name, value);
+          }}
+          error={errors.phone}
+        />
+
+        <InputField
+          label="Mật khẩu"
+          type="password"
+          name="password"
+          placeholder="Nhập mật khẩu"
+          onChange={async (e, { name, value }) => {
+            setValue(name, value);
+          }}
+          error={errors.password}
+        />
+
+        <InputField
+          label="Xác nhận mật khẩu"
+          type="password"
+          name="confirmPassword"
+          placeholder="Nhập lại mật khẩu"
+          onChange={async (e, { name, value }) => {
+            setValue(name, value);
+          }}
+          error={errors.confirmPassword}
+        />
+
+        {/* 
         <InputField
           label="Số điện thoại"
           name="phone"
@@ -144,60 +104,11 @@ const Register = ({ handleOpenOtpRegister }) => {
           type="password"
           label="Xác nhận mật khẩu"
           name="confirmPassword"
-          value={user.confirmPassword}
+          value={confirmPassword}
           errorMsg="Mật khẩu không khớp"
           regex={user.password}
-          handleChange={handleChange}
-        />
-
-        {/* <DatePickerField
-          label="Ngày tháng năm sinh"
-          onDateChange={onDateChange}
-          name="dob"
-          date={user.dob || new Date()}
-          minDate={minDate}
-          maxDate={maxDate}
-          errorMsg="It looks like you've entered the wrong date of birth."
+          handleChange={handleChangeConfirmPassword}
         /> */}
-        {/* <Form.Select
-          fluid
-          label="Tỉnh/Thành"
-          options={dataProvinces.provinces}
-          placeholder="Tỉnh/Thành"
-          onChange={handleSelectProvince}
-        />
-        <Form.Select
-          fluid
-          label="Quận/Huyện"
-          options={dataProvinces.districts}
-          placeholder="Quận/Huyện"
-          onChange={handleSelectDistrict}
-        />
-        <Form.Select
-          fluid
-          label="Phường/Xã"
-          options={dataProvinces.wards}
-          placeholder="Phường/Xã"
-          onChange={handleSelectWard}
-        /> */}
-
-        <Form.Group inline>
-          <label>Giới tính</label>
-          <Form.Radio
-            label="Nam"
-            name="gender"
-            value="male"
-            checked={user.gender === "male"}
-            onChange={handleChangeGender}
-          />
-          <Form.Radio
-            label="Nữ"
-            value="female"
-            name="gender"
-            checked={user.gender === "female"}
-            onChange={handleChangeGender}
-          />
-        </Form.Group>
 
         <Grid>
           <Grid.Column textAlign="center">

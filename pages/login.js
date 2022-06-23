@@ -1,12 +1,16 @@
-import React from 'react'
-import LoginOrRegister from '../components/login-register/login-or-register.component'
+import React from "react";
+import LoginRegister from "../components/login-register/login-register.component";
+import SubHeader from "../components/sub-header/sub-header.component";
 
 const login = () => {
   return (
-    <LoginOrRegister>
-        
-    </LoginOrRegister>
-  )
-}
+    <div>
+      <SubHeader title="Đăng nhập Đăng ký" />
+      <LoginRegister />
+    </div>
 
-export default login
+    // </LoginRegister>
+  );
+};
+
+export default login;

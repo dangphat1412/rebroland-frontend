@@ -3,7 +3,7 @@ import MainNavigation from "../main-navigation/main-navigation.component";
 import SubNavigation from "../sub-navigation/sub-navigation.component";
 import { NavigationContainer } from "./navigation.styles";
 
-const Navigation = () => {
+const Navigation = ({ user }) => {
   const [showSubnavigation, setShowSubnavigation] = useState(true);
 
   const controlSubnavigation = () => {
@@ -20,7 +20,7 @@ const Navigation = () => {
   return (
     <NavigationContainer className={!showSubnavigation && "active"} fluid>
       {showSubnavigation && <SubNavigation />}
-      <MainNavigation className={!showSubnavigation && "sticky"} />
+      <MainNavigation className={!showSubnavigation && "sticky"} user={user} />
     </NavigationContainer>
   );
 };

@@ -1,53 +1,66 @@
-import React, { useState } from "react";
-import { Button, Form, Grid } from "semantic-ui-react";
+import React, { useEffect } from "react";
+import { Form, Grid } from "semantic-ui-react";
+import { loginUser } from "../../actions/auth";
 import CustomButton from "../custom-button/custom-button.component";
 import InputField from "../input-field/input-field.component";
+import { useForm } from "react-hook-form";
 import { LoginContainer } from "./login.styles";
 
 const Login = ({ handleOpenForgotPassword }) => {
-  const [user, setUser] = useState({
-    phone: "",
-    password: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prev) => ({ ...prev, [name]: value }));
+  useEffect(() => {
+    register("phone", { required: "Số điện thoại không được để trống" });
+    register("password", { required: "Mật khẩu không được để trống" });
+  }, []);
+
+  const onSubmit = async (user) => {
+    await loginUser(user);
   };
-
-  const handleSubmit = () => {};
 
   return (
     <LoginContainer>
-      <Form>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <InputField
           label="Số điện thoại"
           name="phone"
-          value={user.phone}
-          errorMsg="Số điện thoại không được để trống"
-          handleChange={handleChange}
-          required
+          placeholder="Nhập số điện thoại"
+          onChange={async (e, { name, value }) => {
+            setValue(name, value);
+          }}
+          error={errors.phone}
+          requiredField
         />
+
         <InputField
-          type="password"
           label="Mật khẩu"
+          type="password"
           name="password"
-          value={user.password}
-          errorMsg="Mật khẩu không được để trống"
-          handleChange={handleChange}
-          required
+          placeholder="Nhập mật khẩu"
+          onChange={async (e, { name, value }) => {
+            setValue(name, value);
+          }}
+          error={errors.password}
+          requiredField
         />
+
         <Grid>
           <Grid.Column width={8}>
             <Form.Checkbox label="Duy trì đăng nhập" />
           </Grid.Column>
           <Grid.Column textAlign="right" width={8} className="forgot-password">
-            <div onClick={handleOpenForgotPassword}>Quên mật khẩu</div>
+            <span onClick={handleOpenForgotPassword}>Quên mật khẩu</span>
           </Grid.Column>
         </Grid>
         <Grid>
           <Grid.Column textAlign="center">
             <CustomButton type="submit">Đăng nhập</CustomButton>
+            {/* <input type="submit" /> */}
           </Grid.Column>
         </Grid>
       </Form>

@@ -4,13 +4,13 @@ import {
   Divider,
   Form,
   Grid,
-  Header,
   Icon,
   Image,
   List,
   Rating,
   Segment,
 } from "semantic-ui-react";
+import ImageGallery from "../image-gallery/image-gallery.component";
 import { FormPropertyDetailContainer } from "./form-property-detail.styles";
 
 const FormPropertyDetail = () => {
@@ -49,6 +49,26 @@ const FormPropertyDetail = () => {
                     </List.Content>
                   </List.Item>
                 </List>
+
+                <List
+                  horizontal
+                  relaxed
+                  size="big"
+                  floated="right"
+                  selection
+                  verticalAlign="middle"
+                >
+                  <List.Item>
+                    <List.Icon name="share alternate" />
+                  </List.Item>
+                  <List.Item>
+                    <List.Icon name="warning sign" />
+                  </List.Item>
+                  <List.Item>
+                    <List.Icon name="heart" />
+                  </List.Item>
+                </List>
+
                 <Divider />
 
                 <h3>Thông tin mô tả</h3>
@@ -67,6 +87,8 @@ const FormPropertyDetail = () => {
                 <h3>Đặc điểm bất động sản</h3>
                 <p>Đặc điểm bds</p>
                 <h3>Hình ảnh</h3>
+                <ImageGallery />
+
                 <h3>Xem trên bản đồ</h3>
               </Segment>
             </Grid.Column>

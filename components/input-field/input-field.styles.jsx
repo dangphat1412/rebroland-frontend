@@ -1,15 +1,25 @@
-import { Label } from "semantic-ui-react";
+import { Form, Label } from "semantic-ui-react";
 import styled from "styled-components";
 
-export const FormContainer = styled.div`
-    position: relative;
-    margin-bottom: 10px;
-`
+export const FormContainer = styled(Form.Field)`
+  .required {
+    color: red;
+  }
+`;
+
+export const InputContainer = styled(Form.Input)`
+  margin-bottom: 0px !important;
+`;
+
+export const TextareaContainer = styled(Form.TextArea)`
+  margin-bottom: 0px !important;
+`;
+
+export const SelectContainer = styled(Form.Select)`
+  margin-bottom: 0px !important;
+`;
 
 export const ErrorMessage = styled(Label)`
-    position: absolute !important;
-    left: 340px;
-    top: 28px;
-    width: fit-content;
-    z-index: 1;
+  border: none !important;
+  padding-left: 0px !important;
 `;

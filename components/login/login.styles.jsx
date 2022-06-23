@@ -1,3 +1,4 @@
+import { Label } from "semantic-ui-react";
 import styled from "styled-components";
 
 export const LoginContainer = styled.div`
@@ -5,10 +6,12 @@ export const LoginContainer = styled.div`
     color: red;
     cursor: pointer;
     &:hover {
-        font-weight: bold;
+      font-weight: bold;
     }
   }
   .btn-login {
-    font-family: "Tahoma"
+    font-family: "Tahoma";
   }
 `;
+
+export const ErrorMessage = styled(Label)``;
