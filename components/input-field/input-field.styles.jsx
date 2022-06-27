@@ -19,6 +19,10 @@ export const SelectContainer = styled(Form.Select)`
   margin-bottom: 0px !important;
 `;
 
+export const DropdownContainer = styled(Form.Dropdown)`
+  margin-bottom: 0px !important;
+`;
+
 export const ErrorMessage = styled(Label)`
   border: none !important;
   padding-left: 0px !important;

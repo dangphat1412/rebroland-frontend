@@ -2,10 +2,19 @@ import { Card } from "semantic-ui-react";
 import styled from "styled-components";
 
 export const RealEstateItemContainer = styled(Card)`
-  .item-content {
-    padding: 1.5rem !important;
+  .header,
+  .description {
+    width: 100%;
+    font-family: "Tahoma", sans-serif !important;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .item-image {
-    height: 100% !important;
+  .header {
+    -webkit-line-clamp: 2;
+  }
+  .description {
+    -webkit-line-clamp: 3;
   }
 `;

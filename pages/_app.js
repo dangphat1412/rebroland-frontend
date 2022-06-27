@@ -28,7 +28,6 @@ class MyApp extends App {
           headers: { Authorization: token },
         });
         const user = res.data;
-        console.log("USER: ", user);
         // if (user) !protectedRoutes && redirectUser(ctx, "/");
 
         pageProps.user = user;

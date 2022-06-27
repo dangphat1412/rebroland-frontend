@@ -1,31 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactImageGallery from "react-image-gallery";
+import { ImageGalleryContainer } from "./image-gallery.styes";
 
-const images = [
-  {
-    original: "https://picsum.photos/id/1018/1000/600/",
-    thumbnail: "https://picsum.photos/id/1018/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1015/1000/600/",
-    thumbnail: "https://picsum.photos/id/1015/250/150/",
-  },
-  {
-    original: "https://picsum.photos/id/1019/1000/600/",
-    thumbnail: "https://picsum.photos/id/1019/250/150/",
-  },
-];
+const ImageGallery = ({ images }) => {
+  const [items, setItems] = useState([]);
 
-const ImageGallery = () => {
+  useEffect(() => {
+    setItems(
+      images.map((image) => {
+        return {
+          original: image,
+          thumbnail: image,
+        };
+      })
+    );
+  }, [images]);
+
   return (
-    <div>
+    <ImageGalleryContainer>
       <ReactImageGallery
-        items={images}
+        items={items}
         showIndex={true}
         disableKeyDown={false}
-        originalHeight="500px"
+        originalHeight={200}
       />
-    </div>
+    </ImageGalleryContainer>
   );
 };
 

@@ -12,16 +12,9 @@ import {
 import Link from "next/link";
 import { getPostsByUser } from "../../actions/post";
 import { UserPanelContainer } from "./user-panel.styles";
+import MyProfileProperty from "../my-profile-property/my-profile-property.component";
 
 const UserPanel = () => {
-  const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    (async () => {
-      const data = await getPostsByUser();
-      console.log(data);
-      setPosts(data);
-    })();
-  }, []);
   return (
     <UserPanelContainer>
       <Grid>
@@ -73,39 +66,7 @@ const UserPanel = () => {
             </Segment>
           </Grid.Column>
           <Grid.Column width={12}>
-            <Table padded>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell singleLine textAlign="center">
-                    Bài đăng
-                  </Table.HeaderCell>
-                  <Table.HeaderCell singleLine textAlign="center">
-                    Ngày đăng
-                  </Table.HeaderCell>
-                  <Table.HeaderCell singleLine textAlign="center">
-                    Hành động
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-
-              <Table.Body>
-                <Table.Row>
-                  <ItemTable />
-                </Table.Row>
-                <Table.Row>
-                  <ItemTable />
-                </Table.Row>
-                <Table.Row>
-                  <ItemTable />
-                </Table.Row>
-                <Table.Row>
-                  <ItemTable />
-                </Table.Row>
-                <Table.Row>
-                  <ItemTable />
-                </Table.Row>
-              </Table.Body>
-            </Table>
+            <MyProfileProperty />
             <Pagination
               defaultActivePage={5}
               ellipsisItem={{
@@ -128,67 +89,6 @@ const UserPanel = () => {
         </Grid.Row>
       </Grid>
     </UserPanelContainer>
-  );
-};
-
-const ItemTable = () => {
-  return (
-    <>
-      <Table.Cell width={11}>
-        <Item.Group>
-          <Item style={{ padding: "0px !important" }}>
-            <Item.Image
-              size="medium"
-              src="https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
-            />
-            <Item.Content className="item-content">
-              <Item.Header>
-                Biệt thự đường Ngô Thời Nhiệm Q3, DT: 20x25m, T 1L ST, giá
-                105tr/th
-              </Item.Header>
-              <Item.Description>
-                <div>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Aliquid fugiat, quis ad dolores natus veritatis voluptatibus
-                  fugit. Expedita
-                </div>
-                <List horizontal size="large" style={{ marginTop: "0px" }}>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header>11 tỷ</List.Header>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header>260 triệu/m²</List.Header>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header>70m²</List.Header>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>Thanh Xuân, Hà Nội</List.Content>
-                  </List.Item>
-                </List>
-              </Item.Description>
-              <Item.Extra>
-                <span>3 ngày trước</span>
-              </Item.Extra>
-            </Item.Content>
-          </Item>
-        </Item.Group>
-      </Table.Cell>
-      <Table.Cell singleLine textAlign="center">
-        Ngày 31 tháng 12 năm 2021
-      </Table.Cell>
-      <Table.Cell textAlign="center">
-        <Icon circular inverted color="teal" name="eye" />
-        <Icon circular inverted color="green" name="edit outline" />
-        <Icon circular inverted color="red" name="trash alternate" />
-      </Table.Cell>
-    </>
   );
 };
 

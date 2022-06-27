@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Segment } from "semantic-ui-react";
+import { Button, Form, Grid, Segment } from "semantic-ui-react";
 import {
   getDistrictById,
   getProvincesById,
@@ -7,6 +7,7 @@ import {
 } from "../../actions/vietnam-provinces";
 import InputField from "../input-field/input-field.component";
 import Map from "../map/map.component";
+import { useFieldArray } from "react-hook-form";
 
 const HANOI_PROVINCE_ID = 1;
 const THACHTHAT_DISTRICT_ID = 276;
@@ -18,6 +19,22 @@ const GeographicInformationForm = ({
   getValues,
   setValue,
 }) => {
+  const {
+    fields: coordinatesFields,
+    append: coordinatesAppend,
+    remove: coordinatesRemove,
+  } = useFieldArray({ control, name: "coordinates" });
+
+  const [position, setPosition] = useState([
+    { lat: 21.01286, lng: 105.526657 },
+  ]);
+
+  const handleCheck = () => {
+    getValues("coordinates").map((coordinate) => {
+      return { lat: coordinate.latitude, lng: coordinate.longitude };
+    });
+  };
+
   const handleChange = (e, { name, value }) => {
     name === "province" && fetchDistrictAPI();
     name === "district" && fetchWardsAPI();
@@ -126,7 +143,58 @@ const GeographicInformationForm = ({
       {/* missing loading */}
       <Form.Field>
         <label>Vị trí trên bản đồ</label>
-        <Map getValues={getValues} setValue={setValue} control={control} />
+        <Map position={position} />
+        <Grid>
+          <Grid.Row>
+            <Grid.Column>
+              {coordinatesFields.map((field, index) => {
+                return (
+                  <Form.Group widths="equal" key={field.id}>
+                    <InputField
+                      name={`coordinates[${index}].latitude`}
+                      placeholder="Nhập vĩ độ"
+                      onChange={(e) => {
+                        getValues("coordinates")[index].latitude =
+                          e.target.value;
+                      }}
+                    />
+                    <InputField
+                      name={`coordinates.[${index}].longitude`}
+                      placeholder="Nhập kinh độ"
+                      onChange={(e) => {
+                        getValues("coordinates")[index].longitude =
+                          e.target.value;
+                      }}
+                    />
+                    <Form.Field>
+                      <Button
+                        color="red"
+                        type="button"
+                        onClick={() => coordinatesRemove(index)}
+                      >
+                        Xoá toạ độ
+                      </Button>
+                    </Form.Field>
+                  </Form.Group>
+                );
+              })}
+              <div>
+                <Button
+                  primary
+                  type="button"
+                  onClick={() => {
+                    coordinatesAppend({});
+                  }}
+                >
+                  Thêm toạ độ
+                </Button>
+                <Button positive type="button" onClick={handleCheck}>
+                  Kiểm tra trên bản đồ
+                </Button>
+              </div>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </Form.Field>
     </Segment>
   );

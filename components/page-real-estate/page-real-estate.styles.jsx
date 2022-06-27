@@ -1,3 +1,4 @@
+import { Form } from "semantic-ui-react";
 import styled from "styled-components";
 
 export const RealEstatePageContainer = styled.div`
@@ -7,5 +8,19 @@ export const RealEstatePageContainer = styled.div`
 
   .item {
     padding: 10px !important;
+  }
+`;
+
+export const FormSearchContainer = styled(Form)`
+  h1 {
+    font-family: "Tahoma", sans-serif !important;
+  }
+  label {
+    color: white !important;
+  }
+  button {
+    font-family: "Tahoma", sans-serif !important;
+    background: #ff9219 !important;
+    color: white !important;
   }
 `;

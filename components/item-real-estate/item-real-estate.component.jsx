@@ -15,7 +15,7 @@ import {
 import Link from "next/link";
 import { RealEstateItemContainer } from "./item-real-estate.styles";
 
-const RealEstateItem = () => {
+const RealEstateItem = ({ post }) => {
   return (
     <Link href="/thong-tin-chi-tiet">
       <RealEstateItemContainer fluid>
@@ -26,10 +26,7 @@ const RealEstateItem = () => {
               src="https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
             />
             <Item.Content className="item-content">
-              <Item.Header>
-                Biệt thự đường Ngô Thời Nhiệm Q3, DT: 20x25m, T 1L ST, giá
-                105tr/th
-              </Item.Header>
+              <Item.Header>{post.title}</Item.Header>
               <Item.Description>
                 <List horizontal size="large">
                   <List.Item>
@@ -51,12 +48,8 @@ const RealEstateItem = () => {
                     <List.Content>Thanh Xuân, Hà Nội</List.Content>
                   </List.Item>
                 </List>
-                <div>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Aliquid fugiat, quis ad dolores natus veritatis voluptatibus
-                  fugit. Expedita
-                </div>
               </Item.Description>
+              <Item.Description>{post.description}</Item.Description>
               <Item.Extra>
                 <span>3 ngày trước</span>
                 <Button floated="right" icon>

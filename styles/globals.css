@@ -6,12 +6,13 @@ body {
   width: 100%;
   font-family: "Tahoma", sans-serif !important;
   background-color: rgb(249, 249, 249) !important;
-
 }
 
 * {
   box-sizing: border-box;
 }
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap");
 
 @font-face {
   font-family: "Poppins";

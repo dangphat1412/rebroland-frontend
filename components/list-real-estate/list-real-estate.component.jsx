@@ -3,14 +3,14 @@ import { Icon, Pagination } from "semantic-ui-react";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import { PaginationContainer } from "./list-real-estate.styles";
 
-const ListRealEstate = () => {
+const ListRealEstate = ({ posts }) => {
   return (
     <div>
-      <RealEstateItem />
-      <RealEstateItem />
-      <RealEstateItem />
-      <RealEstateItem />
-      <RealEstateItem />
+      {posts.map((post) => (
+        <>
+          <RealEstateItem post={post} />
+        </>
+      ))}
       <Pagination
         defaultActivePage={5}
         ellipsisItem={{

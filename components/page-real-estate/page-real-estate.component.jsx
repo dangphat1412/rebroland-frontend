@@ -1,32 +1,42 @@
-import React from "react";
-import { Form, Grid, List, Segment } from "semantic-ui-react";
-import CustomButton from "../custom-button/custom-button.component";
+import React, { useEffect, useState } from "react";
+import { Form, Grid, Input, List, Segment } from "semantic-ui-react";
+import { getPosts } from "../../actions/post";
+import InputField from "../input-field/input-field.component";
 import ListRealEstate from "../list-real-estate/list-real-estate.component";
-import { RealEstatePageContainer } from "./page-real-estate.styles";
+import MultiRangeSlider from "../multi-range-slider/multi-range-slider.component";
+import SearchBox from "../search-box/search-box.component";
+import {
+  FormSearchContainer,
+  RealEstatePageContainer,
+} from "./page-real-estate.styles";
 
 const RealEstatePage = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await getPosts();
+      setPosts(data);
+    })();
+  }, []);
+
   return (
     <RealEstatePageContainer>
       <Grid>
         <Grid.Row>
           <Grid.Column width={4}>
-            <Segment>
-              <Form>
-                <h1>Tìm kiếm</h1>
-                <Form.Input />
-                <Form.Input />
-                <Form.Select />
-                <Form.Select />
-                <Form.Select />
-                <Form.Input />
-                <Form.Input />
-                <Form.Input />
-                <Form.Button fluid>TÌM KIẾM</Form.Button>
-              </Form>
+            <Segment
+              style={{
+                backgroundImage: "url('/zyro-image.png')",
+                color: "white",
+              }}
+            >
+              {/* http://www.on3-step.com/tf/plesire/img/bg-search-ver.jpg */}
+              <SearchBox />
             </Segment>
           </Grid.Column>
           <Grid.Column width={8}>
-            <ListRealEstate />
+            <ListRealEstate posts={posts} />
           </Grid.Column>
           <Grid.Column width={4}>
             <Segment>

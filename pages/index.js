@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div>
       <HomeBackground />
-      <SearchBox />
+      {/* <SearchBox /> */}
       <Milestones />
       <ListPropertiesRecommend />
     </div>

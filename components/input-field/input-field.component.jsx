@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  DropdownContainer,
   ErrorMessage,
   FormContainer,
   InputContainer,
@@ -22,6 +23,12 @@ const InputField = ({
         return <TextareaContainer {...props} />;
       case "select":
         return <SelectContainer {...props} />;
+      case "dropdown":
+        return children ? (
+          <DropdownContainer {...props}>{children}</DropdownContainer>
+        ) : (
+          <DropdownContainer {...props} />
+        );
       default:
         return children ? (
           <InputContainer {...props}>{children}</InputContainer>

@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Breadcrumb,
   Button,
   Divider,
   Form,
@@ -9,11 +10,21 @@ import {
   List,
   Rating,
   Segment,
+  Statistic,
 } from "semantic-ui-react";
 import ImageGallery from "../image-gallery/image-gallery.component";
-import { FormPropertyDetailContainer } from "./form-property-detail.styles";
+import Link from "next/link";
+import {
+  ActionContainer,
+  ContactInformationContainer,
+  FormPropertyDetailContainer,
+  HeaderContainer,
+  ShotInformationContainer,
+  UserInformationContainer,
+} from "./form-property-detail.styles";
+import Map from "../map/map.component";
 
-const FormPropertyDetail = () => {
+const FormPropertyDetail = ({ post, user }) => {
   return (
     <FormPropertyDetailContainer>
       <Form size="large">
@@ -21,108 +32,133 @@ const FormPropertyDetail = () => {
           <Grid.Row>
             <Grid.Column width={12}>
               <Segment>
-                <h1>
-                  Thuê nguyên căn hẻm 10 Trần Hữu Trang, Phú Nhuận (4x24m) có
-                  hẻm hậu. Giá 18 triệu TL
-                </h1>
-                <p>
-                  10, Đường Trần Hữu Trang, Phường 11, Phú Nhuận, Hồ Chí Minh
-                </p>
-                <Divider />
-                <List horizontal relaxed size="big">
-                  <List.Item>
-                    <List.Content>
-                      Loại bất động sản
-                      <List.Header>Bán nhà</List.Header>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      Mức giá
-                      <List.Header>48 m²</List.Header>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      Diện tích
-                      <List.Header>5.5 tỷ</List.Header>
-                    </List.Content>
-                  </List.Item>
-                </List>
+                <HeaderContainer as="h1">{post.title}</HeaderContainer>
 
-                <List
-                  horizontal
-                  relaxed
-                  size="big"
-                  floated="right"
-                  selection
-                  verticalAlign="middle"
-                >
-                  <List.Item>
-                    <List.Icon name="share alternate" />
-                  </List.Item>
-                  <List.Item>
-                    <List.Icon name="warning sign" />
-                  </List.Item>
-                  <List.Item>
-                    <List.Icon name="heart" />
-                  </List.Item>
-                </List>
+                <Breadcrumb
+                  icon="right angle"
+                  sections={[
+                    {
+                      key: "province",
+                      content: `${post.province}`,
+                      link: true,
+                    },
+                    {
+                      key: "district",
+                      content: `${post.district}`,
+                      link: true,
+                    },
+                    { key: "ward", content: `${post.ward}`, link: true },
+                    {
+                      key: "address",
+                      content: `${post.address}`,
+                      active: true,
+                    },
+                  ]}
+                />
 
                 <Divider />
 
-                <h3>Thông tin mô tả</h3>
-                <p>
-                  Quỹ hàng Vinhomes Hưng Yên đợt 1 giá cực tốt liên hệ em Hoa
-                  0986784*** để được tư vấn và lựa chọn những căn đẹp nhất với
-                  giá tốt nhất thị trường. Vinhomes Hưng Yên - The Empire
-                  Vinhomes Ocean Park 2 nơi khởi nguồn cuộc sống thịnh vượng. *
-                  Sản phẩm đa dạng phù hợp với mọi nhu cầu khách hàng. - Liền
-                  kề, Shophouse: 48m2 - 64m2 - 70m2 - 80m2 - 90m2 - 100m2 -
-                  112.5m2 - 120m2 - 157.5m2. - Song lập: 127.5m2 - 136m2 - 140m2
-                  - 150m2 - 162m2 - 170m2 - 180m2. - Đơn lập: 217m2 - 141m2 -
-                  230m2 - 470m2. * Chính sách hỗ trợ. + Hỗ trợ vay 70%, có thể
-                  lên đến 80%. + Hỗ trợ lãi suất 0% đến 12 tháng.
-                </p>
-                <h3>Đặc điểm bất động sản</h3>
+                <Grid>
+                  <Grid.Row columns={2}>
+                    <Grid.Column verticalAlign="middle">
+                      <ShotInformationContainer floated="left">
+                        <Statistic>
+                          <Statistic.Label>Loại bất động sản</Statistic.Label>
+                          <Statistic.Value text>
+                            {post.propertyType && post.propertyType.name}
+                          </Statistic.Value>
+                        </Statistic>
+                        <Statistic>
+                          <Statistic.Label>Mức giá</Statistic.Label>
+                          <Statistic.Value text>14 tỷ</Statistic.Value>
+                        </Statistic>
+                        <Statistic>
+                          <Statistic.Label>Diện tích</Statistic.Label>
+                          <Statistic.Value text>{post.area} m²</Statistic.Value>
+                        </Statistic>
+                      </ShotInformationContainer>
+                    </Grid.Column>
+                    <Grid.Column verticalAlign="middle">
+                      <ActionContainer
+                        horizontal
+                        relaxed
+                        size="massive"
+                        floated="right"
+                        selection
+                      >
+                        <List.Item>
+                          <Icon name="share alternate" />
+                        </List.Item>
+                        <List.Item>
+                          <Icon name="warning sign" />
+                        </List.Item>
+                        <List.Item>
+                          <Icon name="heart" />
+                        </List.Item>
+                      </ActionContainer>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+
+                <Divider />
+
+                <HeaderContainer as="h2">Thông tin mô tả</HeaderContainer>
+                <pre style={{ fontFamily: "Tahoma" }}>{post.description}</pre>
+                <HeaderContainer as="h2">Đặc điểm bất động sản</HeaderContainer>
                 <p>Đặc điểm bds</p>
-                <h3>Hình ảnh</h3>
-                <ImageGallery />
+                <HeaderContainer as="h2">Hình ảnh</HeaderContainer>
+                {post.images && <ImageGallery images={post.images} />}
 
-                <h3>Xem trên bản đồ</h3>
+                <HeaderContainer as="h2">Xem trên bản đồ</HeaderContainer>
+                {post.coordinates && (
+                  <Map
+                    position={post.coordinates.map((coordinate) => {
+                      return {
+                        lat: coordinate.latitude,
+                        lng: coordinate.longitude,
+                      };
+                    })}
+                  />
+                )}
               </Segment>
             </Grid.Column>
             <Grid.Column width={4}>
-              <Segment textAlign="center">
+              <UserInformationContainer textAlign="center">
                 <Image
-                  src="https://media.travelmag.vn/files/content/2021/04/30/173292019_315063713309362_6329146106221360649_n-00272556.jpg"
+                  src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
                   size="tiny"
                   circular
                   alt="avatar"
                   verticalAlign="middle"
                 />
-                <br />
-                <br />
-                <div>Được đăng bởi</div>
-                <h4>Sơn Tùng M-TP</h4>
-              </Segment>
-              <Segment textAlign="center">
-                <>Thông tin liên hệ</>
-                <h3>Nguyễn Đăng Phát</h3>
-                <div>
-                  {" "}
-                  <Icon name="map marker alternate" />
-                  Ngọc Nội - Trạm Lộ - Thuận Thành - Bắc Ninh
-                </div>
-                <Button fluid color="blue" size="large" inverted>
+                <p className="prefix-user">Được đăng bởi</p>
+                <Link href="/">{user.fullName}</Link>
+              </UserInformationContainer>
+
+              <ContactInformationContainer textAlign="center">
+                <p>Thông tin liên hệ</p>
+                <h2>{post.contactName}</h2>
+                {post.contactAddress && (
+                  <div>
+                    <Icon name="map marker alternate" />
+                    {post.contactAddress}
+                  </div>
+                )}
+                <Button fluid color="blue" size="large">
                   <Icon name="phone" />
                   <span>0917768923</span>
                 </Button>
-                <Button fluid color="green" size="large" inverted>
+                <br />
+                <Button fluid color="blue" size="large">
                   <Icon name="mail" />
                   <span>phatnguyen1412@gmail.com</span>
                 </Button>
-              </Segment>
+                <br />
+                <Button fluid color="blue" size="large">
+                  Yêu cầu liên hệ lại
+                </Button>
+              </ContactInformationContainer>
+
               <Segment textAlign="left">
                 <h3>Người môi giới đang theo dõi</h3>
                 <List relaxed>

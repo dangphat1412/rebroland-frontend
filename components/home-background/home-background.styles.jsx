@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+const imageBackground = "/zyro-image.png";
+
 export const HomeBackgroundContainer = styled.div`
   height: 1500px;
   width: 100%;
@@ -7,7 +9,7 @@ export const HomeBackgroundContainer = styled.div`
   padding: 0;
   max-height: 680px;
   overflow: hidden;
-  background-image: url("./zyro-image.png");
+  background-image: url(${imageBackground});
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;

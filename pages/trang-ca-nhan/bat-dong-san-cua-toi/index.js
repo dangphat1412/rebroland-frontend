@@ -1,6 +1,6 @@
 import React from "react";
-import SubHeader from "../../components/sub-header/sub-header.component";
-import UserPanel from "../../components/user-panel/user-panel.component";
+import SubHeader from "../../../components/sub-header/sub-header.component";
+import UserPanel from "../../../components/user-panel/user-panel.component";
 
 const MyProperty = () => {
   return (
