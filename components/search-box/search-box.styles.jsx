@@ -32,4 +32,7 @@ export const FormSearchContainer = styled(Form)`
     color: white !important;
     margin-top: 40px !important;
   }
+  .divider.default.text {
+    color: black !important;
+  }
 `;

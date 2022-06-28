@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const MultiRangeSliderContainer = styled.div`
   .container {
-    height: 100px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,13 +33,13 @@ export const MultiRangeSliderContainer = styled.div`
   }
 
   .slider__range {
-    background-color: #9fe5e1;
+    background-color: #009ba1;
     z-index: 2;
   }
 
   .slider__left-value,
   .slider__right-value {
-    color: #dee2e6;
+    color: #009ba1;
     font-size: 12px;
     margin-top: 20px;
   }
@@ -77,7 +77,7 @@ export const MultiRangeSliderContainer = styled.div`
 
   /* For Chrome browsers */
   .thumb::-webkit-slider-thumb {
-    background-color: #f1f5f7;
+    background-color: #009BA1;
     border: none;
     border-radius: 50%;
     box-shadow: 0 0 1px 1px #ced4da;
@@ -91,7 +91,7 @@ export const MultiRangeSliderContainer = styled.div`
 
   /* For Firefox browsers */
   .thumb::-moz-range-thumb {
-    background-color: #f1f5f7;
+    background-color: #009BA1;
     border: none;
     border-radius: 50%;
     box-shadow: 0 0 1px 1px #ced4da;

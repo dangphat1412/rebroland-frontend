@@ -50,7 +50,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
       );
     })();
   }, []);
-
+  
   useEffect(() => {
     (async () => {
       const data = await getDirections();

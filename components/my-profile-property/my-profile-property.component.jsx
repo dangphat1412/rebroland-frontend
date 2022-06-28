@@ -1,11 +1,20 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Icon, Item, List, Popup, Table } from "semantic-ui-react";
+import { Confirm, Icon, Item, List, Popup, Table } from "semantic-ui-react";
 import { getPostsByUser } from "../../actions/post";
 import { ItemContainer } from "./my-profile-property.styles";
 
 const MyProfileProperty = () => {
   const [posts, setPosts] = useState([]);
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+
+  const handleConfirm = () => {
+    setOpenDeleteConfirm(false);
+  };
+  const handleCancel = () => {
+    setOpenDeleteConfirm(false);
+  };
+
   useEffect(() => {
     (async () => {
       const data = await getPostsByUser();
@@ -31,6 +40,13 @@ const MyProfileProperty = () => {
       </Table.Header>
 
       <Table.Body>
+        <ItemTable setOpenDeleteConfirm={setOpenDeleteConfirm} />
+        <Confirm
+          open={openDeleteConfirm}
+          content="Xác nhận xoá bài viết"
+          onCancel={handleCancel}
+          onConfirm={handleConfirm}
+        />
         {posts.map((post, index) => (
           <Table.Row key={index}>
             <Table.Cell width={11}>
@@ -129,7 +145,7 @@ const MyProfileProperty = () => {
   );
 };
 
-const ItemTable = () => {
+const ItemTable = ({ setOpenDeleteConfirm }) => {
   return (
     <>
       <Table.Cell width={11}>
@@ -184,7 +200,15 @@ const ItemTable = () => {
       <Table.Cell textAlign="center">
         <Icon circular inverted color="teal" name="eye" />
         <Icon circular inverted color="green" name="edit outline" />
-        <Icon circular inverted color="red" name="trash alternate" />
+        <Icon
+          circular
+          inverted
+          color="red"
+          name="trash alternate"
+          onClick={() => {
+            setOpenDeleteConfirm(true);
+          }}
+        />
       </Table.Cell>
     </>
   );
