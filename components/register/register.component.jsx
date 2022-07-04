@@ -15,10 +15,11 @@ const Register = ({ handleOpenOtpRegister, setUserRegister }) => {
 
   useEffect(() => {
     register("fullName", { required: "Họ tên không được để trống" });
-    register("phone", { required: "Số điện thoại không được để trống" });
-    register("password", { required: "Mật khẩu không được để trống" });
+    register("phone", { required: "Số điện thoại không được để trống", pattern: {value: /^(84|0[3|5|7|8|9])+([0-9]{8})$/, message: 'Số điện thoại là số Việt Nam và có 10 chữ số'}});
+    register("password", { required: "Mật khẩu không được để trống", pattern: {value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/, message: 'Mật khẩu chứa ít nhất 8 ký tự, gồm chữ hoa, thường và số'}});
     register("confirmPassword", {
       required: "Xác nhận mật khẩu không được để trống",
+      
     });
   }, []);
 
