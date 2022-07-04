@@ -17,11 +17,6 @@ const Login = ({ handleOpenForgotPassword, setLoginOpen, setLoading }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  useEffect(() => {
-    register("phone", { required: "Số điện thoại không được để trống" });
-    register("password", { required: "Mật khẩu không được để trống" });
-  }, []);
-
   const onSubmit = async (user) => {
     await loginUser(user, setErrorMessage, setLoginOpen, setLoading);
   };
@@ -38,6 +33,7 @@ const Login = ({ handleOpenForgotPassword, setLoginOpen, setLoading }) => {
           label="Số điện thoại"
           name="phone"
           placeholder="Nhập số điện thoại"
+          {...register("phone", { required: "Số điện thoại không được để trống" })}
           onChange={async (e, { name, value }) => {
             setValue(name, value);
           }}
@@ -49,6 +45,7 @@ const Login = ({ handleOpenForgotPassword, setLoginOpen, setLoading }) => {
           label="Mật khẩu"
           type={showPassword ? "text" : "password"}
           name="password"
+          {...register("password", { required: "Mật khẩu không được để trống" })}
           placeholder="Nhập mật khẩu"
           onChange={async (e, { name, value }) => {
             setValue(name, value);
