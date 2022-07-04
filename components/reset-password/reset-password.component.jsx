@@ -18,7 +18,7 @@ const ResetPassword = () => {
           label="Nhập lại mật khẩu mới"
           name="confirmPassword"
         //   value={phone}
-          errorMsg="Số điện thoại không được để trống"
+          errorMsg="Số điện thoại không được để trống."
         //   handleChange={handleChange}
           required
         />
