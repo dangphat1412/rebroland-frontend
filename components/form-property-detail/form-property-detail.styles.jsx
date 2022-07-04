@@ -13,22 +13,18 @@ export const HeaderContainer = styled(Header)`
 
 export const ShotInformationContainer = styled(Statistic.Group)`
   width: fit-content;
-
   .ui.statistic {
     margin-right: 30px !important;
     margin-left: 30px !important;
   }
-
   .label,
   .value {
     font-family: "Tahoma", sans-serif !important;
     text-transform: none !important;
   }
-
   .label {
     color: #999 !important;
   }
-
   .value {
     min-height: 0 !important;
   }

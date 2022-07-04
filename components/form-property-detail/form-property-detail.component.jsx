@@ -13,7 +13,7 @@ import {
   Statistic,
 } from "semantic-ui-react";
 import ImageGallery from "../image-gallery/image-gallery.component";
-import Link from "next/link";
+import Map from "../map/map.component";
 import {
   ActionContainer,
   ContactInformationContainer,
@@ -22,9 +22,11 @@ import {
   ShotInformationContainer,
   UserInformationContainer,
 } from "./form-property-detail.styles";
-import Map from "../map/map.component";
+import Link from "next/link";
 
 const FormPropertyDetail = ({ post, user }) => {
+  console.log("POST: ", post);
+  console.log("USER: ", user);
   return (
     <FormPropertyDetailContainer>
       <Form size="large">

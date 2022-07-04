@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Dropdown, Form } from "semantic-ui-react";
-import { getDirections, getPropertyTypes } from "../../actions/post";
+import {
+  getDirections,
+  getPropertyTypes,
+  searchPosts,
+} from "../../actions/post";
 import {
   getDistrictById,
   getProvincesById,
@@ -14,11 +18,11 @@ import { FormSearchContainer } from "./search-box.styles";
 const HANOI_PROVINCE_ID = 1;
 const THACHTHAT_DISTRICT_ID = 276;
 
-const SearchBox = () => {
+const SearchBox = ({ setData }) => {
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
       key: undefined,
-      propertyType: undefined,
+      propertyTypes: undefined,
       province: undefined,
       district: undefined,
       ward: undefined,
@@ -122,6 +126,8 @@ const SearchBox = () => {
 
   const onSubmit = async (data, e) => {
     console.log("SEARCH: ", data);
+    const postData = await searchPosts(data);
+    setData(postData);
   };
 
   return (
@@ -198,7 +204,7 @@ const SearchBox = () => {
               text="Tất cả mức giá"
               onClick={() => {
                 setPricePlaceholder("Tất cả mức giá");
-                setValue("minPrice", 0);
+                setValue("minPrice", undefined);
                 setValue("maxPrice", undefined);
               }}
             />
@@ -230,8 +236,8 @@ const SearchBox = () => {
               text="Thoả thuận"
               onClick={() => {
                 setPricePlaceholder("Thoả thuận");
-                setValue("minPrice", undefined);
-                setValue("maxPrice", undefined);
+                setValue("minPrice", 0);
+                setValue("maxPrice", 0);
               }}
             />
           </Dropdown.Menu>
@@ -262,10 +268,10 @@ const SearchBox = () => {
               />
             </Dropdown.Item>
             <Dropdown.Item
-              text="Tất cả mức giá"
+              text="Tất cả diện tích"
               onClick={() => {
-                setAreaPlaceholder("Tất cả mức giá");
-                setValue("minArea", 0);
+                setAreaPlaceholder("Tất cả diện tích");
+                setValue("minArea", undefined);
                 setValue("maxArea", undefined);
               }}
             />
@@ -273,16 +279,16 @@ const SearchBox = () => {
               text="≥ 1000 m²"
               onClick={() => {
                 setAreaPlaceholder("≥ 1000 m²");
-                setValue("minArea", undefined);
-                setValue("maxArea", 1000);
+                setValue("minArea", 1000);
+                setValue("maxArea", undefined);
               }}
             />
             <Dropdown.Item
               text="Thoả thuận"
               onClick={() => {
                 setAreaPlaceholder("Thoả thuận");
-                setValue("minArea", undefined);
-                setValue("maxArea", undefined);
+                setValue("minArea", 0);
+                setValue("maxArea", 0);
               }}
             />
           </Dropdown.Menu>

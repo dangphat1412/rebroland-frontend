@@ -22,6 +22,7 @@ const LoginRegisterModal = ({
   setResetPasswordOpen,
   otpRegisterOpen,
   setOtpRegisterOpen,
+  setLoading,
 }) => {
   const [userRegister, setUserRegister] = useState();
 
@@ -66,6 +67,7 @@ const LoginRegisterModal = ({
 
   return (
     <ModalContainer>
+      {/* Login */}
       <ModalItem
         header="Đăng nhập"
         footer={
@@ -82,9 +84,11 @@ const LoginRegisterModal = ({
         <Login
           handleOpenForgotPassword={handleOpenForgotPassword}
           setLoginOpen={setLoginOpen}
+          setLoading={setLoading}
         />
       </ModalItem>
 
+      {/* Register */}
       <ModalItem
         header="Đăng ký tài khoản"
         onOpen={registerOpen}

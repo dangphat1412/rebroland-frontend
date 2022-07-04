@@ -29,11 +29,10 @@ export const NavContainer = styled(Container)`
 export const Menu = styled.div`
   margin-left: 95px;
   margin-right: 95px;
-  font-size: 16px;
-  font-weight: 500;
   letter-spacing: 1px;
 
   & a {
+    font-size: 16px !important;
     color: white !important;
 
     &:hover {
@@ -46,6 +45,11 @@ export const Menu = styled.div`
     padding-bottom: 4px;
     z-index: 900;
   }
+
+  // .item {
+  //   font-family: "Tahoma", san-serif !important;
+  //   font-weight: bold !important;
+  // }
 `;
 
 export const LogoContainer = styled(Image)`

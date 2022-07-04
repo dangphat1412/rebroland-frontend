@@ -60,7 +60,7 @@ export const createPost = async (post, images) => {
 
 export const getPostsByUser = async () => {
   try {
-    const res = await Axios.get("/");
+    const res = await Axios.get("/user");
     return res.data;
   } catch (error) {
     console.log(error);
@@ -76,9 +76,20 @@ export const getPostById = async (postId) => {
   }
 };
 
-export const getPosts = async () => {
+export const getPosts = async (activePage) => {
   try {
-    const res = await Axios.get("/");
+    const page = activePage - 1;
+    const res = await Axios.get(`?pageNo=${page || 0}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const searchPosts = async (data) => {
+  try {
+    const res = await Axios.get("?pageNo=3");
+    console.log("res.data: ", res.data);
     return res.data;
   } catch (error) {
     console.log(error);

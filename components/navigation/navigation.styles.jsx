@@ -6,14 +6,14 @@ export const NavigationContainer = styled(Container)`
   width: 100%;
   height: 140px;
   color: #fff;
-  font-family: "Nunito", sans-serif;
+  font-family: "Tahoma", sans-serif !important;
+  font-weight: bold !important;
   background-color: rgba(28, 28, 28, 0.3);
-  z-index: 2;
-  transition: all .5s cubic-bezier(.165, .84, .44, 1);
+  z-index: 999;
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
   &.active {
     height: 80px;
-    background-color: rgba(28, 28, 28 ,0.9);
-    transition: all .5s cubic-bezier(.165, .84, .44, 1);
+    background-color: rgba(28, 28, 28, 0.9);
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 `;
-

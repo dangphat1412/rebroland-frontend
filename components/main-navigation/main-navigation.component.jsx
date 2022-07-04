@@ -11,17 +11,9 @@ import {
   Radio,
 } from "semantic-ui-react";
 import { logoutUser } from "../../actions/auth";
-import LoginRegisterModal from "../login-register-modal/login-register-modal.component";
 import { NavContainer, Menu, LogoContainer } from "./main-navigation.styles";
 
-const MainNavigation = ({ user, className }) => {
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
-  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
-  const [otpResetPasswordOpen, setOtpResetPasswordOpen] = useState(false);
-  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
-  const [otpRegisterOpen, setOtpRegisterOpen] = useState(false);
-
+const MainNavigation = ({ user, className, setLoginOpen, setRegisterOpen }) => {
   return (
     <div>
       <NavContainer className={className} fluid>
@@ -70,12 +62,11 @@ const MainNavigation = ({ user, className }) => {
                               avatar
                               src="https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg"
                             />
-                            <span> Đăng Phát</span>
+                            <span>{user.fullName}</span>
                           </>
                         }
                         simple
                         direction="left"
-                        className="drop-down"
                       >
                         <Dropdown.Menu>
                           <Dropdown.Header content="Chế độ nhà môi giới" />
@@ -110,7 +101,7 @@ const MainNavigation = ({ user, className }) => {
                     </List.Item>
                     <List.Item as="a">
                       <Icon
-                        name="bookmark outline"
+                        name="heart outline"
                         inverted
                         color="grey"
                         size="large"
@@ -139,20 +130,6 @@ const MainNavigation = ({ user, className }) => {
           </Grid>
         </Menu>
       </NavContainer>
-      <LoginRegisterModal
-        loginOpen={loginOpen}
-        setLoginOpen={setLoginOpen}
-        registerOpen={registerOpen}
-        setRegisterOpen={setRegisterOpen}
-        forgotPasswordOpen={forgotPasswordOpen}
-        setForgotPasswordOpen={setForgotPasswordOpen}
-        otpResetPasswordOpen={otpResetPasswordOpen}
-        setOtpResetPasswordOpen={setOtpResetPasswordOpen}
-        resetPasswordOpen={resetPasswordOpen}
-        setResetPasswordOpen={setResetPasswordOpen}
-        otpRegisterOpen={otpRegisterOpen}
-        setOtpRegisterOpen={setOtpRegisterOpen}
-      />
     </div>
   );
 };

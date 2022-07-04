@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { Form, Grid } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import { Form, Grid, Message } from "semantic-ui-react";
 import { loginUser } from "../../actions/auth";
 import CustomButton from "../custom-button/custom-button.component";
 import InputField from "../input-field/input-field.component";
 import { useForm } from "react-hook-form";
 import { LoginContainer } from "./login.styles";
 
-const Login = ({ handleOpenForgotPassword }) => {
+const Login = ({ handleOpenForgotPassword, setLoginOpen, setLoading }) => {
   const {
     register,
     handleSubmit,
@@ -14,18 +14,26 @@ const Login = ({ handleOpenForgotPassword }) => {
     formState: { errors },
   } = useForm();
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
   useEffect(() => {
     register("phone", { required: "Số điện thoại không được để trống" });
     register("password", { required: "Mật khẩu không được để trống" });
   }, []);
 
   const onSubmit = async (user) => {
-    await loginUser(user);
+    await loginUser(user, setErrorMessage, setLoginOpen, setLoading);
   };
 
   return (
     <LoginContainer>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)} error={errorMessage !== null}>
+        <Message
+          error
+          content={errorMessage}
+          onDismiss={() => setErrorMessage(null)}
+        />
         <InputField
           label="Số điện thoại"
           name="phone"
@@ -39,11 +47,17 @@ const Login = ({ handleOpenForgotPassword }) => {
 
         <InputField
           label="Mật khẩu"
-          type="password"
+          type={showPassword ? "text" : "password"}
           name="password"
           placeholder="Nhập mật khẩu"
           onChange={async (e, { name, value }) => {
             setValue(name, value);
+          }}
+          icon={{
+            name: "eye",
+            circular: true,
+            link: true,
+            onClick: () => setShowPassword(!showPassword),
           }}
           error={errors.password}
           requiredField
@@ -60,7 +74,6 @@ const Login = ({ handleOpenForgotPassword }) => {
         <Grid>
           <Grid.Column textAlign="center">
             <CustomButton type="submit">Đăng nhập</CustomButton>
-            {/* <input type="submit" /> */}
           </Grid.Column>
         </Grid>
       </Form>

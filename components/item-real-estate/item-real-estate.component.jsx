@@ -17,14 +17,11 @@ import { RealEstateItemContainer } from "./item-real-estate.styles";
 
 const RealEstateItem = ({ post }) => {
   return (
-    <Link href="/thong-tin-chi-tiet">
+    <Link href={`/bat-dong-san/${post.postId}`}>
       <RealEstateItemContainer fluid>
         <Item.Group>
           <Item>
-            <Item.Image
-              size="medium"
-              src="https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
-            />
+            <Item.Image size="medium" src={post.images[0].image} />
             <Item.Content className="item-content">
               <Item.Header>{post.title}</Item.Header>
               <Item.Description>
@@ -51,9 +48,9 @@ const RealEstateItem = ({ post }) => {
               </Item.Description>
               <Item.Description>{post.description}</Item.Description>
               <Item.Extra>
-                <span>3 ngày trước</span>
+                <span>{post.startDate}</span>
                 <Button floated="right" icon>
-                  <Icon name="bookmark outline" size="big" />
+                  <Icon name="heart outline" size="big" />
                 </Button>
               </Item.Extra>
             </Item.Content>

@@ -4,7 +4,6 @@ import styled from "styled-components";
 export const RealEstateItemContainer = styled(Card)`
   .header,
   .description {
-    width: 100%;
     font-family: "Tahoma", sans-serif !important;
     display: -webkit-box !important;
     -webkit-box-orient: vertical;
@@ -13,8 +12,18 @@ export const RealEstateItemContainer = styled(Card)`
   }
   .header {
     -webkit-line-clamp: 2;
+    margin-top: 1px !important;
   }
   .description {
     -webkit-line-clamp: 3;
+  }
+  .ui.medium.image {
+    height: 215px !important;
+    width: 300x !important;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
   }
 `;

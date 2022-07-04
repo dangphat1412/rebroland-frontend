@@ -3,22 +3,35 @@ import Router from "next/router";
 import cookie from "js-cookie";
 import API_URL from "../utils/apiUrl";
 import { setToken } from "../utils/authUser";
+import Cookies from "js-cookie";
 
-export const loginUser = async (user) => {
+export const loginUser = async (
+  user,
+  setErrorMessage,
+  setLoginOpen,
+  setLoading
+) => {
+  setLoading(true);
   try {
     const res = await axios.post(`${API_URL}/api/users/signin`, user);
     setToken(res.data.accessToken);
-    Router.reload();
+    setLoginOpen(false);
+    Router.push(Router.pathname);
   } catch (error) {
-    console.log(error);
+    setErrorMessage(error.response.data);
   }
+  setLoading(false);
 };
 
 export const logoutUser = async () => {
   try {
-    // await axios.post(`${API_URL}/api/users/logout`);
+    // await axios.post(`${API_URL}/logout`, {
+    //   headers: {
+    //     Authorization: Cookies.get("token"),
+    //   },
+    // });
     cookie.remove("token");
-    Router.push("/");
+    Router.push(Router.pathname);
   } catch (error) {
     console.log(error);
   }
