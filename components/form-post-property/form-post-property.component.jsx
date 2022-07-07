@@ -91,6 +91,7 @@ const FormPostProperty = ({ user }) => {
                     errors={errors}
                     watch={watch}
                     setValue={setValue}
+                    getValues={getValues}
                   />
                   <GeographicInformationForm
                     register={register}

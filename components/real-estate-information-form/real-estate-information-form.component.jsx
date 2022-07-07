@@ -7,8 +7,15 @@ import {
   getUnitPrices,
 } from "../../actions/post";
 import InputField from "../input-field/input-field.component";
+import { useForm } from "react-hook-form";
 
-const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
+const RealEstateInformationForm = ({
+  register,
+  errors,
+  watch,
+  setValue,
+  getValues,
+}) => {
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [unitPrices, setUnitPrices] = useState([]);
   const [longevity, setLongevity] = useState([]);
@@ -50,7 +57,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
       );
     })();
   }, []);
-  
+
   useEffect(() => {
     (async () => {
       const data = await getDirections();
@@ -187,11 +194,23 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                       />
                       {watch("propertyTypeId") !== 2 ? (
                         <InputField
-                          {...register("plotNumber")}
+                          {...register("plotNumber", {
+                            validate: {
+                              required: (value) => {
+                                if (
+                                  !value &&
+                                  getValues("barcode") 
+                                )
+                                  return "Thiếu thông tin số thửa";
+                                // return true;
+                              },
+                            },
+                          })}
                           label="Số thửa"
                           name="plotNumber"
                           placeholder="Nhập số thửa"
                           onChange={handleChange}
+                          error={errors.plotNumber}
                         />
                       ) : (
                         <>
