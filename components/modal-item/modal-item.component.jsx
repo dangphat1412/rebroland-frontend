@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, TransitionablePortal } from "semantic-ui-react";
 import { ModalFooter } from "../login-register-modal/login-register-modal.styles";
 
-const ModalItem = ({ header, footer, onOpen, onClose, children }) => {
+const ModalItem = ({ header, footer, onOpen, onClose, size, children }) => {
   return (
     <TransitionablePortal
       open={onOpen}
@@ -10,7 +10,7 @@ const ModalItem = ({ header, footer, onOpen, onClose, children }) => {
     >
       <Modal
         centered={false}
-        size="mini"
+        size={size || "mini"}
         open={onOpen}
         onClose={onClose}
         closeIcon
@@ -19,9 +19,11 @@ const ModalItem = ({ header, footer, onOpen, onClose, children }) => {
           {header}
         </Modal.Header>
         <Modal.Content>{children}</Modal.Content>
-        <Modal.Actions>
-          <ModalFooter>{footer}</ModalFooter>
-        </Modal.Actions>
+        {footer && (
+          <Modal.Actions>
+            <ModalFooter>{footer}</ModalFooter>
+          </Modal.Actions>
+        )}
       </Modal>
     </TransitionablePortal>
   );

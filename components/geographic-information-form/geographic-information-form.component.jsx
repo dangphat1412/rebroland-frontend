@@ -133,7 +133,7 @@ const GeographicInformationForm = ({
           requiredField
         />
         <InputField
-          {...register("ward")}
+          {...register("address")}
           label="Địa chỉ"
           name="address"
           placeholder="Nhập địa chỉ"

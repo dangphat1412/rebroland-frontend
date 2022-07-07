@@ -16,23 +16,32 @@ export default function MyApp({ Component, pageProps }) {
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
-  const [otpResetPasswordOpen, setOtpResetPasswordOpen] = useState(false);
+  const [otpForgotPasswordOpen, setOtpForgotPasswordOpen] = useState(false);
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
   const [otpRegisterOpen, setOtpRegisterOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [followingPosts, setFollowingPosts] = useState(
+    pageProps.following || []
+  );
 
   return (
     <>
       <Dimmer active={loading}>
-        <Loader/>
+        <Loader />
       </Dimmer>
-      
+
       <Navigation
         {...pageProps}
+        followingPosts={followingPosts}
+        setFollowingPosts={setFollowingPosts}
         setLoginOpen={setLoginOpen}
         setRegisterOpen={setRegisterOpen}
       />
-      <Component {...pageProps} />
+      <Component
+        {...pageProps}
+        followingPosts={followingPosts}
+        setFollowingPosts={setFollowingPosts}
+      />
       <Footer />
 
       <LoginRegisterModal
@@ -42,8 +51,8 @@ export default function MyApp({ Component, pageProps }) {
         setRegisterOpen={setRegisterOpen}
         forgotPasswordOpen={forgotPasswordOpen}
         setForgotPasswordOpen={setForgotPasswordOpen}
-        otpResetPasswordOpen={otpResetPasswordOpen}
-        setOtpResetPasswordOpen={setOtpResetPasswordOpen}
+        otpForgotPasswordOpen={otpForgotPasswordOpen}
+        setOtpForgotPasswordOpen={setOtpForgotPasswordOpen}
         resetPasswordOpen={resetPasswordOpen}
         setResetPasswordOpen={setResetPasswordOpen}
         otpRegisterOpen={otpRegisterOpen}
@@ -70,8 +79,10 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       const res = await axios.get(`${API_URL}/api/users`, {
         headers: { Authorization: token },
       });
-      const user = res.data;
+      const { user, following, isBroker } = res.data;
       pageProps.user = user;
+      pageProps.following = following;
+      pageProps.isBroker = isBroker;
       // if (user) !protectedRoutes && redirectUser(ctx, "/");
     } catch (error) {
       destroyCookie(ctx, "token");

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Icon, List, Loader, Segment } from "semantic-ui-react";
 import { getPosts } from "../../actions/post";
-import ListRealEstate from "../list-real-estate/list-real-estate.component";
 import SearchBox from "../search-box/search-box.component";
 import {
   CategoriesContainer,
@@ -9,17 +8,14 @@ import {
   RealEstatePageContainer,
 } from "./page-real-estate.styles";
 import PaginationItem from "../pagination-item/pagination-item.component";
+import RealEstateItem from "../item-real-estate/item-real-estate.component";
 
-const RealEstatePage = () => {
-  const [data, setData] = useState([]);
+const RealEstatePage = ({ postsData, followingPosts, setFollowingPosts }) => {
+  const [data, setData] = useState(postsData || {});
 
   const handlePaginationChange = (e, { activePage }) => {
     fetchAPI(activePage);
   };
-
-  useEffect(() => {
-    fetchAPI();
-  }, []);
 
   const fetchAPI = async (page) => {
     const postData = await getPosts(page);
@@ -51,10 +47,17 @@ const RealEstatePage = () => {
               </Segment>
             ) : (
               <>
-                <ListRealEstate posts={data.posts} />
+                {data.posts &&
+                  data.posts.map((post, index) => (
+                    <RealEstateItem
+                      post={post}
+                      key={index}
+                      followingPosts={followingPosts}
+                      setFollowingPosts={setFollowingPosts}
+                    />
+                  ))}
                 <PaginationContainer>
                   <PaginationItem
-                    defaultActivePage={1}
                     activePage={data.pageNo}
                     boundaryRange={1}
                     siblingRange={1}

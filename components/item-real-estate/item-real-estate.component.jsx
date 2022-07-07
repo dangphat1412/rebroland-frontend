@@ -1,23 +1,27 @@
-import React from "react";
-import {
-  Button,
-  Card,
-  Divider,
-  Grid,
-  Header,
-  Icon,
-  Image,
-  Item,
-  Label,
-  List,
-  Segment,
-} from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import { Button, Icon, Item, List } from "semantic-ui-react";
 import Link from "next/link";
 import { RealEstateItemContainer } from "./item-real-estate.styles";
+import convertToSlug from "../../utils/convertToSlug";
+import { followPost } from "../../actions/post";
 
-const RealEstateItem = ({ post }) => {
+const RealEstateItem = ({ post, followingPosts, setFollowingPosts }) => {
+  const handleSaveProperty = (e, postId) => {
+    e.stopPropagation();
+    followPost(postId) &&
+    followingPosts.filter(
+      (followingPost) => followingPost.postId === post.postId
+    ).length > 0
+      ? setFollowingPosts(
+          followingPosts.filter(
+            (followingPost) => followingPost.postId !== post.postId
+          )
+        )
+      : setFollowingPosts([...followingPosts, post]);
+  };
+
   return (
-    <Link href={`/bat-dong-san/${post.postId}`}>
+    <Link href={`/bat-dong-san/${convertToSlug(post.title)}-${post.postId}`}>
       <RealEstateItemContainer fluid>
         <Item.Group>
           <Item>
@@ -49,8 +53,24 @@ const RealEstateItem = ({ post }) => {
               <Item.Description>{post.description}</Item.Description>
               <Item.Extra>
                 <span>{post.startDate}</span>
-                <Button floated="right" icon>
-                  <Icon name="heart outline" size="big" />
+                <Button
+                  floated="right"
+                  icon
+                  basic
+                  onClick={(e) => {
+                    handleSaveProperty(e, post.postId);
+                  }}
+                >
+                  <Icon
+                    name="heart"
+                    color={
+                      followingPosts.filter(
+                        (followingPost) => followingPost.postId === post.postId
+                      ).length > 0
+                        ? "red"
+                        : "null"
+                    }
+                  />
                 </Button>
               </Item.Extra>
             </Item.Content>

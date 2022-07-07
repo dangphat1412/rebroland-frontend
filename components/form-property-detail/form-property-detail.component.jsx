@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Breadcrumb,
   Button,
@@ -22,11 +22,19 @@ import {
   ShotInformationContainer,
   UserInformationContainer,
 } from "./form-property-detail.styles";
+import ModalItem from "../modal-item/modal-item.component";
+import FormReport from "../form-report/form-report.component";
+import { followPost } from "../../actions/post";
 import Link from "next/link";
 
 const FormPropertyDetail = ({ post, user }) => {
-  console.log("POST: ", post);
-  console.log("USER: ", user);
+  const [open, setOpen] = useState(false);
+
+  const handleFollowProperty = (e, postId) => {
+    e.stopPropagation();
+    followPost(postId) ? console.log("done") : console.log("fail");
+  };
+
   return (
     <FormPropertyDetailContainer>
       <Form size="large">
@@ -67,7 +75,7 @@ const FormPropertyDetail = ({ post, user }) => {
                         <Statistic>
                           <Statistic.Label>Loại bất động sản</Statistic.Label>
                           <Statistic.Value text>
-                            {post.propertyType && post.propertyType.name}
+                            {post.propertyType.name}
                           </Statistic.Value>
                         </Statistic>
                         <Statistic>
@@ -92,10 +100,20 @@ const FormPropertyDetail = ({ post, user }) => {
                           <Icon name="share alternate" />
                         </List.Item>
                         <List.Item>
-                          <Icon name="warning sign" />
+                          <Icon
+                            name="warning sign"
+                            onClick={() => {
+                              setOpen(true);
+                            }}
+                          />
                         </List.Item>
                         <List.Item>
-                          <Icon name="heart" />
+                          <Icon
+                            name="heart"
+                            onClick={(e) => {
+                              handleFollowProperty(e, post.postId);
+                            }}
+                          />
                         </List.Item>
                       </ActionContainer>
                     </Grid.Column>
@@ -105,7 +123,9 @@ const FormPropertyDetail = ({ post, user }) => {
                 <Divider />
 
                 <HeaderContainer as="h2">Thông tin mô tả</HeaderContainer>
-                <pre style={{ fontFamily: "Tahoma" }}>{post.description}</pre>
+                <div>
+                  <pre>{post.description}</pre>
+                </div>
                 <HeaderContainer as="h2">Đặc điểm bất động sản</HeaderContainer>
                 <p>Đặc điểm bds</p>
                 <HeaderContainer as="h2">Hình ảnh</HeaderContainer>
@@ -134,7 +154,7 @@ const FormPropertyDetail = ({ post, user }) => {
                   verticalAlign="middle"
                 />
                 <p className="prefix-user">Được đăng bởi</p>
-                <Link href="/">{user.fullName}</Link>
+                <Link href={`/${post.user.id}`}>{post.user.fullName}</Link>
               </UserInformationContainer>
 
               <ContactInformationContainer textAlign="center">
@@ -233,6 +253,15 @@ const FormPropertyDetail = ({ post, user }) => {
           </Grid.Row>
         </Grid>
       </Form>
+      <ModalItem
+        header="Báo cáo tin đăng không chính xác"
+        onOpen={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <FormReport />
+      </ModalItem>
     </FormPropertyDetailContainer>
   );
 };

@@ -7,8 +7,6 @@ const Axios = axios.create({
   baseURL: `${API_URL}/api/posts`,
   headers: {
     Authorization: Cookies.get("token"),
-    // "Content-Type": "application/json",
-    // "Access-Control-Allow-Origin": "*",
   },
 });
 
@@ -58,9 +56,10 @@ export const createPost = async (post, images) => {
   }
 };
 
-export const getPostsByUser = async () => {
+export const getPostsByUser = async (activePage) => {
   try {
-    const res = await Axios.get("/user");
+    const page = activePage - 1;
+    const res = await Axios.get(`/user?pageNo=${page || 0}`);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -86,11 +85,30 @@ export const getPosts = async (activePage) => {
   }
 };
 
+export const getFollowingPostsByUser = async (activePage) => {
+  try {
+    const page = activePage - 1;
+    const res = await Axios.get(`/user/follow?pageNo=${page || 0}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const searchPosts = async (data) => {
   try {
     const res = await Axios.get("?pageNo=3");
     console.log("res.data: ", res.data);
     return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const followPost = async (postId) => {
+  try {
+    const res = await Axios.post(`/follow/${postId}`);
+    return res.status === 201;
   } catch (error) {
     console.log(error);
   }

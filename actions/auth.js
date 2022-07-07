@@ -16,7 +16,7 @@ export const loginUser = async (
     const res = await axios.post(`${API_URL}/api/users/signin`, user);
     setToken(res.data.accessToken);
     setLoginOpen(false);
-    Router.push(Router.pathname);
+    Router.push(Router.asPath);
   } catch (error) {
     setErrorMessage(error.response.data);
   }
@@ -31,38 +31,85 @@ export const logoutUser = async () => {
     //   },
     // });
     cookie.remove("token");
-    Router.push(Router.pathname);
+    Router.push("/");
   } catch (error) {
     console.log(error);
   }
 };
 
-export const getOtpToken = async (user) => {
-  try {
-    const res = await axios.post(`${API_URL}/api/users/otp`, user);
-    console.log(res.data);
-    return res.status;
-  } catch (error) {
-    // const errorMsg = catchErrors(error);
-    // setError(errorMsg);
-    console.log(error);
-  }
-  //   setLoading(false);
-};
-
-export const registerUser = async (user, setOtpRegisterOpen) => {
+export const registerUser = async (user, setErrorMessage) => {
   try {
     const res = await axios.post(`${API_URL}/api/users/signup`, user);
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    setErrorMessage(error.response.data);
+    console.log(error);
+  }
+};
+
+export const otpRegisterUser = async (
+  user,
+  setErrorMessage,
+  setOtpRegisterOpen
+) => {
+  try {
+    const res = await axios.post(`${API_URL}/api/users/signup/otp`, user);
 
     if (res.status === 200) {
       setToken(res.data.accessToken);
-      Router.reload();
+      setOtpRegisterOpen(false);
+      Router.push(Router.pathname);
     }
-    // setToken(res.data);
   } catch (error) {
-    // const errorMsg = catchErrors(error);
-    // setError(errorMsg);
+    setErrorMessage(error.response.data);
     console.log(error);
   }
-  //   setLoading(false);
+};
+
+export const forgotPasswordUser = async (user, setErrorMessage) => {
+  try {
+    const res = await axios.post(
+      `${API_URL}/api/users/forgot-password/otp`,
+      user
+    );
+    return res.data;
+  } catch (error) {
+    setErrorMessage(error.response.data);
+    console.log(error);
+  }
+};
+
+export const otpForgotPasswordUser = async (
+  user,
+  setErrorMessage,
+  handleOpenLogin
+) => {
+  try {
+    const res = await axios.put(`${API_URL}/api/users/forgot-password`, user);
+
+    if (res.status === 200) {
+      handleOpenLogin();
+    }
+  } catch (error) {
+    setErrorMessage(error.response.data);
+    console.log(error);
+  }
+};
+
+export const brokerRegister = async (setErrorMessage) => {
+  try {
+    const res = await axios.post(`${API_URL}/api/users/broker/signup`, {
+      headers: {
+        Authorization: Cookies.get("token"),
+      },
+    });
+
+    if (res.status === 200) {
+      Router.push("/");
+    }
+  } catch (error) {
+    setErrorMessage(error.response.data);
+    console.log(error);
+  }
 };

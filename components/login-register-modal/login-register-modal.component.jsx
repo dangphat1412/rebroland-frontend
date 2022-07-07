@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { Modal, TransitionablePortal } from "semantic-ui-react";
 import ForgotPassword from "../forgot-password/forgot-password.component";
 import Login from "../login/login.component";
 import ModalItem from "../modal-item/modal-item.component";
 import OtpRegister from "../otp-register/otp-register.component";
-import OtpResetPassword from "../otp-reset-password/otp-reset-password.component";
 import Register from "../register/register.component";
-import ResetPassword from "../reset-password/reset-password.component";
-import { ModalContainer, ModalFooter } from "./login-register-modal.styles";
+import { ModalContainer } from "./login-register-modal.styles";
+import OtpForgotPassword from "../otp-forgot-password/otp-forgot-password.component";
 
 const LoginRegisterModal = ({
   loginOpen,
@@ -16,15 +14,15 @@ const LoginRegisterModal = ({
   setRegisterOpen,
   forgotPasswordOpen,
   setForgotPasswordOpen,
-  otpResetPasswordOpen,
-  setOtpResetPasswordOpen,
-  resetPasswordOpen,
+  otpForgotPasswordOpen,
+  setOtpForgotPasswordOpen,
   setResetPasswordOpen,
   otpRegisterOpen,
   setOtpRegisterOpen,
   setLoading,
 }) => {
-  const [userRegister, setUserRegister] = useState();
+  const [registerData, setRegisterData] = useState();
+  const [forgotPasswordData, setForgotPasswordData] = useState();
 
   const handleOpenRegister = () => {
     handleCloseAllModals();
@@ -41,9 +39,9 @@ const LoginRegisterModal = ({
     setForgotPasswordOpen(true);
   };
 
-  const handleOpenOtpResetPassword = () => {
+  const handleOpenOtpForgotPassword = () => {
     handleCloseAllModals();
-    setOtpResetPasswordOpen(true);
+    setOtpForgotPasswordOpen(true);
   };
 
   const handleOpenResetPassword = () => {
@@ -60,7 +58,7 @@ const LoginRegisterModal = ({
     setLoginOpen(false);
     setRegisterOpen(false);
     setForgotPasswordOpen(false);
-    setOtpResetPasswordOpen(false);
+    setOtpForgotPasswordOpen(false);
     setResetPasswordOpen(false);
     setOtpRegisterOpen(false);
   };
@@ -104,116 +102,66 @@ const LoginRegisterModal = ({
       >
         <Register
           handleOpenOtpRegister={handleOpenOtpRegister}
-          setUserRegister={setUserRegister}
+          setRegisterData={setRegisterData}
         />
       </ModalItem>
 
-      <TransitionablePortal
-        open={forgotPasswordOpen}
-        transition={{ animation: "scale", duration: 300 }}
+      {/* Forgot password */}
+      <ModalItem
+        header="Quên mật khẩu"
+        onOpen={forgotPasswordOpen}
+        onClose={() => {
+          setForgotPasswordOpen(false);
+        }}
+        footer={
+          <>
+            Quay lại trang <span onClick={handleOpenLogin}>Đăng nhập</span>
+          </>
+        }
       >
-        <Modal
-          centered={false}
-          size="mini"
-          open={forgotPasswordOpen}
-          onClose={() => {
-            setForgotPasswordOpen(false);
-          }}
-          closeIcon
-        >
-          <Modal.Header>Khôi phục mật khẩu</Modal.Header>
-          <Modal.Content>
-            <ForgotPassword
-              handleOpenOtpResetPassword={handleOpenOtpResetPassword}
-            />
-          </Modal.Content>
-          <Modal.Actions>
-            <ModalFooter>
-              Quay lại trang <span onClick={handleOpenLogin}>Đăng nhập</span>
-            </ModalFooter>
-          </Modal.Actions>
-        </Modal>
-      </TransitionablePortal>
+        <ForgotPassword
+          setForgotPasswordData={setForgotPasswordData}
+          handleOpenOtpForgotPassword={handleOpenOtpForgotPassword}
+        />
+      </ModalItem>
 
-      <TransitionablePortal
-        open={otpResetPasswordOpen}
-        transition={{ animation: "scale", duration: 300 }}
+      {/* OTP forgot password */}
+      <ModalItem
+        header="Nhập mã khôi phục mật khẩu"
+        onOpen={otpForgotPasswordOpen}
+        onClose={() => {
+          setOtpForgotPasswordOpen(false);
+        }}
+        footer={
+          <>
+            Quay lại trang <span onClick={handleOpenLogin}>Đăng nhập</span>
+          </>
+        }
       >
-        <Modal
-          centered={false}
-          size="mini"
-          open={otpResetPasswordOpen}
-          onClose={() => {
-            setOtpResetPasswordOpen(false);
-          }}
-          closeIcon
-        >
-          <Modal.Header>Khôi phục mật khẩu</Modal.Header>
-          <Modal.Content>
-            <OtpResetPassword
-              handleOpenResetPassword={handleOpenResetPassword}
-            />
-          </Modal.Content>
-          <Modal.Actions>
-            <ModalFooter>
-              Quay lại trang <span onClick={handleOpenLogin}>Đăng nhập</span>
-            </ModalFooter>
-          </Modal.Actions>
-        </Modal>
-      </TransitionablePortal>
+        <OtpForgotPassword
+          forgotPasswordData={forgotPasswordData}
+          handleOpenLogin={handleOpenLogin}
+        />
+      </ModalItem>
 
-      <TransitionablePortal
-        open={resetPasswordOpen}
-        transition={{ animation: "scale", duration: 300 }}
+      {/* OTP Register */}
+      <ModalItem
+        header="Xác nhận mã OTP"
+        footer={
+          <>
+            Quay lại trang <span onClick={handleOpenRegister}>Đăng ký</span>
+          </>
+        }
+        onOpen={otpRegisterOpen}
+        onClose={() => {
+          setOtpRegisterOpen(false);
+        }}
       >
-        <Modal
-          centered={false}
-          size="mini"
-          open={resetPasswordOpen}
-          onClose={() => {
-            setResetPasswordOpen(false);
-          }}
-          closeIcon
-        >
-          <Modal.Header>Khôi phục mật khẩu</Modal.Header>
-          <Modal.Content>
-            <ResetPassword />
-          </Modal.Content>
-          <Modal.Actions>
-            <ModalFooter>
-              Quay lại trang <span onClick={handleOpenLogin}>Đăng nhập</span>
-            </ModalFooter>
-          </Modal.Actions>
-        </Modal>
-      </TransitionablePortal>
-
-      <TransitionablePortal
-        open={otpRegisterOpen}
-        transition={{ animation: "scale", duration: 300 }}
-      >
-        <Modal
-          centered={false}
-          size="mini"
-          open={otpRegisterOpen}
-          onClose={() => {
-            setOtpRegisterOpen(false);
-          }}
-          closeIcon
-        >
-          <Modal.Header>Xác nhận mã OTP</Modal.Header>
-          <Modal.Content>
-            <OtpRegister
-              userRegister={userRegister}
-              setOtpRegisterOpen={setOtpRegisterOpen}
-            />
-          </Modal.Content>
-          <Modal.Actions>
-            <ModalFooter>
-              Quay lại trang <span onClick={handleOpenRegister}>Đăng ký</span>
-            </ModalFooter>
-          </Modal.Actions>
-        </Modal>
-      </TransitionablePortal>
+        <OtpRegister
+          registerData={registerData}
+          setOtpRegisterOpen={setOtpRegisterOpen}
+        />
+      </ModalItem>
     </ModalContainer>
   );
 };

@@ -7,13 +7,23 @@ import {
   Grid,
   Icon,
   Image,
+  Label,
   List,
+  Popup,
   Radio,
 } from "semantic-ui-react";
 import { logoutUser } from "../../actions/auth";
 import { NavContainer, Menu, LogoContainer } from "./main-navigation.styles";
 
-const MainNavigation = ({ user, className, setLoginOpen, setRegisterOpen }) => {
+const MainNavigation = ({
+  user,
+  isBroker,
+  followingPosts,
+  setFollowingPosts,
+  className,
+  setLoginOpen,
+  setRegisterOpen,
+}) => {
   return (
     <div>
       <NavContainer className={className} fluid>
@@ -69,12 +79,28 @@ const MainNavigation = ({ user, className, setLoginOpen, setRegisterOpen }) => {
                         direction="left"
                       >
                         <Dropdown.Menu>
-                          <Dropdown.Header content="Chế độ nhà môi giới" />
-                          <Radio toggle className="btn-radio" />
+                          {isBroker ? (
+                            <>
+                              <Dropdown.Header content="Chế độ nhà môi giới" />
+                              <Radio toggle className="btn-radio" />
+                            </>
+                          ) : (
+                            <Dropdown.Item
+                              icon="home"
+                              text="Trở thành nhà môi giới"
+                              style={{ fontWeight: "bold" }}
+                              onClick={() => {
+                                Router.push("/nha-moi-gioi/dang-ky");
+                              }}
+                            />
+                          )}
                           <Dropdown.Divider />
                           <Dropdown.Item
                             icon="user outline"
                             text="Thông tin cá nhân"
+                            onClick={() => {
+                              Router.push("/trang-ca-nhan/thong-tin-ca-nhan");
+                            }}
                           />
                           <Dropdown.Item
                             icon="file alternate outline"
@@ -88,6 +114,11 @@ const MainNavigation = ({ user, className, setLoginOpen, setRegisterOpen }) => {
                           <Dropdown.Item
                             icon="heart outline"
                             text="Danh sách tin đã lưu"
+                            onClick={() => {
+                              Router.push(
+                                "/trang-ca-nhan/danh-sach-tin-da-luu"
+                              );
+                            }}
                           />
                           <Dropdown.Item
                             icon="sign out"
@@ -99,22 +130,48 @@ const MainNavigation = ({ user, className, setLoginOpen, setRegisterOpen }) => {
                         </Dropdown.Menu>
                       </Dropdown>
                     </List.Item>
-                    <List.Item as="a">
-                      <Icon
-                        name="heart outline"
-                        inverted
-                        color="grey"
-                        size="large"
-                      />
-                    </List.Item>
-                    <List.Item as="a">
-                      <Icon
-                        name="bell outline"
-                        inverted
-                        color="grey"
-                        size="large"
-                      />
-                    </List.Item>
+                    <Popup
+                      content="I will not flip!"
+                      on="click"
+                      pinned
+                      basic
+                      position="bottom center"
+                      trigger={
+                        <List.Item as="a">
+                          <Icon
+                            name="heart outline"
+                            inverted
+                            color="grey"
+                            size="large"
+                          />
+                          {followingPosts.length > 0 && (
+                            <Label circular color="red" floating size="tiny">
+                              {followingPosts.length}
+                            </Label>
+                          )}
+                        </List.Item>
+                      }
+                    />
+                    <Popup
+                      content="I will not flip!"
+                      on="click"
+                      basic
+                      pinned
+                      position="bottom center"
+                      trigger={
+                        <List.Item as="a">
+                          <Icon
+                            name="bell outline"
+                            inverted
+                            color="grey"
+                            size="large"
+                          />
+                          <Label circular color="red" floating size="tiny">
+                            2
+                          </Label>
+                        </List.Item>
+                      }
+                    />
                   </>
                 )}
 

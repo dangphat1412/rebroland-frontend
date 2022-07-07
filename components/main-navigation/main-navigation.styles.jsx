@@ -46,10 +46,24 @@ export const Menu = styled.div`
     z-index: 900;
   }
 
-  // .item {
-  //   font-family: "Tahoma", san-serif !important;
-  //   font-weight: bold !important;
-  // }
+  .header {
+    font-family: "Tahoma", san-serif !important;
+    text-transform: none !important;
+    font-size: 14px !important;
+  }
+
+  img {
+    margin-right: 10px !important;
+  }
+
+  .item {
+    position: relative;
+    & .ui.floating.label {
+      position: absolute;
+      top: -25%;
+      left: 105%;
+    }
+  }
 `;
 
 export const LogoContainer = styled(Image)`

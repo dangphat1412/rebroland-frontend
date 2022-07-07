@@ -7,10 +7,10 @@ const ImageGallery = ({ images }) => {
 
   useEffect(() => {
     setItems(
-      images.map((image) => {
+      images.map((item) => {
         return {
-          original: image,
-          thumbnail: image,
+          original: item.image,
+          thumbnail: item.image,
         };
       })
     );

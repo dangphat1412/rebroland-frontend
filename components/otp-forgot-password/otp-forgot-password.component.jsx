@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import OtpInput from "react-otp-input";
 import { Form, Grid, Message } from "semantic-ui-react";
-import { otpRegisterUser, registerUser } from "../../actions/auth";
+import { forgotPasswordUser, otpForgotPasswordUser } from "../../actions/auth";
 import CustomButton from "../custom-button/custom-button.component";
 
-const OtpRegister = ({ registerData, setOtpRegisterOpen }) => {
-  const [user, setUser] = useState(registerData.user);
-  const [counter, setCounter] = useState(registerData.tokenTime * 60);
+const OtpForgotPassword = ({ forgotPasswordData, handleOpenLogin }) => {
+  const [user, setUser] = useState(forgotPasswordData.user);
+  const [counter, setCounter] = useState(forgotPasswordData.tokenTime * 60);
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const OtpRegister = ({ registerData, setOtpRegisterOpen }) => {
   };
 
   const handleResentOtp = async () => {
-    const data = await registerUser(user, setErrorMessage);
+    const data = await forgotPasswordUser(user, setErrorMessage);
     if (data) {
       setUser(data.user);
       setCounter(data.tokenTime * 60);
@@ -29,7 +29,7 @@ const OtpRegister = ({ registerData, setOtpRegisterOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await otpRegisterUser(user, setErrorMessage, setOtpRegisterOpen);
+    await otpForgotPasswordUser(user, setErrorMessage, handleOpenLogin);
   };
 
   return (
@@ -90,4 +90,4 @@ const OtpRegister = ({ registerData, setOtpRegisterOpen }) => {
   );
 };
 
-export default OtpRegister;
+export default OtpForgotPassword;

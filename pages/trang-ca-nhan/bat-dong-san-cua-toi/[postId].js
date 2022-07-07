@@ -1,23 +1,11 @@
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { getPostById } from "../../../actions/post";
+import React from "react";
 import FormPropertyDetail from "../../../components/form-property-detail/form-property-detail.component";
 import SubHeader from "../../../components/sub-header/sub-header.component";
+import { parseCookies } from "nookies";
+import axios from "axios";
+import API_URL from "../../../utils/apiUrl";
 
-const MyDetailProperty = ({ user }) => {
-  const router = useRouter();
-
-  const [post, setPost] = useState({});
-  const { postId } = router.query;
-
-  useEffect(() => {
-    (async () => {
-      const data = await getPostById(postId);
-      console.log("POST: ", data);
-      setPost(data);
-    })();
-  });
-
+const MyDetailProperty = ({ post, user }) => {
   return (
     <>
       <SubHeader title="Chi tiết bất động sản" />
@@ -25,5 +13,23 @@ const MyDetailProperty = ({ user }) => {
     </>
   );
 };
+
+export async function getServerSideProps(context) {
+  try {
+    const { postId } = context.query;
+    const { token } = parseCookies(context);
+
+    const res = await axios.get(
+      `${API_URL}/api/posts/${postId.split("-").pop()}`,
+      {
+        headers: { Authorization: token },
+      }
+    );
+
+    return { props: { post: res.data } };
+  } catch (error) {
+    // return { props: { post: [1, 2, 3] } };
+  }
+}
 
 export default MyDetailProperty;

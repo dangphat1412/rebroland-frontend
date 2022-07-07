@@ -3,7 +3,14 @@ import MainNavigation from "../main-navigation/main-navigation.component";
 import SubNavigation from "../sub-navigation/sub-navigation.component";
 import { NavigationContainer } from "./navigation.styles";
 
-const Navigation = ({ user, setLoginOpen, setRegisterOpen }) => {
+const Navigation = ({
+  user,
+  isBroker,
+  followingPosts,
+  setFollowingPosts,
+  setLoginOpen,
+  setRegisterOpen,
+}) => {
   const [showSubnavigation, setShowSubnavigation] = useState(true);
 
   const controlSubnavigation = () => {
@@ -23,6 +30,9 @@ const Navigation = ({ user, setLoginOpen, setRegisterOpen }) => {
       <MainNavigation
         className={!showSubnavigation && "sticky"}
         user={user}
+        isBroker={isBroker}
+        followingPosts={followingPosts}
+        setFollowingPosts={setFollowingPosts}
         setLoginOpen={setLoginOpen}
         setRegisterOpen={setRegisterOpen}
       />

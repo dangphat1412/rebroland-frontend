@@ -1,17 +1,15 @@
-import { Label } from "semantic-ui-react";
 import styled from "styled-components";
 
 export const LoginContainer = styled.div`
   .forgot-password {
     color: red;
+    font-weight: bold;
     cursor: pointer;
     &:hover {
-      font-weight: bold;
+      color: #ff4b4b;
     }
   }
   .btn-login {
-    font-family: "Tahoma";
+    font-family: "Tahoma", san-serif;
   }
 `;
-
-export const ErrorMessage = styled(Label)``;

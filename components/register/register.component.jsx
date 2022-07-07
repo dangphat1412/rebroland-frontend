@@ -1,75 +1,69 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Form, Grid } from "semantic-ui-react";
-import { getOtpToken, registerUser } from "../../actions/auth";
+import { Form, Grid, Message } from "semantic-ui-react";
+import { registerUser } from "../../actions/auth";
 import CustomButton from "../custom-button/custom-button.component";
 import InputField from "../input-field/input-field.component";
 
-const Register = ({ handleOpenOtpRegister, setUserRegister }) => {
+const Register = ({ handleOpenOtpRegister, setRegisterData }) => {
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
-    register("fullName", { required: "Họ tên không được để trống" });
-    register("phone", {
-      required: "Số điện thoại không được để trống",
-      pattern: {
-        value: /^(84|0[3|5|7|8|9])+([0-9]{8})$/,
-        message: "Số điện thoại là số Việt Nam và có 10 chữ số",
-      },
-    });
-    register("password", {
-      required: "Mật khẩu không được để trống",
-      pattern: {
-        value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
-        message: "Mật khẩu chứa ít nhất 8 ký tự, gồm chữ hoa, thường và số",
-      },
-    });
-    register("confirmPassword", {
-      required: "Xác nhận mật khẩu không được để trống",
-    });
-  }, []);
+  const password = useRef({});
+  password.current = watch("password", "");
+
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (user) => {
-    const status = await getOtpToken(user);
-    if (status === 200) {
-      setUserRegister({ ...user });
+    console.log("user: ", user);
+    const data = await registerUser(user, setErrorMessage);
+    if (data) {
+      setRegisterData(data);
       handleOpenOtpRegister();
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   await getOtpToken(user);
-  //   setUserRegister({ ...user });
-  //   handleOpenOtpRegister();
-  // };
-
   return (
     <>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)} error={errorMessage !== null}>
+        <Message
+          error
+          content={errorMessage}
+          onDismiss={() => setErrorMessage(null)}
+        />
         <InputField
           label="Họ và tên"
           name="fullName"
           placeholder="Nhập họ và tên"
+          {...register("fullName", { required: "Họ tên không được để trống" })}
           onChange={(e, { name, value }) => {
             setValue(name, value);
           }}
           error={errors.fullName}
+          requiredField
         />
 
         <InputField
           label="Số điện thoại"
           name="phone"
           placeholder="Nhập số điện thoại"
+          {...register("phone", {
+            required: "Số điện thoại không được để trống",
+            pattern: {
+              value: /^(84|0[3|5|7|8|9])+([0-9]{8})$/,
+              message: "Số điện thoại là số Việt Nam và có 10 chữ số",
+            },
+          })}
           onChange={(e, { name, value }) => {
             setValue(name, value);
           }}
           error={errors.phone}
+          requiredField
         />
 
         <InputField
@@ -77,10 +71,19 @@ const Register = ({ handleOpenOtpRegister, setUserRegister }) => {
           type="password"
           name="password"
           placeholder="Nhập mật khẩu"
+          {...register("password", {
+            required: "Mật khẩu không được để trống",
+            pattern: {
+              value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
+              message:
+                "Mật khẩu chứa ít nhất 8 ký tự, gồm chữ hoa, thường và số",
+            },
+          })}
           onChange={async (e, { name, value }) => {
             setValue(name, value);
           }}
           error={errors.password}
+          requiredField
         />
 
         <InputField
@@ -88,39 +91,17 @@ const Register = ({ handleOpenOtpRegister, setUserRegister }) => {
           type="password"
           name="confirmPassword"
           placeholder="Nhập lại mật khẩu"
+          {...register("confirmPassword", {
+            required: "Xác nhận mật khẩu không được để trống",
+            validate: (value) =>
+              value === password.current || "Mật khẩu không khớp",
+          })}
           onChange={async (e, { name, value }) => {
             setValue(name, value);
           }}
           error={errors.confirmPassword}
+          requiredField
         />
-
-        {/* 
-        <InputField
-          label="Số điện thoại"
-          name="phone"
-          value={user.phone}
-          errorMsg="Số điện thoại không đúng định dạng"
-          regex="(84|0[3|5|7|8|9])+([0-9]{8})\b"
-          handleChange={handleChange}
-        />
-        <InputField
-          type="password"
-          label="Mật khẩu"
-          name="password"
-          value={user.password}
-          errorMsg="Mật khẩu không đúng định dạng"
-          regex="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$"
-          handleChange={handleChange}
-        />
-        <InputField
-          type="password"
-          label="Xác nhận mật khẩu"
-          name="confirmPassword"
-          value={confirmPassword}
-          errorMsg="Mật khẩu không khớp"
-          regex={user.password}
-          handleChange={handleChangeConfirmPassword}
-        /> */}
 
         <Grid>
           <Grid.Column textAlign="center">
