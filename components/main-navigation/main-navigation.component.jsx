@@ -48,7 +48,9 @@ const MainNavigation = ({
                 <Link href="/bat-dong-san">
                   <List.Item as="a">Bất động sản</List.Item>
                 </Link>
-                <List.Item as="a">Nhà môi giới</List.Item>
+                <Link href="/nha-moi-gioi">
+                  <List.Item as="a">Nhà môi giới</List.Item>
+                </Link>
               </List>
             </Grid.Column>
             <Grid.Column width={4} textAlign="right" verticalAlign="middle">

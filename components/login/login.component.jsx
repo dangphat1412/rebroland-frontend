@@ -31,7 +31,7 @@ const Login = ({ handleOpenForgotPassword, setLoginOpen, setLoading }) => {
       <Form onSubmit={handleSubmit(onSubmit)} error={errorMessage !== null}>
         <Message
           error
-          content={errorMessage}
+          list={errorMessage}
           onDismiss={() => setErrorMessage(null)}
         />
         <InputField

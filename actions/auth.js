@@ -4,6 +4,7 @@ import cookie from "js-cookie";
 import API_URL from "../utils/apiUrl";
 import { setToken } from "../utils/authUser";
 import Cookies from "js-cookie";
+import convertToListMessages from "../utils/convertToListMessages";
 
 export const loginUser = async (
   user,
@@ -18,7 +19,9 @@ export const loginUser = async (
     setLoginOpen(false);
     Router.push(Router.asPath);
   } catch (error) {
-    setErrorMessage(error.response.data);
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
+    console.log(messages);
   }
   setLoading(false);
 };
