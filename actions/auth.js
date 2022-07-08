@@ -6,6 +6,13 @@ import { setToken } from "../utils/authUser";
 import Cookies from "js-cookie";
 import convertToListMessages from "../utils/convertToListMessages";
 
+const Axios = axios.create({
+  baseURL: `${API_URL}/api/users`,
+  headers: {
+    Authorization: Cookies.get("token"),
+  },
+});
+
 export const loginUser = async (
   user,
   setErrorMessage,
@@ -102,17 +109,31 @@ export const otpForgotPasswordUser = async (
 
 export const brokerRegister = async (setErrorMessage) => {
   try {
-    const res = await axios.post(`${API_URL}/api/users/broker/signup`, {
-      headers: {
-        Authorization: Cookies.get("token"),
-      },
-    });
+    const res = await Axios.post("/broker/signup");
 
     if (res.status === 200) {
-      Router.push("/");
+      Router.push("/nha-moi-gioi");
     }
   } catch (error) {
-    setErrorMessage(error.response.data);
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
   }
+};
+
+export const switchRole = async (setLoading) => {
+  setLoading(true);
+  try {
+    const res = await Axios.post("/switch");
+
+    if (res.status === 200) {
+      res.data.user.currentRole === 3 && Router.push("/nha-moi-gioi");
+      res.data.user.currentRole === 2 && Router.push("/");
+    }
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+  setLoading(false);
 };

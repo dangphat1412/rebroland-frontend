@@ -113,3 +113,12 @@ export const followPost = async (postId) => {
     console.log(error);
   }
 };
+
+export const historyPost = async (postId) => {
+  try {
+    const res = await axios.get(`${API_URL}/api/posts/history/${postId}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

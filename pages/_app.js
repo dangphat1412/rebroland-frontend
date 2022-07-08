@@ -36,6 +36,7 @@ export default function MyApp({ Component, pageProps }) {
         setFollowingPosts={setFollowingPosts}
         setLoginOpen={setLoginOpen}
         setRegisterOpen={setRegisterOpen}
+        setLoading={setLoading}
       />
       <Component
         {...pageProps}

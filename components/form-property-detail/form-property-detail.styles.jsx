@@ -14,10 +14,11 @@ export const FormPropertyDetailContainer = styled.div`
     white-space: pre-wrap;
     word-wrap: break-word;
   }
-`;
 
-export const HeaderContainer = styled(Header)`
-  font-family: "Tahoma", sans-serif;
+  .button,
+  .header {
+    font-family: "Tahoma", san-serif !important;
+  }
 `;
 
 export const ShotInformationContainer = styled(Statistic.Group)`

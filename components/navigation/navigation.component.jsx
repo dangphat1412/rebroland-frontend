@@ -10,6 +10,7 @@ const Navigation = ({
   setFollowingPosts,
   setLoginOpen,
   setRegisterOpen,
+  setLoading,
 }) => {
   const [showSubnavigation, setShowSubnavigation] = useState(true);
 
@@ -35,6 +36,7 @@ const Navigation = ({
         setFollowingPosts={setFollowingPosts}
         setLoginOpen={setLoginOpen}
         setRegisterOpen={setRegisterOpen}
+        setLoading={setLoading}
       />
     </NavigationContainer>
   );

@@ -12,7 +12,7 @@ import {
   Popup,
   Radio,
 } from "semantic-ui-react";
-import { logoutUser } from "../../actions/auth";
+import { logoutUser, switchRole } from "../../actions/auth";
 import { NavContainer, Menu, LogoContainer } from "./main-navigation.styles";
 
 const MainNavigation = ({
@@ -23,7 +23,16 @@ const MainNavigation = ({
   className,
   setLoginOpen,
   setRegisterOpen,
+  setLoading,
 }) => {
+  const [switchBroker, setSwitchBroker] = useState(
+    (user && user.currentRole === 3) || false
+  );
+  const handleSwitchBroker = async () => {
+    setSwitchBroker(!switchBroker);
+    await switchRole(setLoading);
+  };
+
   return (
     <div>
       <NavContainer className={className} fluid>
@@ -48,7 +57,7 @@ const MainNavigation = ({
                 <Link href="/bat-dong-san">
                   <List.Item as="a">Bất động sản</List.Item>
                 </Link>
-                <Link href="/nha-moi-gioi">
+                <Link href="/danh-sach-nha-moi-gioi">
                   <List.Item as="a">Nhà môi giới</List.Item>
                 </Link>
               </List>
@@ -83,8 +92,19 @@ const MainNavigation = ({
                         <Dropdown.Menu>
                           {isBroker ? (
                             <>
-                              <Dropdown.Header content="Chế độ nhà môi giới" />
-                              <Radio toggle className="btn-radio" />
+                              <Dropdown.Header
+                                content={
+                                  switchBroker
+                                    ? "Chế độ nhà môi giới"
+                                    : "Chế độ người dùng"
+                                }
+                              />
+                              <Radio
+                                toggle
+                                className="btn-radio"
+                                checked={switchBroker}
+                                onChange={handleSwitchBroker}
+                              />
                             </>
                           ) : (
                             <Dropdown.Item

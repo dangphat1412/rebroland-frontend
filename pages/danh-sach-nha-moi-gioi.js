@@ -4,7 +4,7 @@ import SubHeader from '../components/sub-header/sub-header.component'
 const Broker = () => {
   return (
     <div>
-        <SubHeader title="Nhà môi giới" />
+        <SubHeader title="Danh sách nhà môi giới" />
     </div>
   )
 }

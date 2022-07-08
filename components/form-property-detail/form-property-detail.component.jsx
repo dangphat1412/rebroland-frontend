@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import {
   Breadcrumb,
   Button,
+  Dimmer,
   Divider,
   Form,
   Grid,
+  Header,
   Icon,
   Image,
   List,
+  Loader,
   Rating,
   Segment,
   Statistic,
+  Table,
 } from "semantic-ui-react";
 import ImageGallery from "../image-gallery/image-gallery.component";
 import Map from "../map/map.component";
@@ -18,17 +22,24 @@ import {
   ActionContainer,
   ContactInformationContainer,
   FormPropertyDetailContainer,
-  HeaderContainer,
   ShotInformationContainer,
   UserInformationContainer,
 } from "./form-property-detail.styles";
 import ModalItem from "../modal-item/modal-item.component";
 import FormReport from "../form-report/form-report.component";
-import { followPost } from "../../actions/post";
+import { followPost, historyPost } from "../../actions/post";
 import Link from "next/link";
 
 const FormPropertyDetail = ({ post, user }) => {
-  const [open, setOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [historyData, setHistoryData] = useState();
+
+  const showHistory = async (postId) => {
+    setHistoryOpen(true);
+    const data = await historyPost(postId);
+    setHistoryData(data);
+  };
 
   const handleFollowProperty = (e, postId) => {
     e.stopPropagation();
@@ -42,7 +53,7 @@ const FormPropertyDetail = ({ post, user }) => {
           <Grid.Row>
             <Grid.Column width={12}>
               <Segment>
-                <HeaderContainer as="h1">{post.title}</HeaderContainer>
+                <Header as="h1">{post.title}</Header>
 
                 <Breadcrumb
                   icon="right angle"
@@ -122,16 +133,16 @@ const FormPropertyDetail = ({ post, user }) => {
 
                 <Divider />
 
-                <HeaderContainer as="h2">Thông tin mô tả</HeaderContainer>
+                <Header as="h2">Thông tin mô tả</Header>
                 <div>
                   <pre>{post.description}</pre>
                 </div>
-                <HeaderContainer as="h2">Đặc điểm bất động sản</HeaderContainer>
+                <Header as="h2">Đặc điểm bất động sản</Header>
                 <p>Đặc điểm bds</p>
-                <HeaderContainer as="h2">Hình ảnh</HeaderContainer>
+                <Header as="h2">Hình ảnh</Header>
                 {post.images && <ImageGallery images={post.images} />}
 
-                <HeaderContainer as="h2">Xem trên bản đồ</HeaderContainer>
+                <Header as="h2">Xem trên bản đồ</Header>
                 {post.coordinates && (
                   <Map
                     position={post.coordinates.map((coordinate) => {
@@ -159,7 +170,7 @@ const FormPropertyDetail = ({ post, user }) => {
 
               <ContactInformationContainer textAlign="center">
                 <p>Thông tin liên hệ</p>
-                <h2>{post.contactName}</h2>
+                <Header as="h2">{post.contactName}</Header>
                 {post.contactAddress && (
                   <div>
                     <Icon name="map marker alternate" />
@@ -180,6 +191,17 @@ const FormPropertyDetail = ({ post, user }) => {
                   Yêu cầu liên hệ lại
                 </Button>
               </ContactInformationContainer>
+
+              <Button
+                fluid
+                size="large"
+                color="green"
+                onClick={() => {
+                  showHistory(post.postId);
+                }}
+              >
+                Xem lịch sử bất động sản
+              </Button>
 
               <Segment textAlign="left">
                 <h3>Người môi giới đang theo dõi</h3>
@@ -255,14 +277,111 @@ const FormPropertyDetail = ({ post, user }) => {
       </Form>
       <ModalItem
         header="Báo cáo tin đăng không chính xác"
-        onOpen={open}
+        onOpen={reportOpen}
         onClose={() => {
-          setOpen(false);
+          setReportOpen(false);
         }}
       >
         <FormReport />
       </ModalItem>
+      <ModalItem
+        header="Lịch sử bất động sản"
+        size="tiny"
+        onOpen={historyOpen}
+        onClose={() => {
+          setHistoryOpen(false);
+        }}
+      >
+        <FormHistory historyData={historyData} />
+      </ModalItem>
     </FormPropertyDetailContainer>
+  );
+};
+
+const FormHistory = ({ historyData }) => {
+  return (
+    <>
+      {historyData ? (
+        <>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={5}>
+                <Header as="h5">Mã vạch</Header>
+              </Grid.Column>
+              <Grid.Column width={5}>
+                {Object.values(historyData)[0][0].barcode}
+              </Grid.Column>
+            </Grid.Row>
+            {Object.values(historyData)[0][0].plotNumber && (
+              <Grid.Row>
+                <Grid.Column width={5}>
+                  <Header as="h5">Số thửa</Header>
+                </Grid.Column>
+                <Grid.Column width={5}>
+                  {Object.values(historyData)[0][0].plotNumber}
+                </Grid.Column>
+              </Grid.Row>
+            )}
+            {Object.values(historyData)[0][0].buildingName && (
+              <Grid.Row>
+                <Grid.Column width={5}>
+                  <Header as="h5">Tên toà nhà</Header>
+                </Grid.Column>
+                <Grid.Column width={5}>
+                  {Object.values(historyData)[0][0].buildingName}
+                </Grid.Column>
+              </Grid.Row>
+            )}
+          </Grid>
+          <Table celled>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Số thứ tự</Table.HeaderCell>
+                <Table.HeaderCell>Họ và tên chủ hộ</Table.HeaderCell>
+                <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
+                <Table.HeaderCell>Sở hữu từ</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            {}
+
+            <Table.Body>
+              {Object.values(historyData)[0].map((d, index) => {
+                return (
+                  <Table.Row key={index}>
+                    <Table.Cell>{index + 1}</Table.Cell>
+                    <Table.Cell>{d.owner}</Table.Cell>
+                    <Table.Cell>{d.phone}</Table.Cell>
+                    <Table.Cell>{d.startDate}</Table.Cell>
+                  </Table.Row>
+                );
+              })}
+              {/* <Table.Row>
+                <Table.Cell>1</Table.Cell>
+                <Table.Cell>Nguyễn Văn A</Table.Cell>
+                <Table.Cell>0918767657</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>2</Table.Cell>
+                <Table.Cell>Nguyễn Văn B</Table.Cell>
+                <Table.Cell>0356456787</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>3</Table.Cell>
+                <Table.Cell>Nguyễn Văn C</Table.Cell>
+                <Table.Cell>0356456787</Table.Cell>
+              </Table.Row> */}
+            </Table.Body>
+          </Table>
+        </>
+      ) : (
+        <>
+          <Dimmer active inverted>
+            <Loader inverted>Loading</Loader>
+          </Dimmer>
+        </>
+      )}
+    </>
   );
 };
 
