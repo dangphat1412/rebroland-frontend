@@ -2,7 +2,7 @@ import React from "react";
 import { Segment } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
 
-const PostInformationForm = ({ register, errors, setValue }) => {
+const PostInformationForm = ({ register, errors, setValue, getValues }) => {
   const handleChange = (e, { name, value }) => {
     setValue(name, value);
   };
@@ -16,6 +16,7 @@ const PostInformationForm = ({ register, errors, setValue }) => {
         name="title"
         placeholder="Nhập tiêu đề"
         onChange={handleChange}
+        defaultValue={getValues("title")}
         error={errors.title}
         requiredField
       />
@@ -27,6 +28,7 @@ const PostInformationForm = ({ register, errors, setValue }) => {
         name="description"
         placeholder="Nhập mô tả chung về bất động sản của bạn"
         onChange={handleChange}
+        defaultValue={getValues("description")}
         error={errors.description}
         requiredField
       />

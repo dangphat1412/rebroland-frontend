@@ -8,7 +8,7 @@ import { redirectUser } from "../utils/authUser";
 import Navigation from "../components/navigation/navigation.component";
 import Footer from "../components/footer/footer.component";
 import "react-image-gallery/styles/css/image-gallery.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginRegisterModal from "../components/login-register-modal/login-register-modal.component";
 import { Dimmer, Loader } from "semantic-ui-react";
 
@@ -23,6 +23,10 @@ export default function MyApp({ Component, pageProps }) {
   const [followingPosts, setFollowingPosts] = useState(
     pageProps.following || []
   );
+
+  useEffect(() => {
+    console.log("user: ", pageProps.user);
+  }, [pageProps.user]);
 
   return (
     <>
@@ -66,7 +70,7 @@ export default function MyApp({ Component, pageProps }) {
 
 MyApp.getInitialProps = async ({ Component, ctx }) => {
   const { token } = parseCookies(ctx);
-  let pageProps = { a: [1, 2, 3] };
+  let pageProps = {};
   const protectedRoutes = ctx.pathname === "/dang-tin";
 
   if (!token) {
@@ -84,10 +88,17 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       pageProps.user = user;
       pageProps.following = following;
       pageProps.isBroker = isBroker;
-      // if (user) !protectedRoutes && redirectUser(ctx, "/");
+      // if (user && user.currentRole === 3) {
+      // redirectUser(ctx, "/nha-moi-gioi");
+      // }
+      if (user)
+        user.currentRole === 3 &&
+          !ctx.pathname === "/nha-moi-gioi" &&
+          redirectUser(ctx, "/nha-moi-gioi");
     } catch (error) {
       destroyCookie(ctx, "token");
       redirectUser(ctx, "/");
+      console.log(error);
     }
   }
   return { pageProps };

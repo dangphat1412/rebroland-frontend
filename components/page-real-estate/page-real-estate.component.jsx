@@ -45,9 +45,11 @@ const RealEstatePage = ({ postsData, followingPosts, setFollowingPosts }) => {
               <Segment basic>
                 <Loader active inline="centered" />
               </Segment>
+            ) : data.posts.length === 0 ? (
+              <>Không tìm thấy kết quả phù hợp</>
             ) : (
               <>
-                {data.posts &&
+                {data &&
                   data.posts.map((post, index) => (
                     <RealEstateItem
                       post={post}

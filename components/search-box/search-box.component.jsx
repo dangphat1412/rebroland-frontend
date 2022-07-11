@@ -194,8 +194,8 @@ const SearchBox = ({ setData }) => {
                 max={30}
                 onChange={({ min, max }) => {
                   setPricePlaceholder(`${min} tỷ - ${max} tỷ`);
-                  setValue("minPrice", min);
-                  setValue("maxPrice", max);
+                  setValue("minPrice", min * 1000000000);
+                  setValue("maxPrice", max * 1000000000);
                 }}
                 unit="tỷ"
               />
@@ -228,8 +228,8 @@ const SearchBox = ({ setData }) => {
               text="≥ 30 tỷ"
               onClick={() => {
                 setPricePlaceholder("≥ 30 tỷ");
-                setValue("minPrice", undefined);
-                setValue("maxPrice", 30000000000);
+                setValue("minPrice", 30000000000);
+                setValue("maxPrice", undefined);
               }}
             />
             <Dropdown.Item

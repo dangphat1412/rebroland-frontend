@@ -6,7 +6,7 @@ import ListPropertiesRecommend from "../components/list-properties-recommend/lis
 export default function Home() {
   return (
     <div>
-      <HomeBackground />
+      <HomeBackground background="/zyro-image.png" />
       {/* <SearchBox /> */}
       <Milestones />
       <ListPropertiesRecommend />

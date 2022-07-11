@@ -8,7 +8,14 @@ import {
 } from "../../actions/post";
 import InputField from "../input-field/input-field.component";
 
-const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
+const RealEstateInformationForm = ({
+  register,
+  errors,
+  watch,
+  setValue,
+  getValues,
+  post,
+}) => {
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [unitPrices, setUnitPrices] = useState([]);
   const [longevity, setLongevity] = useState([]);
@@ -50,7 +57,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
       );
     })();
   }, []);
-  
+
   useEffect(() => {
     (async () => {
       const data = await getDirections();
@@ -65,19 +72,29 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
   return (
     <Segment size="large">
       <h1>Thông tin bất động sản</h1>
-      <InputField
-        {...register("propertyTypeId", {
-          required: "Loại bất động sản không được để trống",
-        })}
-        fieldType="select"
-        label="Loại bất động sản"
-        name="propertyTypeId"
-        placeholder="Chọn loại bất động sản"
-        options={propertyTypes}
-        onChange={handleChange}
-        error={errors.propertyTypeId}
-        requiredField
-      />
+      {!post ? (
+        <InputField
+          {...register("propertyTypeId", {
+            required: "Loại bất động sản không được để trống",
+          })}
+          fieldType="select"
+          label="Loại bất động sản"
+          name="propertyTypeId"
+          placeholder="Chọn loại bất động sản"
+          options={propertyTypes}
+          onChange={handleChange}
+          error={errors.propertyTypeId}
+          requiredField
+        />
+      ) : (
+        <InputField
+          label="Loại bất động sản"
+          value={post.propertyType.name}
+          requiredField
+          disabled
+        />
+      )}
+
       <Form.Group widths={2}>
         <InputField
           {...register("area", { required: "Diện tích không được để trống" })}
@@ -86,6 +103,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
           name="area"
           placeholder="Nhập diện tích"
           onChange={handleChange}
+          defaultValue={getValues("area")}
           error={errors.area}
           requiredField
         >
@@ -100,6 +118,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
           label="Mức giá"
           name="price"
           placeholder="Nhập mức giá"
+          defaultValue={getValues("price")}
           onChange={handleChange}
           error={errors.price}
           requiredField
@@ -110,7 +129,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
             name="unitPriceId"
             onChange={handleChange}
             options={unitPrices}
-            defaultValue={1}
+            defaultValue={getValues("unitPriceId")}
           />
         </InputField>
       </Form.Group>
@@ -125,6 +144,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
               placeholder="Chọn tuổi nhà"
               options={longevity}
               onChange={handleChange}
+              defaultValue={getValues("longevityId")}
             />
             <InputField
               {...register("numberOfBedroom")}
@@ -133,6 +153,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
               name="numberOfBedroom"
               placeholder="Nhập số phòng ngủ"
               onChange={handleChange}
+              defaultValue={getValues("numberOfBedroom")}
             />
           </Form.Group>
           <Form.Group widths="equal">
@@ -143,6 +164,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
               name="numberOfBathroom"
               placeholder="Nhập số phòng tắm, vệ sinh"
               onChange={handleChange}
+              defaultValue={getValues("numberOfBathroom")}
             />
             {watch("propertyTypeId") === 1 ? (
               <InputField
@@ -152,6 +174,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                 name="numberOfFloor"
                 placeholder="Nhập tầng"
                 onChange={handleChange}
+                defaultValue={getValues("numberOfFloor")}
               />
             ) : (
               <InputField
@@ -161,6 +184,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                 name="floorNumber"
                 placeholder="Nhập tầng"
                 onChange={handleChange}
+                defaultValue={getValues("floorNumber")}
               />
             )}
           </Form.Group>
@@ -170,7 +194,9 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
         <Form.Field>
           <label>Giấy tờ pháp lý</label>
           <Tab
-            defaultActiveIndex={1}
+            defaultActiveIndex={
+              post ? (post.certification === true ? 0 : 1) : 1
+            }
             menu={{ secondary: true }}
             panes={[
               {
@@ -184,6 +210,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                         name="barcode"
                         placeholder="Nhập mã vạch"
                         onChange={handleChange}
+                        defaultValue={getValues("barcode")}
                       />
                       {watch("propertyTypeId") !== 2 ? (
                         <InputField
@@ -192,6 +219,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                           name="plotNumber"
                           placeholder="Nhập số thửa"
                           onChange={handleChange}
+                          defaultValue={getValues("plotNumber")}
                         />
                       ) : (
                         <>
@@ -201,6 +229,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                             name="buildingName"
                             placeholder="Nhập tên toà"
                             onChange={handleChange}
+                            defaultValue={getValues("buildingName")}
                           />
                           <InputField
                             {...register("floorNumber")}
@@ -208,6 +237,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                             name="floorNumber"
                             placeholder="Nhập tầng"
                             onChange={handleChange}
+                            defaultValue={getValues("floorNumber")}
                           />
                           <InputField
                             {...register("numberRoom")}
@@ -215,6 +245,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                             name="numberRoom"
                             placeholder="Nhập phòng"
                             onChange={handleChange}
+                            defaultValue={getValues("numberRoom")}
                           />
                         </>
                       )}
@@ -226,6 +257,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                         name="owner"
                         placeholder="Nhập tên chủ hộ"
                         onChange={handleChange}
+                        defaultValue={getValues("owner")}
                       />
                       <InputField
                         {...register("ownerPhone")}
@@ -233,29 +265,9 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
                         name="ownerPhone"
                         placeholder="Nhập số điện thoại"
                         onChange={handleChange}
+                        defaultValue={getValues("ownerPhone")}
                       />
                     </Form.Group>
-                    {/* {watch("propertyTypeId") !== 2 && (
-                    <>
-                      <Divider horizontal>Mảnh đất được tách ra từ</Divider>
-                      <Form.Group widths="equal">
-                        <InputField
-                          {...register("parentBarcode")}
-                          label="Mã vạch trên sổ đỏ được tách"
-                          name="parentBarcode"
-                          placeholder="Nhập mã vạch"
-                          onChange={handleChange}
-                        />
-                        <InputField
-                          {...register("parentPlotNumber")}
-                          label="Số thửa trên sổ đỏ được tách"
-                          name="parentPlotNumber"
-                          placeholder="Nhập số thửa"
-                          onChange={handleChange}
-                        />
-                      </Form.Group>
-                    </>
-                  )} */}
                   </Tab.Pane>
                 ),
               },
@@ -281,6 +293,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
           placeholder="Chọn hướng nhà"
           options={directions}
           onChange={handleChange}
+          defaultValue={getValues("directionId")}
         />
         <InputField
           {...register("frontispiece")}
@@ -289,6 +302,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
           name="frontispiece"
           placeholder="Nhập mặt tiền"
           onChange={handleChange}
+          defaultValue={getValues("frontispiece")}
         >
           <input />
           <Label basic size="big">
@@ -303,6 +317,7 @@ const RealEstateInformationForm = ({ register, errors, watch, setValue }) => {
         name="additionalDescription"
         placeholder="Nhập mô tả bổ sung"
         onChange={handleChange}
+        defaultValue={getValues("additionalDescription")}
       />
     </Segment>
   );

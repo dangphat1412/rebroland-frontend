@@ -6,6 +6,17 @@ export const MyProfilePageContainer = styled.div`
   margin-top: 20px;
   margin-right: 95px;
   margin-left: 95px;
+
+  .btnUpdate {
+    font-family: "Tahoma", san-serif !important;
+    color: #fff;
+    background: #ff9219;
+  }
+  .ui.form .disabled.field,
+  .ui.form .disabled.fields .field,
+  .ui.form .field :disabled {
+    opacity: 1;
+  }
 `;
 
 export const ProfileContainer = styled(Card)`

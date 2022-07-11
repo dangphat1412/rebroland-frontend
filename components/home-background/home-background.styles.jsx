@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const imageBackground = "/zyro-image.png";
+// const imageBackground = "/background-broker.jpg";
 
 export const HomeBackgroundContainer = styled.div`
   height: 1500px;

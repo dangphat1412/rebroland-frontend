@@ -29,8 +29,11 @@ import ModalItem from "../modal-item/modal-item.component";
 import FormReport from "../form-report/form-report.component";
 import { followPost, historyPost } from "../../actions/post";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const FormPropertyDetail = ({ post, user }) => {
+  const router = useRouter();
+
   const [reportOpen, setReportOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyData, setHistoryData] = useState();
@@ -39,6 +42,10 @@ const FormPropertyDetail = ({ post, user }) => {
     setHistoryOpen(true);
     const data = await historyPost(postId);
     setHistoryData(data);
+  };
+
+  const createDerivativePost = (postId) => {
+    router.push(`/nha-moi-gioi/tao-bai-phai-sinh/${postId}`);
   };
 
   const handleFollowProperty = (e, postId) => {
@@ -195,13 +202,25 @@ const FormPropertyDetail = ({ post, user }) => {
               <Button
                 fluid
                 size="large"
-                color="green"
+                color="teal"
                 onClick={() => {
                   showHistory(post.postId);
                 }}
               >
                 Xem lịch sử bất động sản
               </Button>
+              {user.currentRole === 3 && (
+                <Button
+                  fluid
+                  size="large"
+                  color="green"
+                  onClick={() => {
+                    createDerivativePost(post.postId);
+                  }}
+                >
+                  Tạo bài phái sinh
+                </Button>
+              )}
 
               <Segment textAlign="left">
                 <h3>Người môi giới đang theo dõi</h3>
@@ -356,21 +375,6 @@ const FormHistory = ({ historyData }) => {
                   </Table.Row>
                 );
               })}
-              {/* <Table.Row>
-                <Table.Cell>1</Table.Cell>
-                <Table.Cell>Nguyễn Văn A</Table.Cell>
-                <Table.Cell>0918767657</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>2</Table.Cell>
-                <Table.Cell>Nguyễn Văn B</Table.Cell>
-                <Table.Cell>0356456787</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>3</Table.Cell>
-                <Table.Cell>Nguyễn Văn C</Table.Cell>
-                <Table.Cell>0356456787</Table.Cell>
-              </Table.Row> */}
             </Table.Body>
           </Table>
         </>

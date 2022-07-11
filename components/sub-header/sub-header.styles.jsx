@@ -16,9 +16,18 @@ export const SubHeaderContainer = styled.div`
     font-family: "Tahoma", sans-serif;
     color: #fff;
     font-size: 70px;
-    text-shadow: black 0.1em 0.1em 0.1em;
+    text-shadow: black 0.05em 0.05em 0.05em;
     position: absolute;
     bottom: 50px;
+    left: 100px;
+  }
+  & h3 {
+    font-family: "Tahoma", sans-serif;
+    color: #fff;
+    font-size: 20px;
+    text-shadow: black 0.05em 0.05em 0.05em;
+    position: absolute;
+    bottom: 20px;
     left: 100px;
   }
 `;

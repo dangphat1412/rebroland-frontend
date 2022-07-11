@@ -25,11 +25,7 @@ const MainNavigation = ({
   setRegisterOpen,
   setLoading,
 }) => {
-  const [switchBroker, setSwitchBroker] = useState(
-    (user && user.currentRole === 3) || false
-  );
   const handleSwitchBroker = async () => {
-    setSwitchBroker(!switchBroker);
     await switchRole(setLoading);
   };
 
@@ -82,6 +78,7 @@ const MainNavigation = ({
                             <Image
                               avatar
                               src="https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg"
+                              alt="avatar"
                             />
                             <span>{user.fullName}</span>
                           </>
@@ -94,7 +91,7 @@ const MainNavigation = ({
                             <>
                               <Dropdown.Header
                                 content={
-                                  switchBroker
+                                  user.currentRole === 3
                                     ? "Chế độ nhà môi giới"
                                     : "Chế độ người dùng"
                                 }
@@ -102,7 +99,7 @@ const MainNavigation = ({
                               <Radio
                                 toggle
                                 className="btn-radio"
-                                checked={switchBroker}
+                                checked={user.currentRole === 3}
                                 onChange={handleSwitchBroker}
                               />
                             </>

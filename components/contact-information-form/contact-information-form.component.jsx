@@ -43,6 +43,7 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
           name="contactEmail"
           placeholder="Nhập Email"
           onChange={handleChange}
+          defaultValue={getValues("contactEmail")}
         />
         <InputField
           {...register("contactAddress")}
@@ -50,6 +51,7 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
           name="contactAddress"
           placeholder="Nhập địa chỉ"
           onChange={handleChange}
+          defaultValue={getValues("contactAddress")}
         />
       </Form.Group>
     </Segment>

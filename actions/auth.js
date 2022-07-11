@@ -13,6 +13,19 @@ const Axios = axios.create({
   },
 });
 
+export const updateUser = async (data, mediaUrl, setErrorMessage) => {
+  try {
+    const dataUser = mediaUrl ? { ...data, avatar: mediaUrl } : data;
+    console.log("dataUser: ", dataUser);
+    const res = await Axios.put("/", dataUser);
+    res.status === 200 && Router.push(Router.asPath);
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
 export const loginUser = async (
   user,
   setErrorMessage,

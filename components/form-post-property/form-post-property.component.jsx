@@ -1,4 +1,4 @@
-import React, {createRef, useState } from "react";
+import React, { createRef, useState } from "react";
 import { Form, Grid, Ref, Sticky } from "semantic-ui-react";
 import { FormPostPropertyContainer } from "./form-post-property.styles";
 import { useForm } from "react-hook-form";

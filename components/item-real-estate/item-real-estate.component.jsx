@@ -64,6 +64,7 @@ const RealEstateItem = ({ post, followingPosts, setFollowingPosts }) => {
                   <Icon
                     name="heart"
                     color={
+                      followingPosts &&
                       followingPosts.filter(
                         (followingPost) => followingPost.postId === post.postId
                       ).length > 0

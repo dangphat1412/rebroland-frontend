@@ -97,7 +97,23 @@ export const getFollowingPostsByUser = async (activePage) => {
 
 export const searchPosts = async (data) => {
   try {
-    const res = await Axios.get("?pageNo=3");
+    const res = await Axios.get("/", {
+      params: {
+        keyword: data.key,
+        propertyTypes: data.propertyTypes
+          ? data.propertyTypes.toString()
+          : undefined,
+        province: data.province,
+        district: data.district,
+        ward: data.ward,
+        minPrice: data.minPrice,
+        maxPrice: data.maxPrice,
+        minArea: data.minArea,
+        maxArea: data.maxArea,
+        directions: data.directions ? data.directions.toString() : undefined,
+        numberOfBedrooms: data.numberOfBedrooms,
+      },
+    });
     console.log("res.data: ", res.data);
     return res.data;
   } catch (error) {
