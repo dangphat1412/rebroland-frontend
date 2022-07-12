@@ -7,7 +7,11 @@ import API_URL from "../../utils/apiUrl";
 const Broker = ({ listBrokers }) => {
   return (
     <div>
-      <SubHeader title="Danh sách nhà môi giới" subtitle="Kết quả tìm kiếm nhà môi giới"/>
+      <SubHeader
+        title="Danh sách nhà môi giới"
+        subtitle="Kết quả tìm kiếm nhà môi giới"
+        background="/zyro-image.png"
+      />
       <ListBrokersPage listBrokers={listBrokers} />
     </div>
   );

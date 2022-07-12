@@ -1,7 +1,7 @@
-import App from "next/app";
 import axios from "axios";
 import { parseCookies, destroyCookie } from "nookies";
 import "../styles/globals.css";
+import "fontkiko/css/kiko-all.css";
 import "semantic-ui-css/semantic.min.css";
 import API_URL from "../utils/apiUrl";
 import { redirectUser } from "../utils/authUser";

@@ -32,17 +32,46 @@ const RealEstateItem = ({ post, followingPosts, setFollowingPosts }) => {
                 <List horizontal size="large">
                   <List.Item>
                     <List.Content>
-                      <List.Header>11 tỷ</List.Header>
+                      <List.Header>
+                        {post.unitPrice.id === 1 &&
+                          (post.price >= 1000000000
+                            ? post.price / 1000000000 + " tỷ"
+                            : post.price / 1000000 + " triệu")}
+                        {post.unitPrice.id === 2 &&
+                          (post.price * post.area >= 1000000000
+                            ? (post.price * post.area) / 1000000000 + " tỷ"
+                            : (post.price * post.area) / 1000000 + " triệu")}
+                        {post.unitPrice.id === 3 && "Thoả thuận"}
+                      </List.Header>
                     </List.Content>
                   </List.Item>
                   <List.Item>
                     <List.Content>
-                      <List.Header>260 triệu/m²</List.Header>
+                      <List.Header>
+                        {post.unitPrice.id === 1 &&
+                          (post.price / post.area / 1000000000 >= 1000000000
+                            ? Math.round(
+                                (post.price / post.area / 1000000000) * 10
+                              ) /
+                                10 +
+                              " tỷ/m²"
+                            : Math.round(
+                                (post.price / post.area / 1000000) * 10
+                              ) /
+                                10 +
+                              " triệu/m²")}
+                        {post.unitPrice.id === 2 &&
+                          (post.price >= 1000000000
+                            ? Math.round((post.price / 1000000000) * 10) / 10 +
+                              " tỷ/m²"
+                            : Math.round((post.price / 1000000) * 10) / 10 +
+                              " triệu/m²")}
+                      </List.Header>
                     </List.Content>
                   </List.Item>
                   <List.Item>
                     <List.Content>
-                      <List.Header>70m²</List.Header>
+                      <List.Header>{post.area}m²</List.Header>
                     </List.Content>
                   </List.Item>
                   <List.Item>

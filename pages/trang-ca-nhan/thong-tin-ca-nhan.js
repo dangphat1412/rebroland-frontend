@@ -5,7 +5,7 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 const MyInformation = ({ user }) => {
   return (
     <div>
-      <SubHeader title="Thông tin cá nhân" />
+      <SubHeader title="Thông tin cá nhân" background="/zyro-image.png"/>
       <MyProfilePage user={user} />
     </div>
   );

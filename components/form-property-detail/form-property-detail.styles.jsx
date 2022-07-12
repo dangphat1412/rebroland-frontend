@@ -19,6 +19,25 @@ export const FormPropertyDetailContainer = styled.div`
   .header {
     font-family: "Tahoma", san-serif !important;
   }
+  .property {
+    .column {
+      margin-bottom: 20px !important;
+    }
+    & .property-content {
+      font-size: 20px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      & .kikor {
+        margin-right: 5px;
+      }
+      & .property-header {
+        display: flex !important;
+      }
+      & .property-description {
+        padding-right: 100px;
+      }
+    }
+  }
 `;
 
 export const ShotInformationContainer = styled(Statistic.Group)`

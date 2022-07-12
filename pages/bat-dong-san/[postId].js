@@ -8,7 +8,7 @@ import API_URL from "../../utils/apiUrl";
 const DetailRealEstate = ({ post, user }) => {
   return (
     <>
-      <SubHeader title="Chi tiết bất động sản" />
+      <SubHeader title="Chi tiết bất động sản" background="/zyro-image.png" />
       <FormPropertyDetail post={post} user={user} />
     </>
   );

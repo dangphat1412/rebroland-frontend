@@ -5,11 +5,11 @@ import { parseCookies } from "nookies";
 import axios from "axios";
 import API_URL from "../../../utils/apiUrl";
 
-const MyPropertyHome = ({ postsData }) => {
+const MyPropertyHome = ({ user, postsData }) => {
   return (
     <div>
-      <SubHeader title="Bất động sản của tôi" />
-      <MyPropertyPage postsData={postsData} />
+      <SubHeader title="Bất động sản của tôi" background="/zyro-image.png"/>
+      <MyPropertyPage postsData={postsData} user={user} />
     </div>
   );
 };

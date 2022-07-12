@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Breadcrumb,
   Button,
@@ -9,14 +9,15 @@ import {
   Header,
   Icon,
   Image,
+  Item,
   List,
   Loader,
+  Radio,
   Rating,
   Segment,
   Statistic,
   Table,
 } from "semantic-ui-react";
-import ImageGallery from "../image-gallery/image-gallery.component";
 import Map from "../map/map.component";
 import {
   ActionContainer,
@@ -30,6 +31,7 @@ import FormReport from "../form-report/form-report.component";
 import { followPost, historyPost } from "../../actions/post";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import ReactImageGallery from "react-image-gallery";
 
 const FormPropertyDetail = ({ post, user }) => {
   const router = useRouter();
@@ -37,6 +39,19 @@ const FormPropertyDetail = ({ post, user }) => {
   const [reportOpen, setReportOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyData, setHistoryData] = useState();
+
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    setItems(
+      post.images.map((item) => {
+        return {
+          original: item.image,
+          thumbnail: item.image,
+        };
+      })
+    );
+  }, [post.images]);
 
   const showHistory = async (postId) => {
     setHistoryOpen(true);
@@ -61,7 +76,6 @@ const FormPropertyDetail = ({ post, user }) => {
             <Grid.Column width={12}>
               <Segment>
                 <Header as="h1">{post.title}</Header>
-
                 <Breadcrumb
                   icon="right angle"
                   sections={[
@@ -83,9 +97,7 @@ const FormPropertyDetail = ({ post, user }) => {
                     },
                   ]}
                 />
-
                 <Divider />
-
                 <Grid>
                   <Grid.Row columns={2}>
                     <Grid.Column verticalAlign="middle">
@@ -98,7 +110,43 @@ const FormPropertyDetail = ({ post, user }) => {
                         </Statistic>
                         <Statistic>
                           <Statistic.Label>Mức giá</Statistic.Label>
-                          <Statistic.Value text>14 tỷ</Statistic.Value>
+                          <Statistic.Value text>
+                            {post.unitPrice.id === 1 &&
+                              (post.price >= 1000000000
+                                ? post.price / 1000000000 + " tỷ"
+                                : post.price / 1000000 + " triệu")}
+                            {post.unitPrice.id === 2 &&
+                              (post.price * post.area >= 1000000000
+                                ? (post.price * post.area) / 1000000000 + " tỷ"
+                                : (post.price * post.area) / 1000000 +
+                                  " triệu")}
+                            {post.unitPrice.id === 3 && "Thoả thuận"}
+                          </Statistic.Value>
+                          <Statistic.Label>
+                            {post.unitPrice.id === 1 &&
+                              (post.price / post.area / 1000000000 >= 1000000000
+                                ? "~ " +
+                                  Math.round(
+                                    (post.price / post.area / 1000000000) * 10
+                                  ) /
+                                    10 +
+                                  " tỷ/m²"
+                                : "~ " +
+                                  Math.round(
+                                    (post.price / post.area / 1000000) * 10
+                                  ) /
+                                    10 +
+                                  " triệu/m²")}
+                            {post.unitPrice.id === 2 &&
+                              (post.price >= 1000000000
+                                ? "~ " +
+                                  Math.round((post.price / 1000000000) * 10) /
+                                    10 +
+                                  " tỷ/m²"
+                                : "~ " +
+                                  Math.round((post.price / 1000000) * 10) / 10 +
+                                  " triệu/m²")}
+                          </Statistic.Label>
                         </Statistic>
                         <Statistic>
                           <Statistic.Label>Diện tích</Statistic.Label>
@@ -137,17 +185,115 @@ const FormPropertyDetail = ({ post, user }) => {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-
                 <Divider />
-
+                <Header as="h2">Hình ảnh</Header>
+                {post.images && (
+                  <ReactImageGallery
+                    items={items}
+                    showIndex={true}
+                    disableKeyDown={false}
+                    originalHeight={200}
+                    thumbnailPosition="left"
+                  />
+                )}
                 <Header as="h2">Thông tin mô tả</Header>
                 <div>
                   <pre>{post.description}</pre>
                 </div>
                 <Header as="h2">Đặc điểm bất động sản</Header>
-                <p>Đặc điểm bds</p>
-                <Header as="h2">Hình ảnh</Header>
-                {post.images && <ImageGallery images={post.images} />}
+                <Grid columns={3} divided className="property">
+                  <Grid.Row>
+                    <Grid.Column>
+                      <Item>
+                        <Item.Content
+                          verticalAlign="middle"
+                          className="property-content"
+                        >
+                          <Item.Header className="property-header">
+                            <span class="kikor kiko-square-footage"></span>
+                            Diện tích
+                          </Item.Header>
+                          <Item.Description className="property-description">
+                            {post.area}m²
+                          </Item.Description>
+                        </Item.Content>
+                      </Item>
+                    </Grid.Column>
+                    <Grid.Column>
+                      <Item>
+                        <Item.Content
+                          verticalAlign="middle"
+                          className="property-content"
+                        >
+                          <Item.Header className="property-header">
+                            <span class="kikor kiko-price-real-estate"></span>
+                            Mức giá
+                          </Item.Header>
+                          <Item.Description className="property-description">
+                            {post.unitPrice.id === 1 &&
+                              (post.price >= 1000000000
+                                ? post.price / 1000000000 + " tỷ"
+                                : post.price / 1000000 + " triệu")}
+                            {post.unitPrice.id === 2 &&
+                              (post.price * post.area >= 1000000000
+                                ? (post.price * post.area) / 1000000000 + " tỷ"
+                                : (post.price * post.area) / 1000000 +
+                                  " triệu")}
+                            {post.unitPrice.id === 3 && "Thoả thuận"}
+                          </Item.Description>
+                        </Item.Content>
+                      </Item>
+                    </Grid.Column>
+                    <Grid.Column>
+                      <Item>
+                        <Item.Content
+                          verticalAlign="middle"
+                          className="property-content"
+                        >
+                          <Item.Header className="property-header">
+                            <span class="kikor kiko-square-footage"></span>
+                            Diện tích
+                          </Item.Header>
+                          <Item.Description className="property-description">
+                            {post.area}m²
+                          </Item.Description>
+                        </Item.Content>
+                      </Item>
+                    </Grid.Column>
+                    <Grid.Column>
+                      <Item>
+                        <Item.Content
+                          verticalAlign="middle"
+                          className="property-content"
+                        >
+                          <Item.Header className="property-header">
+                            <span class="kikor kiko-square-footage"></span>
+                            Diện tích
+                          </Item.Header>
+                          <Item.Description className="property-description">
+                            {post.area}m²
+                          </Item.Description>
+                        </Item.Content>
+                      </Item>
+                    </Grid.Column>
+                    <Grid.Column>
+                      <Item>
+                        <Item.Content
+                          verticalAlign="middle"
+                          className="property-content"
+                        >
+                          <Item.Header className="property-header">
+                            <span class="kikor kiko-square-footage"></span>
+                            Mã số ádasd
+                          </Item.Header>
+                          <Item.Description className="property-description">
+                            {post.area}m²
+                          </Item.Description>
+                        </Item.Content>
+                      </Item>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
 
                 <Header as="h2">Xem trên bản đồ</Header>
                 {post.coordinates && (
@@ -209,7 +355,7 @@ const FormPropertyDetail = ({ post, user }) => {
               >
                 Xem lịch sử bất động sản
               </Button>
-              {user.currentRole === 3 && (
+              {user && user.currentRole === 3 && (
                 <Button
                   fluid
                   size="large"
@@ -222,74 +368,77 @@ const FormPropertyDetail = ({ post, user }) => {
                 </Button>
               )}
 
-              <Segment textAlign="left">
-                <h3>Người môi giới đang theo dõi</h3>
-                <List relaxed>
-                  <List.Item>
-                    <List.Content floated="right">
-                      <Button primary>Xem bài phái sinh</Button>
-                    </List.Content>
-                    <Image
-                      avatar
-                      src="https://react.semantic-ui.com/images/avatar/small/rachel.png"
-                      alt="avatar"
-                    />
-                    <List.Content>
-                      <List.Header as="a">Nguyễn Văn A</List.Header>
-                      <List.Description>
-                        <Rating
-                          icon="star"
-                          defaultRating={4}
-                          maxRating={5}
-                          disabled
-                        />
-                      </List.Description>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content floated="right">
-                      <Button primary>Xem bài phái sinh</Button>
-                    </List.Content>
-                    <Image
-                      avatar
-                      src="https://react.semantic-ui.com/images/avatar/small/rachel.png"
-                      alt="avatar"
-                    />
-                    <List.Content>
-                      <List.Header as="a">Nguyễn Văn A</List.Header>
-                      <List.Description>
-                        <Rating
-                          icon="star"
-                          defaultRating={5}
-                          maxRating={5}
-                          disabled
-                        />
-                      </List.Description>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content floated="right">
-                      <Button primary>Xem bài phái sinh</Button>
-                    </List.Content>
-                    <Image
-                      avatar
-                      src="https://react.semantic-ui.com/images/avatar/small/rachel.png"
-                      alt="avatar"
-                    />
-                    <List.Content>
-                      <List.Header as="a">Nguyễn Văn A</List.Header>
-                      <List.Description>
-                        <Rating
-                          icon="star"
-                          defaultRating={3}
-                          maxRating={5}
-                          disabled
-                        />
-                      </List.Description>
-                    </List.Content>
-                  </List.Item>
-                </List>
-              </Segment>
+              {user && post.user.id === user.id && (
+                <Segment>
+                  <Radio toggle label="Cho phép tạo bài phái sinh" />
+                  <Header as="h3">Người môi giới đang theo dõi</Header>
+                  <List relaxed>
+                    <List.Item>
+                      <List.Content floated="right">
+                        <Button primary>Xem bài phái sinh</Button>
+                      </List.Content>
+                      <Image
+                        avatar
+                        src="https://react.semantic-ui.com/images/avatar/small/rachel.png"
+                        alt="avatar"
+                      />
+                      <List.Content>
+                        <List.Header as="a">Nguyễn Văn A</List.Header>
+                        <List.Description>
+                          <Rating
+                            icon="star"
+                            defaultRating={4}
+                            maxRating={5}
+                            disabled
+                          />
+                        </List.Description>
+                      </List.Content>
+                    </List.Item>
+                    <List.Item>
+                      <List.Content floated="right">
+                        <Button primary>Xem bài phái sinh</Button>
+                      </List.Content>
+                      <Image
+                        avatar
+                        src="https://react.semantic-ui.com/images/avatar/small/rachel.png"
+                        alt="avatar"
+                      />
+                      <List.Content>
+                        <List.Header as="a">Nguyễn Văn A</List.Header>
+                        <List.Description>
+                          <Rating
+                            icon="star"
+                            defaultRating={5}
+                            maxRating={5}
+                            disabled
+                          />
+                        </List.Description>
+                      </List.Content>
+                    </List.Item>
+                    <List.Item>
+                      <List.Content floated="right">
+                        <Button primary>Xem bài phái sinh</Button>
+                      </List.Content>
+                      <Image
+                        avatar
+                        src="https://react.semantic-ui.com/images/avatar/small/rachel.png"
+                        alt="avatar"
+                      />
+                      <List.Content>
+                        <List.Header as="a">Nguyễn Văn A</List.Header>
+                        <List.Description>
+                          <Rating
+                            icon="star"
+                            defaultRating={3}
+                            maxRating={5}
+                            disabled
+                          />
+                        </List.Description>
+                      </List.Content>
+                    </List.Item>
+                  </List>
+                </Segment>
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>

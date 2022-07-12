@@ -16,7 +16,7 @@ const UserPanel = ({ user }) => {
                   "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
                 }
                 size="small"
-                // circular
+                circular
                 alt="avatar"
                 verticalAlign="middle"
               />

@@ -18,7 +18,7 @@ import {
   PaginationContainer,
 } from "./page-my-property.styles";
 
-const MyPropertyPage = ({ postsData }) => {
+const MyPropertyPage = ({ user, postsData }) => {
   const [data, setData] = useState(postsData || {});
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
 
@@ -44,7 +44,7 @@ const MyPropertyPage = ({ postsData }) => {
       <Grid>
         <Grid.Row>
           <Grid.Column width={3}>
-            <UserPanel />
+            <UserPanel user={user} />
           </Grid.Column>
           <Grid.Column width={13}>
             <Table padded>

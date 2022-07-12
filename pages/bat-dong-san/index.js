@@ -1,14 +1,13 @@
 import React from "react";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import RealEstatePage from "../../components/page-real-estate/page-real-estate.component";
-import { parseCookies } from "nookies";
 import axios from "axios";
 import API_URL from "../../utils/apiUrl";
 
 const RealEstate = ({ postsData, followingPosts, setFollowingPosts }) => {
   return (
     <div>
-      <SubHeader title="Bất động sản" />
+      <SubHeader title="Bất động sản" background="/zyro-image.png" />
       <RealEstatePage
         postsData={postsData}
         followingPosts={followingPosts}

@@ -8,7 +8,7 @@ import API_URL from "../../utils/apiUrl";
 const DetailBroker = ({ post, user }) => {
   return (
     <>
-      <SubHeader title="Chi tiết nhà môi giới" />
+      <SubHeader title="Chi tiết nhà môi giới" background="/zyro-image.png"/>
       <DetailBrokerPage />
     </>
   );
