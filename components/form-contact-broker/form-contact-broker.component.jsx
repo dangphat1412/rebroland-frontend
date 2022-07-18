@@ -10,21 +10,7 @@ const FormContactBroker = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      key: undefined,
-      propertyTypes: undefined,
-      province: undefined,
-      district: undefined,
-      ward: undefined,
-      minPrice: undefined,
-      maxPrice: undefined,
-      minArea: undefined,
-      maxArea: undefined,
-      directions: undefined,
-      numberOfBedrooms: undefined,
-    },
-  });
+  } = useForm({});
 
   useEffect(() => {
     register("fullName", { required: "Số điện thoại không được để trống" });
@@ -36,7 +22,8 @@ const FormContactBroker = () => {
 
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const onSubmit = async (user) => {
+  const onSubmit = async (data) => {
+    console.log("contact broker: ", data);
     // await loginUser(user, setErrorMessage, setLoginOpen, setLoading);
   };
 

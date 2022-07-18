@@ -13,3 +13,9 @@ export const ListBrokersContainer = styled.div`
     object-fit: cover;
   }
 `;
+
+export const PaginationContainer = styled.div`
+  display: flex !important;
+  justify-content: center;
+  margin-top: 10px;
+`;

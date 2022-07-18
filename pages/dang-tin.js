@@ -4,7 +4,7 @@ import SubHeader from "../components/sub-header/sub-header.component";
 export default function AddProperty({ user }) {
   return (
     <div>
-      <SubHeader title="Đăng tin rao bán đất"/>
+      <SubHeader title="Đăng tin rao bán đất" background="/zyro-image.png" />
       <FormPostProperty user={user} />
     </div>
   );

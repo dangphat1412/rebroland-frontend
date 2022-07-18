@@ -8,7 +8,7 @@ import API_URL from "../../../utils/apiUrl";
 const MyPropertyHome = ({ user, postsData }) => {
   return (
     <div>
-      <SubHeader title="Bất động sản của tôi" background="/zyro-image.png"/>
+      <SubHeader title="Bất động sản của tôi" background="/zyro-image.png" />
       <MyPropertyPage postsData={postsData} user={user} />
     </div>
   );

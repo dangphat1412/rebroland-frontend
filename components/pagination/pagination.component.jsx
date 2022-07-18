@@ -1,8 +1,8 @@
 import React from "react";
 import { Icon } from "semantic-ui-react";
-import { PaginationContainer } from "./pagination-item.styles";
+import { PaginationContainer } from "./pagination.styles";
 
-const PaginationItem = ({ ...props }) => {
+const Pagination = ({ ...props }) => {
   return (
     <PaginationContainer
       firstItem={{ content: <Icon name="angle double left" />, icon: true }}
@@ -14,4 +14,4 @@ const PaginationItem = ({ ...props }) => {
   );
 };
 
-export default PaginationItem;
+export default Pagination;

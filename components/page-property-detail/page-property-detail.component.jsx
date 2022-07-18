@@ -4,6 +4,7 @@ import {
   Button,
   Dimmer,
   Divider,
+  Dropdown,
   Form,
   Grid,
   Header,
@@ -25,15 +26,18 @@ import {
   FormPropertyDetailContainer,
   ShotInformationContainer,
   UserInformationContainer,
-} from "./form-property-detail.styles";
+} from "./page-property-detail.styles";
 import ModalItem from "../modal-item/modal-item.component";
 import FormReport from "../form-report/form-report.component";
 import { followPost, historyPost } from "../../actions/post";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactImageGallery from "react-image-gallery";
+import Script from "next/script";
+import Head from "next/head";
+import { SemanticToastContainer, toast } from "react-semantic-toasts";
 
-const FormPropertyDetail = ({ post, user }) => {
+const PagePropertyDetail = ({ post, user }) => {
   const router = useRouter();
 
   const [reportOpen, setReportOpen] = useState(false);
@@ -63,13 +67,73 @@ const FormPropertyDetail = ({ post, user }) => {
     router.push(`/nha-moi-gioi/tao-bai-phai-sinh/${postId}`);
   };
 
-  const handleFollowProperty = (e, postId) => {
+  const handleZaloShare = () => {
+    console.log(router);
+  };
+
+  const handleFacebookShare = () => {};
+
+  const handleFollowingPost = async (
+    e,
+    post,
+    followingPosts,
+    setFollowingPosts
+  ) => {
     e.stopPropagation();
-    followPost(postId) ? console.log("done") : console.log("fail");
+    user
+      ? await followPost(post, followingPosts, setFollowingPosts)
+      : setTimeout(() => {
+          toast({
+            type: "error",
+            title: "Yêu cầu đăng nhập",
+            description: <p>Đăng nhập để quan tâm bài viết</p>,
+          });
+        }, 1000);
+  };
+
+  const handleCopyLink = () => {
+    const el = document.createElement("input");
+    el.value = window.location.href;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    setTimeout(() => {
+      toast({
+        type: "success",
+        title: "Sao chép liên kết",
+        description: <p>Sao chép liên kết thành công</p>,
+      });
+    }, 1000);
   };
 
   return (
     <FormPropertyDetailContainer>
+      <Head>
+        <title>{post.title}</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta property="og:url" content={router.asPath} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={post.description} />
+        {/* <meta property="og:image" content={post.images[0].image} /> */}
+      </Head>
+      <SemanticToastContainer position="bottom-right" />
+      {/* <div
+        class="fb-share-button"
+        data-href="http://localhost:3000/bat-dong-san/gia-tu-32trm2-hang-ngoai-giao-dau-tu-gia-dot-1-view-ho-i1---i2-re-nhat-dong-10-ky-hdmb-ls-0-24t-38"
+        data-layout="button_count"
+        data-size="small"
+      ></div>
+      <div
+        class="zalo-share-button"
+        data-href="http://localhost:3000/bat-dong-san/gia-tu-32trm2-hang-ngoai-giao-dau-tu-gia-dot-1-view-ho-i1---i2-re-nhat-dong-10-ky-hdmb-ls-0-24t-38"
+        data-oaid="2599619185893858022"
+        data-layout="1"
+        data-color="blue"
+        data-customize="false"
+      ></div> */}
+
       <Form size="large">
         <Grid columns="equal" padded>
           <Grid.Row>
@@ -163,13 +227,45 @@ const FormPropertyDetail = ({ post, user }) => {
                         selection
                       >
                         <List.Item>
-                          <Icon name="share alternate" />
+                          <Dropdown
+                            icon="share alternate"
+                            floating
+                            labeled
+                            className="icon"
+                          >
+                            <Dropdown.Menu>
+                              <Dropdown.Item>
+                                <Image
+                                  src="https://cdn.icon-icons.com/icons2/2108/PNG/512/facebook_icon_130940.png"
+                                  alt="fb"
+                                  size="mini"
+                                />
+                                Facebook
+                              </Dropdown.Item>
+                              <Dropdown.Item onClick={handleZaloShare}>
+                                <Image
+                                  src="https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png"
+                                  alt="fb"
+                                  size="mini"
+                                />
+                                Zalo
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                onClick={(e, data) => {
+                                  handleCopyLink();
+                                }}
+                              >
+                                <Icon name="linkify" size="large" />
+                                Sao chép liên kết
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
                         </List.Item>
                         <List.Item>
                           <Icon
                             name="warning sign"
                             onClick={() => {
-                              setOpen(true);
+                              setReportOpen(true);
                             }}
                           />
                         </List.Item>
@@ -177,7 +273,7 @@ const FormPropertyDetail = ({ post, user }) => {
                           <Icon
                             name="heart"
                             onClick={(e) => {
-                              handleFollowProperty(e, post.postId);
+                              handleFollowingPost
                             }}
                           />
                         </List.Item>
@@ -201,8 +297,13 @@ const FormPropertyDetail = ({ post, user }) => {
                   <pre>{post.description}</pre>
                 </div>
                 <Header as="h2">Đặc điểm bất động sản</Header>
-                <Grid columns={3} divided className="property">
+                <Grid columns={3} className="property" divided="vertically">
                   <Grid.Row>
+                    <PropertyItem
+                      iconClass="kikor kiko-square-footage"
+                      title="Diện tích"
+                      description={`${post.area} m²`}
+                    />
                     <Grid.Column>
                       <Item>
                         <Item.Content
@@ -210,23 +311,7 @@ const FormPropertyDetail = ({ post, user }) => {
                           className="property-content"
                         >
                           <Item.Header className="property-header">
-                            <span class="kikor kiko-square-footage"></span>
-                            Diện tích
-                          </Item.Header>
-                          <Item.Description className="property-description">
-                            {post.area}m²
-                          </Item.Description>
-                        </Item.Content>
-                      </Item>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Item>
-                        <Item.Content
-                          verticalAlign="middle"
-                          className="property-content"
-                        >
-                          <Item.Header className="property-header">
-                            <span class="kikor kiko-price-real-estate"></span>
+                            <span className="kikor kiko-price-real-estate"></span>
                             Mức giá
                           </Item.Header>
                           <Item.Description className="property-description">
@@ -244,54 +329,41 @@ const FormPropertyDetail = ({ post, user }) => {
                         </Item.Content>
                       </Item>
                     </Grid.Column>
-                    <Grid.Column>
-                      <Item>
-                        <Item.Content
-                          verticalAlign="middle"
-                          className="property-content"
-                        >
-                          <Item.Header className="property-header">
-                            <span class="kikor kiko-square-footage"></span>
-                            Diện tích
-                          </Item.Header>
-                          <Item.Description className="property-description">
-                            {post.area}m²
-                          </Item.Description>
-                        </Item.Content>
-                      </Item>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Item>
-                        <Item.Content
-                          verticalAlign="middle"
-                          className="property-content"
-                        >
-                          <Item.Header className="property-header">
-                            <span class="kikor kiko-square-footage"></span>
-                            Diện tích
-                          </Item.Header>
-                          <Item.Description className="property-description">
-                            {post.area}m²
-                          </Item.Description>
-                        </Item.Content>
-                      </Item>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Item>
-                        <Item.Content
-                          verticalAlign="middle"
-                          className="property-content"
-                        >
-                          <Item.Header className="property-header">
-                            <span class="kikor kiko-square-footage"></span>
-                            Mã số ádasd
-                          </Item.Header>
-                          <Item.Description className="property-description">
-                            {post.area}m²
-                          </Item.Description>
-                        </Item.Content>
-                      </Item>
-                    </Grid.Column>
+                    {post.direction && (
+                      <PropertyItem
+                        iconClass="kikor kiko-resale-property"
+                        title="Hướng nhà"
+                        description={post.direction.name}
+                      />
+                    )}
+                    {post.numberOfBedroom && (
+                      <PropertyItem
+                        iconClass="kikor kiko-bedroom"
+                        title="Phòng ngủ"
+                        description={post.numberOfBedroom}
+                      />
+                    )}
+                    {post.numberOfBathroom && (
+                      <PropertyItem
+                        iconClass="kikor kiko-bathroom"
+                        title="Phòng tắm"
+                        description={post.numberOfBathroom}
+                      />
+                    )}
+                    {post.numberOfFloor && (
+                      <PropertyItem
+                        iconClass="kikor kiko-stairs"
+                        title="Số tầng"
+                        description={post.numberOfFloor}
+                      />
+                    )}
+                    {post.frontispiece && (
+                      <PropertyItem
+                        iconClass="kikor kiko-real-estate-auction"
+                        title="Mặt tiền"
+                        description={`${post.frontispiece} m²`}
+                      />
+                    )}
                   </Grid.Row>
                 </Grid>
 
@@ -318,36 +390,34 @@ const FormPropertyDetail = ({ post, user }) => {
                   verticalAlign="middle"
                 />
                 <p className="prefix-user">Được đăng bởi</p>
-                <Link href={`/${post.user.id}`}>{post.user.fullName}</Link>
+                <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>{post.user.fullName}</Link>
               </UserInformationContainer>
 
               <ContactInformationContainer textAlign="center">
-                <p>Thông tin liên hệ</p>
+                <Header as="h5">Thông tin liên hệ</Header>
                 <Header as="h2">{post.contactName}</Header>
-                {post.contactAddress && (
+                <div className="information">
+                  <div>
+                    <Icon name="mobile alternate" />
+                    {post.contactPhone}
+                  </div>
+                  <div>
+                    <Icon name="mail outline" />
+                    {post.contactEmail}
+                  </div>
                   <div>
                     <Icon name="map marker alternate" />
                     {post.contactAddress}
                   </div>
-                )}
-                <Button fluid color="blue" size="large">
-                  <Icon name="phone" />
-                  <span>0917768923</span>
-                </Button>
-                <br />
-                <Button fluid color="blue" size="large">
-                  <Icon name="mail" />
-                  <span>phatnguyen1412@gmail.com</span>
-                </Button>
-                <br />
-                <Button fluid color="blue" size="large">
+                </div>
+                <Button fluid color="blue" size="big">
                   Yêu cầu liên hệ lại
                 </Button>
               </ContactInformationContainer>
 
               <Button
                 fluid
-                size="large"
+                size="big"
                 color="teal"
                 onClick={() => {
                   showHistory(post.postId);
@@ -358,7 +428,7 @@ const FormPropertyDetail = ({ post, user }) => {
               {user && user.currentRole === 3 && (
                 <Button
                   fluid
-                  size="large"
+                  size="big"
                   color="green"
                   onClick={() => {
                     createDerivativePost(post.postId);
@@ -462,6 +532,15 @@ const FormPropertyDetail = ({ post, user }) => {
       >
         <FormHistory historyData={historyData} />
       </ModalItem>
+
+      <Script
+        async
+        defer
+        crossOrigin="anonymous"
+        src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0"
+        nonce="tykp7X9M"
+      ></Script>
+      <Script src="https://sp.zalo.me/plugins/sdk.js"></Script>
     </FormPropertyDetailContainer>
   );
 };
@@ -538,4 +617,22 @@ const FormHistory = ({ historyData }) => {
   );
 };
 
-export default FormPropertyDetail;
+const PropertyItem = ({ iconClass, title, description }) => {
+  return (
+    <Grid.Column>
+      <Item>
+        <Item.Content verticalAlign="middle" className="property-content">
+          <Item.Header className="property-header">
+            <span className={iconClass}></span>
+            {title}
+          </Item.Header>
+          <Item.Description className="property-description">
+            {description}
+          </Item.Description>
+        </Item.Content>
+      </Item>
+    </Grid.Column>
+  );
+};
+
+export default PagePropertyDetail;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Grid, Segment } from "semantic-ui-react";
+import { Button, Form, Grid, Header, Segment } from "semantic-ui-react";
 import {
   getDistrictById,
   getProvincesById,
@@ -18,6 +18,7 @@ const GeographicInformationForm = ({
   control,
   getValues,
   setValue,
+  post,
 }) => {
   const {
     fields: coordinatesFields,
@@ -91,54 +92,85 @@ const GeographicInformationForm = ({
 
   return (
     <Segment size="large">
-      <h1>Thông tin địa lý</h1>
+      <Header as="h1">Thông tin địa lý</Header>
       <Form.Group widths={2}>
-        <InputField
-          {...register("province", {
-            required: "Tỉnh/Thành phố không được để trống",
-          })}
-          fieldType="select"
-          label="Tỉnh/Thành phố"
-          name="province"
-          placeholder="Chọn Tỉnh/Thành phố"
-          options={dataProvinces.provinces}
-          onChange={handleChange}
-          error={errors.province}
-          requiredField
-        />
-        <InputField
-          {...register("district", {
-            required: "Quận/Huyện không được để trống",
-          })}
-          fieldType="select"
-          label="Quận/Huyện"
-          name="district"
-          placeholder="Chọn Quận/Huyện"
-          options={dataProvinces.districts}
-          onChange={handleChange}
-          error={errors.district}
-          requiredField
-        />
+        {!post ? (
+          <InputField
+            {...register("province", {
+              required: "Tỉnh/Thành phố không được để trống",
+            })}
+            fieldType="select"
+            label="Tỉnh/Thành phố"
+            name="province"
+            placeholder="Chọn Tỉnh/Thành phố"
+            options={dataProvinces.provinces}
+            onChange={handleChange}
+            error={errors.province}
+            requiredField
+          />
+        ) : (
+          <InputField
+            label="Tỉnh/Thành phố"
+            value={getValues("province")}
+            requiredField
+            disabled
+          />
+        )}
+        {!post ? (
+          <InputField
+            {...register("district", {
+              required: "Quận/Huyện không được để trống",
+            })}
+            fieldType="select"
+            label="Quận/Huyện"
+            name="district"
+            placeholder="Chọn Quận/Huyện"
+            options={dataProvinces.districts}
+            onChange={handleChange}
+            error={errors.district}
+            requiredField
+          />
+        ) : (
+          <InputField
+            label="Quận/Huyện"
+            value={getValues("district")}
+            requiredField
+            disabled
+          />
+        )}
       </Form.Group>
       <Form.Group widths={2}>
-        <InputField
-          {...register("ward", { required: "Xã/Phường không được để trống" })}
-          fieldType="select"
-          label="Phường/Xã"
-          name="ward"
-          placeholder="Chọn Phường/Xã"
-          options={dataProvinces.wards}
-          onChange={handleChange}
-          error={errors.ward}
-          requiredField
-        />
-        <InputField
-          {...register("address")}
-          label="Địa chỉ"
-          name="address"
-          placeholder="Nhập địa chỉ"
-          onChange={handleChange}
-        />
+        {!post ? (
+          <InputField
+            {...register("ward", { required: "Xã/Phường không được để trống" })}
+            fieldType="select"
+            label="Phường/Xã"
+            name="ward"
+            placeholder="Chọn Phường/Xã"
+            options={dataProvinces.wards}
+            onChange={handleChange}
+            error={errors.ward}
+            requiredField
+          />
+        ) : (
+          <InputField
+            label="Phường/Xã"
+            value={getValues("ward")}
+            requiredField
+            disabled
+          />
+        )}
+        {!post ? (
+          <InputField
+            {...register("address")}
+            label="Địa chỉ"
+            name="address"
+            placeholder="Nhập địa chỉ"
+            onChange={handleChange}
+          />
+        ) : (
+          <InputField label="Địa chỉ" value={getValues("address")} disabled />
+        )}
       </Form.Group>
       {/* missing loading */}
       <Form.Field>

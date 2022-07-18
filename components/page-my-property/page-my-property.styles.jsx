@@ -5,8 +5,10 @@ export const MyPropertiesPageContainer = styled.div`
   margin-right: 95px;
   margin-left: 95px;
 
+  .header,
+  .button,
   .item {
-    padding: 15px !important;
+    font-family: "Tahoma", san-serif !important;
   }
 
   .header,
@@ -23,6 +25,18 @@ export const MyPropertiesPageContainer = styled.div`
   }
   .description {
     -webkit-line-clamp: 3;
+    margin-top: 0px !important;
+  }
+
+  .my-derivative-property {
+    position: relative;
+    & .filter {
+      position: absolute;
+      right: 10px;
+    }
+  }
+  .list {
+    margin: 10px 0px;
   }
   .ui.medium.image {
     height: 215px !important;
@@ -32,10 +46,6 @@ export const MyPropertiesPageContainer = styled.div`
       width: 100%;
       object-fit: cover;
     }
-  }
-  .list {
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
   }
 `;
 

@@ -1,15 +1,24 @@
 import axios from "axios";
-import { parseCookies } from "nookies";
 import React from "react";
-import FormPropertyDetail from "../../components/form-property-detail/form-property-detail.component";
+import PagePropertyDetail from "../../components/page-property-detail/page-property-detail.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 
-const DetailRealEstate = ({ post, user }) => {
+const DetailRealEstate = ({
+  post,
+  user,
+  followingPosts,
+  setFollowingPosts,
+}) => {
   return (
     <>
       <SubHeader title="Chi tiết bất động sản" background="/zyro-image.png" />
-      <FormPropertyDetail post={post} user={user} />
+      <PagePropertyDetail
+        post={post}
+        user={user}
+        followingPosts={followingPosts}
+        setFollowingPosts={setFollowingPosts}
+      />
     </>
   );
 };

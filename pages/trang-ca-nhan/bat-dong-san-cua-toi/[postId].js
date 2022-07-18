@@ -1,15 +1,15 @@
 import React from "react";
-import FormPropertyDetail from "../../../components/form-property-detail/form-property-detail.component";
 import SubHeader from "../../../components/sub-header/sub-header.component";
 import { parseCookies } from "nookies";
 import axios from "axios";
 import API_URL from "../../../utils/apiUrl";
+import PagePropertyDetail from "../../../components/page-property-detail/page-property-detail.component";
 
 const MyDetailProperty = ({ post, user }) => {
   return (
     <>
       <SubHeader title="Chi tiết bất động sản" background="/zyro-image.png" />
-      <FormPropertyDetail post={post} user={user} />
+      <PagePropertyDetail post={post} user={user} />
     </>
   );
 };

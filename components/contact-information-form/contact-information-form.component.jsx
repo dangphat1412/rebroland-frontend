@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Segment } from "semantic-ui-react";
+import { Form, Header, Segment } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
 
 const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
@@ -9,7 +9,7 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
 
   return (
     <Segment size="large">
-      <h1>Thông tin liên hệ</h1>
+      <Header as="h1">Thông tin liên hệ</Header>
       <Form.Group widths={2}>
         <InputField
           {...register("contactName", {

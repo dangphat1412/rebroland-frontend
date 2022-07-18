@@ -6,7 +6,12 @@ import InputField from "../input-field/input-field.component";
 import { useForm } from "react-hook-form";
 import { LoginContainer } from "./login.styles";
 
-const Login = ({ handleOpenForgotPassword, setLoginOpen, setLoading }) => {
+const Login = ({
+  handleOpenForgotPassword,
+  setLoginOpen,
+  setLoading,
+  setFollowingPosts,
+}) => {
   const {
     register,
     handleSubmit,
@@ -23,7 +28,13 @@ const Login = ({ handleOpenForgotPassword, setLoginOpen, setLoading }) => {
   }, []);
 
   const onSubmit = async (user) => {
-    await loginUser(user, setErrorMessage, setLoginOpen, setLoading);
+    await loginUser(
+      user,
+      setErrorMessage,
+      setLoginOpen,
+      setLoading,
+      setFollowingPosts
+    );
   };
 
   return (

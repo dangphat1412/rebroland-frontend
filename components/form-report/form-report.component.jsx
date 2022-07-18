@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Checkbox, Form } from "semantic-ui-react";
 import CustomButton from "../custom-button/custom-button.component";
@@ -11,6 +11,10 @@ const FormReport = () => {
     setValue,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    register("address");
+  });
 
   const handleChange = (e, { name, value }) => {
     setValue(name, value);
@@ -26,7 +30,6 @@ const FormReport = () => {
         <Form.Field
           control={Checkbox}
           name="address"
-          {...register("address")}
           onChange={async (e, { name, checked }) => {
             setValue(name, checked);
           }}
@@ -35,7 +38,6 @@ const FormReport = () => {
         <Form.Field
           control={Checkbox}
           name="information"
-          {...register("information")}
           onChange={async (e, { name, checked }) => {
             setValue(name, checked);
           }}
@@ -44,7 +46,6 @@ const FormReport = () => {
         <Form.Field
           control={Checkbox}
           name="image"
-          {...register("image")}
           onChange={async (e, { name, checked }) => {
             setValue(name, checked);
           }}
@@ -53,7 +54,6 @@ const FormReport = () => {
         <Form.Field
           control={Checkbox}
           name="duplicate"
-          {...register("duplicate")}
           onChange={async (e, { name, checked }) => {
             setValue(name, checked);
           }}
@@ -62,7 +62,6 @@ const FormReport = () => {
         <Form.Field
           control={Checkbox}
           name="noContact"
-          {...register("noContact")}
           onChange={async (e, { name, checked }) => {
             setValue(name, checked);
           }}
@@ -71,7 +70,6 @@ const FormReport = () => {
         <Form.Field
           control={Checkbox}
           name="fakeNews"
-          {...register("fakeNews")}
           onChange={async (e, { name, checked }) => {
             setValue(name, checked);
           }}
@@ -80,7 +78,6 @@ const FormReport = () => {
         <Form.Field
           control={Checkbox}
           name="map"
-          {...register("map")}
           onChange={async (e, { name, checked }) => {
             setValue(name, checked);
           }}
@@ -89,7 +86,6 @@ const FormReport = () => {
         <Form.Field
           control={Checkbox}
           name="sold"
-          {...register("sold")}
           onChange={async (e, { name, checked }) => {
             setValue(name, checked);
           }}
@@ -98,7 +94,6 @@ const FormReport = () => {
         <InputField
           fieldType="textarea"
           rows={2}
-          {...register("other")}
           label="Phản hồi khác"
           name="other"
           placeholder="Nhập phản hồi"

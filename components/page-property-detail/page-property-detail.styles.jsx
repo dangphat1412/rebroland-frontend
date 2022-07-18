@@ -1,4 +1,4 @@
-import { Header, List, Segment, Statistic } from "semantic-ui-react";
+import { List, Segment, Statistic } from "semantic-ui-react";
 import styled from "styled-components";
 
 export const FormPropertyDetailContainer = styled.div`
@@ -24,19 +24,27 @@ export const FormPropertyDetailContainer = styled.div`
       margin-bottom: 20px !important;
     }
     & .property-content {
-      font-size: 20px !important;
+      font-size: 16px !important;
       display: flex !important;
       justify-content: space-between !important;
       & .kikor {
-        margin-right: 5px;
+        margin-right: 7px;
       }
       & .property-header {
+        font-weight: bold !important;
         display: flex !important;
       }
       & .property-description {
-        padding-right: 100px;
+        padding-right: 160px;
       }
     }
+  }
+  .button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .ui.horizontal.list:not(.celled) > .item:first-child {
+    padding-left: 10px !important;
   }
 `;
 
@@ -63,9 +71,6 @@ export const ActionContainer = styled(List)`
   .item {
     padding: 10px !important;
   }
-  .item:first-child: {
-    padding-left: 10px !important;
-  }
 `;
 
 export const UserInformationContainer = styled(Segment)`
@@ -78,4 +83,8 @@ export const UserInformationContainer = styled(Segment)`
   }
 `;
 
-export const ContactInformationContainer = styled(Segment)``;
+export const ContactInformationContainer = styled(Segment)`
+  .information {
+    font-size: 17px;
+  }
+`;

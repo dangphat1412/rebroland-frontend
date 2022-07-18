@@ -1,76 +1,145 @@
 import React from "react";
-import { Grid, Header, Icon, Image, List, Segment } from "semantic-ui-react";
+import {
+  Card,
+  Grid,
+  Header,
+  Icon,
+  Image,
+  List,
+  Segment,
+} from "semantic-ui-react";
 import Link from "next/link";
 import { UserPanelContainer } from "./user-panel.styles";
+import { logoutUser } from "../../actions/auth";
 
 const UserPanel = ({ user }) => {
   return (
     <UserPanelContainer>
+      <Card fluid>
+        <Card.Content textAlign="center" className="title-content">
+          <Card.Header className="custom-header">Thông tin cá nhân</Card.Header>
+        </Card.Content>
+        <Card.Content textAlign="center">
+          <Image
+            src={
+              user.avatar ||
+              "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+            }
+            circular
+            alt="avatar"
+            verticalAlign="middle"
+          />
+          <Card.Header>{user.fullName}</Card.Header>
+          <Card.Description textAlign="left">
+            <Icon name="mobile alternate" />
+            {user.phone}
+          </Card.Description>
+          <Card.Description textAlign="left">
+            <Icon name="mail outline" />
+            {user.email}
+          </Card.Description>
+          <Card.Description textAlign="left">
+            <Icon name="map marker alternate" />
+            Ngọc Nội, Trạm Lộ, Thuận Thành, Bắc Ninh
+          </Card.Description>
+        </Card.Content>
+      </Card>
+
       <Segment>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column textAlign="center">
-              <Image
-                src={
-                  user.avatar ||
-                  "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                }
-                size="small"
-                circular
-                alt="avatar"
-                verticalAlign="middle"
-              />
-              <Header as="h3">{user.fullName}</Header>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-        <div>
-          <Icon name="mobile alternate" />
-          {user.phone}
-        </div>
-        <div>
-          <Icon name="mail outline" />
-          {user.email}
-        </div>
-        <div>
-          <Icon name="map marker alternate" />
-          <span>Ngọc Nội, Trạm Lộ, Thuận Thành, Bắc Ninh</span>
-        </div>
-      </Segment>
-      <Segment>
-        <List divided relaxed selection size="big">
+        <List divided relaxed selection animated size="big">
           <Link href="/trang-ca-nhan/thong-tin-ca-nhan">
             <List.Item>
-              <List.Icon name="user outline" />
               <List.Content>
-                <List.Header as="h4">Thông tin cá nhân</List.Header>
+                <List.Header as="h4">
+                  <span class="kikor kiko-user"></span> Thông tin cá nhân
+                </List.Header>
               </List.Content>
             </List.Item>
           </Link>
-          <Link href="/trang-ca-nhan/bat-dong-san-cua-toi">
-            <List.Item>
-              <List.Icon name="file outline" />
-              <List.Content>
-                <List.Header as="h4">Bất động sản của tôi</List.Header>
-              </List.Content>
-            </List.Item>
-          </Link>
+          {user.currentRole === 2 ? (
+            <Link href="/trang-ca-nhan/bat-dong-san-cua-toi">
+              <List.Item>
+                <List.Content>
+                  <List.Header as="h4">
+                    <span class="kikor kiko-home"></span> Bất động sản của tôi
+                  </List.Header>
+                </List.Content>
+              </List.Item>
+            </Link>
+          ) : (
+            <Link href="/nha-moi-gioi/bat-dong-san-phai-sinh-cua-toi">
+              <List.Item>
+                <List.Content>
+                  <List.Header as="h4">
+                    <span class="kikor kiko-home"></span> Bất động sản phái sinh
+                    của tôi
+                  </List.Header>
+                </List.Content>
+              </List.Item>
+            </Link>
+          )}
+
+          {user.currentRole === 2 ? (
+            <Link href="/trang-ca-nhan/danh-sach-tin-da-luu">
+              <List.Item>
+                <List.Content>
+                  <List.Header as="h4">
+                    <span class="kikor kiko-heart-symbol"></span> Bất động sản
+                    đã lưu
+                  </List.Header>
+                </List.Content>
+              </List.Item>
+            </Link>
+          ) : (
+            <Link href="/nha-moi-gioi/danh-sach-bat-dong-san-da-luu">
+              <List.Item>
+                <List.Content>
+                  <List.Header as="h4">
+                    <span class="kikor kiko-heart-symbol"></span> Bất động sản
+                    phái sinh đã lưu
+                  </List.Header>
+                </List.Content>
+              </List.Item>
+            </Link>
+          )}
+
+          {user.currentRole === 3 && (
+            <Link href="/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai">
+              <List.Item>
+                <List.Content>
+                  <List.Header as="h4">
+                    <span class="kikor kiko-address-book"></span> Xử lý yêu cầu
+                    liên hệ lại
+                  </List.Header>
+                </List.Content>
+              </List.Item>
+            </Link>
+          )}
+
+          {user.currentRole === 3 && (
+            <Link href="/nha-moi-gioi/cham-soc-khach-hang">
+              <List.Item>
+                <List.Content>
+                  <List.Header as="h4">
+                    <span class="kikor kiko-handed"></span> Chăm sóc khách hàng
+                  </List.Header>
+                </List.Content>
+              </List.Item>
+            </Link>
+          )}
+
           <List.Item>
-            <List.Icon name="heart outline" />
             <List.Content>
-              <List.Header as="h4">Bất động sản đã thích</List.Header>
+              <List.Header as="h4">
+                <span class="kikor kiko-pencil-write"></span> Đăng tin
+              </List.Header>
             </List.Content>
           </List.Item>
-          <List.Item>
-            <List.Icon name="edit outline" />
+          <List.Item onClick={logoutUser}>
             <List.Content>
-              <List.Header as="h4">Đăng tin</List.Header>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name="log out" />
-            <List.Content>
-              <List.Header as="h4">Đăng xuất</List.Header>
+              <List.Header as="h4">
+                <span class="kikor kiko-arrow-right-circle"></span> Đăng xuất
+              </List.Header>
             </List.Content>
           </List.Item>
         </List>

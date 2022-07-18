@@ -2,18 +2,28 @@ import React from "react";
 import { Modal, TransitionablePortal } from "semantic-ui-react";
 import { ModalFooter } from "../login-register-modal/login-register-modal.styles";
 
-const ModalItem = ({ header, footer, onOpen, onClose, size, children }) => {
+const ModalItem = ({
+  header,
+  footer,
+  onOpen,
+  onClose,
+  size,
+  children,
+  dimmer,
+  center,
+}) => {
   return (
     <TransitionablePortal
       open={onOpen}
       transition={{ animation: "scale", duration: 300 }}
     >
       <Modal
-        centered={false}
+        centered={center || false}
         size={size || "mini"}
         open={onOpen}
         onClose={onClose}
         closeIcon
+        dimmer={dimmer || "default"}
       >
         <Modal.Header style={{ fontFamily: "Tahoma, san-serif" }}>
           {header}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Grid, Icon } from "semantic-ui-react";
 import { getFollowingPostsByUser } from "../../actions/post";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
-import PaginationItem from "../pagination-item/pagination-item.component";
+import Pagination from "../pagination/pagination.component";
 import UserPanel from "../user-panel/user-panel.component";
 import {
   MyFollowingPropertiesContainer,
@@ -10,6 +10,7 @@ import {
 } from "./page-my-following-properties.styles";
 
 const MyFollowingPropertiesPage = ({
+  user,
   postsData,
   followingPosts,
   setFollowingPosts,
@@ -33,7 +34,7 @@ const MyFollowingPropertiesPage = ({
       <Grid>
         <Grid.Row>
           <Grid.Column width={3}>
-            <UserPanel />
+            <UserPanel user={user} />
           </Grid.Column>
           <Grid.Column width={13}>
             {data.posts &&
@@ -46,7 +47,7 @@ const MyFollowingPropertiesPage = ({
                 />
               ))}
             <PaginationContainer>
-              <PaginationItem
+              <Pagination
                 activePage={data.pageNo}
                 boundaryRange={1}
                 siblingRange={1}

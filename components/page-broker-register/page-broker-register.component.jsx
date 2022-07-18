@@ -28,7 +28,6 @@ const BrokerRegisterPage = () => {
   }, []);
 
   const onSubmit = async (data) => {
-    console.log(data);
     await brokerRegister(setErrorMessage);
   };
 
@@ -52,7 +51,7 @@ const BrokerRegisterPage = () => {
             >
               <Message
                 error
-                content={errorMessage}
+                list={errorMessage}
                 onDismiss={() => setErrorMessage(null)}
               />
               <Label basic>Thời lượng</Label>

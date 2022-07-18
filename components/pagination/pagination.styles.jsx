@@ -1,4 +1,4 @@
-import { Form, Pagination, Segment } from "semantic-ui-react";
+import { Pagination } from "semantic-ui-react";
 import styled from "styled-components";
 
 export const PaginationContainer = styled(Pagination)`

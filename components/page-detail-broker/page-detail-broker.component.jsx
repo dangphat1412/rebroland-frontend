@@ -94,6 +94,9 @@ const DetailBrokerPage = () => {
                 officiis delectus magnam! Aperiam optio labore sapiente itaque
                 illo possimus accusamus numquam nam reiciendis.
               </div>
+              {/* <div>
+                <pre>{post.description}</pre>
+              </div> */}
             </Segment>
             <Header as="h2">Danh sách bất động sản</Header>
             <Tab menu={{ secondary: true, pointing: true }} panes={panes} />

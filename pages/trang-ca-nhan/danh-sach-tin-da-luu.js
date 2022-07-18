@@ -6,6 +6,7 @@ import axios from "axios";
 import API_URL from "../../utils/apiUrl";
 
 const MyFollowProperties = ({
+  user,
   postsData,
   followingPosts,
   setFollowingPosts,
@@ -14,6 +15,7 @@ const MyFollowProperties = ({
     <div>
       <SubHeader title="Danh sách tin đã lưu" />
       <MyFollowingPropertiesPage
+        user={user}
         postsData={postsData}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}

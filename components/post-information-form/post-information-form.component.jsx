@@ -1,5 +1,5 @@
 import React from "react";
-import { Segment } from "semantic-ui-react";
+import { Header, Segment } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
 
 const PostInformationForm = ({ register, errors, setValue, getValues }) => {
@@ -9,7 +9,7 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
 
   return (
     <Segment size="large">
-      <h1>Thông tin bài đăng</h1>
+      <Header as="h1">Thông tin bài đăng</Header>
       <InputField
         {...register("title", { required: "Tiêu đề không được để trống" })}
         label="Tiêu đề"

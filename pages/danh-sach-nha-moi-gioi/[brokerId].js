@@ -1,6 +1,5 @@
 import axios from "axios";
 import React from "react";
-import FormPropertyDetail from "../../components/form-property-detail/form-property-detail.component";
 import DetailBrokerPage from "../../components/page-detail-broker/page-detail-broker.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
@@ -8,7 +7,7 @@ import API_URL from "../../utils/apiUrl";
 const DetailBroker = ({ post, user }) => {
   return (
     <>
-      <SubHeader title="Chi tiết nhà môi giới" background="/zyro-image.png"/>
+      <SubHeader title="Chi tiết nhà môi giới" background="/zyro-image.png" />
       <DetailBrokerPage />
     </>
   );

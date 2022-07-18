@@ -85,12 +85,14 @@ const FormPostProperty = ({ user }) => {
                     errors={errors}
                     register={register}
                     setValue={setValue}
+                    getValues={getValues}
                   />
                   <RealEstateInformationForm
                     register={register}
                     errors={errors}
                     watch={watch}
                     setValue={setValue}
+                    getValues={getValues}
                   />
                   <GeographicInformationForm
                     register={register}

@@ -5,7 +5,6 @@ import SubHeader from "../../../components/sub-header/sub-header.component";
 import API_URL from "../../../utils/apiUrl";
 
 const CreateDerivativePostProperty = ({ user, post }) => {
-  console.log("derivative post: ", post);
   return (
     <div>
       <SubHeader title="Tạo bài phái sinh" background="/bg-real-estate.jpg" />

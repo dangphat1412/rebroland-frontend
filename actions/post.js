@@ -56,11 +56,12 @@ export const createPost = async (post, images) => {
   }
 };
 
-export const getPostsByUser = async (activePage) => {
+export const createDerivativePost = async (postId, post, images) => {
   try {
-    const page = activePage - 1;
-    const res = await Axios.get(`/user?pageNo=${page || 0}`);
-    return res.data;
+    console.log("DATA: ", { ...post, images });
+    const res = await Axios.post(`/${postId}`, { ...post, images });
+    res.status === 201 &&
+      Router.push("/nha-moi-gioi/bat-dong-san-phai-sinh-cua-toi");
   } catch (error) {
     console.log(error);
   }
@@ -78,7 +79,7 @@ export const getPostById = async (postId) => {
 export const getPosts = async (activePage) => {
   try {
     const page = activePage - 1;
-    const res = await Axios.get(`?pageNo=${page || 0}`);
+    const res = await Axios.get(`/lists?pageNo=${page || 0}`);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -121,10 +122,24 @@ export const searchPosts = async (data) => {
   }
 };
 
-export const followPost = async (postId) => {
+export const followPost = async (post, followingPosts, setFollowingPosts) => {
   try {
-    const res = await Axios.post(`/follow/${postId}`);
-    return res.status === 201;
+    const res =
+      post.postId !== 0
+        ? await Axios.post(`/follow/0/${post.derivativeId}`)
+        : await Axios.post(`/follow/${post.derivativeId}/0`);
+    console.log(res.status);
+    res.status === 201 && setFollowingPosts([...followingPosts, post]);
+    res.status === 204 &&
+      setFollowingPosts(
+        followingPosts.filter(
+          (followingPost) =>
+            !(
+              followingPost.postId === post.postId &&
+              followingPost.derivativeId === post.derivativeId
+            )
+        )
+      );
   } catch (error) {
     console.log(error);
   }
@@ -133,6 +148,32 @@ export const followPost = async (postId) => {
 export const historyPost = async (postId) => {
   try {
     const res = await axios.get(`${API_URL}/api/posts/history/${postId}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPostsByUser = async (propertyType, sortValue, pageNo) => {
+  try {
+    const res = await Axios.get(
+      `/user?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDerivativePostsByUser = async (
+  propertyType,
+  sortValue,
+  pageNo
+) => {
+  try {
+    const res = await Axios.get(
+      `/broker/list?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
+    );
     return res.data;
   } catch (error) {
     console.log(error);

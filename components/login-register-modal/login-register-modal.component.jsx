@@ -20,6 +20,8 @@ const LoginRegisterModal = ({
   otpRegisterOpen,
   setOtpRegisterOpen,
   setLoading,
+  followingPosts,
+  setFollowingPosts,
 }) => {
   const [registerData, setRegisterData] = useState();
   const [forgotPasswordData, setForgotPasswordData] = useState();
@@ -83,6 +85,7 @@ const LoginRegisterModal = ({
           handleOpenForgotPassword={handleOpenForgotPassword}
           setLoginOpen={setLoginOpen}
           setLoading={setLoading}
+          setFollowingPosts={setFollowingPosts}
         />
       </ModalItem>
 

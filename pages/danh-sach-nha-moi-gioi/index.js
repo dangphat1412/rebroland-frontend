@@ -4,7 +4,7 @@ import ListBrokersPage from "../../components/page-list-brokers/page-list-broker
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 
-const Broker = ({ listBrokers }) => {
+const Broker = ({ brokersData }) => {
   return (
     <div>
       <SubHeader
@@ -12,7 +12,7 @@ const Broker = ({ listBrokers }) => {
         subtitle="Kết quả tìm kiếm nhà môi giới"
         background="/zyro-image.png"
       />
-      <ListBrokersPage listBrokers={listBrokers} />
+      <ListBrokersPage brokersData={brokersData} />
     </div>
   );
 };
@@ -21,7 +21,7 @@ export async function getServerSideProps(context) {
   try {
     const res = await axios.get(`${API_URL}/api/users/broker`);
 
-    return { props: { listBrokers: res.data } };
+    return { props: { brokersData: res.data } };
   } catch (error) {
     // return { props: { post: [1, 2, 3] } };
   }

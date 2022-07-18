@@ -178,9 +178,9 @@ const MyProfilePage = ({ user }) => {
                 <Card.Header textAlign="center">Thông tin cá nhân</Card.Header>
               </Card.Content>
               <Card.Content>
-                <Grid>
+                <Grid centered>
                   <Grid.Row>
-                    <Grid.Column width={9}>
+                    <Grid.Column width={9} centered>
                       <Form
                         onSubmit={handleSubmit(onSubmit)}
                         error={errorMessage !== null}
@@ -290,6 +290,18 @@ const MyProfilePage = ({ user }) => {
                             setValue(name, value);
                           }}
                         />
+                        <InputField
+                          label="Trang cá nhân Facebook"
+                          // onChange={async (e, { name, value }) => {
+                          //   setValue(name, value);
+                          // }}
+                        />
+                        <InputField
+                          label="Trang cá nhân Zalo"
+                          // onChange={async (e, { name, value }) => {
+                          //   setValue(name, value);
+                          // }}
+                        />
                         <Grid>
                           <Grid.Column textAlign="center">
                             <Button type="submit" className="btnUpdate">
@@ -299,7 +311,7 @@ const MyProfilePage = ({ user }) => {
                         </Grid>
                       </Form>
                     </Grid.Column>
-                    <Grid.Column width={7} textAlign="center">
+                    {/* <Grid.Column width={7} textAlign="center">
                       <label style={{ fontWeight: "bold" }}>Ảnh đại diện</label>
                       <input
                         ref={mediaRef}
@@ -343,7 +355,7 @@ const MyProfilePage = ({ user }) => {
                       >
                         Thay đổi ảnh đại diện
                       </Button>
-                    </Grid.Column>
+                    </Grid.Column> */}
                   </Grid.Row>
                 </Grid>
               </Card.Content>

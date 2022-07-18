@@ -3,30 +3,26 @@ import { parseCookies, destroyCookie } from "nookies";
 import "../styles/globals.css";
 import "fontkiko/css/kiko-all.css";
 import "semantic-ui-css/semantic.min.css";
+import "react-semantic-toasts/styles/react-semantic-alert.css";
 import API_URL from "../utils/apiUrl";
 import { redirectUser } from "../utils/authUser";
 import Navigation from "../components/navigation/navigation.component";
 import Footer from "../components/footer/footer.component";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { useEffect, useState } from "react";
-import LoginRegisterModal from "../components/login-register-modal/login-register-modal.component";
 import { Dimmer, Loader } from "semantic-ui-react";
 
 export default function MyApp({ Component, pageProps }) {
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
-  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
-  const [otpForgotPasswordOpen, setOtpForgotPasswordOpen] = useState(false);
-  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
-  const [otpRegisterOpen, setOtpRegisterOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [followingPosts, setFollowingPosts] = useState(
-    pageProps.following || []
-  );
+  const [followingPosts, setFollowingPosts] = useState([]);
 
   useEffect(() => {
     console.log("user: ", pageProps.user);
   }, [pageProps.user]);
+
+  useEffect(() => {
+    setFollowingPosts(pageProps.followingPosts);
+  }, [pageProps.followingPosts]);
 
   return (
     <>
@@ -36,11 +32,9 @@ export default function MyApp({ Component, pageProps }) {
 
       <Navigation
         {...pageProps}
+        setLoading={setLoading}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
-        setLoginOpen={setLoginOpen}
-        setRegisterOpen={setRegisterOpen}
-        setLoading={setLoading}
       />
       <Component
         {...pageProps}
@@ -48,22 +42,6 @@ export default function MyApp({ Component, pageProps }) {
         setFollowingPosts={setFollowingPosts}
       />
       <Footer />
-
-      <LoginRegisterModal
-        loginOpen={loginOpen}
-        setLoginOpen={setLoginOpen}
-        registerOpen={registerOpen}
-        setRegisterOpen={setRegisterOpen}
-        forgotPasswordOpen={forgotPasswordOpen}
-        setForgotPasswordOpen={setForgotPasswordOpen}
-        otpForgotPasswordOpen={otpForgotPasswordOpen}
-        setOtpForgotPasswordOpen={setOtpForgotPasswordOpen}
-        resetPasswordOpen={resetPasswordOpen}
-        setResetPasswordOpen={setResetPasswordOpen}
-        otpRegisterOpen={otpRegisterOpen}
-        setOtpRegisterOpen={setOtpRegisterOpen}
-        setLoading={setLoading}
-      />
     </>
   );
 }
@@ -84,17 +62,15 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       const res = await axios.get(`${API_URL}/api/users`, {
         headers: { Authorization: token },
       });
-      const { user, following, isBroker } = res.data;
+      const { user, isBroker, following } = res.data;
       pageProps.user = user;
-      pageProps.following = following;
+      pageProps.followingPosts = following;
       pageProps.isBroker = isBroker;
       // if (user && user.currentRole === 3) {
       // redirectUser(ctx, "/nha-moi-gioi");
       // }
-      if (user)
-        user.currentRole === 3 &&
-          !ctx.pathname === "/nha-moi-gioi" &&
-          redirectUser(ctx, "/nha-moi-gioi");
+      if (user && user.currentRole === 3 && ctx.pathname === "/")
+        redirectUser(ctx, "/nha-moi-gioi");
     } catch (error) {
       destroyCookie(ctx, "token");
       redirectUser(ctx, "/");

@@ -30,20 +30,21 @@ export const loginUser = async (
   user,
   setErrorMessage,
   setLoginOpen,
-  setLoading
+  setLoading,
+  setFollowingPosts
 ) => {
   setLoading(true);
   try {
     const res = await axios.post(`${API_URL}/api/users/signin`, user);
     setToken(res.data.accessToken);
     setLoginOpen(false);
-    Router.push(Router.asPath);
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);
     console.log(messages);
   }
   setLoading(false);
+  Router.push(Router.asPath);
 };
 
 export const logoutUser = async () => {

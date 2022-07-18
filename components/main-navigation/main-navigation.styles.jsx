@@ -24,6 +24,9 @@ export const NavContainer = styled(Container)`
   .btn-radio {
     padding-left: 16px !important;
   }
+  .ui.popup>.header {
+    font-family: "Tahoma", san-serif !important;
+  }
 `;
 
 export const Menu = styled.div`

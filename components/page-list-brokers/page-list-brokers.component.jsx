@@ -1,20 +1,70 @@
 import Link from "next/link";
-import React from "react";
-import { Card, Grid, Icon, Image, Segment } from "semantic-ui-react";
+import React, { useState } from "react";
+import {
+  Card,
+  Grid,
+  Icon,
+  Image,
+  Loader,
+  Pagination,
+  Segment,
+} from "semantic-ui-react";
+import { getListBrokers } from "../../actions/user";
 import SearchBoxBroker from "../search-box-broker/search-box-broker.component";
-import { ListBrokersContainer } from "./page-list-brokers.styles";
+import {
+  ListBrokersContainer,
+  PaginationContainer,
+} from "./page-list-brokers.styles";
 
-const ListBrokersPage = ({ listBrokers }) => {
+const ListBrokersPage = ({ brokersData }) => {
+  const [data, setData] = useState(brokersData || {});
+
+  const handlePaginationChange = (e, { activePage }) => {
+    fetchAPI(activePage);
+  };
+
+  const fetchAPI = async (page) => {
+    const brokers = await getListBrokers(page);
+    setData(brokers);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
   return (
     <ListBrokersContainer>
       <Grid>
         <Grid.Row>
           <Grid.Column width={12}>
-            <Card.Group itemsPerRow={4}>
-              {listBrokers.map((broker, index) => {
-                return <BrokerItem key={index} broker={broker} />;
-              })}
-            </Card.Group>
+            {data.length === 0 ? (
+              <Segment basic>
+                <Loader active inline="centered" />
+              </Segment>
+            ) : data.listBroker.length === 0 ? (
+              <>Không tìm thấy kết quả phù hợp</>
+            ) : (
+              <>
+                <Card.Group itemsPerRow={4}>
+                  {data &&
+                    data.listBroker.map((broker, index) => (
+                      <BrokerItem key={index} broker={broker} />
+                    ))}
+                </Card.Group>
+                <PaginationContainer>
+                  <Pagination
+                    activePage={data.pageNumber}
+                    boundaryRange={1}
+                    siblingRange={1}
+                    ellipsisItem={{
+                      content: <Icon name="ellipsis horizontal" />,
+                      icon: true,
+                    }}
+                    totalPages={data.totalPage}
+                    onPageChange={handlePaginationChange}
+                  />
+                </PaginationContainer>
+              </>
+            )}
           </Grid.Column>
           <Grid.Column width={4}>
             <Segment

@@ -3,11 +3,12 @@ import { CreateDerivativePostContainer } from "./page-create-derivative-post.sty
 import { useForm } from "react-hook-form";
 import { Button, Card, Form, Grid, Icon, Image } from "semantic-ui-react";
 import PostInformationForm from "../post-information-form/post-information-form.component";
-import RealEstateInformationForm from "../real-estate-information-form/real-estate-information-form.component";
 import RealEstateCard from "../card-real-estate/card-real-estate.component";
 import ContactInformationForm from "../contact-information-form/contact-information-form.component";
 import ImageInformationForm from "../image-information-form/image-information-form.component";
 import GeographicInformationForm from "../geographic-information-form/geographic-information-form.component";
+import { createDerivativePost } from "../../actions/post";
+import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
 
 const CreateDerivativePost = ({ user, post }) => {
   const contextRef = createRef();
@@ -24,11 +25,11 @@ const CreateDerivativePost = ({ user, post }) => {
     defaultValues: {
       title: post.title,
       description: post.description,
-      propertyTypeId: post.propertyType.id,
+      propertyTypeId: post.propertyType && post.propertyType.id,
       area: post.area,
       price: post.price,
-      unitPriceId: post.unitPrice.id,
-      longevityId: post.longevity.id,
+      unitPriceId: post.unitPrice && post.unitPrice.id,
+      longevityId: post.longevity && post.longevity.id,
       numberOfBedroom: post.numberOfBedroom,
       numberOfBathroom: post.numberOfBathroom,
       floorNumber: post.floorNumber,
@@ -42,13 +43,13 @@ const CreateDerivativePost = ({ user, post }) => {
       ownerPhone: post.ownerPhone,
       // parentBarcode: undefined,
       // parentPlotNumber: undefined,
-      directionId: post.direction.id,
+      directionId: post.direction && post.direction.id,
       frontispiece: post.frontispiece,
       additionalDescription: post.additionalDescription,
-      province: undefined,
-      district: undefined,
-      ward: undefined,
-      address: undefined,
+      province: post.province,
+      district: post.district,
+      ward: post.ward,
+      address: post.address,
       coordinates: [],
       contactName: user.fullName,
       contactPhone: user.phone,
@@ -68,7 +69,7 @@ const CreateDerivativePost = ({ user, post }) => {
         return;
       }
     }
-    await createPost(data, mediaUrl);
+    await createDerivativePost(post.postId, data, mediaUrl);
   };
   return (
     <CreateDerivativePostContainer>
@@ -82,20 +83,13 @@ const CreateDerivativePost = ({ user, post }) => {
                 setValue={setValue}
                 getValues={getValues}
               />
-              <RealEstateInformationForm
-                register={register}
-                errors={errors}
-                watch={watch}
-                setValue={setValue}
-                getValues={getValues}
-                post={post}
-              />
               <GeographicInformationForm
                 register={register}
                 errors={errors}
                 getValues={getValues}
                 setValue={setValue}
                 control={control}
+                post={post}
               />
               <ImageInformationForm images={images} setImages={setImages} />
               <ContactInformationForm

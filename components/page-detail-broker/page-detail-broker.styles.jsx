@@ -22,4 +22,13 @@ export const DetailBrokerContainer = styled.div`
       cursor: pointer;
     }
   }
+
+  pre {
+    font-family: "Tahoma", san-serif !important;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
 `;

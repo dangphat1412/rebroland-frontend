@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Divider, Form, Label, Segment, Select, Tab } from "semantic-ui-react";
+import {
+  Divider,
+  Form,
+  Header,
+  Label,
+  Segment,
+  Select,
+  Tab,
+} from "semantic-ui-react";
 import {
   getDirections,
   getLongevity,
@@ -71,7 +79,7 @@ const RealEstateInformationForm = ({
 
   return (
     <Segment size="large">
-      <h1>Thông tin bất động sản</h1>
+      <Header as="h1">Thông tin bất động sản</Header>
       {!post ? (
         <InputField
           {...register("propertyTypeId", {
@@ -102,7 +110,8 @@ const RealEstateInformationForm = ({
           label="Diện tích"
           name="area"
           placeholder="Nhập diện tích"
-          onChange={handleChange}
+          onChange={post ? handleChange : null}
+          disabled={post ? true : false}
           defaultValue={getValues("area")}
           error={errors.area}
           requiredField
@@ -119,7 +128,8 @@ const RealEstateInformationForm = ({
           name="price"
           placeholder="Nhập mức giá"
           defaultValue={getValues("price")}
-          onChange={handleChange}
+          onChange={post ? handleChange : null}
+          disabled={post ? true : false}
           error={errors.price}
           requiredField
         >
