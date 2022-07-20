@@ -8,6 +8,7 @@ import {
 import InputField from "../input-field/input-field.component";
 import Map from "../map/map.component";
 import { useFieldArray } from "react-hook-form";
+import { FormGeographicInformationContainer } from "./geographic-information-form.styles";
 
 const HANOI_PROVINCE_ID = 1;
 const THACHTHAT_DISTRICT_ID = 276;
@@ -31,9 +32,14 @@ const GeographicInformationForm = ({
   ]);
 
   const handleCheck = () => {
-    getValues("coordinates").map((coordinate) => {
-      return { lat: coordinate.latitude, lng: coordinate.longitude };
-    });
+    setPosition(
+      getValues("coordinates").map((coordinate) => {
+        return {
+          lat: parseFloat(coordinate.latitude),
+          lng: parseFloat(coordinate.longitude),
+        };
+      })
+    );
   };
 
   const handleChange = (e, { name, value }) => {
@@ -41,6 +47,10 @@ const GeographicInformationForm = ({
     name === "district" && fetchWardsAPI();
     setValue(name, value);
   };
+
+  useEffect(() => {
+    console.log(position);
+  });
 
   useEffect(() => {
     fetchProvinceAPI();
@@ -91,7 +101,7 @@ const GeographicInformationForm = ({
   };
 
   return (
-    <Segment size="large">
+    <FormGeographicInformationContainer size="large">
       <Header as="h1">Thông tin địa lý</Header>
       <Form.Group widths={2}>
         {!post ? (
@@ -202,6 +212,7 @@ const GeographicInformationForm = ({
                       <Button
                         color="red"
                         type="button"
+                        size="large"
                         onClick={() => coordinatesRemove(index)}
                       >
                         Xoá toạ độ
@@ -214,13 +225,19 @@ const GeographicInformationForm = ({
                 <Button
                   primary
                   type="button"
+                  size="large"
                   onClick={() => {
                     coordinatesAppend({});
                   }}
                 >
                   Thêm toạ độ
                 </Button>
-                <Button positive type="button" onClick={handleCheck}>
+                <Button
+                  positive
+                  type="button"
+                  onClick={handleCheck}
+                  size="large"
+                >
                   Kiểm tra trên bản đồ
                 </Button>
               </div>
@@ -228,7 +245,7 @@ const GeographicInformationForm = ({
           </Grid.Row>
         </Grid>
       </Form.Field>
-    </Segment>
+    </FormGeographicInformationContainer>
   );
 };
 

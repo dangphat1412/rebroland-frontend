@@ -56,7 +56,7 @@ const MainNavigation = ({
                 </Link>
                 <Link
                   href={
-                    user && user.currentRole
+                    user && user.currentRole === 3
                       ? "/nha-moi-gioi/bat-dong-san"
                       : "/bat-dong-san"
                   }
@@ -92,7 +92,10 @@ const MainNavigation = ({
                           <>
                             <Image
                               avatar
-                              src="https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg"
+                              src={
+                                user.avatar ||
+                                "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg"
+                              }
                               alt="avatar"
                             />
                             <span>{user.fullName}</span>
@@ -203,7 +206,9 @@ const MainNavigation = ({
                               })}
                           </Item.Group>
                           <Divider />
-                          <Link href="/">Xem tất cả</Link>
+                          <Link href="/trang-ca-nhan/danh-sach-tin-da-luu">
+                            Xem tất cả
+                          </Link>
                         </>
                       }
                       on="click"

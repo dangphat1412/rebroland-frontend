@@ -35,6 +35,7 @@ export const MyDerivativePropertyContainer = styled.div`
       right: 10px;
     }
   }
+  
   .list {
     margin: 10px 0px;
   }

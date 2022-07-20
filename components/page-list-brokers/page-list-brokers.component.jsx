@@ -2,6 +2,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import {
   Card,
+  Dropdown,
   Grid,
   Icon,
   Image,
@@ -18,9 +19,15 @@ import {
 
 const ListBrokersPage = ({ brokersData }) => {
   const [data, setData] = useState(brokersData || {});
+  const [sortValue, setSortValue] = useState(0);
 
   const handlePaginationChange = (e, { activePage }) => {
     fetchAPI(activePage);
+  };
+
+  const handleFilterOption = (e, { value }) => {
+    setSortValue(value);
+    fetchAPI(propertyType, value, 0);
   };
 
   const fetchAPI = async (page) => {
@@ -50,23 +57,33 @@ const ListBrokersPage = ({ brokersData }) => {
                       <BrokerItem key={index} broker={broker} />
                     ))}
                 </Card.Group>
-                <PaginationContainer>
-                  <Pagination
-                    activePage={data.pageNumber}
-                    boundaryRange={1}
-                    siblingRange={1}
-                    ellipsisItem={{
-                      content: <Icon name="ellipsis horizontal" />,
-                      icon: true,
-                    }}
-                    totalPages={data.totalPage}
-                    onPageChange={handlePaginationChange}
-                  />
-                </PaginationContainer>
+                {data.totalPage > 1 && (
+                  <PaginationContainer>
+                    <Pagination
+                      activePage={data.pageNumber}
+                      boundaryRange={1}
+                      siblingRange={1}
+                      ellipsisItem={{
+                        content: <Icon name="ellipsis horizontal" />,
+                        icon: true,
+                      }}
+                      totalPages={data.totalPage}
+                      onPageChange={handlePaginationChange}
+                    />
+                  </PaginationContainer>
+                )}
               </>
             )}
           </Grid.Column>
           <Grid.Column width={4}>
+            <Dropdown
+              fluid
+              selection
+              options={options}
+              className="filter"
+              value={sortValue}
+              onChange={handleFilterOption}
+            />
             <Segment
               style={{
                 backgroundImage: "url('/zyro-image.png')",
@@ -114,5 +131,23 @@ const BrokerItem = ({ broker }) => {
     </Link>
   );
 };
+
+const options = [
+  {
+    key: 0,
+    text: "Thông thường",
+    value: 0,
+  },
+  {
+    key: 1,
+    text: "Lượt bình chọn",
+    value: 1,
+  },
+  {
+    key: 2,
+    text: "Số giao dịch thành công",
+    value: 2,
+  },
+];
 
 export default ListBrokersPage;

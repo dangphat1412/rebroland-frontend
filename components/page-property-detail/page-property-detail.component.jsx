@@ -37,7 +37,14 @@ import Script from "next/script";
 import Head from "next/head";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 
-const PagePropertyDetail = ({ post, user }) => {
+const PagePropertyDetail = ({
+  post,
+  user,
+  followingPosts,
+  setFollowingPosts,
+}) => {
+  console.log(followingPosts);
+  console.log(post);
   const router = useRouter();
 
   const [reportOpen, setReportOpen] = useState(false);
@@ -273,8 +280,22 @@ const PagePropertyDetail = ({ post, user }) => {
                           <Icon
                             name="heart"
                             onClick={(e) => {
-                              handleFollowingPost
+                              handleFollowingPost(
+                                e,
+                                post,
+                                followingPosts,
+                                setFollowingPosts
+                              );
                             }}
+                            color={
+                              followingPosts &&
+                              followingPosts.filter(
+                                (followingPost) =>
+                                  followingPost.postId === post.postId
+                              ).length > 0
+                                ? "red"
+                                : null
+                            }
                           />
                         </List.Item>
                       </ActionContainer>
@@ -390,7 +411,9 @@ const PagePropertyDetail = ({ post, user }) => {
                   verticalAlign="middle"
                 />
                 <p className="prefix-user">Được đăng bởi</p>
-                <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>{post.user.fullName}</Link>
+                <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
+                  {post.user.fullName}
+                </Link>
               </UserInformationContainer>
 
               <ContactInformationContainer textAlign="center">

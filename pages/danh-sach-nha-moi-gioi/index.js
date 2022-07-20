@@ -9,7 +9,7 @@ const Broker = ({ brokersData }) => {
     <div>
       <SubHeader
         title="Danh sách nhà môi giới"
-        subtitle="Kết quả tìm kiếm nhà môi giới"
+        subtitle={`Kết quả tìm kiếm có ${brokersData.totalPage} Nhà môi giới`}
         background="/zyro-image.png"
       />
       <ListBrokersPage brokersData={brokersData} />

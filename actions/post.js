@@ -86,10 +86,15 @@ export const getPosts = async (activePage) => {
   }
 };
 
-export const getFollowingPostsByUser = async (activePage) => {
+export const getFollowingPostsByUser = async (
+  propertyType,
+  sortValue,
+  pageNo
+) => {
   try {
-    const page = activePage - 1;
-    const res = await Axios.get(`/user/follow?pageNo=${page || 0}`);
+    const res = await Axios.get(
+      `/user/follow?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
+    );
     return res.data;
   } catch (error) {
     console.log(error);
@@ -124,11 +129,7 @@ export const searchPosts = async (data) => {
 
 export const followPost = async (post, followingPosts, setFollowingPosts) => {
   try {
-    const res =
-      post.postId !== 0
-        ? await Axios.post(`/follow/0/${post.derivativeId}`)
-        : await Axios.post(`/follow/${post.derivativeId}/0`);
-    console.log(res.status);
+    const res = await Axios.post(`/follow/${post.postId}`);
     res.status === 201 && setFollowingPosts([...followingPosts, post]);
     res.status === 204 &&
       setFollowingPosts(
@@ -158,6 +159,22 @@ export const getPostsByUser = async (propertyType, sortValue, pageNo) => {
   try {
     const res = await Axios.get(
       `/user?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPostsByUserDetail = async (
+  userId,
+  propertyType,
+  sortValue,
+  pageNo
+) => {
+  try {
+    const res = await axios.get(
+      `${API_URL}/api/posts/user/${userId}?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
     );
     return res.data;
   } catch (error) {

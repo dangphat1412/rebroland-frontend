@@ -13,7 +13,7 @@ import {
   Tab,
   Table,
 } from "semantic-ui-react";
-import { getDerivativePostsByUser, getPostsByUser } from "../../actions/post";
+import { getPostsByUser } from "../../actions/post";
 import convertToSlug from "../../utils/convertToSlug";
 import Pagination from "../pagination/pagination.component";
 import UserPanel from "../user-panel/user-panel.component";
@@ -193,7 +193,7 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                       </Item.Group>
                     </Table.Cell>
                     <Table.Cell singleLine textAlign="center">
-                      {post.statusDTO.name}
+                      {post.status.name}
                     </Table.Cell>
                     <Table.Cell textAlign="center">
                       <Link

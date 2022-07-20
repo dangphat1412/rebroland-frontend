@@ -31,4 +31,12 @@ export const DetailBrokerContainer = styled.div`
     white-space: pre-wrap;
     word-wrap: break-word;
   }
+
+  .list-property {
+    position: relative;
+    & .filter {
+      position: absolute;
+      right: 0px;
+    }
+  }
 `;

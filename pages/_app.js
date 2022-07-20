@@ -49,7 +49,8 @@ export default function MyApp({ Component, pageProps }) {
 MyApp.getInitialProps = async ({ Component, ctx }) => {
   const { token } = parseCookies(ctx);
   let pageProps = {};
-  const protectedRoutes = ctx.pathname === "/dang-tin";
+  // const protectedRoutes = ctx.pathname === "/dang-tin";
+  const protectedRoutes = false;
 
   if (!token) {
     destroyCookie(ctx, "token");

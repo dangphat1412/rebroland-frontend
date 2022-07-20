@@ -5,8 +5,21 @@ export const MyFollowingPropertiesContainer = styled.div`
   margin-right: 95px;
   margin-left: 95px;
 
+  .header,
+  .button,
+  .item {
+    font-family: "Tahoma", san-serif !important;
+  }
+
   .item {
     padding: 15px !important;
+  }
+  .my-following-property {
+    position: relative;
+    & .filter {
+      position: absolute;
+      right: 10px;
+    }
   }
 `;
 

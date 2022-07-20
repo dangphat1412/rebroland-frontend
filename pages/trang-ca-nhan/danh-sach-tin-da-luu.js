@@ -13,7 +13,7 @@ const MyFollowProperties = ({
 }) => {
   return (
     <div>
-      <SubHeader title="Danh sách tin đã lưu" />
+      <SubHeader title="Danh sách tin đã lưu" background="/zyro-image.png" />
       <MyFollowingPropertiesPage
         user={user}
         postsData={postsData}

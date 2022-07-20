@@ -79,7 +79,18 @@ const UserPanel = ({ user }) => {
             </Link>
           )}
 
-          {user.currentRole === 2 ? (
+          <Link href="/trang-ca-nhan/danh-sach-tin-da-luu">
+            <List.Item>
+              <List.Content>
+                <List.Header as="h4">
+                  <span class="kikor kiko-heart-symbol"></span> Bất động sản đã
+                  lưu
+                </List.Header>
+              </List.Content>
+            </List.Item>
+          </Link>
+
+          {/* {user.currentRole === 2 ? (
             <Link href="/trang-ca-nhan/danh-sach-tin-da-luu">
               <List.Item>
                 <List.Content>
@@ -101,7 +112,7 @@ const UserPanel = ({ user }) => {
                 </List.Content>
               </List.Item>
             </Link>
-          )}
+          )} */}
 
           {user.currentRole === 3 && (
             <Link href="/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai">

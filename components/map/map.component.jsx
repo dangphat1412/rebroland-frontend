@@ -4,21 +4,26 @@ import {
   Polygon,
   useLoadScript,
 } from "@react-google-maps/api";
+import { useEffect, useState } from "react";
 import { MapContainer } from "./map.styles";
 
 const Map = ({ position }) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBJ_D4F8z-sZmHnyQ9hw_GJf7TyRbkzj8c",
+    googleMapsApiKey: "AIzaSyDg8ddyZibDZ1EnI_ZZxLOzKWw9RpqK6lE",
+  });
+
+  const [coordinates, setCoordinates] = useState(position || []);
+
+  useEffect(() => {
+    console.log("coordinates: ", coordinates);
   });
 
   const options = {
-    strokeColor: "red",
+    strokeColor: "#FF0000",
+    strokeOpacity: 0.8,
     strokeWeight: 2,
-    clickable: false,
-    draggable: false,
-    editable: false,
-    geodesic: false,
-    zIndex: 1,
+    fillColor: "#FF0000",
+    fillOpacity: 0.35,
   };
 
   if (!isLoaded) return <>Loading ...</>;
@@ -29,12 +34,9 @@ const Map = ({ position }) => {
         center={position[0]}
         mapContainerClassName="map-container"
       >
-        <Polygon path={position} options={options} />
-        {/* {position.length === 1 ? (
-          <Marker position={position[0]} />
-        ) : (
-          <Polygon path={position} options={options} />
-        )} */}
+        {/* <Marker position={position[0]} /> */}
+        {position.length === 1 && <Marker position={position[0]} />}
+        {position.length > 1 && <Polygon path={position} options={options} />}
       </GoogleMap>
     </MapContainer>
   );

@@ -3,6 +3,7 @@ import React from "react";
 import RealEstatePage from "../../components/page-real-estate/page-real-estate.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
+import { parseCookies } from "nookies";
 
 const RealEstateForBroker = ({
   user,
@@ -28,7 +29,11 @@ const RealEstateForBroker = ({
 
 export async function getServerSideProps(context) {
   try {
-    const res = await axios.get(`${API_URL}/api/posts/lists`);
+    const { token } = parseCookies(context);
+
+    const res = await axios.get(`${API_URL}/api/posts/broker/original`, {
+      headers: { Authorization: token },
+    });
 
     return { props: { postsData: res.data } };
   } catch (error) {
