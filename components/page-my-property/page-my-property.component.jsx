@@ -158,7 +158,7 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                           <Item.Image
                             size="medium"
                             src={
-                              (post.images && post.images[0].image) ||
+                              post.thumbnail ||
                               "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
                             }
                           />

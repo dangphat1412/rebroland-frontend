@@ -60,7 +60,7 @@ const MyProfilePage = ({ user }) => {
     register("address");
     register("description");
     register("avatar");
-  }, []);
+  }, [register]);
 
   const [highlighted, setHighlighted] = useState(false);
   const [mediaPreview, setMediaPreview] = useState(null);

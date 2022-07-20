@@ -35,6 +35,7 @@ import { useRouter } from "next/router";
 import ReactImageGallery from "react-image-gallery";
 import Script from "next/script";
 import Head from "next/head";
+import convertToSlug from "../../utils/convertToSlug";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 
 const PagePropertyDetail = ({
@@ -459,6 +460,17 @@ const PagePropertyDetail = ({
                 >
                   Tạo bài phái sinh
                 </Button>
+              )}
+              {post.originalPost !== null && (
+                <Link
+                  href={`/bat-dong-san/${convertToSlug(post.title)}-${
+                    post.originalPost
+                  }`}
+                >
+                  <Button fluid size="big" color="green">
+                    Xem bài viết gốc
+                  </Button>
+                </Link>
               )}
 
               {user && post.user.id === user.id && (

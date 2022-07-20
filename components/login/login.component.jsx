@@ -25,7 +25,7 @@ const Login = ({
   useEffect(() => {
     register("phone", { required: "Số điện thoại không được để trống" });
     register("password", { required: "Mật khẩu không được để trống" });
-  }, []);
+  }, [register]);
 
   const onSubmit = async (user) => {
     await loginUser(

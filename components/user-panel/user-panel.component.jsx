@@ -51,7 +51,7 @@ const UserPanel = ({ user }) => {
             <List.Item>
               <List.Content>
                 <List.Header as="h4">
-                  <span class="kikor kiko-user"></span> Thông tin cá nhân
+                  <span className="kikor kiko-user"></span> Thông tin cá nhân
                 </List.Header>
               </List.Content>
             </List.Item>
@@ -61,7 +61,7 @@ const UserPanel = ({ user }) => {
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
-                    <span class="kikor kiko-home"></span> Bất động sản của tôi
+                    <span className="kikor kiko-home"></span> Bất động sản của tôi
                   </List.Header>
                 </List.Content>
               </List.Item>
@@ -71,7 +71,7 @@ const UserPanel = ({ user }) => {
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
-                    <span class="kikor kiko-home"></span> Bất động sản phái sinh
+                    <span className="kikor kiko-home"></span> Bất động sản phái sinh
                     của tôi
                   </List.Header>
                 </List.Content>
@@ -83,7 +83,7 @@ const UserPanel = ({ user }) => {
             <List.Item>
               <List.Content>
                 <List.Header as="h4">
-                  <span class="kikor kiko-heart-symbol"></span> Bất động sản đã
+                  <span className="kikor kiko-heart-symbol"></span> Bất động sản đã
                   lưu
                 </List.Header>
               </List.Content>
@@ -119,7 +119,7 @@ const UserPanel = ({ user }) => {
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
-                    <span class="kikor kiko-address-book"></span> Xử lý yêu cầu
+                    <span className="kikor kiko-address-book"></span> Xử lý yêu cầu
                     liên hệ lại
                   </List.Header>
                 </List.Content>
@@ -132,7 +132,7 @@ const UserPanel = ({ user }) => {
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
-                    <span class="kikor kiko-handed"></span> Chăm sóc khách hàng
+                    <span className="kikor kiko-handed"></span> Chăm sóc khách hàng
                   </List.Header>
                 </List.Content>
               </List.Item>
@@ -142,14 +142,14 @@ const UserPanel = ({ user }) => {
           <List.Item>
             <List.Content>
               <List.Header as="h4">
-                <span class="kikor kiko-pencil-write"></span> Đăng tin
+                <span className="kikor kiko-pencil-write"></span> Đăng tin
               </List.Header>
             </List.Content>
           </List.Item>
           <List.Item onClick={logoutUser}>
             <List.Content>
               <List.Header as="h4">
-                <span class="kikor kiko-arrow-right-circle"></span> Đăng xuất
+                <span className="kikor kiko-arrow-right-circle"></span> Đăng xuất
               </List.Header>
             </List.Content>
           </List.Item>

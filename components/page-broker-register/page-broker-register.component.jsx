@@ -25,7 +25,7 @@ const BrokerRegisterPage = () => {
   useEffect(() => {
     // register("option", { required: "Chọn gói đăng ký" });
     register("option");
-  }, []);
+  }, [register]);
 
   const onSubmit = async (data) => {
     await brokerRegister(setErrorMessage);

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx-custom
+    restart: always
+    build:
+      context: ./
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /etc/ssl:/etc/ssl
+    networks:
+      - nginx-custom
+networks:
+  nginx-custom:

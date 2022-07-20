@@ -14,23 +14,23 @@ const AdminHome = () => {
               </Menu.Item>
 
               <Menu.Item name="video camera" active>
-                <span class="kikor kiko-management-company"></span>
+                <span className="kikor kiko-management-company"></span>
                 Quản lý người dùng
               </Menu.Item>
               <Menu.Item name="video camera">
-                <span class="kikor kiko-management-company"></span>
+                <span className="kikor kiko-management-company"></span>
                 Quản lý quản trị viên
               </Menu.Item>
               <Menu.Item name="video camera">
-                <span class="kikor kiko-management-company"></span>
+                <span className="kikor kiko-management-company"></span>
                 Quản lý bài đăng
               </Menu.Item>
               <Menu.Item name="video camera">
-                <span class="kikor kiko-management-company"></span>
+                <span className="kikor kiko-management-company"></span>
                 Quản lý các báo cáo
               </Menu.Item>
               <Menu.Item name="video camera">
-                <span class="kikor kiko-management-company"></span>
+                <span className="kikor kiko-management-company"></span>
                 Lịch sử
               </Menu.Item>
             </Menu>

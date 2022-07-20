@@ -39,6 +39,7 @@ const HandleContactBackRequestPage = ({ user }) => {
                           <Image
                             floated="left"
                             size="tiny"
+                            alt="image"
                             src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
                           />
                           <Card.Header>Nguyễn Đăng Phát</Card.Header>
@@ -83,6 +84,7 @@ const HandleContactBackRequestPage = ({ user }) => {
                           <Image
                             floated="left"
                             size="tiny"
+                            alt="image"
                             src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
                           />
                           <Card.Header>Nguyễn Đăng Phát</Card.Header>

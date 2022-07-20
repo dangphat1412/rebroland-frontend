@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button, Card, Icon, Image, Item, List } from "semantic-ui-react";
 import Link from "next/link";
 import { RealEstateItemContainer } from "./item-real-estate.styles";
@@ -95,7 +95,7 @@ const RealEstateItem = ({
                 <Item.Description>{post.description}</Item.Description>
                 <Item.Extra>
                   <span>{post.startDate}</span>
-                  {user.id !== post.user.id && (
+                  {(!user || (user && user.id !== post.user.id)) && (
                     <Button
                       floated="right"
                       icon

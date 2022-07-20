@@ -97,6 +97,7 @@ const TakeCareCustomerPage = ({ user }) => {
                           <Item>
                             <Image
                               size="tiny"
+                              alt="image"
                               src="https://react.semantic-ui.com/images/avatar/large/jenny.jpg"
                             />
 

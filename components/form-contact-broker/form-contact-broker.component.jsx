@@ -18,7 +18,7 @@ const FormContactBroker = () => {
     register("otp");
     register("email");
     register("content");
-  }, []);
+  }, [register]);
 
   const [errorMessage, setErrorMessage] = useState(null);
 

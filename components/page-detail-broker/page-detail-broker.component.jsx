@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import {
-  Button,
   Card,
   Dimmer,
   Dropdown,
-  Form,
   Grid,
   Header,
   Icon,
@@ -17,7 +15,11 @@ import {
 import FormContactBroker from "../form-contact-broker/form-contact-broker.component";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import SearchBoxBroker from "../search-box-broker/search-box-broker.component";
-import { DetailBrokerContainer } from "./page-detail-broker.styles";
+import {
+  DetailBrokerContainer,
+  PaginationContainer,
+} from "./page-detail-broker.styles";
+import Pagination from "../pagination/pagination.component";
 
 const DetailBrokerPage = ({
   user,

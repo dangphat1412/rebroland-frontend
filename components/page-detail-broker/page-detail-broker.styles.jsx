@@ -40,3 +40,8 @@ export const DetailBrokerContainer = styled.div`
     }
   }
 `;
+
+export const PaginationContainer = styled.div`
+  display: flex !important;
+  justify-content: center;
+`;
