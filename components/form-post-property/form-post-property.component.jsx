@@ -81,7 +81,7 @@ const FormPostProperty = ({ user }) => {
             <Grid columns="equal" padded>
               <Grid.Row>
                 <Grid.Column width={10}>
-                  {/* <PostInformationForm
+                  <PostInformationForm
                     errors={errors}
                     register={register}
                     setValue={setValue}
@@ -93,7 +93,7 @@ const FormPostProperty = ({ user }) => {
                     watch={watch}
                     setValue={setValue}
                     getValues={getValues}
-                  /> */}
+                  />
                   <GeographicInformationForm
                     register={register}
                     errors={errors}
@@ -101,13 +101,13 @@ const FormPostProperty = ({ user }) => {
                     setValue={setValue}
                     control={control}
                   />
-                  {/* <ImageInformationForm images={images} setImages={setImages} />
+                  <ImageInformationForm images={images} setImages={setImages} />
                   <ContactInformationForm
                     register={register}
                     setValue={setValue}
                     getValues={getValues}
                     errors={errors}
-                  /> */}
+                  />
                 </Grid.Column>
                 <Grid.Column width={6}>
                   <Sticky context={contextRef} offset={100}>

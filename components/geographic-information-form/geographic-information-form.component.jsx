@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Grid, Header, Segment } from "semantic-ui-react";
 import {
   getDistrictById,
+  getDistricts,
+  getProvinces,
   getProvincesById,
   getWards,
 } from "../../actions/vietnam-provinces";
@@ -9,9 +11,6 @@ import InputField from "../input-field/input-field.component";
 import Map from "../map/map.component";
 import { useFieldArray } from "react-hook-form";
 import { FormGeographicInformationContainer } from "./geographic-information-form.styles";
-
-const HANOI_PROVINCE_ID = 1;
-const THACHTHAT_DISTRICT_ID = 276;
 
 const GeographicInformationForm = ({
   register,
@@ -43,9 +42,17 @@ const GeographicInformationForm = ({
   };
 
   const handleChange = (e, { name, value }) => {
-    name === "province" && fetchDistrictAPI();
-    name === "district" && fetchWardsAPI();
-    setValue(name, value);
+    if (name === "province") {
+      setValue(name, e.target.innerText);
+      fetchDistrictAPI(value);
+    } else if (name === "district") {
+      setValue(name, e.target.innerText);
+      fetchWardsAPI(value);
+    } else if (name === "ward") {
+      setValue(name, e.target.innerText);
+    } else {
+      setValue(name, value);
+    }
   };
 
   useEffect(() => {
@@ -63,39 +70,39 @@ const GeographicInformationForm = ({
   });
 
   const fetchProvinceAPI = async () => {
-    const provincesData = await getProvincesById(HANOI_PROVINCE_ID);
+    const provincesData = await getProvinces();
     setDataProvinces((prev) => ({
       ...prev,
-      provinces: [
-        {
-          key: provincesData.code,
-          text: provincesData.name,
-          value: provincesData.name,
-        },
-      ],
+      provinces: provincesData.map((province) => {
+        return {
+          key: province.code,
+          text: province.name,
+          value: province.code,
+        };
+      }),
     }));
   };
 
-  const fetchDistrictAPI = async () => {
-    const districtsData = await getDistrictById(THACHTHAT_DISTRICT_ID);
+  const fetchDistrictAPI = async (id) => {
+    const districtsData = await getDistricts(id);
     setDataProvinces((prev) => ({
       ...prev,
-      districts: [
-        {
-          key: districtsData.code,
-          text: districtsData.name,
-          value: districtsData.name,
-        },
-      ],
+      districts: districtsData.districts.map((district) => {
+        return {
+          key: district.code,
+          text: district.name,
+          value: district.code,
+        };
+      }),
     }));
   };
 
-  const fetchWardsAPI = async () => {
-    const wardsData = await getWards(THACHTHAT_DISTRICT_ID);
+  const fetchWardsAPI = async (id) => {
+    const wardsData = await getWards(id);
     setDataProvinces((prev) => ({
       ...prev,
       wards: wardsData.wards.map((w) => {
-        return { key: w.code, text: w.name, value: w.name };
+        return { key: w.code, text: w.name, value: w.code };
       }),
     }));
   };
