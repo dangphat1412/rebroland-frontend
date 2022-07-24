@@ -37,13 +37,59 @@ const RealEstateItem = ({
     <Link href={`/bat-dong-san/${convertToSlug(post.title)}-${post.postId}`}>
       <RealEstateItemContainer fluid>
         {type === "card" ? (
-          <>
-            <Image src={post.thumbnail} wrapped ui={false} alt="real estate" />
+          <div className="card-item">
+            <Image
+              src={post.thumbnail}
+              wrapped
+              ui={false}
+              alt="real estate"
+              label={
+                post.originalPost && post.originalPost !== 0
+                  ? {
+                      color: "red",
+                      content: "Bài phái sinh",
+                      icon: "copy outline",
+                      ribbon: true,
+                    }
+                  : null
+              }
+            />
             <Card.Content>
               <Card.Header>{post.title}</Card.Header>
               <Card.Description>{post.description}</Card.Description>
+              <Card.Content extra>
+                <span>{post.startDate}</span>
+                {(!user || (user && user.id !== post.user.id)) && (
+                  <Button
+                    floated="right"
+                    icon
+                    basic
+                    onClick={(e) => {
+                      handleFollowingPost(
+                        e,
+                        post,
+                        followingPosts,
+                        setFollowingPosts
+                      );
+                    }}
+                  >
+                    <Icon
+                      name="heart"
+                      color={
+                        followingPosts &&
+                        followingPosts.filter(
+                          (followingPost) =>
+                            followingPost.postId === post.postId
+                        ).length > 0
+                          ? "red"
+                          : null
+                      }
+                    />
+                  </Button>
+                )}
+              </Card.Content>
             </Card.Content>
-          </>
+          </div>
         ) : (
           <Item.Group>
             <Item>

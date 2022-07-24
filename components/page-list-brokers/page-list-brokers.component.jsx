@@ -42,18 +42,36 @@ const ListBrokersPage = ({ brokersData }) => {
     <ListBrokersContainer>
       <Grid>
         <Grid.Row>
+          <Grid.Column width={4}>
+            <Dropdown
+              fluid
+              selection
+              options={options}
+              className="filter"
+              value={sortValue}
+              onChange={handleFilterOption}
+            />
+            <Segment
+              style={{
+                backgroundImage: "url('/zyro-image.png')",
+                color: "white",
+              }}
+            >
+              <SearchBoxBroker />
+            </Segment>
+          </Grid.Column>
           <Grid.Column width={12}>
             {data.length === 0 ? (
               <Segment basic>
                 <Loader active inline="centered" />
               </Segment>
-            ) : data.listBroker.length === 0 ? (
+            ) : data.list.length === 0 ? (
               <>Không tìm thấy kết quả phù hợp</>
             ) : (
               <>
                 <Card.Group itemsPerRow={4}>
                   {data &&
-                    data.listBroker.map((broker, index) => (
+                    data.list.map((broker, index) => (
                       <BrokerItem key={index} broker={broker} />
                     ))}
                 </Card.Group>
@@ -74,24 +92,6 @@ const ListBrokersPage = ({ brokersData }) => {
                 )}
               </>
             )}
-          </Grid.Column>
-          <Grid.Column width={4}>
-            <Dropdown
-              fluid
-              selection
-              options={options}
-              className="filter"
-              value={sortValue}
-              onChange={handleFilterOption}
-            />
-            <Segment
-              style={{
-                backgroundImage: "url('/zyro-image.png')",
-                color: "white",
-              }}
-            >
-              <SearchBoxBroker />
-            </Segment>
           </Grid.Column>
         </Grid.Row>
       </Grid>

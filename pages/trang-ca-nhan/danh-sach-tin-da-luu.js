@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MyFollowingPropertiesPage from "../../components/page-my-following-properties/page-my-following-properties.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import { parseCookies } from "nookies";
@@ -11,14 +11,20 @@ const MyFollowProperties = ({
   followingPosts,
   setFollowingPosts,
 }) => {
+  const [totalResult, setTotalResult] = useState(postsData.totalResult);
   return (
     <div>
-      <SubHeader title="Danh sách tin đã lưu" background="/zyro-image.png" />
+      <SubHeader
+        title="Danh sách tin đã lưu"
+        subtitle={`Có tất cả ${totalResult} bất động sản`}
+        background="/zyro-image.png"
+      />
       <MyFollowingPropertiesPage
         user={user}
         postsData={postsData}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
+        setTotalResult={setTotalResult}
       />
     </div>
   );

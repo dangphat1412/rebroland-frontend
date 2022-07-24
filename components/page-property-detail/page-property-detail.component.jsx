@@ -37,6 +37,8 @@ import Script from "next/script";
 import Head from "next/head";
 import convertToSlug from "../../utils/convertToSlug";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
+import calculatePrice from "../../utils/calculatePrice";
+import FormContact from "../form-contact/form-contact.component";
 
 const PagePropertyDetail = ({
   post,
@@ -44,15 +46,14 @@ const PagePropertyDetail = ({
   followingPosts,
   setFollowingPosts,
 }) => {
-  console.log(followingPosts);
-  console.log(post);
   const router = useRouter();
-
   const [reportOpen, setReportOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const [historyData, setHistoryData] = useState();
-
   const [items, setItems] = useState([]);
+
+  const { price, pricePerSquare } = calculatePrice(post);
 
   useEffect(() => {
     setItems(
@@ -115,6 +116,10 @@ const PagePropertyDetail = ({
     }, 1000);
   };
 
+  const onContactSubmit = async (data, e) => {
+    console.log(data);
+  };
+
   return (
     <FormPropertyDetailContainer>
       <Head>
@@ -126,7 +131,7 @@ const PagePropertyDetail = ({
         <meta property="og:description" content={post.description} />
         {/* <meta property="og:image" content={post.images[0].image} /> */}
       </Head>
-      <SemanticToastContainer position="bottom-right" />
+      <SemanticToastContainer position="bottom-right" maxToasts={3} />
       {/* <div
         class="fb-share-button"
         data-href="http://localhost:3000/bat-dong-san/gia-tu-32trm2-hang-ngoai-giao-dau-tu-gia-dot-1-view-ho-i1---i2-re-nhat-dong-10-ky-hdmb-ls-0-24t-38"
@@ -183,41 +188,10 @@ const PagePropertyDetail = ({
                         <Statistic>
                           <Statistic.Label>Mức giá</Statistic.Label>
                           <Statistic.Value text>
-                            {post.unitPrice.id === 1 &&
-                              (post.price >= 1000000000
-                                ? post.price / 1000000000 + " tỷ"
-                                : post.price / 1000000 + " triệu")}
-                            {post.unitPrice.id === 2 &&
-                              (post.price * post.area >= 1000000000
-                                ? (post.price * post.area) / 1000000000 + " tỷ"
-                                : (post.price * post.area) / 1000000 +
-                                  " triệu")}
-                            {post.unitPrice.id === 3 && "Thoả thuận"}
+                            {post.unitPrice.id === 3 ? "Thoả thuận" : price}
                           </Statistic.Value>
                           <Statistic.Label>
-                            {post.unitPrice.id === 1 &&
-                              (post.price / post.area / 1000000000 >= 1000000000
-                                ? "~ " +
-                                  Math.round(
-                                    (post.price / post.area / 1000000000) * 10
-                                  ) /
-                                    10 +
-                                  " tỷ/m²"
-                                : "~ " +
-                                  Math.round(
-                                    (post.price / post.area / 1000000) * 10
-                                  ) /
-                                    10 +
-                                  " triệu/m²")}
-                            {post.unitPrice.id === 2 &&
-                              (post.price >= 1000000000
-                                ? "~ " +
-                                  Math.round((post.price / 1000000000) * 10) /
-                                    10 +
-                                  " tỷ/m²"
-                                : "~ " +
-                                  Math.round((post.price / 1000000) * 10) / 10 +
-                                  " triệu/m²")}
+                            {post.unitPrice.id !== 3 && pricePerSquare}
                           </Statistic.Label>
                         </Statistic>
                         <Statistic>
@@ -273,7 +247,17 @@ const PagePropertyDetail = ({
                           <Icon
                             name="warning sign"
                             onClick={() => {
-                              setReportOpen(true);
+                              user
+                                ? setReportOpen(true)
+                                : setTimeout(() => {
+                                    toast({
+                                      type: "error",
+                                      title: "Yêu cầu đăng nhập",
+                                      description: (
+                                        <p>Đăng nhập để báo cáo bài viết</p>
+                                      ),
+                                    });
+                                  }, 1000);
                             }}
                           />
                         </List.Item>
@@ -434,7 +418,14 @@ const PagePropertyDetail = ({
                     {post.contactAddress}
                   </div>
                 </div>
-                <Button fluid color="blue" size="big">
+                <Button
+                  fluid
+                  color="blue"
+                  size="big"
+                  onClick={() => {
+                    setContactOpen(true);
+                  }}
+                >
                   Yêu cầu liên hệ lại
                 </Button>
               </ContactInformationContainer>
@@ -555,7 +546,11 @@ const PagePropertyDetail = ({
           setReportOpen(false);
         }}
       >
-        <FormReport />
+        <FormReport
+          toast={toast}
+          setReportOpen={setReportOpen}
+          postId={post.postId}
+        />
       </ModalItem>
       <ModalItem
         header="Lịch sử bất động sản"
@@ -566,6 +561,15 @@ const PagePropertyDetail = ({
         }}
       >
         <FormHistory historyData={historyData} />
+      </ModalItem>
+      <ModalItem
+        header="Yêu cầu liên hệ lại"
+        onOpen={contactOpen}
+        onClose={() => {
+          setContactOpen(false);
+        }}
+      >
+        <FormContact postId={post.postId} userId={post.user.id} />
       </ModalItem>
 
       <Script

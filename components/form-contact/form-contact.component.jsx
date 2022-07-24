@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, Header, Message } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
-import { FormContactBrokerContainer } from "./form-contact-broker.styles";
+import { FormContactBrokerContainer } from "./form-contact.styles";
 import { useForm } from "react-hook-form";
+import { userContact } from "../../actions/contact";
 
-const FormContactBroker = () => {
+const FormContact = ({ title, userId, postId }) => {
   const {
     register,
     handleSubmit,
@@ -24,7 +25,7 @@ const FormContactBroker = () => {
 
   const onSubmit = async (data) => {
     console.log("contact broker: ", data);
-    // await loginUser(user, setErrorMessage, setLoginOpen, setLoading);
+    await userContact(data, userId, postId);
   };
 
   return (
@@ -32,7 +33,7 @@ const FormContactBroker = () => {
       onSubmit={handleSubmit(onSubmit)}
       error={errorMessage !== null}
     >
-      <Header as="h2">Liên lạc với nhà môi giới</Header>
+      <Header as="h2">{title}</Header>
       <Message
         error
         list={errorMessage}
@@ -79,4 +80,4 @@ const FormContactBroker = () => {
   );
 };
 
-export default FormContactBroker;
+export default FormContact;

@@ -16,6 +16,7 @@ const RealEstatePage = ({
   postsData,
   followingPosts,
   setFollowingPosts,
+  setTotalResult,
 }) => {
   const [sortValue, setSortValue] = useState(0);
 
@@ -28,6 +29,7 @@ const RealEstatePage = ({
   const fetchAPI = async (page) => {
     const postData = await getPosts(page);
     setData(postData);
+    setTotalResult(postData.totalResult);
     window.scrollTo({
       top: 0,
       behavior: "smooth",

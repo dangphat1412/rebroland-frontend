@@ -12,7 +12,7 @@ import {
   Segment,
   Tab,
 } from "semantic-ui-react";
-import FormContactBroker from "../form-contact-broker/form-contact-broker.component";
+import FormContact from "../form-contact/form-contact.component";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import SearchBoxBroker from "../search-box-broker/search-box-broker.component";
 import {
@@ -20,6 +20,7 @@ import {
   PaginationContainer,
 } from "./page-detail-broker.styles";
 import Pagination from "../pagination/pagination.component";
+import options from "../../utils/RealEstateSortValue";
 
 const DetailBrokerPage = ({
   user,
@@ -61,6 +62,7 @@ const DetailBrokerPage = ({
       behavior: "smooth",
     });
   };
+
   return (
     <DetailBrokerContainer>
       <Grid>
@@ -221,7 +223,10 @@ const DetailBrokerPage = ({
           </Grid.Column>
           <Grid.Column width={4}>
             <Segment>
-              <FormContactBroker />
+              <FormContact
+                title="Liên lạc với nhà môi giới"
+                userId={userDetail.id}
+              />
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -270,43 +275,5 @@ const ListProperty = ({
     </>
   );
 };
-
-const options = [
-  {
-    key: 0,
-    text: "Thông thường",
-    value: 0,
-  },
-  {
-    key: 1,
-    text: "Giá từ thấp đến cao",
-    value: 1,
-  },
-  {
-    key: 2,
-    text: "Giá từ cao đến thấp",
-    value: 2,
-  },
-  {
-    key: 3,
-    text: "Giá trên m² từ thấp đến cao",
-    value: 3,
-  },
-  {
-    key: 4,
-    text: "Giá trên m² từ cao đến thấp",
-    value: 4,
-  },
-  {
-    key: 5,
-    text: "Diện tích từ bé đến lớn",
-    value: 5,
-  },
-  {
-    key: 6,
-    text: "Diện tích từ lớn đến bé",
-    value: 6,
-  },
-];
 
 export default DetailBrokerPage;

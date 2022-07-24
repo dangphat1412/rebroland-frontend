@@ -1,15 +1,16 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import ListBrokersPage from "../../components/page-list-brokers/page-list-brokers.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 
 const Broker = ({ brokersData }) => {
+  const [totalResult, setTotalResult] = useState(brokersData.totalResult);
   return (
     <div>
       <SubHeader
         title="Danh sách nhà môi giới"
-        subtitle={`Kết quả tìm kiếm có ${brokersData.totalPage} Nhà môi giới`}
+        subtitle={`Kết quả tìm kiếm có ${totalResult} Nhà môi giới`}
         background="/zyro-image.png"
       />
       <ListBrokersPage brokersData={brokersData} />

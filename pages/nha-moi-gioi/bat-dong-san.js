@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import RealEstatePage from "../../components/page-real-estate/page-real-estate.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
@@ -11,10 +11,12 @@ const RealEstateForBroker = ({
   followingPosts,
   setFollowingPosts,
 }) => {
+  const [totalResult, setTotalResult] = useState(postsData.totalResult);
   return (
     <div>
       <SubHeader
         title="Bất động sản cho Nhà môi giới"
+        subtitle={`Có tất cả ${totalResult} bất động sản`}
         background="/bg-real-estate.jpg"
       />
       <RealEstatePage
@@ -22,6 +24,7 @@ const RealEstateForBroker = ({
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
         user={user}
+        setTotalResult={setTotalResult}
       />
     </div>
   );

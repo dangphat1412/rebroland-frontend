@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { Button, Checkbox, Form } from "semantic-ui-react";
-import CustomButton from "../custom-button/custom-button.component";
-import InputField from "../input-field/input-field.component";
+import { Button, Form } from "semantic-ui-react";
+import { reportPost } from "../../actions/report";
 
-const FormReport = () => {
+const FormReport = ({ toast, setReportOpen, postId }) => {
   const {
     register,
     handleSubmit,
@@ -12,93 +11,65 @@ const FormReport = () => {
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
-    register("address");
-  });
-
-  const handleChange = (e, { name, value }) => {
-    setValue(name, value);
-  };
-
   const onSubmit = async (data, e) => {
-    console.log(data);
+    const status = await reportPost(data, postId);
+    if (status === 201) {
+      setTimeout(() => {
+        toast({
+          type: "success",
+          title: "Báo cáo bài viết",
+          description: <p>Báo cáo bài viết thành công</p>,
+        });
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        toast({
+          type: "error",
+          title: "Lỗi",
+          description: <p>Có lỗi xảy ra, hãy thử lại sau</p>,
+        });
+      }, 1000);
+    }
+    setReportOpen(false);
   };
 
   return (
     <div>
       <Form size="large" onSubmit={handleSubmit(onSubmit)}>
-        <Form.Field
-          control={Checkbox}
-          name="address"
-          onChange={async (e, { name, checked }) => {
-            setValue(name, checked);
-          }}
-          label={{ children: "Địa chỉ của bất động sản" }}
-        />
-        <Form.Field
-          control={Checkbox}
-          name="information"
-          onChange={async (e, { name, checked }) => {
-            setValue(name, checked);
-          }}
-          label={{ children: "Các thông tin về: giá, diện tích, mô tả ...." }}
-        />
-        <Form.Field
-          control={Checkbox}
-          name="image"
-          onChange={async (e, { name, checked }) => {
-            setValue(name, checked);
-          }}
-          label={{ children: "Ảnh" }}
-        />
-        <Form.Field
-          control={Checkbox}
-          name="duplicate"
-          onChange={async (e, { name, checked }) => {
-            setValue(name, checked);
-          }}
-          label={{ children: "Trùng với tin rao khác" }}
-        />
-        <Form.Field
-          control={Checkbox}
-          name="noContact"
-          onChange={async (e, { name, checked }) => {
-            setValue(name, checked);
-          }}
-          label={{ children: "Không liên lạc được" }}
-        />
-        <Form.Field
-          control={Checkbox}
-          name="fakeNews"
-          onChange={async (e, { name, checked }) => {
-            setValue(name, checked);
-          }}
-          label={{ children: "Tin không có thật" }}
-        />
-        <Form.Field
-          control={Checkbox}
-          name="map"
-          onChange={async (e, { name, checked }) => {
-            setValue(name, checked);
-          }}
-          label={{ children: "Vị trí bản đồ không chính xác" }}
-        />
-        <Form.Field
-          control={Checkbox}
-          name="sold"
-          onChange={async (e, { name, checked }) => {
-            setValue(name, checked);
-          }}
-          label={{ children: "Bất động sản đã bán" }}
-        />
-        <InputField
-          fieldType="textarea"
-          rows={2}
-          label="Phản hồi khác"
-          name="other"
-          placeholder="Nhập phản hồi"
-          onChange={handleChange}
-        />
+        {reportContent.map((content, index) => {
+          return (
+            <div key={index}>
+              <input
+                type="checkbox"
+                id={`content${index}`}
+                name="content"
+                value={content}
+                {...register("content", {
+                  required: {
+                    value: true,
+                    message: "content is required",
+                  },
+                })}
+              />
+              <label htmlFor={`content${index}`}>{content}</label>
+              <br></br>
+            </div>
+          );
+        })}
+        <label htmlFor="otherContent">Phản hồi khác</label>
+        <textarea
+          id="otherContent"
+          name="otherContent"
+          rows="3"
+          {...register("otherContent", {
+            required: {
+              value: true,
+              message: "other-content is required",
+            },
+          })}
+        ></textarea>
+
+        <br></br>
         <Button fluid color="red">
           Gửi báo cáo
         </Button>
@@ -106,5 +77,16 @@ const FormReport = () => {
     </div>
   );
 };
+
+const reportContent = [
+  "Địa chỉ của bất động sản",
+  "Các thông tin về: giá, diện tích, mô tả ....",
+  "Ảnh",
+  "Trùng với tin rao khác",
+  "Không liên lạc được",
+  "Tin không có thật",
+  "Vị trí bản đồ không chính xác",
+  "Bất động sản đã bán",
+];
 
 export default FormReport;

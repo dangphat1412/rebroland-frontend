@@ -41,11 +41,11 @@ const SearchBox = ({ setData }) => {
   const [directions, setDirections] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [numberOfBedrooms, setNumberOfBedrooms] = useState([
-    { key: 0, value: 1, text: "1+" },
-    { key: 1, value: 2, text: "2+" },
-    { key: 2, value: 3, text: "3+" },
-    { key: 3, value: 4, text: "4+" },
-    { key: 4, value: 5, text: "5+" },
+    { key: 0, value: 1, text: "Từ 1 phòng" },
+    { key: 1, value: 2, text: "Từ 2 phòng" },
+    { key: 2, value: 3, text: "Từ 3 phòng" },
+    { key: 3, value: 4, text: "Từ 4 phòng" },
+    { key: 4, value: 5, text: "Từ 5 phòng" },
   ]);
 
   useEffect(() => {

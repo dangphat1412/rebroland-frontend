@@ -1,22 +1,26 @@
-import Link from "next/link";
 import React, { useState } from "react";
 import {
   Card,
+  Dimmer,
   Dropdown,
   Grid,
   Header,
   Icon,
   Image,
+  Loader,
   Segment,
   Tab,
 } from "semantic-ui-react";
 import { getPostsByUserDetail } from "../../actions/post";
-import convertToSlug from "../../utils/convertToSlug";
+import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import Pagination from "../pagination/pagination.component";
 import {
   PaginationContainer,
   UserDetailPageContainer,
 } from "./page-user-detail.styles";
+import { SemanticToastContainer, toast } from "react-semantic-toasts";
+import FormContact from "../form-contact/form-contact.component";
+import options from "../../utils/RealEstateSortValue";
 
 const UserDetailPage = ({
   user,
@@ -32,7 +36,7 @@ const UserDetailPage = ({
   const [sortValue, setSortValue] = useState(0);
 
   const handlePaginationChange = (e, { activePage }) =>
-    fetchAPI(userDetail.id, propertyType, sortValue, activePage);
+    fetchAPI(userDetail.id, propertyType, sortValue, activePage - 1);
 
   const handleOnTabChange = (e, { activeIndex }) => {
     setPropertyType(activeIndex);
@@ -64,6 +68,7 @@ const UserDetailPage = ({
 
   return (
     <UserDetailPageContainer>
+      <SemanticToastContainer position="bottom-right" />
       <Grid>
         <Grid.Row>
           <Grid.Column width={3}>
@@ -113,7 +118,7 @@ const UserDetailPage = ({
               </div>
             </Segment>
           </Grid.Column>
-          <Grid.Column width={13} className="user-detail">
+          <Grid.Column width={9} className="user-detail">
             <Header as="h2">Danh sách bất động sản</Header>
             <Dropdown
               selection
@@ -122,6 +127,9 @@ const UserDetailPage = ({
               value={sortValue}
               onChange={handleFilterOption}
             />
+            <Dimmer active={loading} inverted>
+              <Loader>Đang tải dữ liệu</Loader>
+            </Dimmer>
             <Tab
               onTabChange={handleOnTabChange}
               menu={{ secondary: true, pointing: true }}
@@ -131,8 +139,12 @@ const UserDetailPage = ({
                   render: () => (
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
+                        user={user}
                         data={data}
+                        followingPosts={followingPosts}
+                        setFollowingPosts={setFollowingPosts}
                         handlePaginationChange={handlePaginationChange}
+                        toast={toast}
                       />
                     </Tab.Pane>
                   ),
@@ -142,8 +154,12 @@ const UserDetailPage = ({
                   render: () => (
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
+                        user={user}
                         data={data}
+                        followingPosts={followingPosts}
+                        setFollowingPosts={setFollowingPosts}
                         handlePaginationChange={handlePaginationChange}
+                        toast={toast}
                       />
                     </Tab.Pane>
                   ),
@@ -153,8 +169,12 @@ const UserDetailPage = ({
                   render: () => (
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
+                        user={user}
                         data={data}
+                        followingPosts={followingPosts}
+                        setFollowingPosts={setFollowingPosts}
                         handlePaginationChange={handlePaginationChange}
+                        toast={toast}
                       />
                     </Tab.Pane>
                   ),
@@ -164,8 +184,12 @@ const UserDetailPage = ({
                   render: () => (
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
+                        user={user}
                         data={data}
+                        followingPosts={followingPosts}
+                        setFollowingPosts={setFollowingPosts}
                         handlePaginationChange={handlePaginationChange}
+                        toast={toast}
                       />
                     </Tab.Pane>
                   ),
@@ -173,21 +197,44 @@ const UserDetailPage = ({
               ]}
             />
           </Grid.Column>
+          <Grid.Column width={4}>
+            <Segment>
+              <FormContact
+                title="Liên hệ với chủ sở hữu"
+                userId={userDetail.id}
+              />
+            </Segment>
+          </Grid.Column>
         </Grid.Row>
       </Grid>
     </UserDetailPageContainer>
   );
 };
 
-const ListProperty = ({ data, handlePaginationChange }) => {
+const ListProperty = ({
+  user,
+  data,
+  followingPosts,
+  setFollowingPosts,
+  handlePaginationChange,
+  toast,
+}) => {
   return (
     <>
       {data.posts.length > 0 ? (
         <>
-          <Card.Group itemsPerRow={4}>
+          <Card.Group itemsPerRow={3}>
             {data &&
               data.posts.map((post, index) => (
-                <RealEstateItem post={post} key={index} />
+                <RealEstateItem
+                  user={user}
+                  post={post}
+                  key={index}
+                  followingPosts={followingPosts}
+                  setFollowingPosts={setFollowingPosts}
+                  toast={toast}
+                  type="card"
+                />
               ))}
           </Card.Group>
           <PaginationContainer>
@@ -210,68 +257,5 @@ const ListProperty = ({ data, handlePaginationChange }) => {
     </>
   );
 };
-
-const RealEstateItem = ({ post }) => {
-  return (
-    <Link href={`/bat-dong-san/${convertToSlug(post.title)}-${post.postId}`}>
-      <Card className="real-estate-item">
-        <Image
-          src={
-            post.thumbnail ||
-            "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
-          }
-          wrapped
-          ui={false}
-          alt="real estate"
-        />
-        <Card.Content>
-          <Card.Header>{post.title}</Card.Header>
-          <Card.Meta>
-            <span className="date">Joined in 2015</span>
-          </Card.Meta>
-          <Card.Description>{post.description}</Card.Description>
-        </Card.Content>
-      </Card>
-    </Link>
-  );
-};
-
-const options = [
-  {
-    key: 0,
-    text: "Thông thường",
-    value: 0,
-  },
-  {
-    key: 1,
-    text: "Giá từ thấp đến cao",
-    value: 1,
-  },
-  {
-    key: 2,
-    text: "Giá từ cao đến thấp",
-    value: 2,
-  },
-  {
-    key: 3,
-    text: "Giá trên m² từ thấp đến cao",
-    value: 3,
-  },
-  {
-    key: 4,
-    text: "Giá trên m² từ cao đến thấp",
-    value: 4,
-  },
-  {
-    key: 5,
-    text: "Diện tích từ bé đến lớn",
-    value: 5,
-  },
-  {
-    key: 6,
-    text: "Diện tích từ lớn đến bé",
-    value: 6,
-  },
-];
 
 export default UserDetailPage;

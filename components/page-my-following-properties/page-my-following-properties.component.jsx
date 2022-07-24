@@ -4,6 +4,7 @@ import { getFollowingPostsByUser } from "../../actions/post";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import Pagination from "../pagination/pagination.component";
 import UserPanel from "../user-panel/user-panel.component";
+import options from "../../utils/RealEstateSortValue";
 import {
   MyFollowingPropertiesContainer,
   PaginationContainer,
@@ -14,6 +15,7 @@ const MyFollowingPropertiesPage = ({
   postsData,
   followingPosts,
   setFollowingPosts,
+  setTotalResult,
 }) => {
   const [data, setData] = useState(postsData || {});
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ const MyFollowingPropertiesPage = ({
   const [sortValue, setSortValue] = useState(0);
 
   const handlePaginationChange = (e, { activePage }) =>
-    fetchAPI(propertyType, sortValue, activePage);
+    fetchAPI(propertyType, sortValue, activePage - 1);
 
   const handleOnTabChange = (e, { activeIndex }) => {
     setPropertyType(activeIndex);
@@ -42,6 +44,7 @@ const MyFollowingPropertiesPage = ({
       pageNo
     );
     setData(posts);
+    setTotalResult(posts.totalResult);
     setLoading(false);
     window.scrollTo({
       top: 0,
@@ -145,8 +148,8 @@ const ListProperty = ({
 }) => {
   return (
     <>
-      {data.posts &&
-        data.posts.map((post, index) => (
+      {data.lists &&
+        data.lists.map((post, index) => (
           <RealEstateItem
             user={user}
             post={post}
@@ -155,7 +158,7 @@ const ListProperty = ({
             setFollowingPosts={setFollowingPosts}
           />
         ))}
-      {data.totalPage > 1 && (
+      {data.totalPages > 1 && (
         <PaginationContainer>
           <Pagination
             activePage={data.pageNo}
@@ -173,43 +176,5 @@ const ListProperty = ({
     </>
   );
 };
-
-const options = [
-  {
-    key: 0,
-    text: "Thông thường",
-    value: 0,
-  },
-  {
-    key: 1,
-    text: "Giá từ thấp đến cao",
-    value: 1,
-  },
-  {
-    key: 2,
-    text: "Giá từ cao đến thấp",
-    value: 2,
-  },
-  {
-    key: 3,
-    text: "Giá trên m² từ thấp đến cao",
-    value: 3,
-  },
-  {
-    key: 4,
-    text: "Giá trên m² từ cao đến thấp",
-    value: 4,
-  },
-  {
-    key: 5,
-    text: "Diện tích từ bé đến lớn",
-    value: 5,
-  },
-  {
-    key: 6,
-    text: "Diện tích từ lớn đến bé",
-    value: 6,
-  },
-];
 
 export default MyFollowingPropertiesPage;

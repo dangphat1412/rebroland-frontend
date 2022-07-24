@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div>
       <HomeBackground background="/zyro-image.png" />
-      {/* <SearchBox /> */}
+      <SearchBox />
       <Milestones />
       <ListPropertiesRecommend />
     </div>

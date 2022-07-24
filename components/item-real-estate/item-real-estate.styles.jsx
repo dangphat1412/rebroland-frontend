@@ -26,4 +26,15 @@ export const RealEstateItemContainer = styled(Card)`
       object-fit: cover;
     }
   }
+  .card-item {
+    .image {
+      height: 215px !important;
+      width: 100% !important;
+      img {
+        height: 100% !important;
+        width: 100% !important;
+        object-fit: cover;
+      }
+    }
+  }
 `;

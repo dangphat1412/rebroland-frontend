@@ -21,15 +21,17 @@ import {
   MyPropertiesPageContainer,
   PaginationContainer,
 } from "./page-my-property.styles";
+import options from "../../utils/RealEstateSortValue";
+import calculatePrice from "../../utils/calculatePrice";
 
-const MyPropertyPage = ({ user, postsData }) => {
+const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
   const [data, setData] = useState(postsData || {});
   const [loading, setLoading] = useState(false);
   const [propertyType, setPropertyType] = useState(0);
   const [sortValue, setSortValue] = useState(0);
 
   const handlePaginationChange = (e, { activePage }) =>
-    fetchAPI(propertyType, sortValue, activePage);
+    fetchAPI(propertyType, sortValue, activePage - 1);
 
   const handleOnTabChange = (e, { activeIndex }) => {
     setPropertyType(activeIndex);
@@ -46,6 +48,7 @@ const MyPropertyPage = ({ user, postsData }) => {
     setLoading(true);
     const posts = await getPostsByUser(propertyType, sortValue, pageNo);
     setData(posts);
+    setTotalResult(posts.totalResult);
     setLoading(false);
     window.scrollTo({
       top: 0,
@@ -151,98 +154,7 @@ const ListProperty = ({ data, handlePaginationChange }) => {
             <Table.Body>
               {data &&
                 data.posts.map((post, index) => (
-                  <Table.Row key={index}>
-                    <Table.Cell width={11}>
-                      <Item.Group>
-                        <Item>
-                          <Item.Image
-                            size="medium"
-                            src={
-                              post.thumbnail ||
-                              "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
-                            }
-                          />
-                          <Item.Content className="item-content">
-                            <Item.Header>{post.title}</Item.Header>
-                            <List horizontal>
-                              <List.Item>
-                                <List.Content>
-                                  <List.Header>11 tỷ</List.Header>
-                                </List.Content>
-                              </List.Item>
-                              <List.Item>
-                                <List.Content>
-                                  <List.Header>260 triệu/m²</List.Header>
-                                </List.Content>
-                              </List.Item>
-                              <List.Item>
-                                <List.Content>
-                                  <List.Header>{post.area}m²</List.Header>
-                                </List.Content>
-                              </List.Item>
-                            </List>
-                            <Item.Description>
-                              {post.description}
-                            </Item.Description>
-                            <Item.Description>
-                              {post.ward}, {post.district}, {post.province}
-                            </Item.Description>
-                            <Item.Extra>{post.startDate}</Item.Extra>
-                          </Item.Content>
-                        </Item>
-                      </Item.Group>
-                    </Table.Cell>
-                    <Table.Cell singleLine textAlign="center">
-                      {post.status.name}
-                    </Table.Cell>
-                    <Table.Cell textAlign="center">
-                      <Link
-                        href={`/trang-ca-nhan/bat-dong-san-cua-toi/${convertToSlug(
-                          post.title
-                        )}-${post.postId}`}
-                      >
-                        <Icon
-                          circular
-                          inverted
-                          color="teal"
-                          name="eye"
-                          style={{ cursor: "pointer" }}
-                        />
-                      </Link>
-
-                      <Link href="/">
-                        <Popup
-                          content="Chỉnh sửa bài viết"
-                          trigger={
-                            <Icon
-                              circular
-                              inverted
-                              color="green"
-                              name="edit outline"
-                              style={{ cursor: "pointer" }}
-                            />
-                          }
-                        />
-                      </Link>
-                      <Link href="/">
-                        <Popup
-                          content="Xoá bài viết"
-                          trigger={
-                            <Icon
-                              style={{ cursor: "pointer" }}
-                              circular
-                              inverted
-                              color="red"
-                              name="trash alternate"
-                              onClick={() => {
-                                setOpenDeleteConfirm(true);
-                              }}
-                            />
-                          }
-                        />
-                      </Link>
-                    </Table.Cell>
-                  </Table.Row>
+                  <RealEstateItem post={post} index={index} />
                 ))}
             </Table.Body>
 
@@ -253,19 +165,21 @@ const ListProperty = ({ data, handlePaginationChange }) => {
         onConfirm={handleConfirm}
       /> */}
           </Table>
-          <PaginationContainer>
-            <Pagination
-              activePage={data.pageNo}
-              boundaryRange={1}
-              siblingRange={1}
-              ellipsisItem={{
-                content: <Icon name="ellipsis horizontal" />,
-                icon: true,
-              }}
-              totalPages={data.totalPages}
-              onPageChange={handlePaginationChange}
-            />
-          </PaginationContainer>
+          {data.totalPages > 1 && (
+            <PaginationContainer>
+              <Pagination
+                activePage={data.pageNo}
+                boundaryRange={1}
+                siblingRange={1}
+                ellipsisItem={{
+                  content: <Icon name="ellipsis horizontal" />,
+                  icon: true,
+                }}
+                totalPages={data.totalPages}
+                onPageChange={handlePaginationChange}
+              />
+            </PaginationContainer>
+          )}
         </>
       ) : (
         <Header>Không có bất động sản nào</Header>
@@ -274,42 +188,104 @@ const ListProperty = ({ data, handlePaginationChange }) => {
   );
 };
 
-const options = [
-  {
-    key: 0,
-    text: "Thông thường",
-    value: 0,
-  },
-  {
-    key: 1,
-    text: "Giá từ thấp đến cao",
-    value: 1,
-  },
-  {
-    key: 2,
-    text: "Giá từ cao đến thấp",
-    value: 2,
-  },
-  {
-    key: 3,
-    text: "Giá trên m² từ thấp đến cao",
-    value: 3,
-  },
-  {
-    key: 4,
-    text: "Giá trên m² từ cao đến thấp",
-    value: 4,
-  },
-  {
-    key: 5,
-    text: "Diện tích từ bé đến lớn",
-    value: 5,
-  },
-  {
-    key: 6,
-    text: "Diện tích từ lớn đến bé",
-    value: 6,
-  },
-];
+const RealEstateItem = ({ post }) => {
+  const { price, pricePerSquare } = calculatePrice(post);
+  return (
+    <Table.Row>
+      <Table.Cell width={11}>
+        <Item.Group>
+          <Item>
+            <Item.Image
+              size="medium"
+              src={
+                post.thumbnail ||
+                "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
+              }
+            />
+            <Item.Content className="item-content">
+              <Item.Header>{post.title}</Item.Header>
+              <List horizontal>
+                <List.Item>
+                  <List.Content>
+                    <List.Header>
+                      {post.unitPrice.id === 3 ? "Thoả thuận" : price}
+                    </List.Header>
+                  </List.Content>
+                </List.Item>
+                <List.Item>
+                  <List.Content>
+                    <List.Header>
+                      {post.unitPrice.id !== 3 && pricePerSquare}
+                    </List.Header>
+                  </List.Content>
+                </List.Item>
+                <List.Item>
+                  <List.Content>
+                    <List.Header>{post.area}m²</List.Header>
+                  </List.Content>
+                </List.Item>
+              </List>
+              <Item.Description>{post.description}</Item.Description>
+              <Item.Description>
+                {post.ward}, {post.district}, {post.province}
+              </Item.Description>
+              <Item.Extra>{post.startDate}</Item.Extra>
+            </Item.Content>
+          </Item>
+        </Item.Group>
+      </Table.Cell>
+      <Table.Cell singleLine textAlign="center">
+        {post.status.name}
+      </Table.Cell>
+      <Table.Cell textAlign="center">
+        <Link
+          href={`/trang-ca-nhan/bat-dong-san-cua-toi/${convertToSlug(
+            post.title
+          )}-${post.postId}`}
+        >
+          <Icon
+            circular
+            inverted
+            color="teal"
+            name="eye"
+            style={{ cursor: "pointer" }}
+          />
+        </Link>
+
+        <Link href="/">
+          <Popup
+            content="Chỉnh sửa bài viết"
+            trigger={
+              <Icon
+                circular
+                inverted
+                color="green"
+                name="edit outline"
+                style={{ cursor: "pointer" }}
+              />
+            }
+          />
+        </Link>
+        <Link href="/">
+          <Popup
+            content="Xoá bài viết"
+            trigger={
+              <Icon
+                style={{ cursor: "pointer" }}
+                circular
+                inverted
+                color="red"
+                name="trash alternate"
+                onClick={() => {
+                  setOpenDeleteConfirm(true);
+                }}
+              />
+            }
+          />
+        </Link>
+      </Table.Cell>
+    </Table.Row>
+  );
+};
 
 export default MyPropertyPage;

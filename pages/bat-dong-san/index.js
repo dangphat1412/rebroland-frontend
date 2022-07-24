@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import RealEstatePage from "../../components/page-real-estate/page-real-estate.component";
 import axios from "axios";
 import API_URL from "../../utils/apiUrl";
 
 const RealEstate = ({ user, postsData, followingPosts, setFollowingPosts }) => {
+  const [totalResult, setTotalResult] = useState(postsData.totalResult);
   return (
     <div>
       <SubHeader
         title="Bất động sản"
-        subtitle={`Kết quả tìm kiếm có ${postsData.totalResult} bất động sản`}
+        subtitle={`Kết quả tìm kiếm có ${totalResult} bất động sản`}
         background="/zyro-image.png"
       />
       <RealEstatePage
@@ -17,6 +18,7 @@ const RealEstate = ({ user, postsData, followingPosts, setFollowingPosts }) => {
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
         user={user}
+        setTotalResult={setTotalResult}
       />
     </div>
   );

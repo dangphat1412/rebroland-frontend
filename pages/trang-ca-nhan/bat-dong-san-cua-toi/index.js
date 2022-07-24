@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MyPropertyPage from "../../../components/page-my-property/page-my-property.component";
 import SubHeader from "../../../components/sub-header/sub-header.component";
 import { parseCookies } from "nookies";
@@ -6,10 +6,19 @@ import axios from "axios";
 import API_URL from "../../../utils/apiUrl";
 
 const MyPropertyHome = ({ user, postsData }) => {
+  const [totalResult, setTotalResult] = useState(postsData.totalResult);
   return (
     <div>
-      <SubHeader title="Bất động sản của tôi" background="/zyro-image.png" />
-      <MyPropertyPage postsData={postsData} user={user} />
+      <SubHeader
+        title="Bất động sản của tôi"
+        subtitle={`Có tất cả ${totalResult} bất động sản`}
+        background="/zyro-image.png"
+      />
+      <MyPropertyPage
+        postsData={postsData}
+        user={user}
+        setTotalResult={setTotalResult}
+      />
     </div>
   );
 };
