@@ -5,7 +5,7 @@ import { FormContactBrokerContainer } from "./form-contact.styles";
 import { useForm } from "react-hook-form";
 import { userContact } from "../../actions/contact";
 
-const FormContact = ({ title, userId, postId }) => {
+const FormContact = ({ title, userId, postId, toast, setContactOpen }) => {
   const {
     register,
     handleSubmit,
@@ -14,8 +14,8 @@ const FormContact = ({ title, userId, postId }) => {
   } = useForm({});
 
   useEffect(() => {
-    register("fullName", { required: "Số điện thoại không được để trống" });
-    register("phone", { required: "Mật khẩu không được để trống" });
+    register("fullName", { required: "Họ và tên không được để trống" });
+    register("phone", { required: "Số điện thoại không được để trống" });
     register("otp");
     register("email");
     register("content");
@@ -25,7 +25,25 @@ const FormContact = ({ title, userId, postId }) => {
 
   const onSubmit = async (data) => {
     console.log("contact broker: ", data);
-    await userContact(data, userId, postId);
+    const status = await userContact(data, userId, postId);
+    if (status === 201) {
+      setTimeout(() => {
+        toast({
+          type: "success",
+          title: "Yêu cầu liên hệ lại",
+          description: <p>Yêu cầu liên hệ lại thành công</p>,
+        });
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        toast({
+          type: "error",
+          title: "Yêu cầu liên hệ lại",
+          description: <p>Yêu cầu liên hệ lại thất bại</p>,
+        });
+      }, 1000);
+    }
+    setContactOpen && setContactOpen(false);
   };
 
   return (

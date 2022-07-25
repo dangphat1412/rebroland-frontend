@@ -49,7 +49,7 @@ export default function MyApp({ Component, pageProps }) {
 MyApp.getInitialProps = async ({ Component, ctx }) => {
   const { token } = parseCookies(ctx);
   let pageProps = {};
-  // const protectedRoutes = ctx.pathname === "/dang-tin";
+
   const protectedRoutes = false;
 
   if (!token) {
@@ -67,9 +67,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       pageProps.user = user;
       pageProps.followingPosts = following;
       pageProps.isBroker = isBroker;
-      // if (user && user.currentRole === 3) {
-      // redirectUser(ctx, "/nha-moi-gioi");
-      // }
+
       if (user && user.currentRole === 3 && ctx.pathname === "/")
         redirectUser(ctx, "/nha-moi-gioi");
     } catch (error) {

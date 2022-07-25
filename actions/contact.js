@@ -18,7 +18,18 @@ export const userContact = async (data, userId, postId) => {
     return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
-    setErrorMessage(messages);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const deleteRequestContact = async (contactId) => {
+  try {
+    const res = await Axios.delete(`/${contactId}`);
+    return res.status;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
     console.log(error);
   }
 };

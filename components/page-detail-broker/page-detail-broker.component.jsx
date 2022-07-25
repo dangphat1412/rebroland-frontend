@@ -21,6 +21,8 @@ import {
 } from "./page-detail-broker.styles";
 import Pagination from "../pagination/pagination.component";
 import options from "../../utils/RealEstateSortValue";
+import { SemanticToastContainer, toast } from "react-semantic-toasts";
+import { getPostsByUserDetail } from "../../actions/post";
 
 const DetailBrokerPage = ({
   user,
@@ -35,27 +37,28 @@ const DetailBrokerPage = ({
   const [sortValue, setSortValue] = useState(0);
 
   const handlePaginationChange = (e, { activePage }) =>
-    fetchAPI(propertyType, sortValue, activePage);
+    fetchAPI(userDetail.id, propertyType, sortValue, activePage - 1);
 
   const handleOnTabChange = (e, { activeIndex }) => {
     setPropertyType(activeIndex);
     setSortValue(0);
-    fetchAPI(activeIndex, 0, 0);
+    fetchAPI(userDetail.id, activeIndex, 0, 0);
   };
 
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
-    fetchAPI(propertyType, value, 0);
+    fetchAPI(userDetail.id, propertyType, value, 0);
   };
 
-  const fetchAPI = async (propertyType, sortValue, pageNo) => {
+  const fetchAPI = async (userId, propertyType, sortValue, pageNo) => {
     setLoading(true);
-    const posts = await getFollowingPostsByUser(
+    const posts = await getPostsByUserDetail(
+      userId,
       propertyType,
       sortValue,
       pageNo
     );
-    setData(posts);
+    setData(posts.lists);
     setLoading(false);
     window.scrollTo({
       top: 0,
@@ -65,6 +68,7 @@ const DetailBrokerPage = ({
 
   return (
     <DetailBrokerContainer>
+      <SemanticToastContainer position="bottom-right" maxToasts={3} />
       <Grid>
         <Grid.Row>
           <Grid.Column width={4}>
@@ -158,6 +162,7 @@ const DetailBrokerPage = ({
                 <Loader>Đang tải dữ liệu</Loader>
               </Dimmer>
               <Tab
+                onTabChange={handleOnTabChange}
                 menu={{ secondary: true, pointing: true }}
                 panes={[
                   {
@@ -225,6 +230,7 @@ const DetailBrokerPage = ({
             <Segment>
               <FormContact
                 title="Liên lạc với nhà môi giới"
+                toast={toast}
                 userId={userDetail.id}
               />
             </Segment>

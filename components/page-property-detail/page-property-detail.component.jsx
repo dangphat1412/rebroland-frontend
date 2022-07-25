@@ -569,7 +569,12 @@ const PagePropertyDetail = ({
           setContactOpen(false);
         }}
       >
-        <FormContact postId={post.postId} userId={post.user.id} />
+        <FormContact
+          postId={post.postId}
+          userId={post.user.id}
+          toast={toast}
+          setContactOpen={setContactOpen}
+        />
       </ModalItem>
 
       <Script

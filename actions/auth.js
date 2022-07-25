@@ -72,6 +72,16 @@ export const registerUser = async (user, setErrorMessage) => {
   }
 };
 
+export const changePasswordUser = async (data) => {
+  try {
+    const res = await Axios.put(`/change-password`, data);
+    return res.status;
+  } catch (error) {
+    // setErrorMessage(error.response.data);
+    console.log(error);
+  }
+};
+
 export const otpRegisterUser = async (
   user,
   setErrorMessage,

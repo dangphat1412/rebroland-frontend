@@ -61,7 +61,8 @@ const UserPanel = ({ user }) => {
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
-                    <span className="kikor kiko-home"></span> Bất động sản của tôi
+                    <span className="kikor kiko-home"></span> Bất động sản của
+                    tôi
                   </List.Header>
                 </List.Content>
               </List.Item>
@@ -71,8 +72,8 @@ const UserPanel = ({ user }) => {
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
-                    <span className="kikor kiko-home"></span> Bất động sản phái sinh
-                    của tôi
+                    <span className="kikor kiko-home"></span> Bất động sản phái
+                    sinh của tôi
                   </List.Header>
                 </List.Content>
               </List.Item>
@@ -83,8 +84,8 @@ const UserPanel = ({ user }) => {
             <List.Item>
               <List.Content>
                 <List.Header as="h4">
-                  <span className="kikor kiko-heart-symbol"></span> Bất động sản đã
-                  lưu
+                  <span className="kikor kiko-heart-symbol"></span> Bất động sản
+                  đã lưu
                 </List.Header>
               </List.Content>
             </List.Item>
@@ -119,8 +120,8 @@ const UserPanel = ({ user }) => {
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
-                    <span className="kikor kiko-address-book"></span> Xử lý yêu cầu
-                    liên hệ lại
+                    <span className="kikor kiko-address-book"></span> Xử lý yêu
+                    cầu liên hệ lại
                   </List.Header>
                 </List.Content>
               </List.Item>
@@ -132,12 +133,23 @@ const UserPanel = ({ user }) => {
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
-                    <span className="kikor kiko-handed"></span> Chăm sóc khách hàng
+                    <span className="kikor kiko-handed"></span> Chăm sóc khách
+                    hàng
                   </List.Header>
                 </List.Content>
               </List.Item>
             </Link>
           )}
+
+          <Link href="/trang-ca-nhan/thay-doi-mat-khau">
+            <List.Item>
+              <List.Content>
+                <List.Header as="h4">
+                  <span className="kikor kiko-fingerprint"></span> Đổi mật khẩu
+                </List.Header>
+              </List.Content>
+            </List.Item>
+          </Link>
 
           <List.Item>
             <List.Content>
@@ -149,7 +161,8 @@ const UserPanel = ({ user }) => {
           <List.Item onClick={logoutUser}>
             <List.Content>
               <List.Header as="h4">
-                <span className="kikor kiko-arrow-right-circle"></span> Đăng xuất
+                <span className="kikor kiko-arrow-right-circle"></span> Đăng
+                xuất
               </List.Header>
             </List.Content>
           </List.Item>

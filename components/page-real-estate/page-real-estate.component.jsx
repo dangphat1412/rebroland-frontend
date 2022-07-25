@@ -10,6 +10,7 @@ import {
 import Pagination from "../pagination/pagination.component";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
+import options from "../../utils/RealEstateSortValue";
 
 const RealEstatePage = ({
   user,
@@ -112,43 +113,5 @@ const RealEstatePage = ({
     </RealEstatePageContainer>
   );
 };
-
-const options = [
-  {
-    key: 0,
-    text: "Tin mới nhất",
-    value: 0,
-  },
-  {
-    key: 1,
-    text: "Giá từ thấp đến cao",
-    value: 1,
-  },
-  {
-    key: 2,
-    text: "Giá từ cao đến thấp",
-    value: 2,
-  },
-  {
-    key: 3,
-    text: "Giá trên m² từ thấp đến cao",
-    value: 3,
-  },
-  {
-    key: 4,
-    text: "Giá trên m² từ cao đến thấp",
-    value: 4,
-  },
-  {
-    key: 5,
-    text: "Diện tích từ bé đến lớn",
-    value: 5,
-  },
-  {
-    key: 6,
-    text: "Diện tích từ lớn đến bé",
-    value: 6,
-  },
-];
 
 export default RealEstatePage;
