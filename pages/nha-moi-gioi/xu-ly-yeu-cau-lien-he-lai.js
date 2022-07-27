@@ -5,17 +5,18 @@ import API_URL from "../../utils/apiUrl";
 import { parseCookies } from "nookies";
 import axios from "axios";
 
-const HandleContactBackRequest = ({ user, contactBackRequestData }) => {
+const HandleContactBackRequest = ({ user, contactList, caringList }) => {
   return (
     <div>
       <SubHeader
         title="Xử lý yêu cầu liên hệ lại"
-        subtitle={`Có tất cả ${contactBackRequestData.totalResult} yêu cầu liên hệ lại`}
+        subtitle={`Có tất cả ${contactList.totalResult} yêu cầu liên hệ lại`}
         background="/bg-real-estate.jpg"
       />
       <HandleContactBackRequestPage
         user={user}
-        contactBackRequestData={contactBackRequestData}
+        contactList={contactList}
+        caringList={caringList}
       />
     </div>
   );
@@ -29,7 +30,12 @@ export async function getServerSideProps(context) {
       headers: { Authorization: token },
     });
 
-    return { props: { contactBackRequestData: res.data } };
+    return {
+      props: {
+        contactList: res.data.contactList,
+        caringList: res.data.caringList,
+      },
+    };
   } catch (error) {
     // return { props: { posts: [1, 2, 3] } };
   }

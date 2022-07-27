@@ -4,11 +4,8 @@ import {
   Card,
   Form,
   Grid,
-  Icon,
-  Image,
   Message,
   Radio,
-  Ref,
 } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
 import UserPanel from "../user-panel/user-panel.component";

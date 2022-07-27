@@ -29,7 +29,7 @@ const MyDerivativePropertyPage = ({ user, postsData }) => {
   const [sortValue, setSortValue] = useState(0);
 
   const handlePaginationChange = (e, { activePage }) =>
-    fetchAPI(propertyType, sortValue, activePage);
+    fetchAPI(propertyType, sortValue, activePage - 1);
 
   const handleOnTabChange = (e, { activeIndex }) => {
     setPropertyType(activeIndex);
@@ -162,7 +162,7 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                           <Item.Image
                             size="medium"
                             src={
-                              (post.images && post.images[0].image) ||
+                              (post && post.thumbnail) ||
                               "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
                             }
                           />

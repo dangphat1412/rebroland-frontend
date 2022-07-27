@@ -11,6 +11,7 @@ import Footer from "../components/footer/footer.component";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { useEffect, useState } from "react";
 import { Dimmer, Loader } from "semantic-ui-react";
+import { SemanticToastContainer, toast } from "react-semantic-toasts";
 
 export default function MyApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
@@ -26,12 +27,14 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <>
+      <SemanticToastContainer position="bottom-right" maxToasts={3} />
       <Dimmer active={loading}>
         <Loader />
       </Dimmer>
 
       <Navigation
         {...pageProps}
+        toast={toast}
         setLoading={setLoading}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}

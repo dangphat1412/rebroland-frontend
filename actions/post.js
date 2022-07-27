@@ -78,8 +78,7 @@ export const getPostById = async (postId) => {
 
 export const getPosts = async (activePage) => {
   try {
-    const page = activePage - 1;
-    const res = await Axios.get(`/lists?pageNo=${page || 0}`);
+    const res = await Axios.get(`/lists?pageNo=${activePage || 0}`);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -189,7 +188,7 @@ export const getDerivativePostsByUser = async (
 ) => {
   try {
     const res = await Axios.get(
-      `/broker/list?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
+      `/derivative/list?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
     );
     return res.data;
   } catch (error) {

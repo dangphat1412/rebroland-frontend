@@ -1,8 +1,10 @@
 import Link from "next/link";
 import Router from "next/router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import {
   Button,
+  Dimmer,
   Divider,
   Dropdown,
   Grid,
@@ -12,10 +14,13 @@ import {
   Item,
   Label,
   List,
+  Loader,
   Popup,
   Radio,
+  Segment,
 } from "semantic-ui-react";
 import { logoutUser, switchRole } from "../../actions/auth";
+import { getNotifications } from "../../actions/notifications";
 import { NavContainer, Menu, LogoContainer } from "./main-navigation.styles";
 
 const MainNavigation = ({
@@ -26,11 +31,39 @@ const MainNavigation = ({
   setRegisterOpen,
   setLoading,
   followingPosts,
+  unreadNotification,
+  setUnreadNotification,
   setFollowingPosts,
 }) => {
-  console.log(followingPosts);
+  const [notifications, setNotifications] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [pageNumber, setPageNumber] = useState(1);
+  const isFirstTime = useRef(true);
+
   const handleSwitchBroker = async () => {
     await switchRole(setLoading);
+  };
+
+  const handleShowNotification = async () => {
+    if (isFirstTime.current === true || unreadNotification > 0) {
+      const data = await getNotifications(0);
+      setNotifications([...data]);
+      setUnreadNotification(null);
+    }
+    isFirstTime.current = false;
+  };
+
+  const fetchNotificationsOnScroll = async () => {
+    try {
+      const data = await getNotifications(pageNumber);
+
+      if (data.length === 0) setHasMore(false);
+
+      setNotifications([...notifications, ...data]);
+      setPageNumber((prev) => prev + 1);
+    } catch (error) {
+      alert("Error fetching Posts");
+    }
   };
 
   return (
@@ -232,8 +265,18 @@ const MainNavigation = ({
                       }
                     />
                     <Popup
-                      content="I will not flip!"
+                      wide="very"
+                      content={
+                        <NotificationList
+                          notifications={notifications}
+                          hasMore={hasMore}
+                          fetchNotificationsOnScroll={
+                            fetchNotificationsOnScroll
+                          }
+                        />
+                      }
                       on="click"
+                      onOpen={handleShowNotification}
                       basic
                       pinned
                       position="bottom center"
@@ -245,9 +288,11 @@ const MainNavigation = ({
                             color="grey"
                             size="large"
                           />
-                          <Label circular color="red" floating size="tiny">
-                            2
-                          </Label>
+                          {unreadNotification && unreadNotification > 0 && (
+                            <Label circular color="red" floating size="tiny">
+                              {unreadNotification}
+                            </Label>
+                          )}
                         </List.Item>
                       }
                     />
@@ -267,6 +312,68 @@ const MainNavigation = ({
         </Menu>
       </NavContainer>
     </div>
+  );
+};
+
+const NotificationList = ({
+  notifications,
+  hasMore,
+  fetchNotificationsOnScroll,
+}) => {
+  return (
+    <>
+      <InfiniteScroll
+        hasMore={hasMore}
+        next={fetchNotificationsOnScroll}
+        loader={
+          <Segment>
+            <Dimmer active inverted>
+              <Loader inverted />
+            </Dimmer>
+          </Segment>
+        }
+        endMessage={<b>Đã xem hết thông báo</b>}
+        dataLength={notifications.length}
+        style={{ height: "80vh", width: "400px", overflowY: "scroll" }}
+      >
+        <Header as="h3">Thông báo</Header>
+        <Link href={"/thong-bao"} floated="right">
+          Xem tất cả
+        </Link>
+        <Divider />
+        <Item.Group divided link>
+          {notifications.map((notification, index) => {
+            return (
+              <Item key={index}>
+                <Item.Image
+                  src="https://flyclipart.com/thumb2/excited-icons-download-free-png-and-vector-icons-unlimited-661241.png"
+                  size="tiny"
+                />
+                <Item.Content verticalAlign="middle">
+                  {notification.type === "Contact" && (
+                    <Item.Description>
+                      Số điện thoại <b>{notification.phone}</b> muốn liên lạc
+                      với bạn
+                    </Item.Description>
+                  )}
+                  <Item.Extra>{notification.date}</Item.Extra>
+                </Item.Content>
+                {notification.unRead === false && (
+                  <Item.Content
+                    verticalAlign="middle"
+                    style={{ width: "20px" }}
+                  >
+                    <Item.Extra>
+                      <Label floated="right" circular color="blue" empty />
+                    </Item.Extra>
+                  </Item.Content>
+                )}
+              </Item>
+            );
+          })}
+        </Item.Group>
+      </InfiniteScroll>
+    </>
   );
 };
 

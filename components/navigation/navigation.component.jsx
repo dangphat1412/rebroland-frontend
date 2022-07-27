@@ -13,6 +13,7 @@ const Navigation = ({
   setLoading,
   followingPosts,
   setFollowingPosts,
+  toast,
 }) => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
@@ -21,20 +22,31 @@ const Navigation = ({
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
   const [otpRegisterOpen, setOtpRegisterOpen] = useState(false);
   const [showSubnavigation, setShowSubnavigation] = useState(true);
-
-  const [message, setMessage] = useState("You server message here.");
+  const [unreadNotification, setUnreadNotification] = useState(
+    (user && user.unreadNotification) || null
+  );
 
   useEffect(() => {
     let onConnected = () => {
-      console.log("Connected!!");
-      client.subscribe("/topic/message", function (msg) {
-        if (msg.body) {
-          var jsonBody = JSON.parse(msg.body);
-          if (jsonBody.message) {
-            setMessage(jsonBody.message);
+      user &&
+        client.subscribe(`/topic/message/${user.id}`, function (msg) {
+          if (msg.body) {
+            var jsonBody = JSON.parse(msg.body);
+            if (jsonBody.message) {
+              const sound = new Audio("/light.mp3");
+
+              setUnreadNotification(unreadNotification + 1);
+              setTimeout(() => {
+                sound && sound.play();
+                toast({
+                  type: "info",
+                  title: "Info Toast",
+                  description: <p>{jsonBody.message}</p>,
+                });
+              }, 100);
+            }
           }
-        }
-      });
+        });
     };
 
     let onDisconnected = () => {
@@ -53,14 +65,6 @@ const Navigation = ({
     client.activate();
   });
 
-  let onConnected = () => {
-    console.log("Connected!!");
-  };
-
-  let onMessageReceived = (msg) => {
-    setMessage(msg.message);
-  };
-
   const controlSubnavigation = () => {
     setShowSubnavigation(window.scrollY > 0 ? false : true);
   };
@@ -74,23 +78,13 @@ const Navigation = ({
 
   return (
     <>
-      {/* <SockJsClient
-        url={SOCKET_URL}
-        topics={["/topic/message"]}
-        onConnect={onConnected}
-        onDisconnect={console.log("Disconnected!")}
-        onMessage={(msg) => onMessageReceived(msg)}
-        debug={false}
-        autoReconnect={true}
-      /> */}
-
-      <div>{message}</div>
-
       <NavigationContainer className={!showSubnavigation && "active"} fluid>
         {showSubnavigation && <SubNavigation />}
         <MainNavigation
           className={!showSubnavigation && "sticky"}
           user={user}
+          unreadNotification={unreadNotification}
+          setUnreadNotification={setUnreadNotification}
           isBroker={isBroker}
           setLoginOpen={setLoginOpen}
           setRegisterOpen={setRegisterOpen}

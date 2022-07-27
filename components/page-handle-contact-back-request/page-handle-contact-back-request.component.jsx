@@ -5,6 +5,7 @@ import {
   Confirm,
   Form,
   Grid,
+  Header,
   Icon,
   Image,
   Search,
@@ -15,12 +16,14 @@ import ModalItem from "../modal-item/modal-item.component";
 import UserPanel from "../user-panel/user-panel.component";
 import { HandleContactBackRequestContainer } from "./page-handle-contact-back-request.styles";
 
-const HandleContactBackRequestPage = ({ user, contactBackRequestData }) => {
-  const [contacts, setContacts] = useState(contactBackRequestData.contacts);
+const HandleContactBackRequestPage = ({ user, contactList, caringList }) => {
+  const [contacts, setContacts] = useState(contactList.contacts);
+  const [caring, setCaring] = useState(caringList);
   const [openRefuseConfirm, setOpenRefuseConfirm] = useState(false);
   const [openCreateCustomer, setOpenCreateCustomer] = useState(false);
   const [deletedContactId, setDeletedContactId] = useState(null);
   const [customerInfo, setCustomerInfo] = useState(null);
+  const [isDuplicateCustomer, setDuplicateCustomer] = useState(false);
 
   const handleAccept = async () => {};
 
@@ -58,10 +61,12 @@ const HandleContactBackRequestPage = ({ user, contactBackRequestData }) => {
                       <ContactBackRequestItem
                         key={index}
                         contact={contact}
+                        caring={caring}
                         setOpenCreateCustomer={setOpenCreateCustomer}
                         setOpenRefuseConfirm={setOpenRefuseConfirm}
                         setDeletedContactId={setDeletedContactId}
                         setCustomerInfo={setCustomerInfo}
+                        setDuplicateCustomer={setDuplicateCustomer}
                       />
                     );
                   })}
@@ -90,7 +95,28 @@ const HandleContactBackRequestPage = ({ user, contactBackRequestData }) => {
           setOpenCreateCustomer(false);
         }}
       >
-        <FormCreateCustomer customerInfo={customerInfo} />
+        {isDuplicateCustomer ? (
+          <>
+            <Header as="h3">
+              Số điện thoại này đã có trong danh sách khách hàng
+            </Header>
+            <div>
+              Họ và tên: <b>{customerInfo.fullName}</b>
+            </div>
+            <div>
+              Số điện thoại: <b>{customerInfo.phone}</b>
+            </div>
+            {customerInfo.email && (
+              <div>
+                Email: <b>{customerInfo.email}</b>
+              </div>
+            )}
+            
+          </>
+        ) : (
+          <FormCreateCustomer customerInfo={customerInfo} />
+        )}
+
         {/* <FormReport
           toast={toast}
           setReportOpen={setReportOpen}
@@ -103,10 +129,12 @@ const HandleContactBackRequestPage = ({ user, contactBackRequestData }) => {
 
 const ContactBackRequestItem = ({
   contact,
+  caring,
   setOpenRefuseConfirm,
   setDeletedContactId,
   setOpenCreateCustomer,
   setCustomerInfo,
+  setDuplicateCustomer,
 }) => {
   return (
     <Card fluid>
@@ -144,7 +172,11 @@ const ContactBackRequestItem = ({
                 basic
                 color="green"
                 onClick={() => {
-                  setCustomerInfo(contact);
+                  const customer = caring.find(
+                    (c) => c.phone === contact.phone
+                  );
+                  setCustomerInfo(customer ? customer : contact);
+                  setDuplicateCustomer(customer ? true : false);
                   setOpenCreateCustomer(true);
                 }}
               >

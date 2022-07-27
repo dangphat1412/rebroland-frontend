@@ -154,7 +154,7 @@ const ListProperty = ({ data, handlePaginationChange }) => {
             <Table.Body>
               {data &&
                 data.posts.map((post, index) => (
-                  <RealEstateItem post={post} index={index} />
+                  <RealEstateItem post={post} key={index} />
                 ))}
             </Table.Body>
 

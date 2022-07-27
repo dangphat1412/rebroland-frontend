@@ -20,7 +20,7 @@ const MyDerivativeProperty = ({ user, postsData }) => {
 export async function getServerSideProps(context) {
   try {
     const { token } = parseCookies(context);
-    const res = await axios.get(`${API_URL}/api/posts/broker/list`, {
+    const res = await axios.get(`${API_URL}/api/posts/derivative/list`, {
       headers: { Authorization: token },
     });
 
