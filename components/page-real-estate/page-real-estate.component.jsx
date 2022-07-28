@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Dropdown, Grid, Icon, List, Loader, Segment } from "semantic-ui-react";
-import { getPosts } from "../../actions/post";
+import React, { useState } from "react";
+import {
+  Dimmer,
+  Dropdown,
+  Grid,
+  Icon,
+  List,
+  Loader,
+  Segment,
+} from "semantic-ui-react";
+import { getPosts, searchPosts } from "../../actions/post";
 import SearchBox from "../search-box/search-box.component";
 import {
   CategoriesContainer,
@@ -19,18 +27,28 @@ const RealEstatePage = ({
   setFollowingPosts,
   setTotalResult,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [sortValue, setSortValue] = useState(0);
-
   const [data, setData] = useState(postsData || {});
+  const [params, setParams] = useState(null);
 
-  const handlePaginationChange = (e, { activePage }) => {
-    fetchAPI(activePage-1);
+  const handleFilterOption = (e, { value }) => {
+    setSortValue(value);
+    fetchAPI(params, value, 0);
   };
 
-  const fetchAPI = async (page) => {
-    const postData = await getPosts(page);
+  const handlePaginationChange = (e, { activePage }) => {
+    fetchAPI(params, sortValue, activePage - 1);
+  };
+
+  const fetchAPI = async (params, sortValue, page) => {
+    setLoading(true);
+    const postData = params
+      ? await searchPosts(params, sortValue, page)
+      : await getPosts(sortValue, page);
     setData(postData);
     setTotalResult(postData.totalResult);
+    setLoading(false);
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -49,15 +67,18 @@ const RealEstatePage = ({
                 color: "white",
               }}
             >
-              <SearchBox setData={setData} />
+              <SearchBox
+                setData={setData}
+                setParams={setParams}
+                setSortValue={setSortValue}
+              />
             </Segment>
           </Grid.Column>
           <Grid.Column width={8}>
-            {data.length === 0 ? (
-              <Segment basic>
-                <Loader active inline="centered" />
-              </Segment>
-            ) : data.totalResult === 0 ? (
+            <Dimmer active={loading} inverted>
+              <Loader>Đang tải dữ liệu</Loader>
+            </Dimmer>
+            {data.totalResult === 0 ? (
               <>Không tìm thấy kết quả phù hợp</>
             ) : (
               <>
@@ -89,7 +110,13 @@ const RealEstatePage = ({
             )}
           </Grid.Column>
           <Grid.Column width={4}>
-            <Dropdown fluid selection value={sortValue} options={options} />
+            <Dropdown
+              fluid
+              selection
+              value={sortValue}
+              options={options}
+              onChange={handleFilterOption}
+            />
             <CategoriesContainer>
               <h1>Danh mục Bất động sản</h1>
               <List divided verticalAlign="middle" size="large" relaxed>

@@ -100,7 +100,7 @@ export const getFollowingPostsByUser = async (
   }
 };
 
-export const searchPosts = async (data) => {
+export const searchPosts = async (data, sortValue, page) => {
   try {
     const res = await Axios.get("/", {
       params: {
@@ -117,6 +117,8 @@ export const searchPosts = async (data) => {
         maxArea: data.maxArea,
         direction: data.directions ? data.directions.toString() : undefined,
         numberOfBedroom: data.numberOfBedrooms,
+        sortValue: sortValue,
+        pageNo: page,
       },
     });
     return res.data;

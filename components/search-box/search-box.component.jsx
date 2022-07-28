@@ -19,7 +19,7 @@ import { FormSearchContainer, HomeSearchContainer } from "./search-box.styles";
 const HANOI_PROVINCE_ID = 1;
 const THACHTHAT_DISTRICT_ID = 276;
 
-const SearchBox = ({ setData }) => {
+const SearchBox = ({ setData, setParams, setSortValue }) => {
   const router = useRouter();
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
@@ -127,10 +127,10 @@ const SearchBox = ({ setData }) => {
   };
 
   const onSubmit = async (data, e) => {
-    console.log("SEARCH: ", data);
     const postData = await searchPosts(data);
-    console.log("POSTS: ", postData);
     setData(postData);
+    setParams(data);
+    setSortValue(0);
   };
 
   if (router.pathname === "/")
