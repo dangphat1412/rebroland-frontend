@@ -76,9 +76,9 @@ export const getPostById = async (postId) => {
   }
 };
 
-export const getPosts = async (activePage) => {
+export const getPosts = async (sortValue, page) => {
   try {
-    const res = await Axios.get(`/lists?pageNo=${activePage || 0}`);
+    const res = await Axios.get(`/lists?pageNo=${page}&sortValue=${sortValue}`);
     return res.data;
   } catch (error) {
     console.log(error);

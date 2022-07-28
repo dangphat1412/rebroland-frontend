@@ -13,11 +13,9 @@ const Axios = axios.create({
   },
 });
 
-export const updateUser = async (data, mediaUrl, setErrorMessage) => {
+export const updateUser = async (data, setErrorMessage) => {
   try {
-    const dataUser = mediaUrl ? { ...data, avatar: mediaUrl } : data;
-    console.log("dataUser: ", dataUser);
-    const res = await Axios.put("/", dataUser);
+    const res = await Axios.put("/", data);
     res.status === 200 && Router.push(Router.asPath);
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
@@ -77,7 +75,7 @@ export const changePasswordUser = async (data) => {
     const res = await Axios.put(`/change-password`, data);
     return res.status;
   } catch (error) {
-    // setErrorMessage(error.response.data); 
+    // setErrorMessage(error.response.data);
     console.log(error);
   }
 };

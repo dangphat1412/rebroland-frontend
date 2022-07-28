@@ -1,34 +1,62 @@
-import React from "react";
-import {
-  Card,
-  Grid,
-  Header,
-  Icon,
-  Image,
-  List,
-  Segment,
-} from "semantic-ui-react";
+import React, { useRef, useState } from "react";
+import { Card, Icon, Image, List, Segment } from "semantic-ui-react";
 import Link from "next/link";
 import { UserPanelContainer } from "./user-panel.styles";
-import { logoutUser } from "../../actions/auth";
+import { logoutUser, updateUser } from "../../actions/auth";
+import { uploadMedia } from "../../utils/uploadToCloudinary";
 
 const UserPanel = ({ user }) => {
+  const mediaRef = useRef(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const handleMediaChange = async (e) => {
+    const { name, value, files } = e.target;
+    const mediaUrl = await uploadMedia(files[0]);
+    if (!mediaUrl) {
+      console.log("ERROR UPLOAD");
+      return;
+    }
+    await updateUser({ ...user, avatar: mediaUrl }, setErrorMessage);
+  };
+
   return (
     <UserPanelContainer>
+      <input
+        ref={mediaRef}
+        onChange={handleMediaChange}
+        name="media"
+        style={{ display: "none" }}
+        type="file"
+        accept="image/*"
+      />
       <Card fluid>
         <Card.Content textAlign="center" className="title-content">
           <Card.Header className="custom-header">Thông tin cá nhân</Card.Header>
         </Card.Content>
         <Card.Content textAlign="center">
-          <Image
-            src={
-              user.avatar ||
-              "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-            }
-            circular
-            alt="avatar"
-            verticalAlign="middle"
-          />
+          <div
+            className="profilepic"
+            onClick={() => {
+              mediaRef.current.click();
+            }}
+          >
+            <Image
+              src={
+                user.avatar ||
+                "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+              }
+              circular
+              alt="avatar"
+              verticalAlign="middle"
+              className="profilepic__image"
+            />
+            <div className="profilepic__content">
+              <div className="profilepic__icon">
+                <Icon name="camera" size="large" />
+              </div>
+              <b className="profilepic__text">Thay đổi ảnh đại diện</b>
+            </div>
+          </div>
           <Card.Header>{user.fullName}</Card.Header>
           <Card.Description textAlign="left">
             <Icon name="mobile alternate" />

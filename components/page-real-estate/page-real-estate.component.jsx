@@ -75,9 +75,6 @@ const RealEstatePage = ({
             </Segment>
           </Grid.Column>
           <Grid.Column width={8}>
-            <Dimmer active={loading} inverted>
-              <Loader>Đang tải dữ liệu</Loader>
-            </Dimmer>
             {data.totalResult === 0 ? (
               <>Không tìm thấy kết quả phù hợp</>
             ) : (
@@ -108,6 +105,9 @@ const RealEstatePage = ({
                 </PaginationContainer>
               </>
             )}
+            <Dimmer active={loading} inverted>
+              <Loader>Đang tải dữ liệu</Loader>
+            </Dimmer>
           </Grid.Column>
           <Grid.Column width={4}>
             <Dropdown

@@ -26,14 +26,14 @@ const Navigation = ({
   );
 
   useEffect(() => {
+    const sound = new Audio("/light.mp3");
+
     let onConnected = () => {
       user &&
         client.subscribe(`/topic/message/${user.id}`, function (msg) {
           if (msg.body) {
             var jsonBody = JSON.parse(msg.body);
             if (jsonBody.message) {
-              const sound = new Audio("/light.mp3");
-
               setUnreadNotification(unreadNotification + 1);
               setTimeout(() => {
                 sound && sound.play();

@@ -4,6 +4,7 @@ import {
   Card,
   Form,
   Grid,
+  Image,
   Message,
   Radio,
 } from "semantic-ui-react";
@@ -20,7 +21,6 @@ import {
   getWards,
 } from "../../actions/vietnam-provinces";
 import { updateUser } from "../../actions/auth";
-import { uploadMedia } from "../../utils/uploadToCloudinary";
 
 const MyProfilePage = ({ user }) => {
   const {
@@ -43,6 +43,7 @@ const MyProfilePage = ({ user }) => {
       ward: user.ward,
       address: user.address,
       description: user.description,
+      avatar: user.avatar,
     },
   });
 
@@ -59,19 +60,7 @@ const MyProfilePage = ({ user }) => {
     register("avatar");
   }, [register]);
 
-  const [highlighted, setHighlighted] = useState(false);
-  const [mediaPreview, setMediaPreview] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const mediaRef = useRef(null);
-
-  const handleMediaChange = (e) => {
-    const { name, value, files } = e.target;
-
-    if (name === "media") {
-      setValue("avatar", files[0]);
-      setMediaPreview(URL.createObjectURL(files[0]));
-    }
-  };
 
   const isBefore = (date) => {
     if (!date) {
@@ -149,17 +138,7 @@ const MyProfilePage = ({ user }) => {
   };
 
   const onSubmit = async (data) => {
-    let mediaUrl;
-    if (getValues("avatar")) {
-      mediaUrl = await uploadMedia(getValues("avatar"));
-      if (!mediaUrl) {
-        console.log("ERROR UPLOAD");
-        return;
-      }
-    } else {
-      mediaUrl = user.avatar;
-    }
-    await updateUser(data, mediaUrl, setErrorMessage);
+    await updateUser(data, setErrorMessage);
   };
 
   return (
@@ -308,51 +287,6 @@ const MyProfilePage = ({ user }) => {
                         </Grid>
                       </Form>
                     </Grid.Column>
-                    {/* <Grid.Column width={7} textAlign="center">
-                      <label style={{ fontWeight: "bold" }}>Ảnh đại diện</label>
-                      <input
-                        ref={mediaRef}
-                        onChange={handleMediaChange}
-                        name="media"
-                        style={{ display: "none" }}
-                        type="file"
-                        accept="image/*"
-                      />
-                      <div>
-                        <Image
-                          src={mediaPreview || user.avatar}
-                          style={{ height: "350px", width: "350px" }}
-                          alt="PostImage"
-                          centered
-                          size="medium"
-                        />
-                      </div>
-                      <Button
-                        onClick={() => {
-                          console.log("CLICK");
-                          mediaRef.current.click();
-                        }}
-                        onDrag={(e) => {
-                          e.preventDefault();
-                          // setHighlighted(true);
-                        }}
-                        onDragLeave={(e) => {
-                          e.preventDefault();
-                          // setHighlighted(false);
-                        }}
-                        onDrop={(e) => {
-                          e.preventDefault();
-                          // setHighlighted(true);
-
-                          const droppedFile = Array.from(e.dataTransfer.files);
-
-                          // setMedia(droppedFile[0]);
-                          setMediaPreview(URL.createObjectURL(droppedFile[0]));
-                        }}
-                      >
-                        Thay đổi ảnh đại diện
-                      </Button>
-                    </Grid.Column> */}
                   </Grid.Row>
                 </Grid>
               </Card.Content>
