@@ -21,6 +21,8 @@ import {
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import FormContact from "../form-contact/form-contact.component";
 import options from "../../utils/RealEstateSortValue";
+import ModalItem from "../modal-item/modal-item.component";
+import ReportUserForm from "../form-report-user/form-report-user.component";
 
 const UserDetailPage = ({
   user,
@@ -28,12 +30,12 @@ const UserDetailPage = ({
   followingPosts,
   setFollowingPosts,
 }) => {
-  console.log(postsData.user);
   const [data, setData] = useState(postsData.lists || {});
   const [userDetail, setUserDetail] = useState(postsData.user || {});
   const [loading, setLoading] = useState(false);
   const [propertyType, setPropertyType] = useState(0);
   const [sortValue, setSortValue] = useState(0);
+  const [reportOpen, setReportOpen] = useState(false);
 
   const handlePaginationChange = (e, { activePage }) =>
     fetchAPI(userDetail.id, propertyType, sortValue, activePage - 1);
@@ -68,7 +70,7 @@ const UserDetailPage = ({
 
   return (
     <UserDetailPageContainer>
-      <SemanticToastContainer position="bottom-right" />
+      <SemanticToastContainer position="bottom-right" maxToasts={3} />
       <Grid>
         <Grid.Row>
           <Grid.Column width={3}>
@@ -100,6 +102,18 @@ const UserDetailPage = ({
                   <Icon name="map marker alternate" />
                   Ngọc Nội, Trạm Lộ, Thuận Thành, Bắc Ninh
                 </Card.Description>
+                <Card.Content extra textAlign="left">
+                  <Icon
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setReportOpen(true);
+                    }}
+                    bordered
+                    color="orange"
+                    name="warning sign"
+                    size="large"
+                  />
+                </Card.Content>
               </Card.Content>
             </Card>
             <Segment>
@@ -207,6 +221,19 @@ const UserDetailPage = ({
           </Grid.Column>
         </Grid.Row>
       </Grid>
+      <ModalItem
+        header="Báo cáo người dùng"
+        onOpen={reportOpen}
+        onClose={() => {
+          setReportOpen(false);
+        }}
+      >
+        <ReportUserForm
+          toast={toast}
+          setReportOpen={setReportOpen}
+          userId={postsData.user.id}
+        />
+      </ModalItem>
     </UserDetailPageContainer>
   );
 };

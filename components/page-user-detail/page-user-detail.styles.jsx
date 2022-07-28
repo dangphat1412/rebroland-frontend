@@ -12,7 +12,15 @@ export const UserDetailPageContainer = styled.div`
       right: 10px;
     }
   }
-  
+
+  .social-media-list {
+    display: flex !important;
+    & img {
+      margin-right: 5px;
+      cursor: pointer;
+    }
+  }
+
   .header,
   .item {
     font-family: "Tahoma", san-serif !important;

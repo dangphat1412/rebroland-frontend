@@ -21,3 +21,13 @@ export const reportPost = async (data, postId) => {
     console.log(error);
   }
 };
+
+export const reportUser = async (data, userId) => {
+  try {
+    const content = { content: [...data.content, data.otherContent].join(";") };
+    const res = await Axios.post(`/user/${userId}`, content);
+    return res.status;
+  } catch (error) {
+    console.log(error);
+  }
+};

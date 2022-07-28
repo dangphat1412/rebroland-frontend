@@ -23,6 +23,8 @@ import Pagination from "../pagination/pagination.component";
 import options from "../../utils/RealEstateSortValue";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import { getPostsByUserDetail } from "../../actions/post";
+import ModalItem from "../modal-item/modal-item.component";
+import ReportUserForm from "../form-report-user/form-report-user.component";
 
 const DetailBrokerPage = ({
   user,
@@ -35,6 +37,7 @@ const DetailBrokerPage = ({
   const [loading, setLoading] = useState(false);
   const [propertyType, setPropertyType] = useState(0);
   const [sortValue, setSortValue] = useState(0);
+  const [reportOpen, setReportOpen] = useState(false);
 
   const handlePaginationChange = (e, { activePage }) =>
     fetchAPI(userDetail.id, propertyType, sortValue, activePage - 1);
@@ -127,6 +130,17 @@ const DetailBrokerPage = ({
                         />
                       </a>
                     </Item.Description>
+                    <Item.Extra>
+                      <Icon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setReportOpen(true);
+                        }}
+                        color="orange"
+                        name="warning sign"
+                        size="large"
+                      />
+                    </Item.Extra>
                   </Item.Content>
                 </Item>
               </Item.Group>
@@ -237,6 +251,19 @@ const DetailBrokerPage = ({
           </Grid.Column>
         </Grid.Row>
       </Grid>
+      <ModalItem
+        header="Báo cáo người dùng"
+        onOpen={reportOpen}
+        onClose={() => {
+          setReportOpen(false);
+        }}
+      >
+        <ReportUserForm
+          toast={toast}
+          setReportOpen={setReportOpen}
+          userId={postsData.user.id}
+        />
+      </ModalItem>
     </DetailBrokerContainer>
   );
 };

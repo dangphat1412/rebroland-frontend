@@ -1,2 +1,6 @@
-const API_URL = "http://localhost:8080";
+const API_URL =
+  process.env.NODE_ENV !== "production"
+    ? "http://localhost:8080"
+    : "https://api.rebroland.me";
+
 module.exports = API_URL;

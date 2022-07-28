@@ -299,13 +299,15 @@ const MainNavigation = ({
                   </>
                 )}
 
-                <List.Item as="a">
-                  <Link href="/dang-tin">
-                    <Button inverted color="red">
-                      Đăng tin
-                    </Button>
-                  </Link>
-                </List.Item>
+                {user && (
+                  <List.Item as="a">
+                    <Link href="/dang-tin">
+                      <Button inverted color="red">
+                        Đăng tin
+                      </Button>
+                    </Link>
+                  </List.Item>
+                )}
               </List>
             </Grid.Column>
           </Grid>
