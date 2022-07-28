@@ -115,8 +115,8 @@ export const searchPosts = async (data) => {
         maxPrice: data.maxPrice,
         minArea: data.minArea,
         maxArea: data.maxArea,
-        directions: data.directions ? data.directions.toString() : undefined,
-        numberOfBedrooms: data.numberOfBedrooms,
+        direction: data.directions ? data.directions.toString() : undefined,
+        numberOfBedroom: data.numberOfBedrooms,
       },
     });
     return res.data;
