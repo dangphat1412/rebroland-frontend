@@ -105,7 +105,7 @@ export const searchPosts = async (data) => {
     const res = await Axios.get("/", {
       params: {
         keyword: data.key,
-        propertyTypes: data.propertyTypes
+        propertyType: data.propertyTypes
           ? data.propertyTypes.toString()
           : undefined,
         province: data.province,
@@ -119,7 +119,6 @@ export const searchPosts = async (data) => {
         numberOfBedrooms: data.numberOfBedrooms,
       },
     });
-    console.log("res.data: ", res.data);
     return res.data;
   } catch (error) {
     console.log(error);

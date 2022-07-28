@@ -24,7 +24,7 @@ const RealEstatePage = ({
   const [data, setData] = useState(postsData || {});
 
   const handlePaginationChange = (e, { activePage }) => {
-    fetchAPI(activePage);
+    fetchAPI(activePage-1);
   };
 
   const fetchAPI = async (page) => {

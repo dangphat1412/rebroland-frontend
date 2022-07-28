@@ -4,8 +4,7 @@ import MainNavigation from "../main-navigation/main-navigation.component";
 import SubNavigation from "../sub-navigation/sub-navigation.component";
 import { NavigationContainer } from "./navigation.styles";
 import { Client } from "@stomp/stompjs";
-
-const SOCKET_URL = "ws://localhost:8080/ws-message";
+import SOCKET_URL from "../../utils/socketUrl";
 
 const Navigation = ({
   user,

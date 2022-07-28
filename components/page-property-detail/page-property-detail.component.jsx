@@ -540,7 +540,7 @@ const PagePropertyDetail = ({
         </Grid>
       </Form>
       <ModalItem
-        header="Báo cáo tin đăng không chính xác"
+        header="Báo cáo tin đăng"
         onOpen={reportOpen}
         onClose={() => {
           setReportOpen(false);
