@@ -260,46 +260,50 @@ const PagePropertyDetail = ({
                             </Dropdown.Menu>
                           </Dropdown>
                         </List.Item>
-                        <List.Item>
-                          <Icon
-                            name="warning sign"
-                            onClick={() => {
-                              user
-                                ? setReportOpen(true)
-                                : setTimeout(() => {
-                                    toast({
-                                      type: "error",
-                                      title: "Yêu cầu đăng nhập",
-                                      description: (
-                                        <p>Đăng nhập để báo cáo bài viết</p>
-                                      ),
-                                    });
-                                  }, 1000);
-                            }}
-                          />
-                        </List.Item>
-                        <List.Item>
-                          <Icon
-                            name="heart"
-                            onClick={(e) => {
-                              handleFollowingPost(
-                                e,
-                                post,
-                                followingPosts,
-                                setFollowingPosts
-                              );
-                            }}
-                            color={
-                              followingPosts &&
-                              followingPosts.filter(
-                                (followingPost) =>
-                                  followingPost.postId === post.postId
-                              ).length > 0
-                                ? "red"
-                                : null
-                            }
-                          />
-                        </List.Item>
+                        {user && user.id !== post.user.id && (
+                          <List.Item>
+                            <Icon
+                              name="warning sign"
+                              onClick={() => {
+                                user
+                                  ? setReportOpen(true)
+                                  : setTimeout(() => {
+                                      toast({
+                                        type: "error",
+                                        title: "Yêu cầu đăng nhập",
+                                        description: (
+                                          <p>Đăng nhập để báo cáo bài viết</p>
+                                        ),
+                                      });
+                                    }, 1000);
+                              }}
+                            />
+                          </List.Item>
+                        )}
+                        {user && user.id !== post.user.id && (
+                          <List.Item>
+                            <Icon
+                              name="heart"
+                              onClick={(e) => {
+                                handleFollowingPost(
+                                  e,
+                                  post,
+                                  followingPosts,
+                                  setFollowingPosts
+                                );
+                              }}
+                              color={
+                                followingPosts &&
+                                followingPosts.filter(
+                                  (followingPost) =>
+                                    followingPost.postId === post.postId
+                                ).length > 0
+                                  ? "red"
+                                  : null
+                              }
+                            />
+                          </List.Item>
+                        )}
                       </ActionContainer>
                     </Grid.Column>
                   </Grid.Row>
@@ -433,14 +437,18 @@ const PagePropertyDetail = ({
                     <Icon name="mobile alternate" />
                     {post.contactPhone}
                   </div>
-                  <div>
-                    <Icon name="mail outline" />
-                    {post.contactEmail}
-                  </div>
-                  <div>
-                    <Icon name="map marker alternate" />
-                    {post.contactAddress}
-                  </div>
+                  {post.contactEmail && (
+                    <div>
+                      <Icon name="mail outline" />
+                      {post.contactEmail}
+                    </div>
+                  )}
+                  {post.contactAddress && (
+                    <div>
+                      <Icon name="map marker alternate" />
+                      {post.contactAddress}
+                    </div>
+                  )}
                 </div>
                 {user && user.id !== post.user.id && (
                   <Button
@@ -490,7 +498,7 @@ const PagePropertyDetail = ({
                 </Link>
               )}
 
-              {user && post.user.id === user.id && (
+              {user && post.user.id === user.id && post.originalPost === null && (
                 <Segment>
                   <Radio
                     toggle
