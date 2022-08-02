@@ -30,14 +30,14 @@ const RealEstateItem = ({
             title: "Yêu cầu đăng nhập",
             description: <p>Đăng nhập để quan tâm bài viết</p>,
           });
-        }, 1000);
+        }, 100);
   };
 
   return (
     <Link href={`/bat-dong-san/${convertToSlug(post.title)}-${post.postId}`}>
       <RealEstateItemContainer fluid>
         {type === "card" ? (
-          <div className="card-item">
+          <>
             <Image
               src={post.thumbnail}
               wrapped
@@ -53,12 +53,35 @@ const RealEstateItem = ({
                     }
                   : null
               }
+              className="post-image"
             />
             <Card.Content>
               <Card.Header>{post.title}</Card.Header>
+              <List horizontal size="large">
+                <List.Item>
+                  <List.Content>
+                    <List.Header>
+                      {post.unitPrice.id === 3 ? "Thoả thuận" : price}
+                    </List.Header>
+                  </List.Content>
+                </List.Item>
+                <List.Item>
+                  <List.Content>
+                    <List.Header>
+                      {post.unitPrice.id === 3 ? "" : pricePerSquare}
+                    </List.Header>
+                  </List.Content>
+                </List.Item>
+                <List.Item>
+                  <List.Content>
+                    <List.Header>{post.area}m²</List.Header>
+                  </List.Content>
+                </List.Item>
+              </List>
               <Card.Description>{post.description}</Card.Description>
-              <Card.Content extra>
-                <span>{post.startDate}</span>
+
+              <div>
+                {post.startDate}
                 {(!user || (user && user.id !== post.user.id)) && (
                   <Button
                     floated="right"
@@ -87,9 +110,9 @@ const RealEstateItem = ({
                     />
                   </Button>
                 )}
-              </Card.Content>
+              </div>
             </Card.Content>
-          </div>
+          </>
         ) : (
           <Item.Group>
             <Item>
@@ -133,14 +156,10 @@ const RealEstateItem = ({
                         <List.Header>{post.area}m²</List.Header>
                       </List.Content>
                     </List.Item>
-                    <List.Item>
-                      <List.Content>Thanh Xuân, Hà Nội</List.Content>
-                    </List.Item>
                   </List>
                 </Item.Description>
                 <Item.Description>{post.description}</Item.Description>
                 <Item.Extra>
-                  <span>{post.startDate}</span>
                   {(!user || (user && user.id !== post.user.id)) && (
                     <Button
                       floated="right"
@@ -169,6 +188,15 @@ const RealEstateItem = ({
                       />
                     </Button>
                   )}
+                  <div>
+                    {(post.address ? post.address + ", " : "") +
+                      post.ward +
+                      ", " +
+                      post.district +
+                      ", " +
+                      post.province}
+                  </div>
+                  <span>{post.startDate}</span>
                 </Item.Extra>
               </Item.Content>
             </Item>

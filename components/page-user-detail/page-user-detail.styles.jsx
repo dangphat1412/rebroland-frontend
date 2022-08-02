@@ -62,6 +62,28 @@ export const UserDetailPageContainer = styled.div`
       }
     }
   }
+  .user-information {
+    position: relative;
+    .report-icon {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+  }
+
+  .social-media-list {
+    .ui.mini.image {
+      width: 35px !important;
+      height: auto !important;
+      margin: 0;
+      margin-right: 5px;
+    }
+    display: flex !important;
+    & img {
+      margin-right: 5px;
+      cursor: pointer;
+    }
+  }
 `;
 
 export const PaginationContainer = styled.div`

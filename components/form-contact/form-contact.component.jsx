@@ -5,13 +5,27 @@ import { FormContactBrokerContainer } from "./form-contact.styles";
 import { useForm } from "react-hook-form";
 import { userContact } from "../../actions/contact";
 
-const FormContact = ({ title, userId, postId, toast, setContactOpen }) => {
+const FormContact = ({
+  title,
+  userId,
+  postId,
+  toast,
+  setContactOpen,
+  currentUser,
+}) => {
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
-  } = useForm({});
+  } = useForm({
+    defaultValues: {
+      fullName: currentUser && currentUser.fullName,
+      phone: currentUser && currentUser.phone,
+      email: currentUser && currentUser.email,
+    },
+  });
 
   useEffect(() => {
     register("fullName", { required: "Họ và tên không được để trống" });
@@ -33,7 +47,7 @@ const FormContact = ({ title, userId, postId, toast, setContactOpen }) => {
           title: "Yêu cầu liên hệ lại",
           description: <p>Yêu cầu liên hệ lại thành công</p>,
         });
-      }, 1000);
+      }, 100);
     } else {
       setTimeout(() => {
         toast({
@@ -41,7 +55,7 @@ const FormContact = ({ title, userId, postId, toast, setContactOpen }) => {
           title: "Yêu cầu liên hệ lại",
           description: <p>Yêu cầu liên hệ lại thất bại</p>,
         });
-      }, 1000);
+      }, 100);
     }
     setContactOpen && setContactOpen(false);
   };
@@ -61,27 +75,45 @@ const FormContact = ({ title, userId, postId, toast, setContactOpen }) => {
       <InputField
         label="Họ và tên"
         name="fullName"
-        onChange={async (e, { name, value }) => {
-          setValue(name, value);
-        }}
+        onChange={
+          !currentUser
+            ? async (e, { name, value }) => {
+                setValue(name, value);
+              }
+            : null
+        }
         error={errors.fullName}
+        defaultValue={getValues("fullName")}
+        disabled={currentUser}
         requiredField
       />
       <InputField
         label="Số điện thoại"
         name="phone"
-        onChange={async (e, { name, value }) => {
-          setValue(name, value);
-        }}
-        error={errors.fullName}
+        onChange={
+          !currentUser
+            ? async (e, { name, value }) => {
+                setValue(name, value);
+              }
+            : null
+        }
+        error={errors.phone}
+        defaultValue={getValues("phone")}
+        disabled={currentUser}
         requiredField
       />
       <InputField
         label="Email"
         name="email"
-        onChange={async (e, { name, value }) => {
-          setValue(name, value);
-        }}
+        onChange={
+          !currentUser
+            ? async (e, { name, value }) => {
+                setValue(name, value);
+              }
+            : null
+        }
+        defaultValue={getValues("email")}
+        disabled={currentUser}
       />
       <InputField
         fieldType="textarea"

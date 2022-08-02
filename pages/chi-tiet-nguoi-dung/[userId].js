@@ -5,6 +5,7 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 
 const UserDetail = ({ user, postsData, followingPosts, setFollowingPosts }) => {
+  console.log(postsData);
   return (
     <div>
       <SubHeader title="Chi tiết người dùng" background="/zyro-image.png" />

@@ -39,9 +39,19 @@ export const DetailBrokerContainer = styled.div`
       right: 0px;
     }
   }
+  .broker-avatar {
+    height: 168.5px !important;
+    width: 168.5px !important;
+    img {
+      height: 100% !important;
+      width: 100% !important;
+      object-fit: cover;
+    }
+  }
 `;
 
 export const PaginationContainer = styled.div`
+  margin-top: 10px !important;
   display: flex !important;
   justify-content: center;
 `;

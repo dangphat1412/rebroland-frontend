@@ -5,7 +5,7 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 
 const DetailRealEstate = ({
-  post,
+  postData,
   user,
   followingPosts,
   setFollowingPosts,
@@ -14,7 +14,8 @@ const DetailRealEstate = ({
     <>
       <SubHeader title="Chi tiết bất động sản" background="/zyro-image.png" />
       <PagePropertyDetail
-        post={post}
+        post={postData.post}
+        brokers={postData.brokers}
         user={user}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
@@ -31,7 +32,7 @@ export async function getServerSideProps(context) {
       `${API_URL}/api/posts/${postId.split("-").pop()}`
     );
 
-    return { props: { post: res.data } };
+    return { props: { postData: res.data } };
   } catch (error) {
     // return { props: { post: [1, 2, 3] } };
   }

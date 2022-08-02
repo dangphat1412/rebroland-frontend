@@ -21,8 +21,8 @@ export const RealEstateItemContainer = styled(Card)`
     height: 215px !important;
     width: 300x !important;
     img {
-      height: 100%;
-      width: 100%;
+      height: 100% !important;
+      width: 100% !important;
       object-fit: cover;
     }
   }
@@ -35,6 +35,23 @@ export const RealEstateItemContainer = styled(Card)`
         width: 100% !important;
         object-fit: cover;
       }
+    }
+  }
+
+  img {
+    margin: 0 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover;
+  }
+
+  .post-image {
+    height: 195px;
+    img {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: inherit;
     }
   }
 `;

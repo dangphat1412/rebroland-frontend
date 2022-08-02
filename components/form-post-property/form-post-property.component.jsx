@@ -24,54 +24,54 @@ const FormPostProperty = ({ user }) => {
     watch,
     formState: { errors },
   } = useForm({
-    // defaultValues: {
-    //   title: undefined,
-    //   description: undefined,
-    //   propertyTypeId: undefined,
-    //   area: undefined,
-    //   price: undefined,
-    //   unitPriceId: 1,
-    //   longevityId: undefined,
-    //   numberOfBedroom: undefined,
-    //   numberOfBathroom: undefined,
-    //   floorNumber: undefined,
-    //   numberOfFloor: undefined,
-    //   certification: false,
-    //   barcode: undefined,
-    //   plotNumber: undefined,
-    //   roomNumber: undefined,
-    //   buildingName: undefined,
-    //   owner: undefined,
-    //   ownerPhone: undefined,
-    //   // parentBarcode: undefined,
-    //   // parentPlotNumber: undefined,
-    //   directionId: undefined,
-    //   frontispiece: undefined,
-    //   additionalDescription: undefined,
-    //   province: undefined,
-    //   district: undefined,
-    //   ward: undefined,
-    //   address: undefined,
-    //   coordinates: [],
-    //   // contactName: user.fullName,
-    //   // contactPhone: user.phone,
-    //   contactEmail: undefined,
-    //   contactAddress: undefined,
-    // },
+    defaultValues: {
+      title: undefined,
+      description: undefined,
+      propertyTypeId: undefined,
+      area: undefined,
+      price: undefined,
+      unitPriceId: 1,
+      longevityId: undefined,
+      numberOfBedroom: undefined,
+      numberOfBathroom: undefined,
+      floorNumber: undefined,
+      numberOfFloor: undefined,
+      certification: false,
+      barcode: undefined,
+      plotNumber: undefined,
+      roomNumber: undefined,
+      buildingName: undefined,
+      owner: undefined,
+      ownerPhone: undefined,
+      // parentBarcode: undefined,
+      // parentPlotNumber: undefined,
+      directionId: undefined,
+      frontispiece: undefined,
+      additionalDescription: undefined,
+      province: undefined,
+      district: undefined,
+      ward: undefined,
+      address: undefined,
+      coordinates: [],
+      contactName: user.fullName,
+      contactPhone: user.phone,
+      contactEmail: undefined,
+      contactAddress: undefined,
+    },
   });
 
   const [images, setImages] = useState([]);
 
   const onSubmit = async (data, e) => {
-    // let mediaUrl;
-    // if (images.length !== 0) {
-    //   mediaUrl = await uploadMultipleMedia(images);
-    //   if (!mediaUrl) {
-    //     console.log("ERROR UPLOAD");
-    //     return;
-    //   }
-    // }
-    // await createPost(data, mediaUrl);
+    let mediaUrl;
+    if (images.length !== 0) {
+      mediaUrl = await uploadMultipleMedia(images);
+      if (!mediaUrl) {
+        console.log("ERROR UPLOAD");
+        return;
+      }
+    }
+    await createPost(data, mediaUrl);
     console.log(data);
     const link = await payment("Thanh toán bài đăng", 55000);
     window.open(link.data, "_blank");
@@ -85,7 +85,7 @@ const FormPostProperty = ({ user }) => {
           <Form size="large" onSubmit={handleSubmit(onSubmit)}>
             <Grid columns="equal" padded>
               <Grid.Row>
-                {/* <Grid.Column width={10}>
+                <Grid.Column width={10}>
                   <PostInformationForm
                     errors={errors}
                     register={register}
@@ -113,7 +113,7 @@ const FormPostProperty = ({ user }) => {
                     getValues={getValues}
                     errors={errors}
                   />
-                </Grid.Column> */}
+                </Grid.Column>
                 <Grid.Column width={6}>
                   <Sticky context={contextRef} offset={100}>
                     <PaymentInformationForm />

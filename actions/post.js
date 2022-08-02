@@ -85,6 +85,17 @@ export const getPosts = async (sortValue, page) => {
   }
 };
 
+export const getOriginalPosts = async (sortValue, page) => {
+  try {
+    const res = await Axios.get(
+      `/broker/original?pageNo=${page}&sortValue=${sortValue}`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getFollowingPostsByUser = async (
   propertyType,
   sortValue,
@@ -103,6 +114,33 @@ export const getFollowingPostsByUser = async (
 export const searchPosts = async (data, sortValue, page) => {
   try {
     const res = await Axios.get("/", {
+      params: {
+        keyword: data.key,
+        propertyType: data.propertyTypes
+          ? data.propertyTypes.toString()
+          : undefined,
+        province: data.province,
+        district: data.district,
+        ward: data.ward,
+        minPrice: data.minPrice,
+        maxPrice: data.maxPrice,
+        minArea: data.minArea,
+        maxArea: data.maxArea,
+        direction: data.directions ? data.directions.toString() : undefined,
+        numberOfBedroom: data.numberOfBedrooms,
+        sortValue: sortValue,
+        pageNo: page,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const searchOriginalPosts = async (data, sortValue, page) => {
+  try {
+    const res = await Axios.get("/broker/original/search", {
       params: {
         keyword: data.key,
         propertyType: data.propertyTypes
@@ -192,6 +230,15 @@ export const getDerivativePostsByUser = async (
       `/derivative/list?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
     );
     return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const switchAllowCreateDerivative = async (postId) => {
+  try {
+    const res = await Axios.put(`/allow-derivative/switch/${postId}`);
+    return res.status;
   } catch (error) {
     console.log(error);
   }

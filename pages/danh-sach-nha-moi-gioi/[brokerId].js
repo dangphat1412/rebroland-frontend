@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import DetailBrokerPage from "../../components/page-detail-broker/page-detail-broker.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
@@ -10,14 +10,20 @@ const DetailBroker = ({
   followingPosts,
   setFollowingPosts,
 }) => {
+  const [totalResult, setTotalResult] = useState(postsData.lists.totalResult);
   return (
     <>
-      <SubHeader title="Chi tiết nhà môi giới" background="/zyro-image.png" />
+      <SubHeader
+        title="Chi tiết nhà môi giới"
+        subtitle={`Có tất cả ${totalResult} bất động sản`}
+        background="/zyro-image.png"
+      />
       <DetailBrokerPage
         user={user}
         postsData={postsData}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
+        setTotalResult={setTotalResult}
       />
     </>
   );

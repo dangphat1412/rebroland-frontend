@@ -29,8 +29,6 @@ const MyProfilePage = ({ user }) => {
     setValue,
     getValues,
     watch,
-    setError,
-    clearError,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -44,6 +42,8 @@ const MyProfilePage = ({ user }) => {
       address: user.address,
       description: user.description,
       avatar: user.avatar,
+      facebookLink: user.facebookLink,
+      zaloLink: user.zaloLink,
     },
   });
 
@@ -58,6 +58,20 @@ const MyProfilePage = ({ user }) => {
     register("address");
     register("description");
     register("avatar");
+    register("facebookLink", {
+      pattern: {
+        value:
+          /(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/,
+        message: "Nhập đúng định dạng link Facebook",
+      },
+    });
+    register("zaloLink", {
+      pattern: {
+        value:
+          /^(?:(?:http|https):\/\/)?(?:www.)?zalo.me\/(84|0[3|5|7|8|9])+([0-9]{8})$/,
+        message: "Nhập đúng định dạng link Zalo",
+      },
+    });
   }, [register]);
 
   const [errorMessage, setErrorMessage] = useState(null);
@@ -138,6 +152,7 @@ const MyProfilePage = ({ user }) => {
   };
 
   const onSubmit = async (data) => {
+    // console.log(data);
     await updateUser(data, setErrorMessage);
   };
 
@@ -268,15 +283,21 @@ const MyProfilePage = ({ user }) => {
                         />
                         <InputField
                           label="Trang cá nhân Facebook"
-                          // onChange={async (e, { name, value }) => {
-                          //   setValue(name, value);
-                          // }}
+                          name="facebookLink"
+                          defaultValue={getValues("facebookLink")}
+                          onChange={async (e, { name, value }) => {
+                            setValue(name, value);
+                          }}
+                          error={errors.facebookLink}
                         />
                         <InputField
                           label="Trang cá nhân Zalo"
-                          // onChange={async (e, { name, value }) => {
-                          //   setValue(name, value);
-                          // }}
+                          name="zaloLink"
+                          defaultValue={getValues("zaloLink")}
+                          onChange={async (e, { name, value }) => {
+                            setValue(name, value);
+                          }}
+                          error={errors.zaloLink}
                         />
                         <Grid>
                           <Grid.Column textAlign="center">

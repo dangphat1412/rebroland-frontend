@@ -64,11 +64,13 @@ const UserPanel = ({ user }) => {
           </Card.Description>
           <Card.Description textAlign="left">
             <Icon name="mail outline" />
-            {user.email}
+            {user.email ? user.email : "Đang cập nhật"}
           </Card.Description>
           <Card.Description textAlign="left">
             <Icon name="map marker alternate" />
-            Ngọc Nội, Trạm Lộ, Thuận Thành, Bắc Ninh
+            {user.province && user.district && user.ward
+              ? user.ward + ", " + user.district + ", " + user.province
+              : "Đang cập nhật"}
           </Card.Description>
         </Card.Content>
       </Card>

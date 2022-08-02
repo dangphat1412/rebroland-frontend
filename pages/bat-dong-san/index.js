@@ -3,8 +3,10 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 import RealEstatePage from "../../components/page-real-estate/page-real-estate.component";
 import axios from "axios";
 import API_URL from "../../utils/apiUrl";
+import { useRouter } from "next/router";
 
 const RealEstate = ({ user, postsData, followingPosts, setFollowingPosts }) => {
+  const router = useRouter();
   const [totalResult, setTotalResult] = useState(postsData.totalResult);
   return (
     <div>
@@ -26,7 +28,7 @@ const RealEstate = ({ user, postsData, followingPosts, setFollowingPosts }) => {
 
 export async function getServerSideProps(context) {
   try {
-    const res = await axios.get(`${API_URL}/api/posts/lists`);
+    const res = await axios.get(`${API_URL}/api/posts`);
 
     return { props: { postsData: res.data } };
   } catch (error) {

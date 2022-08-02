@@ -2,42 +2,50 @@ import Link from "next/link";
 import React, { useState } from "react";
 import {
   Card,
+  Dimmer,
   Dropdown,
   Grid,
   Icon,
   Image,
   Loader,
   Pagination,
+  Rating,
   Segment,
 } from "semantic-ui-react";
-import { getListBrokers } from "../../actions/user";
+import { searchBrokers } from "../../actions/user";
 import SearchBoxBroker from "../search-box-broker/search-box-broker.component";
 import {
   ListBrokersContainer,
   PaginationContainer,
 } from "./page-list-brokers.styles";
 
-const ListBrokersPage = ({ brokersData }) => {
+const ListBrokersPage = ({ brokersData, setTotalResult }) => {
   const [data, setData] = useState(brokersData || {});
   const [sortValue, setSortValue] = useState(0);
-
-  const handlePaginationChange = (e, { activePage }) => {
-    fetchAPI(activePage);
-  };
+  const [loading, setLoading] = useState(false);
+  const [params, setParams] = useState(null);
 
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
-    fetchAPI(propertyType, value, 0);
+    fetchAPI(params, value, 0);
   };
 
-  const fetchAPI = async (page) => {
-    const brokers = await getListBrokers(page);
-    setData(brokers);
+  const handlePaginationChange = (e, { activePage }) => {
+    fetchAPI(params, sortValue, activePage - 1);
+  };
+
+  const fetchAPI = async (params, sortValue, page) => {
+    setLoading(true);
+    const brokersData = await searchBrokers(params, sortValue, page);
+    setData(brokersData);
+    setTotalResult(brokersData.totalResult);
+    setLoading(false);
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
+
   return (
     <ListBrokersContainer>
       <Grid>
@@ -57,15 +65,16 @@ const ListBrokersPage = ({ brokersData }) => {
                 color: "white",
               }}
             >
-              <SearchBoxBroker />
+              <SearchBoxBroker
+                setData={setData}
+                setParams={setParams}
+                setSortValue={setSortValue}
+                setTotalResult={setTotalResult}
+              />
             </Segment>
           </Grid.Column>
           <Grid.Column width={12}>
-            {data.length === 0 ? (
-              <Segment basic>
-                <Loader active inline="centered" />
-              </Segment>
-            ) : data.list.length === 0 ? (
+            {data.list.length === 0 ? (
               <>Không tìm thấy kết quả phù hợp</>
             ) : (
               <>
@@ -92,6 +101,9 @@ const ListBrokersPage = ({ brokersData }) => {
                 )}
               </>
             )}
+            <Dimmer active={loading} inverted>
+              <Loader>Đang tải dữ liệu</Loader>
+            </Dimmer>
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -115,16 +127,28 @@ const BrokerItem = ({ broker }) => {
         <Card.Content>
           <Card.Header>{broker.fullName}</Card.Header>
           <Card.Description>
+            <Rating
+              maxRating={5}
+              defaultRating={broker.avgRate.toFixed()}
+              icon="star"
+              size="mini"
+              disabled
+            />
+            <b> {broker.avgRate}</b>
+          </Card.Description>
+          <Card.Description>
             <Icon name="mobile alternate" />
             {broker.phone}
           </Card.Description>
           <Card.Description>
             <Icon name="mail outline" />
-            phatnguyen1412@gmail.com
+            {broker.email ? broker.email : "Đang cập nhật"}
           </Card.Description>
           <Card.Description>
             <Icon name="map marker alternate" />
-            <span>Ngọc Nội, Trạm Lộ, Thuận Thành, Bắc Ninh</span>
+            {broker.province && broker.district && broker.ward
+              ? broker.ward + ", " + broker.district + ", " + broker.province
+              : "Đang cập nhật"}
           </Card.Description>
         </Card.Content>
       </Card>
@@ -135,19 +159,14 @@ const BrokerItem = ({ broker }) => {
 const options = [
   {
     key: 0,
-    text: "Thông thường",
+    text: "Lượt bình chọn",
     value: 0,
   },
-  {
-    key: 1,
-    text: "Lượt bình chọn",
-    value: 1,
-  },
-  {
-    key: 2,
-    text: "Số giao dịch thành công",
-    value: 2,
-  },
+  // {
+  //   key: 1,
+  //   text: "Số giao dịch thành công",
+  //   value: 1,
+  // },
 ];
 
 export default ListBrokersPage;

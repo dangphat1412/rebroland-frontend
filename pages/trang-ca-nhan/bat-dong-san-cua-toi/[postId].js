@@ -5,11 +5,15 @@ import axios from "axios";
 import API_URL from "../../../utils/apiUrl";
 import PagePropertyDetail from "../../../components/page-property-detail/page-property-detail.component";
 
-const MyDetailProperty = ({ post, user }) => {
+const MyDetailProperty = ({ postData, user }) => {
   return (
     <>
       <SubHeader title="Chi tiết bất động sản" background="/zyro-image.png" />
-      <PagePropertyDetail post={post} user={user} />
+      <PagePropertyDetail
+        post={postData.post}
+        brokers={postData.brokers}
+        user={user}
+      />
     </>
   );
 };
@@ -26,7 +30,7 @@ export async function getServerSideProps(context) {
       }
     );
 
-    return { props: { post: res.data } };
+    return { props: { postData: res.data } };
   } catch (error) {
     // return { props: { post: [1, 2, 3] } };
   }

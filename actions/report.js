@@ -13,8 +13,11 @@ const Axios = axios.create({
 
 export const reportPost = async (data, postId) => {
   try {
-    const content = { content: [...data.content, data.otherContent].join(";") };
-    console.log(content);
+    const content = {
+      content: data.content
+        ? [...data.content, data.otherContent].join(";")
+        : data.otherContent,
+    };
     const res = await Axios.post(`/post/${postId}`, content);
     return res.status;
   } catch (error) {

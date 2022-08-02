@@ -1,14 +1,14 @@
 import React, { createRef, useState } from "react";
 import { CreateDerivativePostContainer } from "./page-create-derivative-post.styles";
 import { useForm } from "react-hook-form";
-import { Button, Card, Form, Grid, Icon, Image } from "semantic-ui-react";
+import { Button, Form, Grid } from "semantic-ui-react";
 import PostInformationForm from "../post-information-form/post-information-form.component";
-import RealEstateCard from "../card-real-estate/card-real-estate.component";
 import ContactInformationForm from "../contact-information-form/contact-information-form.component";
 import ImageInformationForm from "../image-information-form/image-information-form.component";
 import GeographicInformationForm from "../geographic-information-form/geographic-information-form.component";
 import { createDerivativePost } from "../../actions/post";
 import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
+import RealEstateItem from "../item-real-estate/item-real-estate.component";
 
 const CreateDerivativePost = ({ user, post }) => {
   const contextRef = createRef();
@@ -100,7 +100,7 @@ const CreateDerivativePost = ({ user, post }) => {
               />
             </Grid.Column>
             <Grid.Column width={6}>
-              <RealEstateCard post={post} />
+              <RealEstateItem post={post} type="card" />
               <Button fluid color="red" size="large">
                 Tạo bài phái sinh
               </Button>

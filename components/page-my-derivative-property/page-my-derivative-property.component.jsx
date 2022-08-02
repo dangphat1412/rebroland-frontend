@@ -35,6 +35,7 @@ const MyDerivativePropertyPage = ({ user, postsData }) => {
     setPropertyType(activeIndex);
     setSortValue(0);
     fetchAPI(activeIndex, 0, 0);
+    console.log(activeIndex);
   };
 
   const handleFilterOption = (e, { value }) => {
@@ -164,6 +165,16 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                             src={
                               (post && post.thumbnail) ||
                               "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
+                            }
+                            label={
+                              post.originalPost && post.originalPost !== 0
+                                ? {
+                                    color: "red",
+                                    content: "Bài phái sinh",
+                                    icon: "copy outline",
+                                    ribbon: true,
+                                  }
+                                : null
                             }
                           />
                           <Item.Content className="item-content">

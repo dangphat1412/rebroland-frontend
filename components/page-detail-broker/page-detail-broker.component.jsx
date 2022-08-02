@@ -9,6 +9,7 @@ import {
   Image,
   Item,
   Loader,
+  Rating,
   Segment,
   Tab,
 } from "semantic-ui-react";
@@ -31,6 +32,7 @@ const DetailBrokerPage = ({
   postsData,
   followingPosts,
   setFollowingPosts,
+  setTotalResult,
 }) => {
   const [userDetail, setUserDetail] = useState(postsData.user);
   const [data, setData] = useState(postsData.lists);
@@ -62,6 +64,7 @@ const DetailBrokerPage = ({
       pageNo
     );
     setData(posts.lists);
+    setTotalResult(posts.lists.totalResult);
     setLoading(false);
     window.scrollTo({
       top: 0,
@@ -90,25 +93,48 @@ const DetailBrokerPage = ({
                 <Item>
                   <Item.Image
                     size="small"
-                    src="https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+                    src={
+                      userDetail.avatar ||
+                      "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+                    }
+                    className="broker-avatar"
                   />
-                  <Item.Content>
+                  <Item.Content style={{ position: "relative" }}>
                     <Item.Header>{userDetail.fullName}</Item.Header>
+                    <Card.Description>
+                      <Rating
+                        maxRating={5}
+                        defaultRating={userDetail.avgRate.toFixed()}
+                        icon="star"
+                        size="mini"
+                        disabled
+                      />
+                      <b> {userDetail.avgRate}</b>
+                    </Card.Description>
                     <Item.Description>
                       <Icon name="mobile alternate" />
                       {userDetail.phone}
                     </Item.Description>
                     <Item.Description>
                       <Icon name="mail outline" />
-                      {userDetail.email}
+                      {userDetail.email ? userDetail.email : "Đang cập nhật"}
                     </Item.Description>
                     <Item.Description>
                       <Icon name="map marker alternate" />
-                      <span>Ngọc Nội, Trạm Lộ, Thuận Thành, Bắc Ninh</span>
+                      {userDetail.province &&
+                      userDetail.district &&
+                      userDetail.ward
+                        ? userDetail.ward +
+                          ", " +
+                          userDetail.district +
+                          ", " +
+                          userDetail.province
+                        : "Đang cập nhật"}
                     </Item.Description>
+
                     <Item.Description className="social-media-list">
                       <a
-                        href="https://www.facebook.com/"
+                        href={userDetail.facebookLink}
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -119,7 +145,7 @@ const DetailBrokerPage = ({
                         />
                       </a>
                       <a
-                        href="https://www.facebook.com/"
+                        href={userDetail.zaloLink}
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -130,38 +156,33 @@ const DetailBrokerPage = ({
                         />
                       </a>
                     </Item.Description>
-                    <Item.Extra>
-                      <Icon
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setReportOpen(true);
-                        }}
-                        color="orange"
-                        name="warning sign"
-                        size="large"
-                      />
-                    </Item.Extra>
+                    <Icon
+                      style={{
+                        cursor: "pointer",
+                        position: "absolute",
+                        right: "0px",
+                        top: "0px",
+                      }}
+                      onClick={() => {
+                        setReportOpen(true);
+                      }}
+                      color="orange"
+                      name="warning sign"
+                      size="large"
+                    />
                   </Item.Content>
                 </Item>
               </Item.Group>
             </Segment>
             <Segment>
-              <Header as="h2">Thông tin về tôi</Header>
+              <Header as="h2">Thông tin mô tả về nhà môi giới</Header>
               <div>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Excepturi dolorem molestiae ullam mollitia odit tempore sint
-                officiis delectus magnam! Aperiam optio labore sapiente itaque
-                illo possimus accusamus numquam nam reiciendis.
+                <pre>
+                  {userDetail.description
+                    ? userDetail.description
+                    : "Đang cập nhật"}
+                </pre>
               </div>
-              <div>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Excepturi dolorem molestiae ullam mollitia odit tempore sint
-                officiis delectus magnam! Aperiam optio labore sapiente itaque
-                illo possimus accusamus numquam nam reiciendis.
-              </div>
-              {/* <div>
-                <pre>{post.description}</pre>
-              </div> */}
             </Segment>
             <div className="list-property">
               <Header as="h2">Danh sách bất động sản</Header>
@@ -189,6 +210,7 @@ const DetailBrokerPage = ({
                           followingPosts={followingPosts}
                           setFollowingPosts={setFollowingPosts}
                           handlePaginationChange={handlePaginationChange}
+                          toast={toast}
                         />
                       </Tab.Pane>
                     ),
@@ -203,6 +225,7 @@ const DetailBrokerPage = ({
                           followingPosts={followingPosts}
                           setFollowingPosts={setFollowingPosts}
                           handlePaginationChange={handlePaginationChange}
+                          toast={toast}
                         />
                       </Tab.Pane>
                     ),
@@ -217,6 +240,7 @@ const DetailBrokerPage = ({
                           followingPosts={followingPosts}
                           setFollowingPosts={setFollowingPosts}
                           handlePaginationChange={handlePaginationChange}
+                          toast={toast}
                         />
                       </Tab.Pane>
                     ),
@@ -232,6 +256,7 @@ const DetailBrokerPage = ({
                           followingPosts={followingPosts}
                           setFollowingPosts={setFollowingPosts}
                           handlePaginationChange={handlePaginationChange}
+                          toast={toast}
                         />
                       </Tab.Pane>
                     ),
@@ -246,6 +271,7 @@ const DetailBrokerPage = ({
                 title="Liên lạc với nhà môi giới"
                 toast={toast}
                 userId={userDetail.id}
+                currentUser={user}
               />
             </Segment>
           </Grid.Column>
@@ -287,10 +313,11 @@ const ListProperty = ({
               key={index}
               followingPosts={followingPosts}
               setFollowingPosts={setFollowingPosts}
+              toast={toast}
             />
           ))}
       </Card.Group>
-      {data.totalPage > 1 && (
+      {data.totalPages > 1 && (
         <PaginationContainer>
           <Pagination
             activePage={data.pageNo}

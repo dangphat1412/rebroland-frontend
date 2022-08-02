@@ -7,6 +7,7 @@ import {
   Header,
   Icon,
   Image,
+  Item,
   Loader,
   Segment,
   Tab,
@@ -80,56 +81,76 @@ const UserDetailPage = ({
                   Thông tin cá nhân
                 </Card.Header>
               </Card.Content>
-              <Card.Content textAlign="center">
+              <Card.Content textAlign="center" className="user-information">
                 <Image
                   src={
+                    userDetail.avatar ||
                     "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
                   }
                   circular
                   alt="avatar"
                   verticalAlign="middle"
                 />
-                <Card.Header>Nguyễn Đăng Phát</Card.Header>
+                <Card.Header>{userDetail.fullName}</Card.Header>
                 <Card.Description textAlign="left">
                   <Icon name="mobile alternate" />
-                  0917768923
+                  {userDetail.phone}
                 </Card.Description>
                 <Card.Description textAlign="left">
                   <Icon name="mail outline" />
-                  phatnguyen1412@gmail.com
+                  {userDetail.email ? userDetail.email : "Đang cập nhật"}
                 </Card.Description>
                 <Card.Description textAlign="left">
                   <Icon name="map marker alternate" />
-                  Ngọc Nội, Trạm Lộ, Thuận Thành, Bắc Ninh
+                  {userDetail.province && userDetail.district && userDetail.ward
+                    ? userDetail.ward +
+                      ", " +
+                      userDetail.district +
+                      ", " +
+                      userDetail.province
+                    : "Đang cập nhật"}
                 </Card.Description>
-                <Card.Content extra textAlign="left">
-                  <Icon
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      setReportOpen(true);
-                    }}
-                    bordered
-                    color="orange"
-                    name="warning sign"
-                    size="large"
-                  />
-                </Card.Content>
+                <Item.Description className="social-media-list">
+                  <a
+                    href={userDetail.facebookLink}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Image
+                      src="https://cdn.icon-icons.com/icons2/2108/PNG/512/facebook_icon_130940.png"
+                      alt="fb"
+                      size="mini"
+                    />
+                  </a>
+                  <a
+                    href={userDetail.zaloLink}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Image
+                      src="https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png"
+                      alt="fb"
+                      size="mini"
+                    />
+                  </a>
+                </Item.Description>
+                <Icon
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setReportOpen(true);
+                  }}
+                  color="orange"
+                  name="warning sign"
+                  size="large"
+                  className="report-icon"
+                />
               </Card.Content>
             </Card>
             <Segment>
               <Header as="h2">Thông tin mô tả</Header>
-              <div>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Excepturi dolorem molestiae ullam mollitia odit tempore sint
-                officiis delectus magnam! Aperiam optio labore sapiente itaque
-                illo possimus accusamus numquam nam reiciendis.
-              </div>
-              <div>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Excepturi dolorem molestiae ullam mollitia odit tempore sint
-                officiis delectus magnam! Aperiam optio labore sapiente itaque
-                illo possimus accusamus numquam nam reiciendis.
-              </div>
+              {userDetail.description
+                ? userDetail.description
+                : "Đang cập nhật"}
             </Segment>
           </Grid.Column>
           <Grid.Column width={9} className="user-detail">

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "semantic-ui-react";
 import { getPropertyTypes } from "../../actions/post";
+import { searchBrokers } from "../../actions/user";
 import {
   getDistricts,
   getProvinces,
@@ -10,7 +11,12 @@ import {
 import InputField from "../input-field/input-field.component";
 import { FormSearchContainer } from "./search-box-broker.styles";
 
-const SearchBoxBroker = () => {
+const SearchBoxBroker = ({
+  setData,
+  setParams,
+  setSortValue,
+  setTotalResult,
+}) => {
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
       key: undefined,
@@ -96,9 +102,13 @@ const SearchBoxBroker = () => {
   };
 
   const onSubmit = async (data, e) => {
-    console.log("SEARCH: ", data);
-    // const postData = await searchPosts(data);
-    // setData(postData);
+    console.log("data: ", data);
+    const brokersData = await searchBrokers(data);
+    console.log(brokersData);
+    setData(brokersData);
+    setTotalResult(brokersData.totalResult);
+    setParams(data);
+    setSortValue(0);
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Breadcrumb,
   Button,
@@ -29,7 +29,11 @@ import {
 } from "./page-property-detail.styles";
 import ModalItem from "../modal-item/modal-item.component";
 import FormReport from "../form-report/form-report.component";
-import { followPost, historyPost } from "../../actions/post";
+import {
+  followPost,
+  historyPost,
+  switchAllowCreateDerivative,
+} from "../../actions/post";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ReactImageGallery from "react-image-gallery";
@@ -39,21 +43,30 @@ import convertToSlug from "../../utils/convertToSlug";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import calculatePrice from "../../utils/calculatePrice";
 import FormContact from "../form-contact/form-contact.component";
+import HOST_URL from "../../utils/hostUrl";
 
 const PagePropertyDetail = ({
   post,
   user,
+  brokers,
   followingPosts,
   setFollowingPosts,
 }) => {
   const router = useRouter();
+
   const [reportOpen, setReportOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [historyData, setHistoryData] = useState();
+  const [allowCreateDerivative, setAllowCreateDerivative] = useState(
+    post.allowDerivative
+  );
   const [items, setItems] = useState([]);
 
   const { price, pricePerSquare } = calculatePrice(post);
+
+  const facebookRef = useRef(null);
+  const zaloRef = useRef(null);
 
   useEffect(() => {
     setItems(
@@ -75,12 +88,6 @@ const PagePropertyDetail = ({
   const createDerivativePost = (postId) => {
     router.push(`/nha-moi-gioi/tao-bai-phai-sinh/${postId}`);
   };
-
-  const handleZaloShare = () => {
-    console.log(router);
-  };
-
-  const handleFacebookShare = () => {};
 
   const handleFollowingPost = async (
     e,
@@ -113,7 +120,14 @@ const PagePropertyDetail = ({
         title: "Sao chép liên kết",
         description: <p>Sao chép liên kết thành công</p>,
       });
-    }, 1000);
+    }, 100);
+  };
+
+  const handleChangeAllowCreateDerivative = async (postId) => {
+    const status = await switchAllowCreateDerivative(postId);
+    if (status === 200) {
+      setAllowCreateDerivative(!allowCreateDerivative);
+    }
   };
 
   const onContactSubmit = async (data, e) => {
@@ -125,27 +139,13 @@ const PagePropertyDetail = ({
       <Head>
         <title>{post.title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta property="og:url" content={router.asPath} />
+        <meta property="og:url" content={`${HOST_URL}${router.asPath}`} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.description} />
-        {/* <meta property="og:image" content={post.images[0].image} /> */}
+        <meta property="og:image" content={post.thumbnail} />
       </Head>
       <SemanticToastContainer position="bottom-right" maxToasts={3} />
-      {/* <div
-        class="fb-share-button"
-        data-href="http://localhost:3000/bat-dong-san/gia-tu-32trm2-hang-ngoai-giao-dau-tu-gia-dot-1-view-ho-i1---i2-re-nhat-dong-10-ky-hdmb-ls-0-24t-38"
-        data-layout="button_count"
-        data-size="small"
-      ></div>
-      <div
-        class="zalo-share-button"
-        data-href="http://localhost:3000/bat-dong-san/gia-tu-32trm2-hang-ngoai-giao-dau-tu-gia-dot-1-view-ho-i1---i2-re-nhat-dong-10-ky-hdmb-ls-0-24t-38"
-        data-oaid="2599619185893858022"
-        data-layout="1"
-        data-color="blue"
-        data-customize="false"
-      ></div> */}
 
       <Form size="large">
         <Grid columns="equal" padded>
@@ -209,28 +209,45 @@ const PagePropertyDetail = ({
                         selection
                       >
                         <List.Item>
-                          <Dropdown
-                            icon="share alternate"
-                            floating
-                            labeled
-                            className="icon"
-                          >
+                          <Dropdown icon="share alternate" floating>
                             <Dropdown.Menu>
                               <Dropdown.Item>
-                                <Image
-                                  src="https://cdn.icon-icons.com/icons2/2108/PNG/512/facebook_icon_130940.png"
-                                  alt="fb"
-                                  size="mini"
-                                />
-                                Facebook
+                                <a
+                                  tracking-id="share-ldp"
+                                  tracking-label="type=facebook"
+                                  className="re__list-standard-1line-no-underline--md"
+                                  id="facebook"
+                                  target="_blank"
+                                  rel="nofollow"
+                                  href={`https://www.facebook.com/sharer/sharer.php?u=${HOST_URL}${router.asPath}`}
+                                >
+                                  <Image
+                                    src="https://cdn.icon-icons.com/icons2/2108/PNG/512/facebook_icon_130940.png"
+                                    alt="facebook"
+                                    size="mini"
+                                  />
+                                  <span>Facebook</span>
+                                </a>
                               </Dropdown.Item>
-                              <Dropdown.Item onClick={handleZaloShare}>
-                                <Image
-                                  src="https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png"
-                                  alt="fb"
-                                  size="mini"
-                                />
-                                Zalo
+                              <Dropdown.Item>
+                                <a
+                                  tracking-id="share-ldp"
+                                  tracking-label="type=zalo"
+                                  className="zalo-share-button"
+                                  data-script="https://sp.zalo.me/plugins/sdk.js"
+                                  data-href={`${HOST_URL}${router.asPath}`}
+                                  data-oaid="2599619185893858022"
+                                  data-layout="2"
+                                  data-color="blue"
+                                  data-customize="true"
+                                >
+                                  <Image
+                                    src="https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png"
+                                    alt="zalo"
+                                    size="mini"
+                                  />
+                                  <span>Zalo</span>
+                                </a>
                               </Dropdown.Item>
                               <Dropdown.Item
                                 onClick={(e, data) => {
@@ -389,9 +406,16 @@ const PagePropertyDetail = ({
             <Grid.Column width={4}>
               <UserInformationContainer textAlign="center">
                 <Image
-                  src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
-                  size="tiny"
-                  circular
+                  src={
+                    post.user.avatar ||
+                    "https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
+                  }
+                  style={{
+                    height: "150px",
+                    width: "150px",
+                    objectFit: "cover",
+                  }}
+                  avatar
                   alt="avatar"
                   verticalAlign="middle"
                 />
@@ -418,16 +442,18 @@ const PagePropertyDetail = ({
                     {post.contactAddress}
                   </div>
                 </div>
-                <Button
-                  fluid
-                  color="blue"
-                  size="big"
-                  onClick={() => {
-                    setContactOpen(true);
-                  }}
-                >
-                  Yêu cầu liên hệ lại
-                </Button>
+                {user && user.id !== post.user.id && (
+                  <Button
+                    fluid
+                    color="blue"
+                    size="big"
+                    onClick={() => {
+                      setContactOpen(true);
+                    }}
+                  >
+                    Yêu cầu liên hệ lại
+                  </Button>
+                )}
               </ContactInformationContainer>
 
               <Button
@@ -440,7 +466,7 @@ const PagePropertyDetail = ({
               >
                 Xem lịch sử bất động sản
               </Button>
-              {user && user.currentRole === 3 && (
+              {user && user.id !== post.user.id && user.currentRole === 3 && (
                 <Button
                   fluid
                   size="big"
@@ -466,72 +492,54 @@ const PagePropertyDetail = ({
 
               {user && post.user.id === user.id && (
                 <Segment>
-                  <Radio toggle label="Cho phép tạo bài phái sinh" />
+                  <Radio
+                    toggle
+                    label={
+                      allowCreateDerivative
+                        ? "Cho phép tạo bài phái sinh"
+                        : "Không cho phép tạo bài phái sinh"
+                    }
+                    onChange={(e) => {
+                      handleChangeAllowCreateDerivative(post.postId);
+                    }}
+                    checked={allowCreateDerivative}
+                  />
                   <Header as="h3">Người môi giới đang theo dõi</Header>
                   <List relaxed>
-                    <List.Item>
-                      <List.Content floated="right">
-                        <Button primary>Xem bài phái sinh</Button>
-                      </List.Content>
-                      <Image
-                        avatar
-                        src="https://react.semantic-ui.com/images/avatar/small/rachel.png"
-                        alt="avatar"
-                      />
-                      <List.Content>
-                        <List.Header as="a">Nguyễn Văn A</List.Header>
-                        <List.Description>
-                          <Rating
-                            icon="star"
-                            defaultRating={4}
-                            maxRating={5}
-                            disabled
-                          />
-                        </List.Description>
-                      </List.Content>
-                    </List.Item>
-                    <List.Item>
-                      <List.Content floated="right">
-                        <Button primary>Xem bài phái sinh</Button>
-                      </List.Content>
-                      <Image
-                        avatar
-                        src="https://react.semantic-ui.com/images/avatar/small/rachel.png"
-                        alt="avatar"
-                      />
-                      <List.Content>
-                        <List.Header as="a">Nguyễn Văn A</List.Header>
-                        <List.Description>
-                          <Rating
-                            icon="star"
-                            defaultRating={5}
-                            maxRating={5}
-                            disabled
-                          />
-                        </List.Description>
-                      </List.Content>
-                    </List.Item>
-                    <List.Item>
-                      <List.Content floated="right">
-                        <Button primary>Xem bài phái sinh</Button>
-                      </List.Content>
-                      <Image
-                        avatar
-                        src="https://react.semantic-ui.com/images/avatar/small/rachel.png"
-                        alt="avatar"
-                      />
-                      <List.Content>
-                        <List.Header as="a">Nguyễn Văn A</List.Header>
-                        <List.Description>
-                          <Rating
-                            icon="star"
-                            defaultRating={3}
-                            maxRating={5}
-                            disabled
-                          />
-                        </List.Description>
-                      </List.Content>
-                    </List.Item>
+                    {brokers &&
+                      brokers.length > 0 &&
+                      brokers.map((broker, index) => {
+                        return (
+                          <List.Item key={index}>
+                            <List.Content floated="right">
+                              <Button primary className="btn-view-derivative">
+                                Xem bài phái sinh
+                              </Button>
+                            </List.Content>
+                            <Image
+                              avatar
+                              src={
+                                broker.user.avatar ||
+                                "https://react.semantic-ui.com/images/avatar/small/rachel.png"
+                              }
+                              alt="avatar"
+                            />
+                            <List.Content>
+                              <List.Header as="a">
+                                {broker.user.fullName}
+                              </List.Header>
+                              <List.Description>
+                                <Rating
+                                  icon="star"
+                                  defaultRating={4}
+                                  maxRating={5}
+                                  disabled
+                                />
+                              </List.Description>
+                            </List.Content>
+                          </List.Item>
+                        );
+                      })}
                   </List>
                 </Segment>
               )}
@@ -576,7 +584,6 @@ const PagePropertyDetail = ({
           setContactOpen={setContactOpen}
         />
       </ModalItem>
-
       <Script
         async
         defer

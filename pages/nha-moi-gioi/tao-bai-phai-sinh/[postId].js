@@ -4,11 +4,11 @@ import CreateDerivativePost from "../../../components/page-create-derivative-pos
 import SubHeader from "../../../components/sub-header/sub-header.component";
 import API_URL from "../../../utils/apiUrl";
 
-const CreateDerivativePostProperty = ({ user, post }) => {
+const CreateDerivativePostProperty = ({ user, postData }) => {
   return (
     <div>
       <SubHeader title="Tạo bài phái sinh" background="/bg-real-estate.jpg" />
-      <CreateDerivativePost post={post} user={user} />
+      <CreateDerivativePost post={postData.post} user={user} />
     </div>
   );
 };
@@ -21,7 +21,7 @@ export async function getServerSideProps(context) {
       `${API_URL}/api/posts/${postId.split("-").pop()}`
     );
 
-    return { props: { post: res.data } };
+    return { props: { postData: res.data } };
   } catch (error) {
     // return { props: { post: [1, 2, 3] } };
   }

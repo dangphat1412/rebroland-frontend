@@ -19,7 +19,7 @@ import { FormSearchContainer, HomeSearchContainer } from "./search-box.styles";
 const HANOI_PROVINCE_ID = 1;
 const THACHTHAT_DISTRICT_ID = 276;
 
-const SearchBox = ({ setData, setParams, setSortValue }) => {
+const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
   const router = useRouter();
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
@@ -128,9 +128,17 @@ const SearchBox = ({ setData, setParams, setSortValue }) => {
 
   const onSubmit = async (data, e) => {
     const postData = await searchPosts(data);
-    setData(postData);
-    setParams(data);
-    setSortValue(0);
+    if (router.pathname === "/") {
+      // router.push({
+      //   pathname: "/bat-dong-san",
+      //   query: { name: data },
+      // });
+    } else {
+      setTotalResult(postData.totalResult);
+      setData(postData);
+      setParams(data);
+      setSortValue(0);
+    }
   };
 
   if (router.pathname === "/")

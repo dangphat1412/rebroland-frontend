@@ -2,39 +2,49 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Button, Form } from "semantic-ui-react";
 import { reportPost } from "../../actions/report";
+import { FormReportContainer } from "./form-report.styles";
 
 const FormReport = ({ toast, setReportOpen, postId }) => {
   const {
     register,
     handleSubmit,
-    setValue,
+    setError,
+    clearError,
+    getValues,
     formState: { errors },
   } = useForm();
 
   const onSubmit = async (data, e) => {
-    const status = await reportPost(data, postId);
-    if (status === 201) {
-      setTimeout(() => {
-        toast({
-          type: "success",
-          title: "Báo cáo bài viết",
-          description: <p>Báo cáo bài viết thành công</p>,
-        });
-      }, 1000);
+    if (!getValues("content") && !getValues("otherContent")) {
+      setError("content", {
+        type: "not null",
+        message: "Chọn nội dung báo cáo",
+      });
     } else {
-      setTimeout(() => {
-        toast({
-          type: "error",
-          title: "Lỗi",
-          description: <p>Có lỗi xảy ra, hãy thử lại sau</p>,
-        });
-      }, 1000);
+      const status = await reportPost(data, postId);
+      if (status === 201) {
+        setTimeout(() => {
+          toast({
+            type: "success",
+            title: "Báo cáo bài viết",
+            description: <p>Báo cáo bài viết thành công</p>,
+          });
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          toast({
+            type: "error",
+            title: "Lỗi",
+            description: <p>Có lỗi xảy ra, hãy thử lại sau</p>,
+          });
+        }, 1000);
+      }
+      setReportOpen(false);
     }
-    setReportOpen(false);
   };
 
   return (
-    <div>
+    <FormReportContainer>
       <Form size="large" onSubmit={handleSubmit(onSubmit)}>
         {reportContent.map((content, index) => {
           return (
@@ -44,37 +54,33 @@ const FormReport = ({ toast, setReportOpen, postId }) => {
                 id={`content${index}`}
                 name="content"
                 value={content}
-                {...register("content", {
-                  required: {
-                    value: true,
-                    message: "content is required",
-                  },
-                })}
+                {...register("content")}
               />
               <label htmlFor={`content${index}`}>{content}</label>
               <br></br>
             </div>
           );
         })}
+
+        <br></br>
         <label htmlFor="otherContent">Phản hồi khác</label>
         <textarea
           id="otherContent"
           name="otherContent"
           rows="3"
-          {...register("otherContent", {
-            required: {
-              value: true,
-              message: "other-content is required",
-            },
-          })}
+          {...register("otherContent")}
         ></textarea>
+
+        <label className="error-field">
+          {errors.content && errors.content.message}
+        </label>
 
         <br></br>
         <Button fluid color="red">
           Gửi báo cáo
         </Button>
       </Form>
-    </div>
+    </FormReportContainer>
   );
 };
 

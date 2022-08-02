@@ -226,6 +226,7 @@ const MainNavigation = ({
                                           post.thumbnail ||
                                           "https://www.phoenixpropertymaster.com/wp-content/uploads/2021/12/Real-Estate.jpg"
                                         }
+                                        className="following-image"
                                       />
                                       <Item.Content verticalAlign="top">
                                         {post.title}

@@ -8,7 +8,7 @@ import {
   Loader,
   Segment,
 } from "semantic-ui-react";
-import { getPosts, searchPosts } from "../../actions/post";
+import { getOriginalPosts, getPosts, searchOriginalPosts, searchPosts } from "../../actions/post";
 import SearchBox from "../search-box/search-box.component";
 import {
   CategoriesContainer,
@@ -19,6 +19,7 @@ import Pagination from "../pagination/pagination.component";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import options from "../../utils/RealEstateSortValue";
+import { useRouter } from "next/router";
 
 const RealEstatePage = ({
   user,
@@ -27,6 +28,7 @@ const RealEstatePage = ({
   setFollowingPosts,
   setTotalResult,
 }) => {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [sortValue, setSortValue] = useState(0);
   const [data, setData] = useState(postsData || {});
@@ -43,9 +45,17 @@ const RealEstatePage = ({
 
   const fetchAPI = async (params, sortValue, page) => {
     setLoading(true);
-    const postData = params
-      ? await searchPosts(params, sortValue, page)
-      : await getPosts(sortValue, page);
+    let postData;
+    if (router.pathname === "/bat-dong-san") {
+      postData = params
+        ? await searchPosts(params, sortValue, page)
+        : await getPosts(sortValue, page);
+    } else {
+      postData = params
+        ? await searchOriginalPosts(params, sortValue, page)
+        : await getOriginalPosts(sortValue, page);
+    }
+
     setData(postData);
     setTotalResult(postData.totalResult);
     setLoading(false);
@@ -71,6 +81,7 @@ const RealEstatePage = ({
                 setData={setData}
                 setParams={setParams}
                 setSortValue={setSortValue}
+                setTotalResult={setTotalResult}
               />
             </Segment>
           </Grid.Column>

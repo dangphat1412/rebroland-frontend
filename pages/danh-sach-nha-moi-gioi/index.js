@@ -13,7 +13,10 @@ const Broker = ({ brokersData }) => {
         subtitle={`Kết quả tìm kiếm có ${totalResult} Nhà môi giới`}
         background="/zyro-image.png"
       />
-      <ListBrokersPage brokersData={brokersData} />
+      <ListBrokersPage
+        brokersData={brokersData}
+        setTotalResult={setTotalResult}
+      />
     </div>
   );
 };

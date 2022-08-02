@@ -35,6 +35,7 @@ export const loginUser = async (
   try {
     const res = await axios.post(`${API_URL}/api/users/signin`, user);
     setToken(res.data.accessToken);
+    Router.reload();
     setLoginOpen(false);
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
@@ -42,7 +43,7 @@ export const loginUser = async (
     console.log(messages);
   }
   setLoading(false);
-  Router.push(Router.asPath);
+  // Router.push(Router.asPath);
 };
 
 export const logoutUser = async () => {

@@ -46,6 +46,9 @@ export const FormPropertyDetailContainer = styled.div`
   .ui.horizontal.list:not(.celled) > .item:first-child {
     padding-left: 10px !important;
   }
+  .btn-view-derivative {
+    margin-top: 0px !important;
+  }
 `;
 
 export const ShotInformationContainer = styled(Statistic.Group)`
@@ -70,6 +73,16 @@ export const ShotInformationContainer = styled(Statistic.Group)`
 export const ActionContainer = styled(List)`
   .item {
     padding: 10px !important;
+  }
+  a {
+    display: flex;
+    align-items: center;
+    color: black;
+    img {
+      width: 24px !important;
+      height: 24px !important;
+      margin-right: 10px;
+    }
   }
 `;
 
