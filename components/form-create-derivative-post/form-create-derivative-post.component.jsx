@@ -33,7 +33,7 @@ const FormCreateDerivativePost = () => {
     register("title", { required: "Tiêu đề không được để trống" });
     register("description", { required: "Mô tả không được để trống" });
     register("images");
-  }, []);
+  }, [register]);
 
   const onSubmit = (data, e) => {
     console.log("DATA: ", data);

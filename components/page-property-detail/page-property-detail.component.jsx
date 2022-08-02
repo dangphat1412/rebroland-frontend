@@ -218,7 +218,7 @@ const PagePropertyDetail = ({
                                   className="re__list-standard-1line-no-underline--md"
                                   id="facebook"
                                   target="_blank"
-                                  rel="nofollow"
+                                  rel="noreferrer"
                                   href={`https://www.facebook.com/sharer/sharer.php?u=${HOST_URL}${router.asPath}`}
                                 >
                                   <Image
