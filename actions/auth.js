@@ -16,7 +16,7 @@ const Axios = axios.create({
 export const updateUser = async (data, setErrorMessage) => {
   try {
     const res = await Axios.put("/", data);
-    res.status === 200 && Router.push(Router.asPath);
+    return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);
@@ -71,12 +71,13 @@ export const registerUser = async (user, setErrorMessage) => {
   }
 };
 
-export const changePasswordUser = async (data) => {
+export const changePasswordUser = async (data, setErrorMessage) => {
   try {
     const res = await Axios.put(`/change-password`, data);
     return res.status;
   } catch (error) {
-    // setErrorMessage(error.response.data);
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
   }
 };

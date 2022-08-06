@@ -57,6 +57,7 @@ export const Menu = styled.div`
 
   img {
     margin-right: 10px !important;
+    object-fit: cover;
   }
 
   .item {

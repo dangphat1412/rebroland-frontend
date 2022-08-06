@@ -5,8 +5,14 @@ import axios from "axios";
 import API_URL from "../../utils/apiUrl";
 import { useRouter } from "next/router";
 
-const RealEstate = ({ user, postsData, followingPosts, setFollowingPosts }) => {
-  const router = useRouter();
+const RealEstate = ({
+  user,
+  postsData,
+  followingPosts,
+  setFollowingPosts,
+  params,
+}) => {
+  console.log(params);
   const [totalResult, setTotalResult] = useState(postsData.totalResult);
   return (
     <div>
@@ -21,6 +27,7 @@ const RealEstate = ({ user, postsData, followingPosts, setFollowingPosts }) => {
         setFollowingPosts={setFollowingPosts}
         user={user}
         setTotalResult={setTotalResult}
+        searchParams={params}
       />
     </div>
   );
@@ -28,9 +35,28 @@ const RealEstate = ({ user, postsData, followingPosts, setFollowingPosts }) => {
 
 export async function getServerSideProps(context) {
   try {
-    const res = await axios.get(`${API_URL}/api/posts`);
+    const { data } = context.query;
+    let params = {};
+    if (data) params = JSON.parse(data) || {};
+    const res = await axios.get(`${API_URL}/api/posts`, {
+      params: {
+        keyword: params.key,
+        propertyType: params.propertyTypes
+          ? params.propertyTypes.toString()
+          : undefined,
+        province: params.province,
+        district: params.district,
+        ward: params.ward,
+        minPrice: params.minPrice,
+        maxPrice: params.maxPrice,
+        minArea: params.minArea,
+        maxArea: params.maxArea,
+        direction: params.directions ? params.directions.toString() : undefined,
+        numberOfBedroom: params.numberOfBedrooms,
+      },
+    });
 
-    return { props: { postsData: res.data } };
+    return { props: { postsData: res.data, params: params } };
   } catch (error) {
     // return { props: { posts: [1, 2, 3] } };
   }

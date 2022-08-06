@@ -5,7 +5,10 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 const BrokerRegister = () => {
   return (
     <div>
-      <SubHeader title="Đăng ký trở thành nhà môi giới" />
+      <SubHeader
+        title="Đăng ký trở thành nhà môi giới"
+        background="/zyro-image.png"
+      />
       <BrokerRegisterPage />
     </div>
   );

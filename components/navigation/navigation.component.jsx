@@ -5,6 +5,7 @@ import SubNavigation from "../sub-navigation/sub-navigation.component";
 import { NavigationContainer } from "./navigation.styles";
 import { Client } from "@stomp/stompjs";
 import SOCKET_URL from "../../utils/socketUrl";
+import { useRouter } from "next/router";
 
 const Navigation = ({
   user,
@@ -24,6 +25,8 @@ const Navigation = ({
   const [unreadNotification, setUnreadNotification] = useState(
     (user && user.unreadNotification) || null
   );
+
+  const router = useRouter();
 
   useEffect(() => {
     const sound = new Audio("/light.mp3");
@@ -75,42 +78,48 @@ const Navigation = ({
     };
   }, []);
 
-  return (
-    <>
-      <NavigationContainer className={!showSubnavigation && "active"} fluid>
-        {showSubnavigation && <SubNavigation />}
-        <MainNavigation
-          className={!showSubnavigation && "sticky"}
-          user={user}
-          unreadNotification={unreadNotification}
-          setUnreadNotification={setUnreadNotification}
-          isBroker={isBroker}
+  if (
+    router.asPath !== "/admin/quan-ly-bai-dang" &&
+    router.asPath !== "/admin/quan-ly-bao-cao" &&
+    router.asPath !== "/admin/quan-ly-tai-chinh" &&
+    router.asPath !== "/admin/quan-ly-nguoi-dung"
+  )
+    return (
+      <>
+        <NavigationContainer className={!showSubnavigation && "active"} fluid>
+          {showSubnavigation && <SubNavigation />}
+          <MainNavigation
+            className={!showSubnavigation && "sticky"}
+            user={user}
+            unreadNotification={unreadNotification}
+            setUnreadNotification={setUnreadNotification}
+            isBroker={isBroker}
+            setLoginOpen={setLoginOpen}
+            setRegisterOpen={setRegisterOpen}
+            setLoading={setLoading}
+            followingPosts={followingPosts}
+            setFollowingPosts={setFollowingPosts}
+          />
+        </NavigationContainer>
+        <LoginRegisterModal
+          loginOpen={loginOpen}
           setLoginOpen={setLoginOpen}
+          registerOpen={registerOpen}
           setRegisterOpen={setRegisterOpen}
+          forgotPasswordOpen={forgotPasswordOpen}
+          setForgotPasswordOpen={setForgotPasswordOpen}
+          otpForgotPasswordOpen={otpForgotPasswordOpen}
+          setOtpForgotPasswordOpen={setOtpForgotPasswordOpen}
+          resetPasswordOpen={resetPasswordOpen}
+          setResetPasswordOpen={setResetPasswordOpen}
+          otpRegisterOpen={otpRegisterOpen}
+          setOtpRegisterOpen={setOtpRegisterOpen}
           setLoading={setLoading}
           followingPosts={followingPosts}
           setFollowingPosts={setFollowingPosts}
         />
-      </NavigationContainer>
-      <LoginRegisterModal
-        loginOpen={loginOpen}
-        setLoginOpen={setLoginOpen}
-        registerOpen={registerOpen}
-        setRegisterOpen={setRegisterOpen}
-        forgotPasswordOpen={forgotPasswordOpen}
-        setForgotPasswordOpen={setForgotPasswordOpen}
-        otpForgotPasswordOpen={otpForgotPasswordOpen}
-        setOtpForgotPasswordOpen={setOtpForgotPasswordOpen}
-        resetPasswordOpen={resetPasswordOpen}
-        setResetPasswordOpen={setResetPasswordOpen}
-        otpRegisterOpen={otpRegisterOpen}
-        setOtpRegisterOpen={setOtpRegisterOpen}
-        setLoading={setLoading}
-        followingPosts={followingPosts}
-        setFollowingPosts={setFollowingPosts}
-      />
-    </>
-  );
+      </>
+    );
 };
 
 export default Navigation;

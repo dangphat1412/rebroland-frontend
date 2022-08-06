@@ -1,8 +1,14 @@
-import React from "react";
-import { Button, Form } from "semantic-ui-react";
+import React, { useRef, useState } from "react";
+import { Button, Form, Image } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
 import { reportUser } from "../../actions/report";
-import { FormReportContainer } from "./form-report-user.styles";
+import {
+  FormReportContainer,
+  ImageContainer,
+  PreviewContainer,
+  RemoveIcon,
+} from "./form-report-user.styles";
+import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
 
 const ReportUserForm = ({ toast, setReportOpen, userId }) => {
   const {
@@ -13,6 +19,27 @@ const ReportUserForm = ({ toast, setReportOpen, userId }) => {
     formState: { errors },
   } = useForm();
 
+  const mediaRef = useRef(null);
+
+  const [images, setImages] = useState([]);
+  const [imagesPreview, setImagesPreview] = useState([]);
+
+  const removeImage = (pictureIndex) => {
+    setImagesPreview(
+      imagesPreview.filter((image, index) => pictureIndex !== index)
+    );
+    setImages(images.filter((image, index) => pictureIndex !== index));
+  };
+
+  const handleMediaChange = (e) => {
+    const { files } = e.target;
+    setImages([...images, ...files]);
+    setImagesPreview([
+      ...imagesPreview,
+      ...Object.values(files).map((f) => URL.createObjectURL(f)),
+    ]);
+  };
+
   const onSubmit = async (data, e) => {
     if (!getValues("content") && !getValues("otherContent")) {
       setError("content", {
@@ -20,7 +47,15 @@ const ReportUserForm = ({ toast, setReportOpen, userId }) => {
         message: "Chọn nội dung báo cáo",
       });
     } else {
-      const status = await reportUser(data, userId);
+      let mediaUrl;
+      if (images.length !== 0) {
+        mediaUrl = await uploadMultipleMedia(images);
+        if (!mediaUrl) {
+          console.log("ERROR UPLOAD");
+          return;
+        }
+      }
+      const status = await reportUser(data, mediaUrl, userId);
       if (status === 201) {
         setTimeout(() => {
           toast({
@@ -68,6 +103,46 @@ const ReportUserForm = ({ toast, setReportOpen, userId }) => {
           rows="3"
           {...register("otherContent")}
         ></textarea>
+
+        <br></br>
+        <label htmlFor="media">Hình ảnh bằng chứng</label>
+        <input
+          ref={mediaRef}
+          onChange={handleMediaChange}
+          name="media"
+          style={{ display: "none" }}
+          type="file"
+          accept="image/*"
+          multiple
+        />
+        <div>
+          <Button
+            type="button"
+            onClick={() => {
+              mediaRef.current.click();
+            }}
+          >
+            Chọn ảnh
+          </Button>
+          {imagesPreview.length > 0 && (
+            <PreviewContainer>
+              {imagesPreview.map((image, index) => (
+                <ImageContainer key={index}>
+                  <Image src={image} alt="image" size="medium" />
+                  <RemoveIcon
+                    name="times circle"
+                    size="large"
+                    color="grey"
+                    onClick={() => {
+                      removeImage(index);
+                    }}
+                    inverted
+                  />
+                </ImageContainer>
+              ))}
+            </PreviewContainer>
+          )}
+        </div>
 
         <label className="error-field">
           {errors.content && errors.content.message}

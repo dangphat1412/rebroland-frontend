@@ -110,7 +110,7 @@ const RealEstateInformationForm = ({
           label="Diện tích"
           name="area"
           placeholder="Nhập diện tích"
-          onChange={post ? handleChange : null}
+          onChange={!post ? handleChange : null}
           disabled={post ? true : false}
           defaultValue={getValues("area")}
           error={errors.area}
@@ -128,7 +128,7 @@ const RealEstateInformationForm = ({
           name="price"
           placeholder="Nhập mức giá"
           defaultValue={getValues("price")}
-          onChange={post ? handleChange : null}
+          onChange={!post ? handleChange : null}
           disabled={post ? true : false}
           error={errors.price}
           requiredField

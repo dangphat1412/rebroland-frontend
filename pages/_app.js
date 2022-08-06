@@ -4,6 +4,7 @@ import "../styles/globals.css";
 import "fontkiko/css/kiko-all.css";
 import "semantic-ui-css/semantic.min.css";
 import "react-semantic-toasts/styles/react-semantic-alert.css";
+import "react-image-lightbox/style.css";
 import API_URL from "../utils/apiUrl";
 import { redirectUser } from "../utils/authUser";
 import Navigation from "../components/navigation/navigation.component";
@@ -73,6 +74,12 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 
       if (user && user.currentRole === 3 && ctx.pathname === "/")
         redirectUser(ctx, "/nha-moi-gioi");
+      if (
+        user &&
+        user.currentRole === 1 &&
+        !protectedAdminRoutes.includes(ctx.pathname)
+      )
+        redirectUser(ctx, "/admin/quan-ly-bai-dang");
     } catch (error) {
       destroyCookie(ctx, "token");
       redirectUser(ctx, "/");
@@ -81,3 +88,10 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   }
   return { pageProps };
 };
+
+const protectedAdminRoutes = [
+  "/admin/quan-ly-bai-dang",
+  "/admin/quan-ly-bao-cao",
+  "/admin/quan-ly-nguoi-dung",
+  "/admin/quan-ly-tai-chinh",
+];

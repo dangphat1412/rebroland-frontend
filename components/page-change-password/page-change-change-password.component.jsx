@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Card, Form, Grid, Message } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
 import UserPanel from "../user-panel/user-panel.component";
@@ -21,6 +21,8 @@ const ChangePasswordPage = ({ user }) => {
   } = useForm({
     defaultValues: {},
   });
+
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const newPassword = useRef({});
   newPassword.current = watch("newPassword", "");
@@ -48,29 +50,22 @@ const ChangePasswordPage = ({ user }) => {
   }, [register]);
 
   const onSubmit = async (data, e) => {
-    const status = await changePasswordUser(data);
+    const status = await changePasswordUser(data, setErrorMessage);
     if (status === 201) {
+      setErrorMessage(null);
       setTimeout(() => {
         toast({
           type: "success",
           title: "Thay đổi mật khẩu",
           description: <p>Thay đổi mật khẩu thành công</p>,
         });
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        toast({
-          type: "error",
-          title: "Thay đổi mật khẩu",
-          description: <p>Thay đổi mật khẩu thất bại</p>,
-        });
-      }, 1000);
+      }, 100);
     }
   };
 
   return (
     <ChangePasswordPageContainer>
-      <SemanticToastContainer position="bottom-right" maxToasts={3} />
+      <SemanticToastContainer position="bottom-right" maxToasts={1} />
       <Grid>
         <Grid.Row>
           <Grid.Column width={3}>
@@ -85,7 +80,16 @@ const ChangePasswordPage = ({ user }) => {
                 <Grid centered>
                   <Grid.Row>
                     <Grid.Column width={6} centered>
-                      <Form onSubmit={handleSubmit(onSubmit)}>
+                      <Form
+                        onSubmit={handleSubmit(onSubmit)}
+                        error={errorMessage !== null}
+                      >
+                        <Message
+                          error
+                          list={errorMessage}
+                          hidden={errorMessage === null}
+                          onDismiss={() => setErrorMessage(null)}
+                        />
                         <InputField
                           type="password"
                           label="Mật khẩu cũ"

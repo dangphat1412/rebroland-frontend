@@ -21,6 +21,7 @@ import {
   getWards,
 } from "../../actions/vietnam-provinces";
 import { updateUser } from "../../actions/auth";
+import { SemanticToastContainer, toast } from "react-semantic-toasts";
 
 const MyProfilePage = ({ user }) => {
   const {
@@ -87,6 +88,27 @@ const MyProfilePage = ({ user }) => {
 
   useEffect(() => {
     fetchProvinceAPI();
+    if (user) {
+      const fetchProvinces = async () => {
+        let provinceId;
+
+        if (user.province) {
+          const provincesData = await getProvinces();
+          provinceId = provincesData.filter(
+            (province) => province.name === user.province
+          )[0].code;
+          fetchDistrictAPI(provinceId);
+        }
+        if (user.district) {
+          const districtsData = await getDistricts(provinceId);
+          const districtId = districtsData.districts.filter(
+            (district) => district.name === user.district
+          )[0].code;
+          fetchWardsAPI(districtId);
+        }
+      };
+      fetchProvinces();
+    }
   }, []);
 
   const [dataProvinces, setDataProvinces] = useState({
@@ -103,7 +125,7 @@ const MyProfilePage = ({ user }) => {
         return {
           key: province.code,
           text: province.name,
-          value: province.code,
+          value: province.name,
         };
       }),
     }));
@@ -117,10 +139,16 @@ const MyProfilePage = ({ user }) => {
         return {
           key: district.code,
           text: district.name,
-          value: district.code,
+          value: district.name,
         };
       }),
     }));
+    setDataProvinces((prev) => ({
+      ...prev,
+      wards: [],
+    }));
+    setValue("district", undefined);
+    setValue("ward", undefined);
   };
 
   const fetchWardsAPI = async (id) => {
@@ -128,9 +156,10 @@ const MyProfilePage = ({ user }) => {
     setDataProvinces((prev) => ({
       ...prev,
       wards: wardsData.wards.map((w) => {
-        return { key: w.code, text: w.name, value: w.code };
+        return { key: w.code, text: w.name, value: w.name };
       }),
     }));
+    setValue("ward", undefined);
   };
 
   const handleDateChange = (value) => {
@@ -139,25 +168,44 @@ const MyProfilePage = ({ user }) => {
 
   const handleChange = (e, { name, value }) => {
     if (name === "province") {
-      setValue(name, e.target.innerText);
-      fetchDistrictAPI(value);
-    } else if (name === "district") {
-      setValue(name, e.target.innerText);
-      fetchWardsAPI(value);
-    } else if (name === "ward") {
-      setValue(name, e.target.innerText);
-    } else {
-      setValue(name, value);
+      const provinceId = dataProvinces.provinces.filter(
+        (province) => province.value === value
+      )[0].key;
+      fetchDistrictAPI(provinceId);
     }
+    if (name === "district") {
+      const districtId = dataProvinces.districts.filter(
+        (district) => district.value === value
+      )[0].key;
+      fetchWardsAPI(districtId);
+    }
+    setValue(name, value);
   };
 
   const onSubmit = async (data) => {
-    // console.log(data);
-    await updateUser(data, setErrorMessage);
+    const status = await updateUser(data, setErrorMessage);
+    if (status === 200) {
+      setTimeout(() => {
+        toast({
+          type: "success",
+          title: "Thay đổi thông tin cá nhân",
+          description: <p>Thay đổi thông tin cá nhân thành công</p>,
+        });
+      }, 100);
+    } else {
+      setTimeout(() => {
+        toast({
+          type: "error",
+          title: "Thay đổi thông tin cá nhân",
+          description: <p>Thay đổi thông tin cá nhân thất bại</p>,
+        });
+      }, 100);
+    }
   };
 
   return (
     <MyProfilePageContainer>
+      <SemanticToastContainer position="bottom-right" maxToasts={3} />
       <Grid>
         <Grid.Row>
           <Grid.Column width={3}>
@@ -244,6 +292,7 @@ const MyProfilePage = ({ user }) => {
                             placeholder="Chọn Tỉnh/Thành phố"
                             options={dataProvinces.provinces}
                             onChange={handleChange}
+                            defaultValue={user.province}
                           />
                           <InputField
                             fieldType="select"
@@ -252,6 +301,7 @@ const MyProfilePage = ({ user }) => {
                             placeholder="Chọn Quận/Huyện"
                             options={dataProvinces.districts}
                             onChange={handleChange}
+                            defaultValue={user.district}
                           />
                         </Form.Group>
                         <Form.Group widths={2}>
@@ -262,6 +312,7 @@ const MyProfilePage = ({ user }) => {
                             placeholder="Chọn Phường/Xã"
                             options={dataProvinces.wards}
                             onChange={handleChange}
+                            defaultValue={user.ward}
                           />
                           <InputField
                             label="Địa chỉ"

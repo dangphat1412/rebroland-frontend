@@ -111,28 +111,32 @@ const UserDetailPage = ({
                     : "Đang cập nhật"}
                 </Card.Description>
                 <Item.Description className="social-media-list">
-                  <a
-                    href={userDetail.facebookLink}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Image
-                      src="https://cdn.icon-icons.com/icons2/2108/PNG/512/facebook_icon_130940.png"
-                      alt="fb"
-                      size="mini"
-                    />
-                  </a>
-                  <a
-                    href={userDetail.zaloLink}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Image
-                      src="https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png"
-                      alt="fb"
-                      size="mini"
-                    />
-                  </a>
+                  {userDetail.facebookLink && (
+                    <a
+                      href={userDetail.facebookLink}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Image
+                        src="https://cdn.icon-icons.com/icons2/2108/PNG/512/facebook_icon_130940.png"
+                        alt="fb"
+                        size="mini"
+                      />
+                    </a>
+                  )}
+                  {userDetail.zaloLink && (
+                    <a
+                      href={userDetail.zaloLink}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Image
+                        src="https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png"
+                        alt="fb"
+                        size="mini"
+                      />
+                    </a>
+                  )}
                 </Item.Description>
                 <Icon
                   style={{ cursor: "pointer" }}
@@ -235,6 +239,7 @@ const UserDetailPage = ({
           <Grid.Column width={4}>
             <Segment>
               <FormContact
+                currentUser={user}
                 title="Liên hệ với chủ sở hữu"
                 userId={userDetail.id}
               />

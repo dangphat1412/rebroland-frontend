@@ -9,6 +9,8 @@ import {
 } from "../../actions/post";
 import {
   getDistrictById,
+  getDistricts,
+  getProvinces,
   getProvincesById,
   getWards,
 } from "../../actions/vietnam-provinces";
@@ -19,7 +21,13 @@ import { FormSearchContainer, HomeSearchContainer } from "./search-box.styles";
 const HANOI_PROVINCE_ID = 1;
 const THACHTHAT_DISTRICT_ID = 276;
 
-const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
+const SearchBox = ({
+  setData,
+  setParams,
+  setSortValue,
+  setTotalResult,
+  searchParams,
+}) => {
   const router = useRouter();
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
@@ -74,6 +82,28 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
 
   useEffect(() => {
     fetchProvinceAPI();
+    if (searchParams) {
+      const fetchProvinces = async () => {
+        let provinceId;
+
+        if (searchParams.province) {
+          const provincesData = await getProvinces();
+          provinceId = provincesData.filter(
+            (province) => province.name === searchParams.province
+          )[0].code;
+          fetchDistrictAPI(provinceId);
+        }
+        if (searchParams.district) {
+          const districtsData = await getDistricts(provinceId);
+          console.log(districtsData);
+          const districtId = districtsData.districts.filter(
+            (district) => district.name === searchParams.district
+          )[0].code;
+          fetchWardsAPI(districtId);
+        }
+      };
+      fetchProvinces();
+    }
   }, []);
 
   const [dataProvinces, setDataProvinces] = useState({
@@ -83,35 +113,35 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
   });
 
   const fetchProvinceAPI = async () => {
-    const provincesData = await getProvincesById(HANOI_PROVINCE_ID);
+    const provincesData = await getProvinces();
     setDataProvinces((prev) => ({
       ...prev,
-      provinces: [
-        {
-          key: provincesData.code,
-          text: provincesData.name,
-          value: provincesData.name,
-        },
-      ],
+      provinces: provincesData.map((province) => {
+        return {
+          key: province.code,
+          text: province.name,
+          value: province.name,
+        };
+      }),
     }));
   };
 
-  const fetchDistrictAPI = async () => {
-    const districtsData = await getDistrictById(THACHTHAT_DISTRICT_ID);
+  const fetchDistrictAPI = async (id) => {
+    const districtsData = await getDistricts(id);
     setDataProvinces((prev) => ({
       ...prev,
-      districts: [
-        {
-          key: districtsData.code,
-          text: districtsData.name,
-          value: districtsData.name,
-        },
-      ],
+      districts: districtsData.districts.map((district) => {
+        return {
+          key: district.code,
+          text: district.name,
+          value: district.name,
+        };
+      }),
     }));
   };
 
-  const fetchWardsAPI = async () => {
-    const wardsData = await getWards(THACHTHAT_DISTRICT_ID);
+  const fetchWardsAPI = async (id) => {
+    const wardsData = await getWards(id);
     setDataProvinces((prev) => ({
       ...prev,
       wards: wardsData.wards.map((w) => {
@@ -121,18 +151,31 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
   };
 
   const handleChange = (e, { name, value }) => {
-    name === "province" && fetchDistrictAPI();
-    name === "district" && fetchWardsAPI();
+    if (name === "province") {
+      const provinceId = dataProvinces.provinces.filter(
+        (province) => province.value === value
+      )[0].key;
+      fetchDistrictAPI(provinceId);
+    }
+    if (name === "district") {
+      const districtId = dataProvinces.districts.filter(
+        (district) => district.value === value
+      )[0].key;
+      fetchWardsAPI(districtId);
+    }
     setValue(name, value);
   };
 
   const onSubmit = async (data, e) => {
     const postData = await searchPosts(data);
     if (router.pathname === "/") {
-      // router.push({
-      //   pathname: "/bat-dong-san",
-      //   query: { name: data },
-      // });
+      router.push(
+        {
+          pathname: "/bat-dong-san",
+          query: { data: JSON.stringify(data) },
+        },
+        "/bat-dong-san"
+      );
     } else {
       setTotalResult(postData.totalResult);
       setData(postData);
@@ -348,6 +391,7 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
           name="key"
           placeholder="Tìm kiếm"
           onChange={handleChange}
+          defaultValue={searchParams.key}
         />
         <InputField
           fieldType="select"
@@ -359,6 +403,7 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
           onChange={(e, data) => {
             setValue("propertyTypes", data.value);
           }}
+          defaultValue={searchParams.propertyTypes}
         />
         <InputField
           fieldType="select"
@@ -367,6 +412,7 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
           placeholder="Tỉnh/Thành phố"
           options={dataProvinces.provinces}
           onChange={handleChange}
+          defaultValue={searchParams.province}
         />
         <InputField
           fieldType="select"
@@ -375,6 +421,7 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
           placeholder="Quận/Huyện"
           options={dataProvinces.districts}
           onChange={handleChange}
+          defaultValue={searchParams.district}
         />
         <InputField
           fieldType="select"
@@ -383,6 +430,7 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
           placeholder="Phường/Xã"
           options={dataProvinces.wards}
           onChange={handleChange}
+          defaultValue={searchParams.ward}
         />
         <Form.Group widths="equal">
           <InputField
@@ -516,6 +564,7 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
           }}
           compact
           selection
+          defaultValue={searchParams.directions}
         />
         <InputField
           fieldType="dropdown"
@@ -526,6 +575,7 @@ const SearchBox = ({ setData, setParams, setSortValue, setTotalResult }) => {
           onChange={handleChange}
           compact
           selection
+          defaultValue={searchParams.numberOfBedrooms}
         />
         <Form.Button fluid>Tìm kiếm</Form.Button>
       </FormSearchContainer>

@@ -21,14 +21,6 @@ const UserPanel = ({ user }) => {
 
   return (
     <UserPanelContainer>
-      <input
-        ref={mediaRef}
-        onChange={handleMediaChange}
-        name="media"
-        style={{ display: "none" }}
-        type="file"
-        accept="image/*"
-      />
       <Card fluid>
         <Card.Content textAlign="center" className="title-content">
           <Card.Header className="custom-header">Thông tin cá nhân</Card.Header>
@@ -75,6 +67,15 @@ const UserPanel = ({ user }) => {
         </Card.Content>
       </Card>
 
+      <input
+        ref={mediaRef}
+        onChange={handleMediaChange}
+        name="media"
+        style={{ display: "none" }}
+        type="file"
+        accept="image/*"
+      />
+
       <Segment>
         <List divided relaxed selection animated size="big">
           <Link href="/trang-ca-nhan/thong-tin-ca-nhan">
@@ -86,7 +87,7 @@ const UserPanel = ({ user }) => {
               </List.Content>
             </List.Item>
           </Link>
-          {user.currentRole === 2 ? (
+          {user.currentRole === 2 && (
             <Link href="/trang-ca-nhan/bat-dong-san-cua-toi">
               <List.Item>
                 <List.Content>
@@ -97,7 +98,8 @@ const UserPanel = ({ user }) => {
                 </List.Content>
               </List.Item>
             </Link>
-          ) : (
+          )}
+          {user.currentRole === 3 && (
             <Link href="/nha-moi-gioi/bat-dong-san-phai-sinh-cua-toi">
               <List.Item>
                 <List.Content>

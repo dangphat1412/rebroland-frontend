@@ -11,12 +11,13 @@ const Axios = axios.create({
   },
 });
 
-export const reportPost = async (data, postId) => {
+export const reportPost = async (data, mediaUrl, postId) => {
   try {
     const content = {
       content: data.content
         ? [...data.content, data.otherContent].join(";")
         : data.otherContent,
+      images: mediaUrl,
     };
     const res = await Axios.post(`/post/${postId}`, content);
     return res.status;
@@ -25,9 +26,12 @@ export const reportPost = async (data, postId) => {
   }
 };
 
-export const reportUser = async (data, userId) => {
+export const reportUser = async (data, mediaUrl, userId) => {
   try {
-    const content = { content: [...data.content, data.otherContent].join(";") };
+    const content = {
+      content: [...data.content, data.otherContent].join(";"),
+      images: mediaUrl,
+    };
     const res = await Axios.post(`/user/${userId}`, content);
     return res.status;
   } catch (error) {

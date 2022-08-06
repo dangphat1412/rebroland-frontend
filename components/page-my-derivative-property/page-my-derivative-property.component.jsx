@@ -35,7 +35,6 @@ const MyDerivativePropertyPage = ({ user, postsData }) => {
     setPropertyType(activeIndex);
     setSortValue(0);
     fetchAPI(activeIndex, 0, 0);
-    console.log(activeIndex);
   };
 
   const handleFilterOption = (e, { value }) => {

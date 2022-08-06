@@ -183,7 +183,7 @@ const MainNavigation = ({
                           />
                           <Dropdown.Item
                             icon="heart outline"
-                            text="Danh sách tin đã lưu"
+                            text="Bát động sản đã lưu"
                             onClick={() => {
                               Router.push(
                                 "/trang-ca-nhan/danh-sach-tin-da-luu"

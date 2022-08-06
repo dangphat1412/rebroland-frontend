@@ -450,7 +450,7 @@ const PagePropertyDetail = ({
                     </div>
                   )}
                 </div>
-                {user && user.id !== post.user.id && (
+                {(!user || (user && user.id !== post.user.id)) && (
                   <Button
                     fluid
                     color="blue"
@@ -586,6 +586,7 @@ const PagePropertyDetail = ({
         }}
       >
         <FormContact
+          currentUser={user}
           postId={post.postId}
           userId={post.user.id}
           toast={toast}
@@ -648,8 +649,6 @@ const FormHistory = ({ historyData }) => {
                 <Table.HeaderCell>Sở hữu từ</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-
-            {}
 
             <Table.Body>
               {Object.values(historyData)[0].map((d, index) => {

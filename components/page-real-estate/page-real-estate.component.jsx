@@ -8,7 +8,12 @@ import {
   Loader,
   Segment,
 } from "semantic-ui-react";
-import { getOriginalPosts, getPosts, searchOriginalPosts, searchPosts } from "../../actions/post";
+import {
+  getOriginalPosts,
+  getPosts,
+  searchOriginalPosts,
+  searchPosts,
+} from "../../actions/post";
 import SearchBox from "../search-box/search-box.component";
 import {
   CategoriesContainer,
@@ -27,12 +32,13 @@ const RealEstatePage = ({
   followingPosts,
   setFollowingPosts,
   setTotalResult,
+  searchParams,
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [sortValue, setSortValue] = useState(0);
   const [data, setData] = useState(postsData || {});
-  const [params, setParams] = useState(null);
+  const [params, setParams] = useState(searchParams);
 
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
@@ -82,6 +88,7 @@ const RealEstatePage = ({
                 setParams={setParams}
                 setSortValue={setSortValue}
                 setTotalResult={setTotalResult}
+                searchParams={searchParams}
               />
             </Segment>
           </Grid.Column>

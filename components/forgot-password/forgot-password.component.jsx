@@ -60,7 +60,7 @@ const ForgotPassword = ({
           requiredField
         />
         <InputField
-          label="Mật khẩu"
+          label="Mật khẩu mới"
           type="password"
           name="password"
           placeholder="Nhập mật khẩu mới"

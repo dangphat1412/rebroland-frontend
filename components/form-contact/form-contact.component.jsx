@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Header, Message } from "semantic-ui-react";
+import { Button, Header, Label, Message } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
 import { FormContactBrokerContainer } from "./form-contact.styles";
 import { useForm } from "react-hook-form";
@@ -38,7 +38,8 @@ const FormContact = ({
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (data) => {
-    console.log("contact broker: ", data);
+    if (!currentUser) return;
+
     const status = await userContact(data, userId, postId);
     if (status === 201) {
       setTimeout(() => {
@@ -84,7 +85,7 @@ const FormContact = ({
         }
         error={errors.fullName}
         defaultValue={getValues("fullName")}
-        disabled={currentUser}
+        disabled
         requiredField
       />
       <InputField
@@ -99,7 +100,7 @@ const FormContact = ({
         }
         error={errors.phone}
         defaultValue={getValues("phone")}
-        disabled={currentUser}
+        disabled
         requiredField
       />
       <InputField
@@ -113,7 +114,7 @@ const FormContact = ({
             : null
         }
         defaultValue={getValues("email")}
-        disabled={currentUser}
+        disabled
       />
       <InputField
         fieldType="textarea"
@@ -122,10 +123,14 @@ const FormContact = ({
         onChange={async (e, { name, value }) => {
           setValue(name, value);
         }}
+        disabled={!currentUser}
       />
-      <Button type="submit" fluid>
+      <Button type="submit" fluid disabled={!currentUser}>
         Gửi tin nhắn
       </Button>
+      {!currentUser && (
+        <div className="alert-login-require">Yêu cầu đăng nhập để liên lạc</div>
+      )}
     </FormContactBrokerContainer>
   );
 };

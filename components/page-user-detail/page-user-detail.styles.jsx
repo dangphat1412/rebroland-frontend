@@ -87,6 +87,7 @@ export const UserDetailPageContainer = styled.div`
 `;
 
 export const PaginationContainer = styled.div`
+  margin-top: 10px;
   display: flex !important;
   justify-content: center;
 `;
