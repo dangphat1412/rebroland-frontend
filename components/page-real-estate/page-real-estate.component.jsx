@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimmer,
   Dropdown,
@@ -9,6 +9,7 @@ import {
   Segment,
 } from "semantic-ui-react";
 import {
+  getAllCategories,
   getOriginalPosts,
   getPosts,
   searchOriginalPosts,
@@ -39,6 +40,16 @@ const RealEstatePage = ({
   const [sortValue, setSortValue] = useState(0);
   const [data, setData] = useState(postsData || {});
   const [params, setParams] = useState(searchParams || {});
+
+  const [categories, setCategoties] = useState(null);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      const data = await getAllCategories();
+      setCategoties(data);
+    };
+    fetchAPI();
+  }, []);
 
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
@@ -137,20 +148,28 @@ const RealEstatePage = ({
             />
             <CategoriesContainer>
               <h1>Danh mục Bất động sản</h1>
-              <List divided verticalAlign="middle" size="large" relaxed>
-                <List.Item>
-                  <List.Content floated="right">100 bất động sản</List.Content>
-                  <List.Content>Nhà ở</List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Content floated="right">100 bất động sản</List.Content>
-                  <List.Content>Nhà chung cư</List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Content floated="right">100 bất động sản</List.Content>
-                  <List.Content>Đất nền</List.Content>
-                </List.Item>
-              </List>
+              {categories && (
+                <List divided verticalAlign="middle" size="large" relaxed>
+                  <List.Item>
+                    <List.Content floated="right">
+                      {categories.house} bất động sản
+                    </List.Content>
+                    <List.Content>Nhà ở</List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Content floated="right">
+                      {categories.apartment} bất động sản
+                    </List.Content>
+                    <List.Content>Nhà chung cư</List.Content>
+                  </List.Item>
+                  <List.Item>
+                    <List.Content floated="right">
+                      {categories.land} bất động sản
+                    </List.Content>
+                    <List.Content>Đất nền</List.Content>
+                  </List.Item>
+                </List>
+              )}
             </CategoriesContainer>
           </Grid.Column>
         </Grid.Row>

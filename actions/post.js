@@ -243,3 +243,12 @@ export const switchAllowCreateDerivative = async (postId) => {
     console.log(error);
   }
 };
+
+export const getAllCategories = async () => {
+  try {
+    const res = await Axios.get(`/categories`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

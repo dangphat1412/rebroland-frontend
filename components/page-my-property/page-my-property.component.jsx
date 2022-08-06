@@ -7,6 +7,7 @@ import {
   Header,
   Icon,
   Item,
+  Label,
   List,
   Loader,
   Popup,
@@ -235,7 +236,21 @@ const RealEstateItem = ({ post }) => {
         </Item.Group>
       </Table.Cell>
       <Table.Cell singleLine textAlign="center">
-        {post.status.name}
+        {post.status.id === 1 && (
+          <Label circular color="green">
+            {post.status.name}
+          </Label>
+        )}
+        {post.status.id === 2 && (
+          <Label circular color="red">
+            {post.status.name}
+          </Label>
+        )}
+        {post.status.id === 3 && (
+          <Label circular color="blue">
+            {post.status.name}
+          </Label>
+        )}
       </Table.Cell>
       <Table.Cell textAlign="center">
         <Link

@@ -11,6 +11,7 @@ import {
   Icon,
   Image,
   Item,
+  Label,
   List,
   Loader,
   Radio,
@@ -150,7 +151,14 @@ const PagePropertyDetail = ({
           <Grid.Row>
             <Grid.Column width={12}>
               <Segment>
-                <Header as="h1">{post.title}</Header>
+                <Header as="h1">
+                  {post.title}{" "}
+                  {post.originalPost && (
+                    <Label as="a" color="red" tag>
+                      BÀI PHÁI SINH
+                    </Label>
+                  )}
+                </Header>
                 <Breadcrumb
                   icon="right angle"
                   sections={[
@@ -314,7 +322,9 @@ const PagePropertyDetail = ({
                     showIndex={true}
                     disableKeyDown={false}
                     originalHeight={200}
-                    thumbnailPosition="left"
+                    originalWidth={200}
+                    // originalHeight
+                    // thumbnailPosition="left"
                   />
                 )}
                 <Header as="h2">Thông tin mô tả</Header>
@@ -510,49 +520,53 @@ const PagePropertyDetail = ({
                     }}
                     checked={allowCreateDerivative}
                   />
-                  <Header as="h3">Người môi giới đang theo dõi</Header>
-                  <List relaxed>
-                    {brokers &&
-                      brokers.length > 0 &&
-                      brokers.map((broker, index) => {
-                        return (
-                          <List.Item key={index}>
-                            <List.Content floated="right">
-                              <Button
-                                primary
-                                className="btn-view-derivative"
-                                onClick={() => {
-                                  router.push(`/bat-dong-san/${broker.postId}`);
-                                }}
-                              >
-                                Xem bài phái sinh
-                              </Button>
-                            </List.Content>
-                            <Image
-                              avatar
-                              src={
-                                broker.user.avatar ||
-                                "https://react.semantic-ui.com/images/avatar/small/rachel.png"
-                              }
-                              alt="avatar"
-                            />
-                            <List.Content>
-                              <List.Header as="a">
-                                {broker.user.fullName}
-                              </List.Header>
-                              <List.Description>
-                                <Rating
-                                  icon="star"
-                                  defaultRating={broker.user.avgRate}
-                                  maxRating={5}
-                                  disabled
-                                />
-                              </List.Description>
-                            </List.Content>
-                          </List.Item>
-                        );
-                      })}
-                  </List>
+                  {brokers && brokers.length > 0 && (
+                    <>
+                      <Header as="h3">Người môi giới đang theo dõi</Header>
+                      <List relaxed>
+                        {brokers.map((broker, index) => {
+                          return (
+                            <List.Item key={index}>
+                              <List.Content floated="right">
+                                <Button
+                                  primary
+                                  className="btn-view-derivative"
+                                  onClick={() => {
+                                    router.push(
+                                      `/bat-dong-san/${broker.postId}`
+                                    );
+                                  }}
+                                >
+                                  Xem bài phái sinh
+                                </Button>
+                              </List.Content>
+                              <Image
+                                avatar
+                                src={
+                                  broker.user.avatar ||
+                                  "https://react.semantic-ui.com/images/avatar/small/rachel.png"
+                                }
+                                alt="avatar"
+                              />
+                              <List.Content>
+                                <List.Header as="a">
+                                  {broker.user.fullName}
+                                </List.Header>
+                                <List.Description>
+                                  <Rating
+                                    icon="star"
+                                    defaultRating={broker.user.avgRate}
+                                    maxRating={5}
+                                    disabled
+                                  />
+                                </List.Description>
+                              </List.Content>
+                            </List.Item>
+                          );
+                        })}
+                      </List>
+                    </>
+                  )}
                 </Segment>
               )}
             </Grid.Column>
