@@ -391,7 +391,7 @@ const SearchBox = ({
           name="key"
           placeholder="Tìm kiếm"
           onChange={handleChange}
-          defaultValue={searchParams.key}
+          defaultValue={searchParams && searchParams.key}
         />
         <InputField
           fieldType="select"
@@ -403,7 +403,7 @@ const SearchBox = ({
           onChange={(e, data) => {
             setValue("propertyTypes", data.value);
           }}
-          defaultValue={searchParams.propertyTypes}
+          defaultValue={searchParams && searchParams.propertyTypes}
         />
         <InputField
           fieldType="select"
@@ -412,7 +412,7 @@ const SearchBox = ({
           placeholder="Tỉnh/Thành phố"
           options={dataProvinces.provinces}
           onChange={handleChange}
-          defaultValue={searchParams.province}
+          defaultValue={searchParams && searchParams.province}
         />
         <InputField
           fieldType="select"
@@ -421,7 +421,7 @@ const SearchBox = ({
           placeholder="Quận/Huyện"
           options={dataProvinces.districts}
           onChange={handleChange}
-          defaultValue={searchParams.district}
+          defaultValue={searchParams && searchParams.district}
         />
         <InputField
           fieldType="select"
@@ -430,7 +430,7 @@ const SearchBox = ({
           placeholder="Phường/Xã"
           options={dataProvinces.wards}
           onChange={handleChange}
-          defaultValue={searchParams.ward}
+          defaultValue={searchParams && searchParams.ward}
         />
         <Form.Group widths="equal">
           <InputField
@@ -564,7 +564,7 @@ const SearchBox = ({
           }}
           compact
           selection
-          defaultValue={searchParams.directions}
+          defaultValue={searchParams && searchParams.directions}
         />
         <InputField
           fieldType="dropdown"
@@ -575,7 +575,7 @@ const SearchBox = ({
           onChange={handleChange}
           compact
           selection
-          defaultValue={searchParams.numberOfBedrooms}
+          defaultValue={searchParams && searchParams.numberOfBedrooms}
         />
         <Form.Button fluid>Tìm kiếm</Form.Button>
       </FormSearchContainer>

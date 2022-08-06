@@ -61,12 +61,10 @@ const PagePropertyDetail = ({
   const [allowCreateDerivative, setAllowCreateDerivative] = useState(
     post.allowDerivative
   );
-  const [items, setItems] = useState([]);
 
   const { price, pricePerSquare } = calculatePrice(post);
 
-  const facebookRef = useRef(null);
-  const zaloRef = useRef(null);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     setItems(
@@ -520,7 +518,13 @@ const PagePropertyDetail = ({
                         return (
                           <List.Item key={index}>
                             <List.Content floated="right">
-                              <Button primary className="btn-view-derivative">
+                              <Button
+                                primary
+                                className="btn-view-derivative"
+                                onClick={() => {
+                                  router.push(`/bat-dong-san/${broker.postId}`);
+                                }}
+                              >
                                 Xem bài phái sinh
                               </Button>
                             </List.Content>
@@ -539,7 +543,7 @@ const PagePropertyDetail = ({
                               <List.Description>
                                 <Rating
                                   icon="star"
-                                  defaultRating={4}
+                                  defaultRating={broker.user.avgRate}
                                   maxRating={5}
                                   disabled
                                 />

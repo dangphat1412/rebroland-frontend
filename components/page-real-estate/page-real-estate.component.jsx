@@ -38,7 +38,7 @@ const RealEstatePage = ({
   const [loading, setLoading] = useState(false);
   const [sortValue, setSortValue] = useState(0);
   const [data, setData] = useState(postsData || {});
-  const [params, setParams] = useState(searchParams);
+  const [params, setParams] = useState(searchParams || {});
 
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
