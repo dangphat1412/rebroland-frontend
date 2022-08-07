@@ -3,7 +3,6 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 import RealEstatePage from "../../components/page-real-estate/page-real-estate.component";
 import axios from "axios";
 import API_URL from "../../utils/apiUrl";
-import { useRouter } from "next/router";
 
 const RealEstate = ({
   user,
@@ -12,7 +11,6 @@ const RealEstate = ({
   setFollowingPosts,
   params,
 }) => {
-  console.log(params);
   const [totalResult, setTotalResult] = useState(postsData.totalResult);
   return (
     <div>
@@ -53,6 +51,8 @@ export async function getServerSideProps(context) {
         maxArea: params.maxArea,
         direction: params.directions ? params.directions.toString() : undefined,
         numberOfBedroom: params.numberOfBedrooms,
+        sortValue: params.sortValue,
+        pageNo: params.pageNo,
       },
     });
 

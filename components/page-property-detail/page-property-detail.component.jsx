@@ -129,8 +129,41 @@ const PagePropertyDetail = ({
     }
   };
 
-  const onContactSubmit = async (data, e) => {
-    console.log(data);
+  const handleAddressSearch = (e, data) => {
+    let params;
+    if (data.content === "province") {
+      params = { province: post.province };
+    }
+    if (data.content === "district") {
+      params = { province: post.province, district: post.district };
+    }
+    if (data.content === "ward") {
+      params = {
+        province: post.province,
+        district: post.district,
+        ward: post.ward,
+      };
+    }
+
+    if (user && user.currentRole === 3) {
+      router.push(
+        {
+          pathname: "/nha-moi-gioi/bat-dong-san",
+          query: { data: JSON.stringify(params) },
+        },
+        "/nha-moi-gioi/bat-dong-san",
+        { scroll: true }
+      );
+    } else {
+      router.push(
+        {
+          pathname: "/bat-dong-san",
+          query: { data: JSON.stringify(params) },
+        },
+        "/bat-dong-san",
+        { scroll: true }
+      );
+    }
   };
 
   return (
@@ -159,27 +192,39 @@ const PagePropertyDetail = ({
                     </Label>
                   )}
                 </Header>
-                <Breadcrumb
-                  icon="right angle"
-                  sections={[
-                    {
-                      key: "province",
-                      content: `${post.province}`,
-                      link: true,
-                    },
-                    {
-                      key: "district",
-                      content: `${post.district}`,
-                      link: true,
-                    },
-                    { key: "ward", content: `${post.ward}`, link: true },
-                    {
-                      key: "address",
-                      content: `${post.address}`,
-                      active: true,
-                    },
-                  ]}
-                />
+                <Breadcrumb>
+                  <Breadcrumb.Section
+                    link
+                    onClick={handleAddressSearch}
+                    content="province"
+                  >
+                    {post.province}
+                  </Breadcrumb.Section>
+                  <Breadcrumb.Divider icon="right angle" />
+                  <Breadcrumb.Section
+                    link
+                    onClick={handleAddressSearch}
+                    content="district"
+                  >
+                    {post.district}
+                  </Breadcrumb.Section>
+                  <Breadcrumb.Divider icon="right angle" />
+                  <Breadcrumb.Section
+                    link
+                    onClick={handleAddressSearch}
+                    content="ward"
+                  >
+                    {post.ward}
+                  </Breadcrumb.Section>
+                  {post.address && (
+                    <>
+                      <Breadcrumb.Divider icon="right angle" />
+                      <Breadcrumb.Section active>
+                        {post.address}
+                      </Breadcrumb.Section>
+                    </>
+                  )}
+                </Breadcrumb>
                 <Divider />
                 <Grid>
                   <Grid.Row columns={2}>

@@ -1,22 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import HandleContactBackRequestPage from "../../components/page-handle-contact-back-request/page-handle-contact-back-request.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 import { parseCookies } from "nookies";
 import axios from "axios";
 
-const HandleContactBackRequest = ({ user, contactList, caringList }) => {
+const HandleContactBackRequest = ({ user, contactList }) => {
+  const [totalResult, setTotalResult] = useState(contactList.totalResult);
   return (
     <div>
       <SubHeader
         title="Xử lý yêu cầu liên hệ lại"
-        subtitle={`Có tất cả ${contactList.totalResult} yêu cầu liên hệ lại`}
+        subtitle={`Có tất cả ${totalResult} yêu cầu liên hệ lại`}
         background="/bg-real-estate.jpg"
       />
       <HandleContactBackRequestPage
         user={user}
         contactList={contactList}
-        caringList={caringList}
+        setTotalResult={setTotalResult}
       />
     </div>
   );
@@ -32,8 +33,7 @@ export async function getServerSideProps(context) {
 
     return {
       props: {
-        contactList: res.data.contactList,
-        caringList: res.data.caringList,
+        contactList: res.data,
       },
     };
   } catch (error) {

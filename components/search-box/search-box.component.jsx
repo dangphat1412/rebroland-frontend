@@ -2,32 +2,17 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Dropdown, Form } from "semantic-ui-react";
+import { getDirections, getPropertyTypes } from "../../actions/post";
 import {
-  getDirections,
-  getPropertyTypes,
-  searchPosts,
-} from "../../actions/post";
-import {
-  getDistrictById,
   getDistricts,
   getProvinces,
-  getProvincesById,
   getWards,
 } from "../../actions/vietnam-provinces";
 import InputField from "../input-field/input-field.component";
 import MultiRangeSlider from "../multi-range-slider/multi-range-slider.component";
 import { FormSearchContainer, HomeSearchContainer } from "./search-box.styles";
 
-const HANOI_PROVINCE_ID = 1;
-const THACHTHAT_DISTRICT_ID = 276;
-
-const SearchBox = ({
-  setData,
-  setParams,
-  setSortValue,
-  setTotalResult,
-  searchParams,
-}) => {
+const SearchBox = ({ searchParams }) => {
   const router = useRouter();
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
@@ -167,24 +152,32 @@ const SearchBox = ({
   };
 
   const onSubmit = async (data, e) => {
-    const postData = await searchPosts(data);
-    if (router.pathname === "/") {
+    if (router.pathname === "/" || router.pathname === "/bat-dong-san") {
       router.push(
         {
           pathname: "/bat-dong-san",
           query: { data: JSON.stringify(data) },
         },
-        "/bat-dong-san"
+        "/bat-dong-san",
+        { scroll: true }
       );
-    } else {
-      setTotalResult(postData.totalResult);
-      setData(postData);
-      setParams(data);
-      setSortValue(0);
+    }
+    if (
+      router.pathname === "/nha-moi-gioi" ||
+      router.pathname === "/nha-moi-gioi/bat-dong-san"
+    ) {
+      router.push(
+        {
+          pathname: "/nha-moi-gioi/bat-dong-san",
+          query: { data: JSON.stringify(data) },
+        },
+        "/nha-moi-gioi/bat-dong-san",
+        { scroll: true }
+      );
     }
   };
 
-  if (router.pathname === "/")
+  if (router.pathname === "/" || router.pathname === "/nha-moi-gioi")
     return (
       <HomeSearchContainer>
         <Form onSubmit={handleSubmit(onSubmit)}>

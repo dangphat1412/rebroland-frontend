@@ -33,3 +33,19 @@ export const deleteRequestContact = async (contactId) => {
     console.log(error);
   }
 };
+
+export const searchContacts = async (params, pageNo) => {
+  try {
+    const res = await Axios.get("", {
+      params: {
+        keyword: params.key,
+        pageNo: pageNo,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};

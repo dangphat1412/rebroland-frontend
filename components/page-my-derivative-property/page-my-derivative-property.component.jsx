@@ -211,9 +211,9 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                     </Table.Cell>
                     <Table.Cell textAlign="center">
                       <Link
-                        href={`/nha-moi-gioi/bat-dong-san-phai-sinh-cua-toi/${convertToSlug(
+                        href={`/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi/${convertToSlug(
                           post.title
-                        )}-${post.postId}.${post.derivativeId}`}
+                        )}-${post.postId}`}
                       >
                         <Icon
                           circular

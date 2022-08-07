@@ -92,6 +92,24 @@ export const searchPosts = async (params, sortValue, pageNo) => {
   }
 };
 
+export const searchPayments = async (params, sortValue, pageNo) => {
+  try {
+    console.log(params);
+    const res = await Axios.get(`/list-payments`, {
+      params: {
+        keyword: params.key,
+        sortValue: sortValue,
+        pageNo: pageNo,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    // const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
 export const searchPostReport = async (params, sortValue, pageNo) => {
   try {
     const res = await Axios.get(`/list-reports/posts`, {
@@ -196,6 +214,17 @@ export const acceptReportUser = async (reportId) => {
   try {
     const res = await Axios.get(`/list-reports/users/accept/${reportId}`);
     return res.status;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const getTotalAmount = async () => {
+  try {
+    const res = await Axios.get(`/list-payments/total`);
+    return res.data;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     // setErrorMessage(messages);

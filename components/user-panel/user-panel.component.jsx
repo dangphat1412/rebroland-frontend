@@ -100,7 +100,7 @@ const UserPanel = ({ user }) => {
             </Link>
           )}
           {user.currentRole === 3 && (
-            <Link href="/nha-moi-gioi/bat-dong-san-phai-sinh-cua-toi">
+            <Link href="/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi">
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
@@ -123,56 +123,6 @@ const UserPanel = ({ user }) => {
             </List.Item>
           </Link>
 
-          {/* {user.currentRole === 2 ? (
-            <Link href="/trang-ca-nhan/danh-sach-tin-da-luu">
-              <List.Item>
-                <List.Content>
-                  <List.Header as="h4">
-                    <span class="kikor kiko-heart-symbol"></span> Bất động sản
-                    đã lưu
-                  </List.Header>
-                </List.Content>
-              </List.Item>
-            </Link>
-          ) : (
-            <Link href="/nha-moi-gioi/danh-sach-bat-dong-san-da-luu">
-              <List.Item>
-                <List.Content>
-                  <List.Header as="h4">
-                    <span class="kikor kiko-heart-symbol"></span> Bất động sản
-                    phái sinh đã lưu
-                  </List.Header>
-                </List.Content>
-              </List.Item>
-            </Link>
-          )} */}
-
-          {user.currentRole === 3 && (
-            <Link href="/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai">
-              <List.Item>
-                <List.Content>
-                  <List.Header as="h4">
-                    <span className="kikor kiko-address-book"></span> Xử lý yêu
-                    cầu liên hệ lại
-                  </List.Header>
-                </List.Content>
-              </List.Item>
-            </Link>
-          )}
-
-          {user.currentRole === 3 && (
-            <Link href="/nha-moi-gioi/cham-soc-khach-hang">
-              <List.Item>
-                <List.Content>
-                  <List.Header as="h4">
-                    <span className="kikor kiko-handed"></span> Chăm sóc khách
-                    hàng
-                  </List.Header>
-                </List.Content>
-              </List.Item>
-            </Link>
-          )}
-
           <Link href="/trang-ca-nhan/thay-doi-mat-khau">
             <List.Item>
               <List.Content>
@@ -183,13 +133,18 @@ const UserPanel = ({ user }) => {
             </List.Item>
           </Link>
 
-          <List.Item>
-            <List.Content>
-              <List.Header as="h4">
-                <span className="kikor kiko-pencil-write"></span> Đăng tin
-              </List.Header>
-            </List.Content>
-          </List.Item>
+          {user && user.currentRole === 2 && (
+            <Link href="/dang-tin">
+              <List.Item>
+                <List.Content>
+                  <List.Header as="h4">
+                    <span className="kikor kiko-pencil-write"></span> Đăng tin
+                  </List.Header>
+                </List.Content>
+              </List.Item>
+            </Link>
+          )}
+
           <List.Item onClick={logoutUser}>
             <List.Content>
               <List.Header as="h4">

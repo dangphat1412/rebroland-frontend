@@ -96,9 +96,16 @@ const MainNavigation = ({
                 >
                   <List.Item as="a">Bất động sản</List.Item>
                 </Link>
-                <Link href="/danh-sach-nha-moi-gioi">
-                  <List.Item as="a">Nhà môi giới</List.Item>
-                </Link>
+                {(!user || (user && user.currentRole === 2)) && (
+                  <Link href="/danh-sach-nha-moi-gioi">
+                    <List.Item as="a">Nhà môi giới</List.Item>
+                  </Link>
+                )}
+                {user && user.currentRole === 3 && (
+                  <Link href="/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai">
+                    <List.Item as="a">Xử lý yêu cầu liên hệ lại</List.Item>
+                  </Link>
+                )}
                 {user && user.currentRole === 3 && (
                   <Link href="/nha-moi-gioi/cham-soc-khach-hang">
                     <List.Item as="a">Chăm sóc khách hàng</List.Item>
@@ -172,22 +179,42 @@ const MainNavigation = ({
                               Router.push("/trang-ca-nhan/thong-tin-ca-nhan");
                             }}
                           />
-                          <Dropdown.Item
-                            icon="file alternate outline"
-                            text="Bất động sản của tôi"
-                            onClick={() => {
-                              Router.push(
-                                "/trang-ca-nhan/bat-dong-san-cua-toi"
-                              );
-                            }}
-                          />
+                          {user && user.currentRole === 2 && (
+                            <Dropdown.Item
+                              icon="file alternate outline"
+                              text="Bất động sản của tôi"
+                              onClick={() => {
+                                Router.push(
+                                  "/trang-ca-nhan/bat-dong-san-cua-toi"
+                                );
+                              }}
+                            />
+                          )}
+                          {user && user.currentRole === 3 && (
+                            <Dropdown.Item
+                              icon="file alternate outline"
+                              text="Bất động sản phái sinh"
+                              onClick={() => {
+                                Router.push(
+                                  "/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi"
+                                );
+                              }}
+                            />
+                          )}
                           <Dropdown.Item
                             icon="heart outline"
-                            text="Bát động sản đã lưu"
+                            text="Bất động sản đã lưu"
                             onClick={() => {
                               Router.push(
                                 "/trang-ca-nhan/danh-sach-tin-da-luu"
                               );
+                            }}
+                          />
+                          <Dropdown.Item
+                            icon="key"
+                            text="Đổi mật khẩu"
+                            onClick={() => {
+                              Router.push("/trang-ca-nhan/thay-doi-mat-khau");
                             }}
                           />
                           <Dropdown.Item
@@ -303,7 +330,11 @@ const MainNavigation = ({
                 {user && (
                   <List.Item as="a">
                     <Link href="/dang-tin">
-                      <Button inverted color="red">
+                      <Button
+                        inverted
+                        color="red"
+                        disabled={user && user.currentRole === 3}
+                      >
                         Đăng tin
                       </Button>
                     </Link>

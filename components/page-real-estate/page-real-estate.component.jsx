@@ -8,13 +8,7 @@ import {
   Loader,
   Segment,
 } from "semantic-ui-react";
-import {
-  getAllCategories,
-  getOriginalPosts,
-  getPosts,
-  searchOriginalPosts,
-  searchPosts,
-} from "../../actions/post";
+import { getAllCategories } from "../../actions/post";
 import SearchBox from "../search-box/search-box.component";
 import {
   CategoriesContainer,
@@ -37,9 +31,8 @@ const RealEstatePage = ({
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [sortValue, setSortValue] = useState(0);
+  const [sortValue, setSortValue] = useState(searchParams.sortValue || 0);
   const [data, setData] = useState(postsData || {});
-  const [params, setParams] = useState(searchParams || {});
 
   const [categories, setCategoties] = useState(null);
 
@@ -51,35 +44,60 @@ const RealEstatePage = ({
     fetchAPI();
   }, []);
 
+  useEffect(() => {
+    setData(postsData);
+    setTotalResult(postsData.totalResult);
+    setSortValue(searchParams.sortValue || 0);
+  }, [searchParams]);
+
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
-    fetchAPI(params, value, 0);
+    fetchAPI(searchParams, value, 0);
   };
 
   const handlePaginationChange = (e, { activePage }) => {
-    fetchAPI(params, sortValue, activePage - 1);
+    fetchAPI(searchParams, sortValue, activePage - 1);
   };
 
-  const fetchAPI = async (params, sortValue, page) => {
-    setLoading(true);
-    let postData;
-    if (router.pathname === "/bat-dong-san") {
-      postData = params
-        ? await searchPosts(params, sortValue, page)
-        : await getPosts(sortValue, page);
-    } else {
-      postData = params
-        ? await searchOriginalPosts(params, sortValue, page)
-        : await getOriginalPosts(sortValue, page);
-    }
+  const fetchAPI = async (params, sortValue, pageNo) => {
+    const data = { ...params, sortValue, pageNo };
+    if (router.asPath === "/bat-dong-san")
+      router.push(
+        {
+          pathname: router.asPath,
+          query: { data: JSON.stringify(data) },
+        },
+        "/bat-dong-san",
+        { scroll: true }
+      );
+    if (router.asPath === "/nha-moi-gioi/bat-dong-san")
+      router.push(
+        {
+          pathname: router.asPath,
+          query: { data: JSON.stringify(data) },
+        },
+        "/nha-moi-gioi/bat-dong-san",
+        { scroll: true }
+      );
+    // setLoading(true);
+    // let postData;
+    // if (router.pathname === "/bat-dong-san") {
+    //   postData = params
+    //     ? await searchPosts(params, sortValue, page)
+    //     : await getPosts(sortValue, page);
+    // } else {
+    //   postData = params
+    //     ? await searchOriginalPosts(params, sortValue, page)
+    //     : await getOriginalPosts(sortValue, page);
+    // }
 
-    setData(postData);
-    setTotalResult(postData.totalResult);
-    setLoading(false);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    // setData(postData);
+    // setTotalResult(postData.totalResult);
+    // setLoading(false);
+    // window.scrollTo({
+    //   top: 0,
+    //   behavior: "smooth",
+    // });
   };
 
   return (
@@ -94,13 +112,7 @@ const RealEstatePage = ({
                 color: "white",
               }}
             >
-              <SearchBox
-                setData={setData}
-                setParams={setParams}
-                setSortValue={setSortValue}
-                setTotalResult={setTotalResult}
-                searchParams={searchParams}
-              />
+              <SearchBox searchParams={searchParams} />
             </Segment>
           </Grid.Column>
           <Grid.Column width={8}>
