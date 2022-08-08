@@ -144,7 +144,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                 },
                 {
                   key: 2,
-                  text: "Đăng ký nhà môi giới",
+                  text: "Đăng ký trở thành nhà môi giới",
                   value: 2,
                 },
               ]}
