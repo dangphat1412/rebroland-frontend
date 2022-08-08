@@ -184,9 +184,9 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
             <Table.Body>
               {data &&
                 data.payments.length > 0 &&
-                data.payments.map((payment) => {
+                data.payments.map((payment, index) => {
                   return (
-                    <Table.Row>
+                    <Table.Row key={index}>
                       <Table.Cell singleLine textAlign="center">
                         {payment.user.id}
                       </Table.Cell>
