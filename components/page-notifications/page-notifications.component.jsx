@@ -58,14 +58,29 @@ const NotificationsPage = ({ notificationList }) => {
                     return (
                       <Item key={index}>
                         <Item.Image
-                          src="https://flyclipart.com/thumb2/excited-icons-download-free-png-and-vector-icons-unlimited-661241.png"
+                          src={
+                            notification.type === "Contact"
+                              ? "https://veganic.vn/images/social/phone.png"
+                              : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkTY0F2IXGOFku2yIu4HOqO6UMaTcke1w33xHRrSPu1dgHbX7amiOvnTu1W-cuSZppuEo&usqp=CAU"
+                          }
                           size="tiny"
                         />
                         <Item.Content>
                           {notification.type === "Contact" && (
+                            <>
+                              <Item.Description>
+                                Số điện thoại <b>{notification.phone}</b> muốn
+                                liên lạc với bạn
+                              </Item.Description>
+                              <Item.Description>
+                                <b>Nội dung: </b>
+                                {notification.content}
+                              </Item.Description>
+                            </>
+                          )}
+                          {notification.type === "Report" && (
                             <Item.Description>
-                              Số điện thoại <b>{notification.phone}</b> muốn
-                              liên lạc với bạn
+                              {notification.content}
                             </Item.Description>
                           )}
                           <Item.Extra>{notification.date} </Item.Extra>

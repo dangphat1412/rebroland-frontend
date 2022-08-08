@@ -45,6 +45,7 @@ import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import calculatePrice from "../../utils/calculatePrice";
 import FormContact from "../form-contact/form-contact.component";
 import HOST_URL from "../../utils/hostUrl";
+import Barcode from "react-hooks-barcode";
 
 const PagePropertyDetail = ({
   post,
@@ -633,13 +634,13 @@ const PagePropertyDetail = ({
       </ModalItem>
       <ModalItem
         header="Lịch sử bất động sản"
-        size="tiny"
+        size="small"
         onOpen={historyOpen}
         onClose={() => {
           setHistoryOpen(false);
         }}
       >
-        <FormHistory historyData={historyData} />
+        <FormHistory post={post} historyData={historyData} />
       </ModalItem>
       <ModalItem
         header="Yêu cầu liên hệ lại"
@@ -668,7 +669,8 @@ const PagePropertyDetail = ({
   );
 };
 
-const FormHistory = ({ historyData }) => {
+const FormHistory = ({ post, historyData }) => {
+  console.log("HISTORY: ", historyData);
   return (
     <>
       {historyData ? (
@@ -676,30 +678,37 @@ const FormHistory = ({ historyData }) => {
           <Grid>
             <Grid.Row>
               <Grid.Column width={5}>
-                <Header as="h5">Mã vạch</Header>
+                <Header as="h5">Mã vạch:</Header>
               </Grid.Column>
               <Grid.Column width={5}>
-                {Object.values(historyData)[0][0].barcode}
+                <Barcode value={post.barcode} {...config} />
               </Grid.Column>
             </Grid.Row>
-            {Object.values(historyData)[0][0].plotNumber && (
+
+            {post.plotNumber && (
               <Grid.Row>
                 <Grid.Column width={5}>
-                  <Header as="h5">Số thửa</Header>
+                  <Header as="h5">Số thửa:</Header>
                 </Grid.Column>
-                <Grid.Column width={5}>
-                  {Object.values(historyData)[0][0].plotNumber}
-                </Grid.Column>
+                <Grid.Column width={5}>{post.plotNumber}</Grid.Column>
               </Grid.Row>
             )}
-            {Object.values(historyData)[0][0].buildingName && (
+
+            {post.buildingName && (
               <Grid.Row>
                 <Grid.Column width={5}>
-                  <Header as="h5">Tên toà nhà</Header>
+                  <Header as="h5">Tên toà nhà:</Header>
                 </Grid.Column>
+                <Grid.Column width={5}>{post.buildingName}</Grid.Column>
+              </Grid.Row>
+            )}
+
+            {post.roomNumber && (
+              <Grid.Row>
                 <Grid.Column width={5}>
-                  {Object.values(historyData)[0][0].buildingName}
+                  <Header as="h5">Phòng số:</Header>
                 </Grid.Column>
+                <Grid.Column width={5}>{post.roomNumber}</Grid.Column>
               </Grid.Row>
             )}
           </Grid>
@@ -710,6 +719,7 @@ const FormHistory = ({ historyData }) => {
                 <Table.HeaderCell>Họ và tên chủ hộ</Table.HeaderCell>
                 <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
                 <Table.HeaderCell>Sở hữu từ</Table.HeaderCell>
+                <Table.HeaderCell>Mã vạch</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
 
@@ -721,6 +731,9 @@ const FormHistory = ({ historyData }) => {
                     <Table.Cell>{d.owner}</Table.Cell>
                     <Table.Cell>{d.phone}</Table.Cell>
                     <Table.Cell>{d.startDate}</Table.Cell>
+                    <Table.Cell>
+                      <Barcode value={d.barcode} {...config} />
+                    </Table.Cell>
                   </Table.Row>
                 );
               })}
@@ -736,6 +749,13 @@ const FormHistory = ({ historyData }) => {
       )}
     </>
   );
+};
+
+const config = {
+  format: "CODE128B",
+  fontSize: 16,
+  width: 1,
+  height: 40,
 };
 
 const PropertyItem = ({ iconClass, title, description }) => {

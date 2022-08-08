@@ -88,6 +88,10 @@ const SearchBox = ({ searchParams }) => {
         }
       };
       fetchProvinces();
+
+      setValue("province", searchParams.province);
+      setValue("district", searchParams.district);
+      setValue("ward", searchParams.ward);
     }
   }, []);
 

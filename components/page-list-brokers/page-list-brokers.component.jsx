@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Dimmer,
@@ -19,32 +19,36 @@ import {
   PaginationContainer,
 } from "./page-list-brokers.styles";
 
-const ListBrokersPage = ({ brokersData, setTotalResult }) => {
+const ListBrokersPage = ({ brokersData, setTotalResult, searchParams }) => {
   const [data, setData] = useState(brokersData || {});
-  const [sortValue, setSortValue] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [params, setParams] = useState(null);
+  const [sortValue, setSortValue] = useState(searchParams.sortValue || 0);
 
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
-    fetchAPI(params, value, 0);
+    fetchAPI(searchParams, value, 0);
   };
 
   const handlePaginationChange = (e, { activePage }) => {
-    fetchAPI(params, sortValue, activePage - 1);
+    fetchAPI(searchParams, sortValue, activePage - 1);
   };
 
-  const fetchAPI = async (params, sortValue, page) => {
-    setLoading(true);
-    const brokersData = await searchBrokers(params, sortValue, page);
+  const fetchAPI = async (params, sortValue, pageNo) => {
+    const data = { ...params, sortValue, pageNo };
+    router.push(
+      {
+        pathname: "/danh-sach-nha-moi-gioi",
+        query: { data: JSON.stringify(data) },
+      },
+      "/danh-sach-nha-moi-gioi",
+      { scroll: true }
+    );
+  };
+
+  useEffect(() => {
     setData(brokersData);
     setTotalResult(brokersData.totalResult);
-    setLoading(false);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
+    setSortValue(searchParams.sortValue || 0);
+  }, [searchParams]);
 
   return (
     <ListBrokersContainer>
@@ -65,12 +69,7 @@ const ListBrokersPage = ({ brokersData, setTotalResult }) => {
                 color: "white",
               }}
             >
-              <SearchBoxBroker
-                setData={setData}
-                setParams={setParams}
-                setSortValue={setSortValue}
-                setTotalResult={setTotalResult}
-              />
+              <SearchBoxBroker searchParams={searchParams} />
             </Segment>
           </Grid.Column>
           <Grid.Column width={12}>
@@ -81,7 +80,11 @@ const ListBrokersPage = ({ brokersData, setTotalResult }) => {
                 <Card.Group itemsPerRow={4}>
                   {data &&
                     data.list.map((broker, index) => (
-                      <BrokerItem key={index} broker={broker} />
+                      <BrokerItem
+                        key={index}
+                        broker={broker}
+                        searchParams={searchParams}
+                      />
                     ))}
                 </Card.Group>
                 {data.totalPage > 1 && (
@@ -101,9 +104,6 @@ const ListBrokersPage = ({ brokersData, setTotalResult }) => {
                 )}
               </>
             )}
-            <Dimmer active={loading} inverted>
-              <Loader>Đang tải dữ liệu</Loader>
-            </Dimmer>
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -111,9 +111,16 @@ const ListBrokersPage = ({ brokersData, setTotalResult }) => {
   );
 };
 
-const BrokerItem = ({ broker }) => {
+const BrokerItem = ({ broker, searchParams }) => {
   return (
-    <Link href={`/danh-sach-nha-moi-gioi/${broker.id}`} passHref>
+    <Link
+      href={{
+        pathname: `/danh-sach-nha-moi-gioi/${broker.id}`,
+        query: { data: JSON.stringify(searchParams) },
+      }}
+      as={`/danh-sach-nha-moi-gioi/${broker.id}`}
+      passHref
+    >
       <Card>
         <Image
           src={

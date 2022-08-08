@@ -33,6 +33,7 @@ const DetailBrokerPage = ({
   followingPosts,
   setFollowingPosts,
   setTotalResult,
+  searchParams,
 }) => {
   const [userDetail, setUserDetail] = useState(postsData.user);
   const [data, setData] = useState(postsData.lists);
@@ -84,7 +85,7 @@ const DetailBrokerPage = ({
                 color: "white",
               }}
             >
-              <SearchBoxBroker />
+              <SearchBoxBroker searchParams={searchParams} />
             </Segment>
           </Grid.Column>
           <Grid.Column width={8}>

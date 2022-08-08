@@ -39,7 +39,7 @@ export async function getServerSideProps(context) {
     const res = await axios.get(`${API_URL}/api/posts`, {
       params: {
         keyword: params.key,
-        propertyType: params.propertyTypes
+        propertyTypes: params.propertyTypes
           ? params.propertyTypes.toString()
           : undefined,
         province: params.province,

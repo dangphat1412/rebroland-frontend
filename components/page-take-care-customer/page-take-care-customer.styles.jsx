@@ -14,4 +14,9 @@ export const TakeCareCustomerContainer = styled.div`
     color: #fff;
     background: #ff9219;
   }
+  .user-avatar-small {
+    height: 30px !important;
+    width: 30px !important;
+    object-fit: cover;
+  }
 `;

@@ -13,10 +13,10 @@ const Axios = axios.create({
   },
 });
 
-export const addNewCustomer = async (data) => {
+export const addNewCustomer = async (contactId, data) => {
   try {
-    const res = await Axios.post("/", data);
-    return res;
+    const res = await Axios.post(`/${contactId}`, data);
+    return res.status;
   } catch (error) {
     // const messages = convertToListMessages(error.response.data);
     console.log(error);

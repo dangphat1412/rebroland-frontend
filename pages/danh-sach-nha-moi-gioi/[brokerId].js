@@ -9,6 +9,7 @@ const DetailBroker = ({
   user,
   followingPosts,
   setFollowingPosts,
+  params,
 }) => {
   const [totalResult, setTotalResult] = useState(postsData.lists.totalResult);
   return (
@@ -24,6 +25,7 @@ const DetailBroker = ({
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
         setTotalResult={setTotalResult}
+        searchParams={params}
       />
     </>
   );
@@ -32,9 +34,12 @@ const DetailBroker = ({
 export async function getServerSideProps(context) {
   try {
     const { brokerId } = context.query;
+    const { data } = context.query;
+    let params = {};
+    if (data) params = JSON.parse(data) || {};
     const res = await axios.get(`${API_URL}/api/posts/user/${brokerId}`);
 
-    return { props: { postsData: res.data } };
+    return { props: { postsData: res.data, params: params } };
   } catch (error) {
     // return { props: { posts: [1, 2, 3] } };
   }

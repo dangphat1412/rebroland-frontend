@@ -79,25 +79,6 @@ const RealEstatePage = ({
         "/nha-moi-gioi/bat-dong-san",
         { scroll: true }
       );
-    // setLoading(true);
-    // let postData;
-    // if (router.pathname === "/bat-dong-san") {
-    //   postData = params
-    //     ? await searchPosts(params, sortValue, page)
-    //     : await getPosts(sortValue, page);
-    // } else {
-    //   postData = params
-    //     ? await searchOriginalPosts(params, sortValue, page)
-    //     : await getOriginalPosts(sortValue, page);
-    // }
-
-    // setData(postData);
-    // setTotalResult(postData.totalResult);
-    // setLoading(false);
-    // window.scrollTo({
-    //   top: 0,
-    //   behavior: "smooth",
-    // });
   };
 
   return (

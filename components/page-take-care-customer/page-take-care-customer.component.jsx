@@ -93,33 +93,6 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                 icon="search"
                 placeholder="Tìm kiếm theo tên hoặc số điện thoại"
               />
-              <Button
-                floated="right"
-                onClick={() => {
-                  setOpenCreateCustomer(true);
-                }}
-              >
-                <Icon name="add" />
-                Thêm
-              </Button>
-              <Button
-                floated="right"
-                onClick={() => {
-                  setOpenUpdateCustomer(true);
-                }}
-              >
-                <Icon name="edit" />
-                Sửa
-              </Button>
-              <Button
-                floated="right"
-                onClick={() => {
-                  setOpenDeleteCustomer(true);
-                }}
-              >
-                <Icon name="delete" />
-                Xoá
-              </Button>
 
               <Table celled selectable sortable>
                 <Table.Header>
@@ -128,7 +101,7 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                     <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
                     <Table.HeaderCell>Email</Table.HeaderCell>
                     <Table.HeaderCell>Ngày bắt đầu</Table.HeaderCell>
-                    <Table.HeaderCell></Table.HeaderCell>
+                    <Table.HeaderCell>Trạng thái</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
 
@@ -143,9 +116,27 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                         handleGetCustomerDetail(care.careId);
                       }}
                     >
-                      <Table.Cell>{care.fullName}</Table.Cell>
-                      <Table.Cell>{care.phone}</Table.Cell>
-                      <Table.Cell>{care.email}</Table.Cell>
+                      <Table.Cell>
+                        <Header as="h4" image>
+                          <Image
+                            src={
+                              care.userCared.avatar ||
+                              "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+                            }
+                            avatar
+                            className="user-avatar-small"
+                          />
+                          <Header.Content>
+                            {care.userCared.fullName}
+                          </Header.Content>
+                        </Header>
+                      </Table.Cell>
+                      <Table.Cell>{care.userCared.phone}</Table.Cell>
+                      <Table.Cell>
+                        {care.userCared.email
+                          ? care.userCared.email
+                          : "Đang cập nhật"}
+                      </Table.Cell>
                       <Table.Cell>{care.startDate}</Table.Cell>
                       <Table.Cell>Đang tư vấn</Table.Cell>
                     </Table.Row>
@@ -155,9 +146,6 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
             </Segment>
           </Grid.Column>
           <Grid.Column width={6}>
-            <Dimmer active={loading} inverted>
-              <Loader inverted>Đang tải</Loader>
-            </Dimmer>
             <Segment>
               <Tab
                 menu={{ secondary: true, pointing: true }}
@@ -178,15 +166,17 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
 
                                 <Item.Content verticalAlign="middle">
                                   <Item.Header>
-                                    {customerDetail.user.fullName}
+                                    {customerDetail.user.userCared.fullName}
                                   </Item.Header>
                                   <Item.Description>
                                     <Icon name="phone" />{" "}
-                                    {customerDetail.user.phone}
+                                    {customerDetail.user.userCared.phone}
                                   </Item.Description>
                                   <Item.Description>
-                                    <Icon name="mail" />{" "}
-                                    {customerDetail.user.email}
+                                    <Icon name="mail" />
+                                    {customerDetail.user.userCared.email
+                                      ? customerDetail.user.userCared.email
+                                      : "Đang cập nhật"}
                                   </Item.Description>
                                 </Item.Content>
                               </Item>
@@ -319,6 +309,9 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                 ]}
               />
             </Segment>
+            <Dimmer active={loading} inverted>
+              <Loader inverted>Đang tải</Loader>
+            </Dimmer>
           </Grid.Column>
         </Grid.Row>
       </Grid>

@@ -28,6 +28,7 @@ import Pagination from "../pagination/pagination.component";
 import calculatePrice from "../../utils/calculatePrice";
 import Link from "next/link";
 import convertToSlug from "../../utils/convertToSlug";
+import { addNewCustomer } from "../../actions/user-care";
 
 const HandleContactBackRequestPage = ({
   user,
@@ -39,6 +40,7 @@ const HandleContactBackRequestPage = ({
   const [openRefuseConfirm, setOpenRefuseConfirm] = useState(false);
   const [openAcceptConfirm, setOpenAcceptConfirm] = useState(false);
   const [selectedContactId, setSelectedContactId] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const [params, setParams] = useState({});
   const [loading, setLoading] = useState(false);
@@ -49,7 +51,21 @@ const HandleContactBackRequestPage = ({
     },
   });
 
-  const handleAccept = async () => {};
+  const handleAccept = async () => {
+    const data = {
+      userCareId: selectedCustomer.userRequest.id,
+      postId: selectedCustomer.shortPost && selectedCustomer.shortPost.postId,
+    };
+    const status = await addNewCustomer(selectedContactId, data);
+    if (status === 201) {
+      setContacts(
+        contacts.filter((contact) => {
+          return contact.contactId !== selectedContactId;
+        })
+      );
+      setOpenAcceptConfirm(false);
+    }
+  };
 
   const handleRefuse = async (contactId) => {
     const status = await deleteRequestContact(contactId);
@@ -61,7 +77,6 @@ const HandleContactBackRequestPage = ({
       );
       setOpenRefuseConfirm(false);
     }
-    console.log(contacts);
   };
 
   const handlePaginationChange = (e, { activePage }) =>
@@ -108,7 +123,7 @@ const HandleContactBackRequestPage = ({
                     />
                   </Form>
                 </Card.Header>
-                {contacts.length > 0 &&
+                {contacts.length > 0 ? (
                   contacts.map((contact, index) => {
                     return (
                       <ContactBackRequestItem
@@ -117,24 +132,33 @@ const HandleContactBackRequestPage = ({
                         setOpenRefuseConfirm={setOpenRefuseConfirm}
                         setOpenAcceptConfirm={setOpenAcceptConfirm}
                         setSelectedContactId={setSelectedContactId}
+                        setSelectedCustomer={setSelectedCustomer}
                       />
                     );
-                  })}
+                  })
+                ) : (
+                  <>
+                    <br />
+                    <b>Không có yêu cầu liên hệ lại</b>
+                  </>
+                )}
               </Card.Content>
             </Card>
-            <PaginationContainer>
-              <Pagination
-                activePage={data.pageNo}
-                boundaryRange={1}
-                siblingRange={1}
-                ellipsisItem={{
-                  content: <Icon name="ellipsis horizontal" />,
-                  icon: true,
-                }}
-                totalPages={data.totalPages}
-                onPageChange={handlePaginationChange}
-              />
-            </PaginationContainer>
+            {data.totalPages > 0 && (
+              <PaginationContainer>
+                <Pagination
+                  activePage={data.pageNo}
+                  boundaryRange={1}
+                  siblingRange={1}
+                  ellipsisItem={{
+                    content: <Icon name="ellipsis horizontal" />,
+                    icon: true,
+                  }}
+                  totalPages={data.totalPages}
+                  onPageChange={handlePaginationChange}
+                />
+              </PaginationContainer>
+            )}
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -173,6 +197,7 @@ const ContactBackRequestItem = ({
   setOpenRefuseConfirm,
   setOpenAcceptConfirm,
   setSelectedContactId,
+  setSelectedCustomer,
 }) => {
   return (
     <Card fluid>
@@ -229,6 +254,7 @@ const ContactBackRequestItem = ({
                 color="green"
                 onClick={() => {
                   setSelectedContactId(contact.contactId);
+                  setSelectedCustomer(contact);
                   setOpenAcceptConfirm(true);
                 }}
               >
