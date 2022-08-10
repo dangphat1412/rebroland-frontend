@@ -10,6 +10,8 @@ const DetailBroker = ({
   followingPosts,
   setFollowingPosts,
   params,
+  setLoginOpen,
+  setRegisterOpen,
 }) => {
   const [totalResult, setTotalResult] = useState(postsData.lists.totalResult);
   return (
@@ -26,6 +28,8 @@ const DetailBroker = ({
         setFollowingPosts={setFollowingPosts}
         setTotalResult={setTotalResult}
         searchParams={params}
+        setLoginOpen={setLoginOpen}
+        setRegisterOpen={setRegisterOpen}
       />
     </>
   );

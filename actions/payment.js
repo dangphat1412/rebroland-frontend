@@ -9,9 +9,9 @@ const Axios = axios.create({
   },
 });
 
-export const payment = async (description, amount) => {
+export const payment = async (amount) => {
   try {
-    const res = await Axios.post("", { description, amount, type: "Đăng bài" });
+    const res = await Axios.post("", amount);
     return res.data;
   } catch (error) {
     console.log(error);

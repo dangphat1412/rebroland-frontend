@@ -131,9 +131,9 @@ export const otpForgotPasswordUser = async (
   }
 };
 
-export const brokerRegister = async (setErrorMessage) => {
+export const brokerRegister = async (id, setErrorMessage) => {
   try {
-    const res = await Axios.post("/broker/signup");
+    const res = await Axios.post(`/broker/signup/${id}`);
 
     if (res.status === 200) {
       Router.push("/nha-moi-gioi");

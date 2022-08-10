@@ -4,7 +4,14 @@ import UserDetailPage from "../../components/page-user-detail/page-user-detail.c
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 
-const UserDetail = ({ user, postsData, followingPosts, setFollowingPosts }) => {
+const UserDetail = ({
+  user,
+  postsData,
+  followingPosts,
+  setFollowingPosts,
+  setLoginOpen,
+  setRegisterOpen,
+}) => {
   console.log(postsData);
   return (
     <div>
@@ -14,6 +21,8 @@ const UserDetail = ({ user, postsData, followingPosts, setFollowingPosts }) => {
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
         user={user}
+        setLoginOpen={setLoginOpen}
+        setRegisterOpen={setRegisterOpen}
       />
     </div>
   );

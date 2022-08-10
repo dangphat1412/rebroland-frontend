@@ -1,4 +1,4 @@
-import { List, Segment, Statistic } from "semantic-ui-react";
+import { Icon, List, Segment, Statistic } from "semantic-ui-react";
 import styled from "styled-components";
 
 export const FormPropertyDetailContainer = styled.div`
@@ -116,4 +116,32 @@ export const ContactInformationContainer = styled(Segment)`
   .information {
     font-size: 17px;
   }
+`;
+
+export const PreviewContainer = styled.div`
+  height: 150px;
+  display: flex;
+  flex-wrap: nowrap !important;
+  overflow-x: scroll;
+`;
+
+export const ImageContainer = styled.div`
+  position: relative;
+  flex: 0 0 auto !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  & img {
+    width: 140px !important;
+    height: 140px !important;
+    padding: 9px;
+    border-radius: 15px;
+  }
+`;
+
+export const RemoveIcon = styled(Icon)`
+  color: white !important;
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  cursor: pointer;
 `;

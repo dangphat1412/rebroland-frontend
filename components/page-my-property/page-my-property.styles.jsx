@@ -34,6 +34,10 @@ export const MyPropertiesPageContainer = styled.div`
       position: absolute;
       right: 10px;
     }
+    & .filter-status {
+      position: absolute;
+      right: 230px;
+    }
   }
   .list {
     margin: 10px 0px;

@@ -1,13 +1,26 @@
 import React, { useRef, useState } from "react";
-import { Card, Icon, Image, List, Segment } from "semantic-ui-react";
+import {
+  Button,
+  Card,
+  Header,
+  Icon,
+  Image,
+  List,
+  Segment,
+} from "semantic-ui-react";
 import Link from "next/link";
 import { UserPanelContainer } from "./user-panel.styles";
 import { logoutUser, updateUser } from "../../actions/auth";
 import { uploadMedia } from "../../utils/uploadToCloudinary";
+import { useRouter } from "next/router";
+import convertToCurrency from "../../utils/convertToCurrency";
 
 const UserPanel = ({ user }) => {
+  console.log("USER: ", user);
+  const router = useRouter();
   const mediaRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(user.avatar);
 
   const handleMediaChange = async (e) => {
     const { name, value, files } = e.target;
@@ -16,6 +29,7 @@ const UserPanel = ({ user }) => {
       console.log("ERROR UPLOAD");
       return;
     }
+    setImagePreview(mediaUrl);
     await updateUser({ ...user, avatar: mediaUrl }, setErrorMessage);
   };
 
@@ -34,7 +48,7 @@ const UserPanel = ({ user }) => {
           >
             <Image
               src={
-                user.avatar ||
+                imagePreview ||
                 "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
               }
               circular
@@ -75,6 +89,20 @@ const UserPanel = ({ user }) => {
         type="file"
         accept="image/*"
       />
+
+      <Segment>
+        <Header as="h3">Số dư tài khoản</Header>
+        <Header as="h1">{convertToCurrency(user.accountBalance)} VNĐ</Header>
+        <Button
+          fluid
+          onClick={() => {
+            router.push("/trang-ca-nhan/nap-tien");
+          }}
+        >
+          <Icon name="credit card outline" />
+          Nạp tiền vào ví
+        </Button>
+      </Segment>
 
       <Segment>
         <List divided relaxed selection animated size="big">
@@ -118,6 +146,16 @@ const UserPanel = ({ user }) => {
                 <List.Header as="h4">
                   <span className="kikor kiko-heart-symbol"></span> Bất động sản
                   đã lưu
+                </List.Header>
+              </List.Content>
+            </List.Item>
+          </Link>
+
+          <Link href="/trang-ca-nhan/thay-doi-so-dien-thoai">
+            <List.Item>
+              <List.Content>
+                <List.Header as="h4">
+                  <span className="kikor kiko-phone"></span> Đổi số điện thoại
                 </List.Header>
               </List.Content>
             </List.Item>

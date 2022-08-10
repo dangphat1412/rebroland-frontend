@@ -4,6 +4,8 @@ import {
   Confirm,
   Dimmer,
   Divider,
+  Dropdown,
+  Form,
   Grid,
   Header,
   Icon,
@@ -15,7 +17,10 @@ import {
   Tab,
   Table,
 } from "semantic-ui-react";
-import { TakeCareCustomerContainer } from "./page-take-care-customer.styles";
+import {
+  ListPostContainer,
+  TakeCareCustomerContainer,
+} from "./page-take-care-customer.styles";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -27,12 +32,23 @@ import NoteForm from "../form-note/form-note.component";
 import FormCreateCustomer from "../form-create-customer/form-create-customer.component";
 import {
   deleteCustomer,
+  editSummarize,
   endCare,
   getCustomerDetail,
 } from "../../actions/user-care";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
+import InputField from "../input-field/input-field.component";
+import { useForm } from "react-hook-form";
 
 const TakeCareCustomerPage = ({ user, caringList }) => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({});
+
   const [cares, setCares] = useState(caringList.cares);
   const [customerDetail, setCustomerDetail] = useState(null);
   const [openAppointmentSchedule, setOpenAppointmentSchedule] = useState(false);
@@ -42,8 +58,25 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
   const [openDeteleCustomer, setOpenDeleteCustomer] = useState(false);
   const [selectedCustomerIndex, setSelectedCustomerIndex] = useState(null);
   const [openUpdateCustomer, setOpenUpdateCustomer] = useState(false);
+  const [openEditSummarize, setOpenEditSummarize] = useState(false);
   const [timeline, setTimeline] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const onSubmitEditSummarize = async (data, e) => {
+    const status = await editSummarize(selectedCustomerIndex, data);
+    if (status === 201) {
+      const list = [...cares];
+      const index = list.findIndex(
+        (user) => user.careId === selectedCustomerIndex
+      );
+      list[index].summarize = data.summarize;
+      setCustomerDetail((prev) => ({
+        ...prev,
+        user: list[index],
+      }));
+      setOpenEditSummarize(false);
+    }
+  };
 
   const handleGetCustomerDetail = async (careId) => {
     setLoading(true);
@@ -51,7 +84,6 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
     setCustomerDetail(data);
     setTimeline(data.timeline);
     setLoading(false);
-    console.log(data);
   };
 
   const handleDeleteCustomer = async (customerId) => {
@@ -88,20 +120,27 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
         <Grid.Row>
           <Grid.Column width={10}>
             <Segment>
-              <Input
-                name="search"
-                icon="search"
-                placeholder="Tìm kiếm theo tên hoặc số điện thoại"
-              />
-
               <Table celled selectable sortable>
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell>Họ và tên</Table.HeaderCell>
-                    <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
-                    <Table.HeaderCell>Email</Table.HeaderCell>
-                    <Table.HeaderCell>Ngày bắt đầu</Table.HeaderCell>
-                    <Table.HeaderCell>Trạng thái</Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Họ và tên
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Số điện thoại
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Email
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Ngày bắt đầu
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Trạng thái
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Hành động
+                    </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
 
@@ -131,14 +170,23 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                           </Header.Content>
                         </Header>
                       </Table.Cell>
-                      <Table.Cell>{care.userCared.phone}</Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        {care.userCared.phone}
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
                         {care.userCared.email
                           ? care.userCared.email
                           : "Đang cập nhật"}
                       </Table.Cell>
-                      <Table.Cell>{care.startDate}</Table.Cell>
-                      <Table.Cell>Đang tư vấn</Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        {care.startDate}
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        Đang tư vấn
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        <Icon name="trash alternate outline" />
+                      </Table.Cell>
                     </Table.Row>
                   ))}
                 </Table.Body>
@@ -161,9 +209,12 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                 <Image
                                   size="tiny"
                                   alt="image"
-                                  src="https://react.semantic-ui.com/images/avatar/large/jenny.jpg"
+                                  src={
+                                    customerDetail.user.userCared.avatar ||
+                                    "https://react.semantic-ui.com/images/avatar/large/jenny.jpg"
+                                  }
+                                  className="user-avatar"
                                 />
-
                                 <Item.Content verticalAlign="middle">
                                   <Item.Header>
                                     {customerDetail.user.userCared.fullName}
@@ -184,15 +235,32 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                 <div>
                                   <Icon name="content" />
                                 </div>
-                                <div>{customerDetail.user.summarize}</div>
+                                <div>
+                                  {customerDetail.user.summarize ? (
+                                    customerDetail.user.summarize
+                                  ) : (
+                                    <b>Không có mô tả nào</b>
+                                  )}
+                                  <Icon
+                                    name="pencil alternate"
+                                    color="yellow"
+                                    style={{
+                                      paddingLeft: "10px",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => {
+                                      setOpenEditSummarize(true);
+                                    }}
+                                  />
+                                </div>
                               </Header>
                             </Item.Group>
-                            <Segment
-                              style={{ overflow: "auto", maxHeight: 340 }}
-                            >
-                              <Item.Group divided>
-                                {customerDetail.posts.length > 0 &&
-                                  customerDetail.posts.map((post, index) => {
+                            {customerDetail.posts.length > 0 && (
+                              <ListPostContainer
+                                style={{ overflow: "auto", maxHeight: 340 }}
+                              >
+                                <Item.Group divided>
+                                  {customerDetail.posts.map((post, index) => {
                                     return (
                                       <Item key={index}>
                                         <Item.Image
@@ -207,13 +275,19 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                           <Item.Header>
                                             {post.title}
                                           </Item.Header>
-                                          <Item.Description></Item.Description>
+                                          <Item.Description>
+                                            {post.description}
+                                          </Item.Description>
+                                          <Item.Extra>
+                                            {post.startDate}
+                                          </Item.Extra>
                                         </Item.Content>
                                       </Item>
                                     );
                                   })}
-                              </Item.Group>
-                            </Segment>
+                                </Item.Group>
+                              </ListPostContainer>
+                            )}
                           </>
                         ) : (
                           <>Chọn một khách hàng để xem chi tiết</>
@@ -292,7 +366,9 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                       }
                                     >
                                       <h3 className="vertical-timeline-element-title">
-                                        Art Director
+                                        {tl.type === "NOTE"
+                                          ? "Ghi chú"
+                                          : "Lịch hẹn"}
                                       </h3>
                                       <p>{tl.description}</p>
                                     </VerticalTimelineElement>
@@ -317,18 +393,26 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
       </Grid>
 
       <ModalItem
-        header="Thêm khách hàng"
-        onOpen={openCreateCustomer}
+        header="Chỉnh sửa mô tả khách hàng"
+        onOpen={openEditSummarize}
         onClose={() => {
-          setOpenCreateCustomer(false);
+          setOpenEditSummarize(false);
         }}
       >
-        <FormCreateCustomer
-          cares={cares}
-          setCares={setCares}
-          toast={toast}
-          setOpenCreateCustomer={setOpenCreateCustomer}
-        />
+        <Form onSubmit={handleSubmit(onSubmitEditSummarize)}>
+          <InputField
+            fieldType="textarea"
+            label="Mô tả"
+            name="summarize"
+            onChange={async (e, { name, value }) => {
+              setValue(name, value);
+            }}
+            defaultValue={customerDetail && customerDetail.user.summarize}
+          />
+          <Button type="submit" fluid>
+            Tạo mới
+          </Button>
+        </Form>
       </ModalItem>
 
       <ModalItem

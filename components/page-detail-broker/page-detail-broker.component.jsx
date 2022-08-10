@@ -34,6 +34,8 @@ const DetailBrokerPage = ({
   setFollowingPosts,
   setTotalResult,
   searchParams,
+  setLoginOpen,
+  setRegisterOpen,
 }) => {
   const [userDetail, setUserDetail] = useState(postsData.user);
   const [data, setData] = useState(postsData.lists);
@@ -273,6 +275,8 @@ const DetailBrokerPage = ({
                 toast={toast}
                 userId={userDetail.id}
                 currentUser={user}
+                setLoginOpen={setLoginOpen}
+                setRegisterOpen={setRegisterOpen}
               />
             </Segment>
           </Grid.Column>

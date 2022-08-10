@@ -12,23 +12,21 @@ import {
 import { BrokerRegisterContainer } from "./page-broker-register.styles";
 import { useForm } from "react-hook-form";
 import { brokerRegister } from "../../actions/auth";
+import convertToListMessages from "../../utils/convertToListMessages";
+import convertToCurrency from "../../utils/convertToCurrency";
 
-const BrokerRegisterPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
+const BrokerRegisterPage = ({ priceList }) => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  useEffect(() => {
-    // register("option", { required: "Chọn gói đăng ký" });
-    register("option");
-  }, [register]);
-
-  const onSubmit = async (data) => {
-    await brokerRegister(setErrorMessage);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedItem) {
+      const msg = convertToListMessages("Chọn một gói thanh toán");
+      setErrorMessage(msg);
+    } else {
+      await brokerRegister(selectedItem.id, setErrorMessage);
+    }
   };
 
   return (
@@ -45,48 +43,65 @@ const BrokerRegisterPage = () => {
               hiệu quả tin đăng.
             </div>
             <br />
-            <Form
-              onSubmit={handleSubmit(onSubmit)}
-              error={errorMessage !== null}
-            >
-              <Message
-                error
-                list={errorMessage}
-                onDismiss={() => setErrorMessage(null)}
-              />
+            <Form onSubmit={onSubmit} error={errorMessage !== null}>
               <Label basic>Thời lượng</Label>
-              <Grid>
-                <Grid.Row>
-                  <Grid.Column width={8}>
-                    <Segment compact>
-                      <Form.Radio name="option" label="1 tháng: 100.000 VNĐ" />
-                    </Segment>
-                  </Grid.Column>
-                  <Grid.Column width={8}>
-                    <Segment compact>
-                      <Form.Radio label="3 tháng: 300.000 VNĐ" />
-                    </Segment>
-                  </Grid.Column>
-                </Grid.Row>
-
-                <Grid.Row>
-                  <Grid.Column width={8}>
-                    <Segment compact>
-                      <Form.Radio label="6 tháng: 600.000 VNĐ" />
-                    </Segment>
-                  </Grid.Column>
-                  <Grid.Column width={8}>
-                    <Segment compact>
-                      <Form.Radio label="12 tháng: 1.200.000 VNĐ" />
-                    </Segment>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
+              <Card.Group itemsPerRow={2}>
+                {priceList.map((data, index) => {
+                  return (
+                    <Card
+                      link
+                      color={
+                        selectedItem && selectedItem.id === data.id
+                          ? "yellow"
+                          : null
+                      }
+                      key={index}
+                      onClick={() => {
+                        setSelectedItem(data);
+                      }}
+                    >
+                      <Card.Content>
+                        <Card.Header>
+                          <span>{data.unitDate / 30} tháng</span>
+                          {data.discount > 0 && (
+                            <Label color="red" horizontal>
+                              -{data.discount} %
+                            </Label>
+                          )}
+                        </Card.Header>
+                        <Card.Meta></Card.Meta>
+                        <Card.Description>
+                          {data.discount > 0 && (
+                            <del>{convertToCurrency(data.price)} VNĐ</del>
+                          )}{" "}
+                          <span>
+                            {convertToCurrency(
+                              (data.price * (100 - data.discount)) / 100
+                            )}{" "}
+                            VNĐ
+                          </span>
+                        </Card.Description>
+                      </Card.Content>
+                    </Card>
+                  );
+                })}
+              </Card.Group>
 
               <Label basic>Chi tiết thanh toán</Label>
               <Card fluid>
                 <Card.Content>
-                  <Card.Header>Bạn trả: 140.000 VNĐ</Card.Header>
+                  {selectedItem ? (
+                    <Card.Header>
+                      Bạn trả:{" "}
+                      {convertToCurrency(
+                        (selectedItem.price * (100 - selectedItem.discount)) /
+                          100
+                      )}{" "}
+                      VNĐ
+                    </Card.Header>
+                  ) : (
+                    <Card.Header>Chọn một gói thanh toán</Card.Header>
+                  )}
                 </Card.Content>
                 <Card.Content extra>
                   <Card.Description>
@@ -101,6 +116,11 @@ const BrokerRegisterPage = () => {
                   </Card.Description>
                 </Card.Content>
               </Card>
+              <Message
+                error
+                list={errorMessage}
+                onDismiss={() => setErrorMessage(null)}
+              />
               <Grid>
                 <Grid.Column textAlign="center">
                   <Button color="red">Thanh toán</Button>

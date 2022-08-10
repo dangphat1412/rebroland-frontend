@@ -211,6 +211,22 @@ const MainNavigation = ({
                             }}
                           />
                           <Dropdown.Item
+                            icon="credit card outline"
+                            text="Nạp tiền vào ví"
+                            onClick={() => {
+                              Router.push("/trang-ca-nhan/nap-tien");
+                            }}
+                          />
+                          <Dropdown.Item
+                            icon="phone"
+                            text="Đổi số điện thoại"
+                            onClick={() => {
+                              Router.push(
+                                "/trang-ca-nhan/thay-doi-so-dien-thoai"
+                              );
+                            }}
+                          />
+                          <Dropdown.Item
                             icon="key"
                             text="Đổi mật khẩu"
                             onClick={() => {

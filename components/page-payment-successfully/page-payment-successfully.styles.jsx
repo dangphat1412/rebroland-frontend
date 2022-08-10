@@ -4,6 +4,7 @@ export const PaymentSuccessfullyPageContainer = styled.div`
   margin-top: 20px;
   margin-right: 95px;
   margin-left: 95px;
+  font-size: 20px;
 
   .label,
   .value,
@@ -13,7 +14,8 @@ export const PaymentSuccessfullyPageContainer = styled.div`
   }
 
   .money-info {
-    background: #ff9219;
+    // background: #ff9219;
+    background: red;
     padding-top: 30px;
     padding-bottom: 30px;
 
@@ -30,6 +32,10 @@ export const PaymentSuccessfullyPageContainer = styled.div`
   }
   .btn-return-home {
     color: #fff !important;
-    background: #ff9219 !important;
+    // background: #ff9219 !important;
+    background: red !important;
+  }
+  .right.floated.five.wide.column {
+    font-size: 1.28571429rem;
   }
 `;

@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Router from "next/router";
 import API_URL from "../utils/apiUrl";
+import convertToListMessages from "../utils/convertToListMessages";
 
 const Axios = axios.create({
   baseURL: `${API_URL}/api/posts`,
@@ -46,22 +47,25 @@ export const getDirections = async () => {
   }
 };
 
-export const createPost = async (post, images) => {
+export const createPost = async (post, images, setErrorMessage) => {
   try {
     console.log("DATA: ", { ...post, images });
     const res = await Axios.post("/", { ...post, images });
     res.status === 201 && Router.push("/trang-ca-nhan/bat-dong-san-cua-toi");
   } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
+    console.log(messages);
   }
 };
 
 export const createDerivativePost = async (postId, post, images) => {
   try {
     console.log("DATA: ", { ...post, images });
-    const res = await Axios.post(`/${postId}`, { ...post, images });
+    const res = await Axios.post(`/derivative/${postId}`, { ...post, images });
     res.status === 201 &&
-      Router.push("/nha-moi-gioi/bat-dong-san-phai-sinh-cua-toi");
+      Router.push("/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi");
   } catch (error) {
     console.log(error);
   }
@@ -193,10 +197,15 @@ export const historyPost = async (postId) => {
   }
 };
 
-export const getPostsByUser = async (propertyType, sortValue, pageNo) => {
+export const getPostsByUser = async (
+  propertyType,
+  status,
+  sortValue,
+  pageNo
+) => {
   try {
     const res = await Axios.get(
-      `/user?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
+      `/user?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}&status=${status}`
     );
     return res.data;
   } catch (error) {

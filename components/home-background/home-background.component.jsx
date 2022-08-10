@@ -6,7 +6,10 @@ const HomeBackground = ({ background }) => {
     <HomeBackgroundContainer
       style={{ backgroundImage: `url('${background}')` }}
     >
-      <h1>Muốn nói cái gì thì nói vào đây</h1>
+      <h1>
+        <span style={{ color: "#fc9f1c" }}>REBROLAND</span> - lựa chọn chung cho
+        mái ấm gia đình
+      </h1>
     </HomeBackgroundContainer>
   );
 };

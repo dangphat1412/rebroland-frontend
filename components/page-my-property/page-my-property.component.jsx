@@ -23,6 +23,7 @@ import {
   PaginationContainer,
 } from "./page-my-property.styles";
 import options from "../../utils/RealEstateSortValue";
+import statusOptions from "../../utils/typePropertyOptions";
 import calculatePrice from "../../utils/calculatePrice";
 
 const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
@@ -30,24 +31,31 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
   const [loading, setLoading] = useState(false);
   const [propertyType, setPropertyType] = useState(0);
   const [sortValue, setSortValue] = useState(0);
+  const [status, setStatus] = useState(0);
 
   const handlePaginationChange = (e, { activePage }) =>
-    fetchAPI(propertyType, sortValue, activePage - 1);
+    fetchAPI(propertyType, status, sortValue, activePage - 1);
 
   const handleOnTabChange = (e, { activeIndex }) => {
     setPropertyType(activeIndex);
     setSortValue(0);
-    fetchAPI(activeIndex, 0, 0);
+    setStatus(0);
+    fetchAPI(activeIndex, 0, 0, 0);
   };
 
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
-    fetchAPI(propertyType, value, 0);
+    fetchAPI(propertyType, status, value, 0);
   };
 
-  const fetchAPI = async (propertyType, sortValue, pageNo) => {
+  const handleFilterStatusOption = (e, { value }) => {
+    setStatus(value);
+    fetchAPI(propertyType, value, 0, 0);
+  };
+
+  const fetchAPI = async (propertyType, status, sortValue, pageNo) => {
     setLoading(true);
-    const posts = await getPostsByUser(propertyType, sortValue, pageNo);
+    const posts = await getPostsByUser(propertyType, status, sortValue, pageNo);
     setData(posts);
     setTotalResult(posts.totalResult);
     setLoading(false);
@@ -65,6 +73,13 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
             <UserPanel user={user} />
           </Grid.Column>
           <Grid.Column width={13} className="my-derivative-property">
+            <Dropdown
+              selection
+              options={statusOptions}
+              className="filter-status"
+              value={status}
+              onChange={handleFilterStatusOption}
+            />
             <Dropdown
               selection
               options={options}
@@ -158,13 +173,6 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                   <RealEstateItem post={post} key={index} />
                 ))}
             </Table.Body>
-
-            {/* <Confirm
-        open={openDeleteConfirm}
-        content="Xác nhận xoá bài viết"
-        onCancel={handleCancel}
-        onConfirm={handleConfirm}
-      /> */}
           </Table>
           {data.totalPages > 1 && (
             <PaginationContainer>
@@ -241,12 +249,18 @@ const RealEstateItem = ({ post }) => {
             {post.status.name}
           </Label>
         )}
-        {post.status.id === 2 && (
-          <Label circular color="red">
+        {post.status.id === 2 ||
+          (post.status.id === 5 && (
+            <Label circular color="red">
+              {post.status.name}
+            </Label>
+          ))}
+        {post.status.id === 3 && (
+          <Label circular color="blue">
             {post.status.name}
           </Label>
         )}
-        {post.status.id === 3 && (
+        {post.status.id === 4 && (
           <Label circular color="blue">
             {post.status.name}
           </Label>

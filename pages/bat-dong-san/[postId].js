@@ -9,6 +9,8 @@ const DetailRealEstate = ({
   user,
   followingPosts,
   setFollowingPosts,
+  setLoginOpen,
+  setRegisterOpen,
 }) => {
   return (
     <>
@@ -19,6 +21,8 @@ const DetailRealEstate = ({
         user={user}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
+        setLoginOpen={setLoginOpen}
+        setRegisterOpen={setRegisterOpen}
       />
     </>
   );

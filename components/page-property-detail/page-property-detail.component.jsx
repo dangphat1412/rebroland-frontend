@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Breadcrumb,
   Button,
+  Checkbox,
   Dimmer,
   Divider,
   Dropdown,
@@ -25,6 +26,9 @@ import {
   ActionContainer,
   ContactInformationContainer,
   FormPropertyDetailContainer,
+  ImageContainer,
+  PreviewContainer,
+  RemoveIcon,
   ShotInformationContainer,
   UserInformationContainer,
 } from "./page-property-detail.styles";
@@ -46,6 +50,9 @@ import calculatePrice from "../../utils/calculatePrice";
 import FormContact from "../form-contact/form-contact.component";
 import HOST_URL from "../../utils/hostUrl";
 import Barcode from "react-hooks-barcode";
+import InputField from "../input-field/input-field.component";
+import { useForm } from "react-hook-form";
+import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
 
 const PagePropertyDetail = ({
   post,
@@ -53,12 +60,15 @@ const PagePropertyDetail = ({
   brokers,
   followingPosts,
   setFollowingPosts,
+  setLoginOpen,
+  setRegisterOpen,
 }) => {
   const router = useRouter();
 
   const [reportOpen, setReportOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [endTransactionOpen, setEndTransactionOpen] = useState(false);
   const [historyData, setHistoryData] = useState();
   const [allowCreateDerivative, setAllowCreateDerivative] = useState(
     post.allowDerivative
@@ -369,8 +379,6 @@ const PagePropertyDetail = ({
                     disableKeyDown={false}
                     originalHeight={200}
                     originalWidth={200}
-                    // originalHeight
-                    // thumbnailPosition="left"
                   />
                 )}
                 <Header as="h2">Thông tin mô tả</Header>
@@ -518,6 +526,19 @@ const PagePropertyDetail = ({
                 )}
               </ContactInformationContainer>
 
+              {user && user.id === post.user.id && (
+                <Button
+                  fluid
+                  size="big"
+                  color="red"
+                  onClick={() => {
+                    setEndTransactionOpen(true);
+                  }}
+                >
+                  Kết thúc giao dịch
+                </Button>
+              )}
+
               <Button
                 fluid
                 size="big"
@@ -655,7 +676,19 @@ const PagePropertyDetail = ({
           userId={post.user.id}
           toast={toast}
           setContactOpen={setContactOpen}
+          setLoginOpen={setLoginOpen}
+          setRegisterOpen={setRegisterOpen}
         />
+      </ModalItem>
+      <ModalItem
+        header="Kết thúc giao dịch"
+        size="small"
+        onOpen={endTransactionOpen}
+        onClose={() => {
+          setEndTransactionOpen(false);
+        }}
+      >
+        <FormEndTransaction post={post} />
       </ModalItem>
       <Script
         async
@@ -666,6 +699,199 @@ const PagePropertyDetail = ({
       ></Script>
       <Script src="https://sp.zalo.me/plugins/sdk.js"></Script>
     </FormPropertyDetailContainer>
+  );
+};
+
+const FormEndTransaction = ({ post }) => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    clearError,
+    getValues,
+    formState: { errors },
+  } = useForm();
+
+  useEffect(() => {
+    register("owner", { required: "Tên chủ hộ không được để trống" });
+    register("ownerPhone", {
+      required: "Số điện thoại chủ hộ không được để trống",
+    });
+    register("barcode", { required: "Mã vạch không được để trống" });
+    register("plotNumber", { required: "Số thửa không được để trống" });
+    register("media");
+  }, [register]);
+
+  const [checked, setChecked] = useState(true);
+  const mediaRef = useRef(null);
+
+  const [images, setImages] = useState([]);
+  const [imagesPreview, setImagesPreview] = useState([]);
+
+  const removeImage = (pictureIndex) => {
+    setImagesPreview(
+      imagesPreview.filter((image, index) => pictureIndex !== index)
+    );
+    setImages(images.filter((image, index) => pictureIndex !== index));
+  };
+
+  const handleMediaChange = (e) => {
+    const { files } = e.target;
+    setImages([...images, ...files]);
+    setImagesPreview([
+      ...imagesPreview,
+      ...Object.values(files).map((f) => URL.createObjectURL(f)),
+    ]);
+  };
+
+  const handleChange = (e, { name, value }) => {
+    setValue(name, value);
+  };
+
+  const onSubmit = async (data, e) => {
+    if (images.length === 0) {
+      setError("media", {
+        type: "not null",
+        message: "Chọn hình ảnh xác minh",
+      });
+      return;
+    }
+    // let mediaUrl;
+    // if (images.length !== 0) {
+    //   mediaUrl = await uploadMultipleMedia(images);
+    //   if (!mediaUrl) {
+    //     console.log("ERROR UPLOAD");
+    //     return;
+    //   }
+    // }
+    console.log(data);
+  };
+
+  return (
+    <>
+      <Header as="h3">Xác nhận kết thúc giao dịch</Header>
+      <Checkbox
+        label="Kết thúc giao dịch và cung cấp thông tin bất động sản"
+        onChange={(e, data) => setChecked(data.checked)}
+        checked={checked}
+        style={{ marginBottom: "10px" }}
+      />
+      {checked && (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form.Group widths={2}>
+            <InputField
+              fluid
+              label="Tên chủ hộ"
+              name="owner"
+              placeholder="Nhập tên chủ hộ"
+              onChange={handleChange}
+              defaultValue={post.owner}
+              error={errors.owner}
+              requiredField
+            />
+
+            <InputField
+              label="Số điện thoại"
+              name="ownerPhone"
+              placeholder="Nhập số điện thoại"
+              defaultValue={post.ownerPhone}
+              onChange={handleChange}
+              error={errors.ownerPhone}
+              requiredField
+            />
+          </Form.Group>
+          <Form.Group widths={2}>
+            <InputField
+              fluid
+              label="Mã vạch"
+              name="barcode"
+              placeholder="Nhập mã vạch"
+              onChange={handleChange}
+              defaultValue={post.barcode}
+              error={errors.barcode}
+              requiredField
+            />
+
+            <InputField
+              label="Số thửa"
+              name="plotNumber"
+              placeholder="Nhập số thửa"
+              defaultValue={post.plotNumber}
+              onChange={handleChange}
+              error={errors.plotNumber}
+              requiredField
+            />
+          </Form.Group>
+          {post.propertyType.id === 2 && (
+            <Form.Group widths={2}>
+              <InputField
+                fluid
+                label="Tên toà nhà"
+                name="buildingName"
+                placeholder="Nhập tên toà nhà"
+                onChange={handleChange}
+                defaultValue={post.buildingName}
+                error={errors.buildingName}
+                requiredField
+                {...register("buildingName", {
+                  required: "Tên toà nhà không được để trống",
+                })}
+              />
+
+              <InputField
+                label="Phòng số"
+                name="roomNumber"
+                placeholder="Nhập số phòng"
+                defaultValue={post.roomNumber}
+                onChange={handleChange}
+                error={errors.roomNumber}
+                requiredField
+                {...register("roomNumber", {
+                  required: "Số phòng không được để trống",
+                })}
+              />
+            </Form.Group>
+          )}
+          <InputField
+            fluid
+            label="Hình ảnh xác minh"
+            name="media"
+            placeholder="Nhập mã vạch"
+            onChange={handleMediaChange}
+            error={errors.media}
+            type="file"
+            accept="image/*"
+            multiple
+          />
+          <div>
+            {imagesPreview.length > 0 && (
+              <PreviewContainer>
+                {imagesPreview.map((image, index) => (
+                  <ImageContainer key={index}>
+                    <Image src={image} alt="image" size="medium" />
+                    <RemoveIcon
+                      name="times circle"
+                      size="large"
+                      color="grey"
+                      onClick={() => {
+                        removeImage(index);
+                      }}
+                      inverted
+                    />
+                  </ImageContainer>
+                ))}
+              </PreviewContainer>
+            )}
+          </div>
+          <Grid>
+            <Grid.Column>
+              <Button type="submit">Kết thúc giao dịch</Button>
+            </Grid.Column>
+          </Grid>
+        </Form>
+      )}
+    </>
   );
 };
 

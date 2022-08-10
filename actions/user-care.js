@@ -15,7 +15,7 @@ const Axios = axios.create({
 
 export const addNewCustomer = async (contactId, data) => {
   try {
-    const res = await Axios.post(`/${contactId}`, data);
+    const res = await Axios.post(`/add-customer/${contactId}`, data);
     return res.status;
   } catch (error) {
     // const messages = convertToListMessages(error.response.data);
@@ -23,10 +23,10 @@ export const addNewCustomer = async (contactId, data) => {
   }
 };
 
-export const upadteCustomer = async (userCareId, data) => {
+export const editSummarize = async (userCareId, data) => {
   try {
     const res = await Axios.put(`/${userCareId}`, data);
-    return res;
+    return res.status;
   } catch (error) {
     // const messages = convertToListMessages(error.response.data);
     console.log(error);

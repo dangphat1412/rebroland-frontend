@@ -1,5 +1,5 @@
 import React, { createRef, useState } from "react";
-import { Form, Grid, Ref, Sticky } from "semantic-ui-react";
+import { Dimmer, Form, Grid, Loader, Ref, Sticky } from "semantic-ui-react";
 import { FormPostPropertyContainer } from "./form-post-property.styles";
 import { useForm } from "react-hook-form";
 import PostInformationForm from "../post-information-form/post-information-form.component";
@@ -10,9 +10,8 @@ import ContactInformationForm from "../contact-information-form/contact-informat
 import PaymentInformationForm from "../payment-information-form/payment-information-form.component";
 import { createPost } from "../../actions/post";
 import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
-import { payment } from "../../actions/payment";
 
-const FormPostProperty = ({ user }) => {
+const FormPostProperty = ({ user, priceData }) => {
   const contextRef = createRef();
 
   const {
@@ -25,68 +24,73 @@ const FormPostProperty = ({ user }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      // title: undefined,
-      // description: undefined,
-      // propertyTypeId: undefined,
-      // area: undefined,
-      // price: undefined,
-      // unitPriceId: 1,
-      // longevityId: undefined,
-      // numberOfBedroom: undefined,
-      // numberOfBathroom: undefined,
-      // floorNumber: undefined,
-      // numberOfFloor: undefined,
-      // certification: false,
-      // barcode: undefined,
-      // plotNumber: undefined,
-      // roomNumber: undefined,
-      // buildingName: undefined,
-      // owner: undefined,
-      // ownerPhone: undefined,
-      // // parentBarcode: undefined,
-      // // parentPlotNumber: undefined,
-      // directionId: undefined,
-      // frontispiece: undefined,
-      // additionalDescription: undefined,
-      // province: undefined,
-      // district: undefined,
-      // ward: undefined,
-      // address: undefined,
-      // coordinates: [],
-      // contactName: user.fullName,
-      // contactPhone: user.phone,
-      // contactEmail: undefined,
-      // contactAddress: undefined,
+      title: undefined,
+      description: undefined,
+      propertyTypeId: undefined,
+      area: undefined,
+      price: undefined,
+      unitPriceId: 1,
+      longevityId: undefined,
+      numberOfBedroom: undefined,
+      numberOfBathroom: undefined,
+      floorNumber: undefined,
+      numberOfFloor: undefined,
+      certification: false,
+      barcode: undefined,
+      plotNumber: undefined,
+      roomNumber: undefined,
+      buildingName: undefined,
+      owner: undefined,
+      ownerPhone: undefined,
+      // parentBarcode: undefined,
+      // parentPlotNumber: undefined,
+      directionId: undefined,
+      frontispiece: undefined,
+      additionalDescription: undefined,
+      province: undefined,
+      district: undefined,
+      ward: undefined,
+      address: undefined,
+      coordinates: [],
+      contactName: user.fullName,
+      contactPhone: user.phone,
+      contactEmail: undefined,
+      contactAddress: undefined,
+      numberOfPostedDay: 7,
     },
   });
 
   const [images, setImages] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data, e) => {
-    // let mediaUrl;
-    // if (images.length !== 0) {
-    //   mediaUrl = await uploadMultipleMedia(images);
-    //   if (!mediaUrl) {
-    //     console.log("ERROR UPLOAD");
-    //     return;
-    //   }
-    // }
-    // await createPost(data, mediaUrl);
-    // console.log(data);
-    const link = await payment("Thanh toán bài đăng", 55000);
-    window.open(link.data, "_blank");
-    console.log(link);
+    setLoading(true);
+    let mediaUrl;
+    if (images.length !== 0) {
+      mediaUrl = await uploadMultipleMedia(images);
+      if (!mediaUrl) {
+        console.log("ERROR UPLOAD");
+        return;
+      }
+    }
+    await createPost(data, mediaUrl, setErrorMessage);
+    setLoading(false);
   };
 
   return (
     <div>
       <FormPostPropertyContainer>
         <Ref innerRef={contextRef}>
-          <Form size="large" onSubmit={handleSubmit(onSubmit)}>
+          <Form
+            size="large"
+            onSubmit={handleSubmit(onSubmit)}
+            error={errorMessage !== null}
+          >
             <Grid columns="equal" padded>
               <Grid.Row>
                 <Grid.Column width={10}>
-                  {/* <PostInformationForm
+                  <PostInformationForm
                     errors={errors}
                     register={register}
                     setValue={setValue}
@@ -112,17 +116,27 @@ const FormPostProperty = ({ user }) => {
                     setValue={setValue}
                     getValues={getValues}
                     errors={errors}
-                  /> */}
+                  />
                 </Grid.Column>
                 <Grid.Column width={6}>
                   <Sticky context={contextRef} offset={100}>
-                    <PaymentInformationForm />
+                    <PaymentInformationForm
+                      user={user}
+                      priceData={priceData}
+                      setValue={setValue}
+                      getValues={getValues}
+                      errorMessage={errorMessage}
+                      setErrorMessage={setErrorMessage}
+                    />
                   </Sticky>
                 </Grid.Column>
               </Grid.Row>
             </Grid>
           </Form>
         </Ref>
+        <Dimmer active={loading} inverted>
+          <Loader>Đang xử lý</Loader>
+        </Dimmer>
       </FormPostPropertyContainer>
     </div>
   );

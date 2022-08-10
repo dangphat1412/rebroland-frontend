@@ -1,11 +1,12 @@
 import axios from "axios";
-import { parseCookies } from "nookies";
 import React from "react";
 import PagePropertyDetail from "../../../components/page-property-detail/page-property-detail.component";
 import SubHeader from "../../../components/sub-header/sub-header.component";
 import API_URL from "../../../utils/apiUrl";
+import { parseCookies } from "nookies";
 
 const DetailMyDerivativeProperty = ({ user, postData }) => {
+  console.log(postData);
   return (
     <div>
       <SubHeader

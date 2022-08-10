@@ -30,6 +30,8 @@ const UserDetailPage = ({
   postsData,
   followingPosts,
   setFollowingPosts,
+  setLoginOpen,
+  setRegisterOpen,
 }) => {
   const [data, setData] = useState(postsData.lists || {});
   const [userDetail, setUserDetail] = useState(postsData.user || {});
@@ -242,6 +244,8 @@ const UserDetailPage = ({
                 currentUser={user}
                 title="Liên hệ với chủ sở hữu"
                 userId={userDetail.id}
+                setLoginOpen={setLoginOpen}
+                setRegisterOpen={setRegisterOpen}
               />
             </Segment>
           </Grid.Column>

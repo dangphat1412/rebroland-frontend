@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const UserPanelContainer = styled.div`
-  .header {
+  .header,
+  .button {
     font-family: "Tahoma", san-serif !important;
   }
   img {
@@ -9,6 +10,11 @@ export const UserPanelContainer = styled.div`
     height: 200px !important;
     margin-bottom: 20px;
   }
+  .button {
+    background: #ff9219 !important;
+    color: #fff !important;
+  }
+
   .title-content {
     background: #ff9219 !important;
     .header {

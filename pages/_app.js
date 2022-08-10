@@ -13,14 +13,18 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import { useEffect, useState } from "react";
 import { Dimmer, Loader } from "semantic-ui-react";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
+import LoginRegisterModal from "../components/login-register-modal/login-register-modal.component";
 
 export default function MyApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
   const [followingPosts, setFollowingPosts] = useState([]);
 
-  useEffect(() => {
-    console.log("user: ", pageProps.user);
-  }, [pageProps.user]);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+  const [otpForgotPasswordOpen, setOtpForgotPasswordOpen] = useState(false);
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
+  const [otpRegisterOpen, setOtpRegisterOpen] = useState(false);
 
   useEffect(() => {
     setFollowingPosts(pageProps.followingPosts);
@@ -39,13 +43,34 @@ export default function MyApp({ Component, pageProps }) {
         setLoading={setLoading}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
+        setLoginOpen={setLoginOpen}
+        setRegisterOpen={setRegisterOpen}
       />
       <Component
         {...pageProps}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
+        setLoginOpen={setLoginOpen}
+        setRegisterOpen={setRegisterOpen}
       />
       <Footer />
+      <LoginRegisterModal
+        loginOpen={loginOpen}
+        setLoginOpen={setLoginOpen}
+        registerOpen={registerOpen}
+        setRegisterOpen={setRegisterOpen}
+        forgotPasswordOpen={forgotPasswordOpen}
+        setForgotPasswordOpen={setForgotPasswordOpen}
+        otpForgotPasswordOpen={otpForgotPasswordOpen}
+        setOtpForgotPasswordOpen={setOtpForgotPasswordOpen}
+        resetPasswordOpen={resetPasswordOpen}
+        setResetPasswordOpen={setResetPasswordOpen}
+        otpRegisterOpen={otpRegisterOpen}
+        setOtpRegisterOpen={setOtpRegisterOpen}
+        setLoading={setLoading}
+        followingPosts={followingPosts}
+        setFollowingPosts={setFollowingPosts}
+      />
     </>
   );
 }

@@ -12,6 +12,8 @@ const FormContact = ({
   toast,
   setContactOpen,
   currentUser,
+  setLoginOpen,
+  setRegisterOpen,
 }) => {
   const {
     register,
@@ -129,7 +131,27 @@ const FormContact = ({
         Gửi tin nhắn
       </Button>
       {!currentUser && (
-        <div className="alert-login-require">Yêu cầu đăng nhập để liên lạc</div>
+        <div className="alert-login-require">
+          Yêu cầu đăng nhập để liên lạc
+          <br />
+          <span
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={() => {
+              setLoginOpen(true);
+            }}
+          >
+            Đăng nhập
+          </span>{" "}
+          hoặc{" "}
+          <span
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={() => {
+              setRegisterOpen(true);
+            }}
+          >
+            Đăng ký
+          </span>
+        </div>
       )}
     </FormContactBrokerContainer>
   );

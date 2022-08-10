@@ -29,4 +29,9 @@ export const BrokerRegisterContainer = styled.div`
     border: none;
     padding-left: 0px;
   }
+
+  .ui.red.horizontal.label {
+    margin-left: 10px;
+    padding-left: 10px;
+  }
 `;

@@ -12,6 +12,8 @@ import { PaymentSuccessfullyPageContainer } from "./page-payment-successfully.st
 
 const PaymentSuccessfullyPage = () => {
   const router = useRouter();
+  const { amount, transactionNo, cardType, bankCode, payDate, orderInfo } =
+    router.query;
   return (
     <PaymentSuccessfullyPageContainer>
       <Grid centered columns={2}>
@@ -22,16 +24,50 @@ const PaymentSuccessfullyPage = () => {
             <div className="money-info">
               <Statistic>
                 <Statistic.Label>Số tiền thanh toán</Statistic.Label>
-                <Statistic.Value>5,550 VNĐ</Statistic.Value>
+                <Statistic.Value>{amount} VNĐ</Statistic.Value>
               </Statistic>
             </div>
-            <Grid textAlign="left">
-              <Grid.Column floated="left" width={5}>
-                ABCD
-              </Grid.Column>
-              <Grid.Column floated="right" width={5}>
-                EFHJ
-              </Grid.Column>
+            <Grid textAlign="left" style={{ marginTop: "10px" }}>
+              <Grid.Row>
+                <Grid.Column floated="left" width={5}>
+                  <Header as="h3">Mã giao dịch:</Header>
+                </Grid.Column>
+                <Grid.Column floated="right" width={5}>
+                  {transactionNo}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column floated="left" width={5}>
+                  <Header as="h3">Loại thẻ:</Header>
+                </Grid.Column>
+                <Grid.Column floated="right" width={5}>
+                  {cardType}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column floated="left" width={5}>
+                  <Header as="h3">Tên ngân hàng:</Header>
+                </Grid.Column>
+                <Grid.Column floated="right" width={5}>
+                  {bankCode}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column floated="left" width={5}>
+                  <Header as="h3">Nội dung thanh toán:</Header>
+                </Grid.Column>
+                <Grid.Column floated="right" width={5}>
+                  {orderInfo}
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column floated="left" width={5}>
+                  <Header as="h3">Ngày thanh toán:</Header>
+                </Grid.Column>
+                <Grid.Column floated="right" width={5}>
+                  {payDate}
+                </Grid.Column>
+              </Grid.Row>
             </Grid>
             <Button
               size="big"
