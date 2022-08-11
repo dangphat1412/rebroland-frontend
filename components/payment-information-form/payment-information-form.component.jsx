@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Button, Divider, Grid, Message, Segment } from "semantic-ui-react";
+import {
+  Button,
+  Divider,
+  Grid,
+  Label,
+  Message,
+  Segment,
+} from "semantic-ui-react";
+import convertToCurrency from "../../utils/convertToCurrency";
 import options from "../../utils/postedDayOptions";
 import InputField from "../input-field/input-field.component";
 
@@ -58,28 +66,28 @@ const PaymentInformationForm = ({
             <Grid.Column>
               <b>Đơn giá / ngày</b>
             </Grid.Column>
-            <Grid.Column textAlign="right">{priceData.price} VNĐ</Grid.Column>
+            <Grid.Column textAlign="right">
+              {priceData.discount > 0 ? (
+                <>
+                  <del>{convertToCurrency(priceData.price)} VNĐ</del>
+                  &nbsp;
+                  <span>
+                    {convertToCurrency(
+                      (priceData.price * (100 - priceData.discount)) / 100
+                    )}{" "}
+                    VNĐ
+                  </span>
+                  &nbsp;
+                  <Label color="red" horizontal>
+                    -{priceData.discount} %
+                  </Label>
+                </>
+              ) : (
+                <>{convertToCurrency(priceData.price)} VNĐ</>
+              )}
+            </Grid.Column>
           </Grid.Row>
-          {priceData.discount > 0 && (
-            <Grid.Row>
-              <Grid.Column>
-                <b>Giảm giá</b>
-              </Grid.Column>
-              <Grid.Column textAlign="right">
-                {priceData.discount} %
-              </Grid.Column>
-            </Grid.Row>
-          )}
-          {priceData.discount > 0 && (
-            <Grid.Row>
-              <Grid.Column>
-                <b>Giảm giá còn</b>
-              </Grid.Column>
-              <Grid.Column textAlign="right">
-                {(priceData.price * (100 - priceData.discount)) / 100} VNĐ
-              </Grid.Column>
-            </Grid.Row>
-          )}
+
           <Grid.Row>
             <Grid.Column>
               <b>Số ngày đăng tin</b>
@@ -94,10 +102,12 @@ const PaymentInformationForm = ({
               <b>Bạn trả</b>
             </Grid.Column>
             <Grid.Column textAlign="right">
-              {(priceData.price *
-                getValues("numberOfPostedDay") *
-                (100 - priceData.discount)) /
-                100}{" "}
+              {convertToCurrency(
+                (priceData.price *
+                  getValues("numberOfPostedDay") *
+                  (100 - priceData.discount)) /
+                  100
+              )}{" "}
               VNĐ
             </Grid.Column>
           </Grid.Row>
@@ -110,7 +120,7 @@ const PaymentInformationForm = ({
               <b>Tổng số tiền trong ví</b>
             </Grid.Column>
             <Grid.Column textAlign="right">
-              {user.accountBalance} VNĐ
+              {convertToCurrency(user.accountBalance)} VNĐ
             </Grid.Column>
           </Grid.Row>
         </Grid>

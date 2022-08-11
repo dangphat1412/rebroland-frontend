@@ -218,12 +218,10 @@ const MainNavigation = ({
                             }}
                           />
                           <Dropdown.Item
-                            icon="phone"
-                            text="Đổi số điện thoại"
+                            icon="credit card outline"
+                            text="Chuyển khoản"
                             onClick={() => {
-                              Router.push(
-                                "/trang-ca-nhan/thay-doi-so-dien-thoai"
-                              );
+                              Router.push("/trang-ca-nhan/chuyen-khoan");
                             }}
                           />
                           <Dropdown.Item

@@ -151,6 +151,16 @@ const UserPanel = ({ user }) => {
             </List.Item>
           </Link>
 
+          <Link href="/trang-ca-nhan/chuyen-khoan">
+            <List.Item>
+              <List.Content>
+                <List.Header as="h4">
+                  <span className="kikor kiko-credit-card"></span> Chuyển khoản
+                </List.Header>
+              </List.Content>
+            </List.Item>
+          </Link>
+
           <Link href="/trang-ca-nhan/thay-doi-so-dien-thoai">
             <List.Item>
               <List.Content>
