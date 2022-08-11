@@ -2,17 +2,14 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import {
   Card,
-  Dimmer,
   Dropdown,
   Grid,
   Icon,
   Image,
-  Loader,
   Pagination,
   Rating,
   Segment,
 } from "semantic-ui-react";
-import { searchBrokers } from "../../actions/user";
 import SearchBoxBroker from "../search-box-broker/search-box-broker.component";
 import {
   ListBrokersContainer,
