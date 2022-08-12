@@ -77,7 +77,8 @@ const Navigation = ({
     router.asPath !== "/admin/quan-ly-bai-dang" &&
     router.asPath !== "/admin/quan-ly-bao-cao" &&
     router.asPath !== "/admin/quan-ly-tai-chinh" &&
-    router.asPath !== "/admin/quan-ly-nguoi-dung"
+    router.asPath !== "/admin/quan-ly-nguoi-dung" &&
+    router.asPath !== "/admin/quan-ly-rut-tien"
   )
     return (
       <>

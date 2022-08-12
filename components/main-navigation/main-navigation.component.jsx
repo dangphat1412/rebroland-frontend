@@ -35,6 +35,7 @@ const MainNavigation = ({
   setUnreadNotification,
   setFollowingPosts,
 }) => {
+  console.log(followingPosts.reverse());
   const [notifications, setNotifications] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
@@ -222,6 +223,13 @@ const MainNavigation = ({
                             text="Chuyển khoản"
                             onClick={() => {
                               Router.push("/trang-ca-nhan/chuyen-khoan");
+                            }}
+                          />
+                          <Dropdown.Item
+                            icon="money bill alternate outline"
+                            text="Rút tiền"
+                            onClick={() => {
+                              Router.push("/trang-ca-nhan/rut-tien");
                             }}
                           />
                           <Dropdown.Item

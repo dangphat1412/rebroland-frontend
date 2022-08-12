@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Dimmer, Dropdown, Grid, Icon, Loader, Tab } from "semantic-ui-react";
+import {
+  Dimmer,
+  Dropdown,
+  Grid,
+  Header,
+  Icon,
+  Loader,
+  Tab,
+} from "semantic-ui-react";
 import { getFollowingPostsByUser } from "../../actions/post";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import Pagination from "../pagination/pagination.component";
@@ -67,9 +75,7 @@ const MyFollowingPropertiesPage = ({
               value={sortValue}
               onChange={handleFilterOption}
             />
-            <Dimmer active={loading} inverted>
-              <Loader>Đang tải dữ liệu</Loader>
-            </Dimmer>
+
             <Tab
               onTabChange={handleOnTabChange}
               menu={{ secondary: true, pointing: true }}
@@ -132,6 +138,9 @@ const MyFollowingPropertiesPage = ({
                 },
               ]}
             />
+            <Dimmer active={loading} inverted>
+              <Loader>Đang tải dữ liệu</Loader>
+            </Dimmer>
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -148,8 +157,11 @@ const ListProperty = ({
 }) => {
   return (
     <>
-      {data.lists &&
-        data.lists.map((post, index) => (
+      {data.posts && data.posts.length === 0 && (
+        <Header as="h3">Không có bất động sản nào</Header>
+      )}
+      {data.posts &&
+        data.posts.map((post, index) => (
           <RealEstateItem
             user={user}
             post={post}

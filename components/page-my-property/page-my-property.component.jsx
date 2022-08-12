@@ -1,8 +1,9 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimmer,
   Dropdown,
+  Form,
   Grid,
   Header,
   Icon,
@@ -14,7 +15,7 @@ import {
   Tab,
   Table,
 } from "semantic-ui-react";
-import { getPostsByUser } from "../../actions/post";
+import { extendPost, getPostsByUser, getPricePerDay } from "../../actions/post";
 import convertToSlug from "../../utils/convertToSlug";
 import Pagination from "../pagination/pagination.component";
 import UserPanel from "../user-panel/user-panel.component";
@@ -25,6 +26,10 @@ import {
 import options from "../../utils/RealEstateSortValue";
 import statusOptions from "../../utils/typePropertyOptions";
 import calculatePrice from "../../utils/calculatePrice";
+import ModalItem from "../modal-item/modal-item.component";
+import { useForm } from "react-hook-form";
+import PaymentInformationForm from "../payment-information-form/payment-information-form.component";
+import { default as directionList } from "../../utils/directionList";
 
 const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
   const [data, setData] = useState(postsData || {});
@@ -100,6 +105,7 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
                         data={data}
+                        user={user}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -111,6 +117,7 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
                         data={data}
+                        user={user}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -122,6 +129,7 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
                         data={data}
+                        user={user}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -132,6 +140,7 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
                   render: () => (
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
+                        user={user}
                         data={data}
                         handlePaginationChange={handlePaginationChange}
                       />
@@ -147,10 +156,24 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
   );
 };
 
-const ListProperty = ({ data, handlePaginationChange }) => {
+const ListProperty = ({ user, data, handlePaginationChange }) => {
+  const [postList, setPostList] = useState(data.posts);
+  const [openExtendPost, setOpenExtendPost] = useState(false);
+  const [detailPost, setDetailPost] = useState(null);
+  const [priceData, setPriceData] = useState(null);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      const data = await getPricePerDay();
+      setPriceData(data);
+    };
+
+    fetchAPI();
+  }, []);
+
   return (
     <>
-      {data.posts.length > 0 ? (
+      {postList.length > 0 ? (
         <>
           <Table padded color="yellow">
             <Table.Header>
@@ -169,8 +192,13 @@ const ListProperty = ({ data, handlePaginationChange }) => {
 
             <Table.Body>
               {data &&
-                data.posts.map((post, index) => (
-                  <RealEstateItem post={post} key={index} />
+                postList.map((post, index) => (
+                  <RealEstateItem
+                    post={post}
+                    key={index}
+                    setOpenExtendPost={setOpenExtendPost}
+                    setDetailPost={setDetailPost}
+                  />
                 ))}
             </Table.Body>
           </Table>
@@ -193,12 +221,90 @@ const ListProperty = ({ data, handlePaginationChange }) => {
       ) : (
         <Header>Không có bất động sản nào</Header>
       )}
+      <ModalItem
+        header="Gia hạn bài viết"
+        size="small"
+        onOpen={openExtendPost}
+        onClose={() => {
+          setOpenExtendPost(false);
+        }}
+      >
+        {detailPost && (
+          <>
+            <FormExtendPost
+              user={user}
+              priceData={priceData}
+              detailPost={detailPost}
+              setOpenExtendPost={setOpenExtendPost}
+              setPostList={setPostList}
+              postList={postList}
+            />
+          </>
+        )}
+      </ModalItem>
     </>
   );
 };
 
-const RealEstateItem = ({ post }) => {
+const FormExtendPost = ({
+  user,
+  priceData,
+  detailPost,
+  setOpenExtendPost,
+  postList,
+  setPostList,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    clearError,
+    getValues,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      numberOfPostedDay: 7,
+    },
+  });
+
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const onSubmit = async (data, e) => {
+    const status = await extendPost(detailPost.postId, data);
+    if (status === 201) {
+      setOpenExtendPost(false);
+      const list = [...postList];
+      const index = list.findIndex((post) => post.postId === detailPost.postId);
+      list[index].status = { id: 1, name: "Đang hoạt động" };
+      setPostList(list);
+    }
+  };
+
+  return (
+    <>
+      {priceData && detailPost && (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <PaymentInformationForm
+            user={user}
+            priceData={priceData}
+            setValue={setValue}
+            getValues={getValues}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+          />
+        </Form>
+      )}
+    </>
+  );
+};
+
+const RealEstateItem = ({ post, setOpenExtendPost, setDetailPost }) => {
   const { price, pricePerSquare } = calculatePrice(post);
+  const directionName = directionList.find(
+    (option) => option.id === post.directionId
+  );
   return (
     <Table.Row>
       <Table.Cell width={11}>
@@ -213,7 +319,7 @@ const RealEstateItem = ({ post }) => {
             />
             <Item.Content className="item-content">
               <Item.Header>{post.title}</Item.Header>
-              <List horizontal>
+              <List horizontal size="large">
                 <List.Item>
                   <List.Content>
                     <List.Header>
@@ -233,6 +339,36 @@ const RealEstateItem = ({ post }) => {
                     <List.Header>{post.area}m²</List.Header>
                   </List.Content>
                 </List.Item>
+
+                {post.numberOfBedroom > 0 && (
+                  <List.Item>
+                    <List.Content>
+                      <List.Header>
+                        {post.numberOfBedroom}{" "}
+                        <span className="kikor kiko-bedroom"></span>
+                      </List.Header>
+                    </List.Content>
+                  </List.Item>
+                )}
+
+                {post.numberOfBathroom > 0 && (
+                  <List.Item>
+                    <List.Content>
+                      <List.Header>
+                        {post.numberOfBedroom}{" "}
+                        <span className="kikor kiko-bathroom"></span>
+                      </List.Header>
+                    </List.Content>
+                  </List.Item>
+                )}
+
+                {directionName && (
+                  <List.Item>
+                    <List.Content>
+                      <List.Header>{directionName.name}</List.Header>
+                    </List.Content>
+                  </List.Item>
+                )}
               </List>
               <Item.Description>{post.description}</Item.Description>
               <Item.Description>
@@ -295,6 +431,24 @@ const RealEstateItem = ({ post }) => {
             }
           />
         </Link>
+        {post.status.id === 5 && (
+          <Popup
+            content="Gia hạn bài viết"
+            trigger={
+              <Icon
+                style={{ cursor: "pointer" }}
+                circular
+                inverted
+                color="orange"
+                name="clock outline"
+                onClick={() => {
+                  setDetailPost(post);
+                  setOpenExtendPost(true);
+                }}
+              />
+            }
+          />
+        )}
         <Link href="/">
           <Popup
             content="Xoá bài viết"

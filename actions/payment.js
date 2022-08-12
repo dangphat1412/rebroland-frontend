@@ -20,20 +20,10 @@ export const payment = async (amount) => {
   }
 };
 
-export const otpTransfer = async (
-  data,
-  setTransferData,
-  setOpenOtpTransfer,
-  setErrorMessage
-) => {
+export const otpTransfer = async (data, setErrorMessage) => {
   try {
     const res = await Axios.post(`/transfer/send-otp`, data);
-
-    if (res.status === 200) {
-      console.log(res.data);
-      setTransferData(res.data);
-      setOpenOtpTransfer(true);
-    }
+    return res;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);
@@ -56,8 +46,32 @@ export const handleTransfer = async (data, setErrorMessage) => {
         },
       });
     }
-    console.log(res.data);
     return res.status;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const otpCashout = async (data, setErrorMessage) => {
+  try {
+    const res = await Axios.post(`/cash-out/send-otp`, data);
+    if (res.status === 200) return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const handleCashout = async (data, setErrorMessage) => {
+  try {
+    console.log(data);
+    const res = await Axios.post(`/cash-out`, data);
+    if (res.status === 201) return res.data;
+
+    return res;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);

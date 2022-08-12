@@ -119,4 +119,5 @@ const protectedAdminRoutes = [
   "/admin/quan-ly-bao-cao",
   "/admin/quan-ly-nguoi-dung",
   "/admin/quan-ly-tai-chinh",
+  "/admin/quan-ly-rut-tien",
 ];

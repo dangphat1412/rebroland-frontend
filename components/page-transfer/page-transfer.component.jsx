@@ -55,12 +55,12 @@ const TransferPage = ({ user }) => {
   }, [register]);
 
   const onSubmit = async (data, e) => {
-    const res = await otpTransfer(
-      data,
-      setTransferData,
-      setOpenOtpTransfer,
-      setErrorMessage
-    );
+    const res = await otpTransfer(data, setErrorMessage);
+    if (res.status === 200) {
+      console.log(res.data);
+      setTransferData(res.data);
+      setOpenOtpTransfer(true);
+    }
   };
 
   return (
@@ -183,8 +183,8 @@ const OtpTransfer = ({ transferData, setOpenOtpTransfer, toast }) => {
       setTimeout(() => {
         toast({
           type: "success",
-          title: "Thay đổi số điện thoại",
-          description: <p>Thay đổi số điện thoại thành công</p>,
+          title: "Chuyển khoản",
+          description: <p>Chuyển khoản thành công</p>,
         });
       }, 100);
     }

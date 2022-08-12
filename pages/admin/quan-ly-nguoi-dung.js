@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AdminNavigation from "../../components/admin-navigation/admin-navigation.component";
 import AdminPanel from "../../components/admin-panel/admin-panel.component";
 import UserManagementPage from "../../components/page-user-management/page-user-management.component";
 import API_URL from "../../utils/apiUrl";
@@ -13,7 +12,6 @@ const UserManagement = ({ usersData }) => {
     <div style={{ display: "flex" }}>
       <AdminPanel />
       <div style={{ width: "83%" }}>
-        {/* <AdminNavigation title="Quản lý người dùng" /> */}
         <SubHeader
           title="Quản lý người dùng"
           subtitle={`Có tất cả ${totalResult} người dùng`}

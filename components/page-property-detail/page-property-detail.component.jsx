@@ -26,15 +26,13 @@ import {
   ActionContainer,
   ContactInformationContainer,
   FormPropertyDetailContainer,
-  ImageContainer,
-  PreviewContainer,
-  RemoveIcon,
   ShotInformationContainer,
   UserInformationContainer,
 } from "./page-property-detail.styles";
 import ModalItem from "../modal-item/modal-item.component";
 import FormReport from "../form-report/form-report.component";
 import {
+  finishTransaction,
   followPost,
   historyPost,
   switchAllowCreateDerivative,
@@ -52,7 +50,6 @@ import HOST_URL from "../../utils/hostUrl";
 import Barcode from "react-hooks-barcode";
 import InputField from "../input-field/input-field.component";
 import { useForm } from "react-hook-form";
-import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
 
 const PagePropertyDetail = ({
   post,
@@ -73,6 +70,7 @@ const PagePropertyDetail = ({
   const [allowCreateDerivative, setAllowCreateDerivative] = useState(
     post.allowDerivative
   );
+  const [openRate, setOpenRate] = useState(false);
 
   const { price, pricePerSquare } = calculatePrice(post);
 
@@ -526,7 +524,7 @@ const PagePropertyDetail = ({
                 )}
               </ContactInformationContainer>
 
-              {user && user.id === post.user.id && (
+              {user && user.id === post.user.id && post.status.id !== 3 && (
                 <Button
                   fluid
                   size="big"
@@ -536,6 +534,20 @@ const PagePropertyDetail = ({
                   }}
                 >
                   Kết thúc giao dịch
+                </Button>
+              )}
+
+              {post.status.id === 3 && (
+                <Button
+                  basic
+                  color="green"
+                  fluid
+                  size="big"
+                  onClick={() => {
+                    setOpenRate(true);
+                  }}
+                >
+                  <Icon name="check circle" color="green" /> Kết thúc giao dịch
                 </Button>
               )}
 
@@ -575,18 +587,20 @@ const PagePropertyDetail = ({
 
               {user && post.user.id === user.id && post.originalPost === null && (
                 <Segment>
-                  <Radio
-                    toggle
-                    label={
-                      allowCreateDerivative
-                        ? "Cho phép tạo bài phái sinh"
-                        : "Không cho phép tạo bài phái sinh"
-                    }
-                    onChange={(e) => {
-                      handleChangeAllowCreateDerivative(post.postId);
-                    }}
-                    checked={allowCreateDerivative}
-                  />
+                  {post.status.id === 1 && (
+                    <Radio
+                      toggle
+                      label={
+                        allowCreateDerivative
+                          ? "Cho phép tạo bài phái sinh"
+                          : "Không cho phép tạo bài phái sinh"
+                      }
+                      onChange={(e) => {
+                        handleChangeAllowCreateDerivative(post.postId);
+                      }}
+                      checked={allowCreateDerivative}
+                    />
+                  )}
                   {brokers && brokers.length > 0 && (
                     <>
                       <Header as="h3">Người môi giới đang theo dõi</Header>
@@ -690,6 +704,16 @@ const PagePropertyDetail = ({
       >
         <FormEndTransaction post={post} />
       </ModalItem>
+      <ModalItem
+        header="Đánh giá nhà môi giới"
+        size="small"
+        onOpen={openRate}
+        onClose={() => {
+          setOpenRate(false);
+        }}
+      >
+        <FormRateBroker brokers={brokers} />
+      </ModalItem>
       <Script
         async
         defer
@@ -699,6 +723,54 @@ const PagePropertyDetail = ({
       ></Script>
       <Script src="https://sp.zalo.me/plugins/sdk.js"></Script>
     </FormPropertyDetailContainer>
+  );
+};
+
+const FormRateBroker = ({ brokers }) => {
+  console.log("BROKERS: ", brokers);
+  return (
+    <Item.Group divided>
+      {brokers &&
+        brokers.length > 0 &&
+        brokers.map((broker) => {
+          console.log("broker 1: ", broker);
+          return (
+            <Item>
+              <Item.Image
+                src={
+                  broker.user.avatar ||
+                  "https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                }
+              />
+
+              <Item.Content>
+                <Item.Header as="a" style={{ fontFamily: "Tahoma" }}>
+                  {broker.user.fullName}{" "}
+                  <span style={{ marginLeft: "20px" }}>
+                    {broker.user.avgRate} <Icon name="star" color="yellow" />
+                  </span>
+                </Item.Header>
+                <Item.Extra>
+                  <Rating icon="star" maxRating={5} size="massive" />
+                </Item.Extra>
+                <Item.Extra>
+                  <InputField
+                    style={{ width: "100%" }}
+                    fieldType="textarea"
+                    rows={6}
+                    name="description"
+                    placeholder="Nhận xét về nhà môi giới này"
+                    // onChange={handleChange}
+                    // defaultValue={getValues("description")}
+                    // error={errors.description}
+                    // requiredField
+                  />
+                </Item.Extra>
+              </Item.Content>
+            </Item>
+          );
+        })}
+    </Item.Group>
   );
 };
 
@@ -712,32 +784,103 @@ const FormEndTransaction = ({ post }) => {
     getValues,
     watch,
     formState: { errors },
-  } = useForm({ defaultValues: { check: true } });
+  } = useForm({
+    defaultValues: {
+      provideInfo: true,
+      owner: post.owner,
+      ownerPhone: post.ownerPhone,
+      barcode: post.barcode,
+      plotNumber: post.plotNumber,
+      buildingName: post.buildingName,
+      roomNumber: post.roomNumber,
+    },
+  });
 
   const handleChange = (e, { name, value }) => {
     setValue(name, value);
   };
 
   const onSubmit = async (data, e) => {
-    console.log(data);
+    const propertyTypeId = post.propertyType.id;
+
+    if (data.provideInfo === true) {
+      let error = false;
+      if (data.owner === null) {
+        setError("owner", {
+          type: "not null",
+          message: "Nhập tên chủ hộ",
+        });
+        error = true;
+      }
+
+      if (data.ownerPhone === null) {
+        setError("ownerPhone", {
+          type: "not null",
+          message: "Nhập số điện thoại chủ hộ",
+        });
+        error = true;
+      }
+
+      if (data.barcode === null) {
+        setError("barcode", {
+          type: "not null",
+          message: "Nhập mã vạch",
+        });
+        error = true;
+      }
+      if (data.plotNumber === null) {
+        setError("plotNumber", {
+          type: "not null",
+          message: "Nhập số thửa",
+        });
+        error = true;
+      }
+
+      if (post.propertyType.id === 2) {
+        if (data.buildingName === null) {
+          setError("buildingName", {
+            type: "not null",
+            message: "Tên toà nhà không được để trống",
+          });
+          error = true;
+        }
+
+        if (data.roomNumber === null) {
+          setError("roomNumber", {
+            type: "not null",
+            message: "Phòng số không được để trống",
+          });
+          error = true;
+        }
+      }
+      if (error === true) return;
+    }
+
+    const status = await finishTransaction(post.postId, {
+      ...data,
+      propertyTypeId,
+    });
+    console.log(status);
   };
 
   return (
     <>
-      <Header as="h3">Xác nhận kết thúc giao dịch</Header>
+      <Header as="h3" style={{ fontFamily: "Tahoma" }}>
+        Xác nhận kết thúc giao dịch
+      </Header>
 
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Checkbox
-          name="check"
+          name="provideInfo"
           label="Cung cấp thông tin bất động sản"
           onClick={(e, { name, checked }) => {
             setValue(name, checked);
           }}
-          {...register("check")}
+          {...register("provideInfo")}
           style={{ marginBottom: "10px" }}
-          defaultChecked={getValues("check")}
+          defaultChecked={getValues("provideInfo")}
         />
-        {watch("check") === true && (
+        {watch("provideInfo") === true && (
           <>
             <Form.Group widths={2}>
               <InputField
@@ -817,8 +960,17 @@ const FormEndTransaction = ({ post }) => {
         )}
 
         <Grid>
-          <Grid.Column>
-            <Button type="submit">Kết thúc giao dịch</Button>
+          <Grid.Column textAlign="center">
+            <Button
+              type="submit"
+              style={{
+                fontFamily: "Tahoma",
+                background: "#ff9219",
+                color: "#fff",
+              }}
+            >
+              Kết thúc giao dịch
+            </Button>
           </Grid.Column>
         </Grid>
       </Form>
@@ -827,7 +979,6 @@ const FormEndTransaction = ({ post }) => {
 };
 
 const FormHistory = ({ post, historyData }) => {
-  console.log("HISTORY: ", historyData);
   return (
     <>
       {historyData ? (

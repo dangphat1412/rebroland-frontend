@@ -49,20 +49,17 @@ export const getDirections = async () => {
 
 export const createPost = async (post, images, setErrorMessage) => {
   try {
-    console.log("DATA: ", { ...post, images });
     const res = await Axios.post("/", { ...post, images });
     res.status === 201 && Router.push("/trang-ca-nhan/bat-dong-san-cua-toi");
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);
     console.log(error);
-    console.log(messages);
   }
 };
 
 export const createDerivativePost = async (postId, post, images) => {
   try {
-    console.log("DATA: ", { ...post, images });
     const res = await Axios.post(`/derivative/${postId}`, { ...post, images });
     res.status === 201 &&
       Router.push("/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi");
@@ -244,6 +241,15 @@ export const getDerivativePostsByUser = async (
   }
 };
 
+export const getPricePerDay = async () => {
+  try {
+    const res = await Axios.get(`price-per-day`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const switchAllowCreateDerivative = async (postId) => {
   try {
     const res = await Axios.put(`/allow-derivative/switch/${postId}`);
@@ -257,6 +263,24 @@ export const getAllCategories = async () => {
   try {
     const res = await Axios.get(`/categories`);
     return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const finishTransaction = async (postId, data) => {
+  try {
+    const res = await Axios.post(`/history/${postId}`, data);
+    return res.status;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const extendPost = async (postId, data) => {
+  try {
+    const res = await Axios.put(`/extend/${postId}`, data);
+    return res.status;
   } catch (error) {
     console.log(error);
   }

@@ -16,7 +16,6 @@ import { useRouter } from "next/router";
 import convertToCurrency from "../../utils/convertToCurrency";
 
 const UserPanel = ({ user }) => {
-  console.log("USER: ", user);
   const router = useRouter();
   const mediaRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -156,6 +155,16 @@ const UserPanel = ({ user }) => {
               <List.Content>
                 <List.Header as="h4">
                   <span className="kikor kiko-credit-card"></span> Chuyển khoản
+                </List.Header>
+              </List.Content>
+            </List.Item>
+          </Link>
+
+          <Link href="/trang-ca-nhan/rut-tien">
+            <List.Item>
+              <List.Content>
+                <List.Header as="h4">
+                  <span className="kikor kiko-credit-card"></span> Rút tiền
                 </List.Header>
               </List.Content>
             </List.Item>

@@ -5,6 +5,7 @@ import { RealEstateItemContainer } from "./item-real-estate.styles";
 import convertToSlug from "../../utils/convertToSlug";
 import { followPost } from "../../actions/post";
 import calculatePrice from "../../utils/calculatePrice";
+import options from "../../utils/directionList";
 
 const RealEstateItem = ({
   user,
@@ -15,6 +16,10 @@ const RealEstateItem = ({
   type,
 }) => {
   const { price, pricePerSquare } = calculatePrice(post);
+  const directionName = options.find(
+    (option) => option.id === post.directionId
+  );
+  console.log("BEDROOM: ", post.numberOfBedroom > 0);
   const handleFollowingPost = async (
     e,
     post,
@@ -156,6 +161,39 @@ const RealEstateItem = ({
                         <List.Header>{post.area}m²</List.Header>
                       </List.Content>
                     </List.Item>
+
+                    {post.numberOfBedroom > 0 && (
+                      <List.Item>
+                        <List.Content>
+                          <List.Header>
+                            {post.numberOfBedroom}{" "}
+                            <span className="kikor kiko-bedroom"></span>
+                          </List.Header>
+                        </List.Content>
+                      </List.Item>
+                    )}
+
+                    {post.numberOfBathroom > 0 && (
+                      <List.Item>
+                        <List.Content>
+                          <List.Header>
+                            {post.numberOfBedroom}{" "}
+                            <span className="kikor kiko-bathroom"></span>
+                          </List.Header>
+                        </List.Content>
+                      </List.Item>
+                    )}
+
+                    {directionName && (
+                      <List.Item>
+                        <List.Content>
+                          <List.Header>
+                            {directionName.name}{" "}
+                            {/* <span className="kikor kiko-rise-prices"></span> */}
+                          </List.Header>
+                        </List.Content>
+                      </List.Item>
+                    )}
                   </List>
                 </Item.Description>
                 <Item.Description>{post.description}</Item.Description>

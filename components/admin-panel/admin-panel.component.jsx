@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Icon, Image, Menu } from "semantic-ui-react";
 import { AdminPanelContainer } from "./admin-panel.styles";
 import { useRouter } from "next/router";
@@ -17,6 +17,9 @@ const AdminPanel = () => {
         break;
       case "reports":
         router.push("/admin/quan-ly-bao-cao");
+        break;
+      case "cash-out":
+        router.push("/admin/quan-ly-rut-tien");
         break;
       case "payment":
         router.push("/admin/quan-ly-tai-chinh");
@@ -64,6 +67,15 @@ const AdminPanel = () => {
         >
           <Icon name="warning sign" />
           Quản lý báo báo
+        </Menu.Item>
+
+        <Menu.Item
+          name="cash-out"
+          active={router.asPath === "/admin/quan-ly-rut-tien"}
+          onClick={handleItemClick}
+        >
+          <Icon name="money" />
+          Quản lý rút tiền
         </Menu.Item>
 
         <Menu.Item
