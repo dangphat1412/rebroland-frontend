@@ -14,6 +14,7 @@ import {
   Table,
 } from "semantic-ui-react";
 import { getDerivativePostsByUser } from "../../actions/post";
+import calculatePrice from "../../utils/calculatePrice";
 import convertToSlug from "../../utils/convertToSlug";
 import Pagination from "../pagination/pagination.component";
 import UserPanel from "../user-panel/user-panel.component";
@@ -181,12 +182,16 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                             <List horizontal>
                               <List.Item>
                                 <List.Content>
-                                  <List.Header>11 tỷ</List.Header>
+                                  <List.Header>
+                                    {calculatePrice(post).price}
+                                  </List.Header>
                                 </List.Content>
                               </List.Item>
                               <List.Item>
                                 <List.Content>
-                                  <List.Header>260 triệu/m²</List.Header>
+                                  <List.Header>
+                                    {calculatePrice(post).pricePerSquare}
+                                  </List.Header>
                                 </List.Content>
                               </List.Item>
                               <List.Item>

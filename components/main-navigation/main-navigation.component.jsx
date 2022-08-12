@@ -35,7 +35,6 @@ const MainNavigation = ({
   setUnreadNotification,
   setFollowingPosts,
 }) => {
-  console.log(followingPosts.reverse());
   const [notifications, setNotifications] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);

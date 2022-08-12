@@ -12,7 +12,6 @@ import { FormSearchContainer } from "./search-box-broker.styles";
 import { useRouter } from "next/router";
 
 const SearchBoxBroker = ({ searchParams }) => {
-  console.log(searchParams);
   const router = useRouter();
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
@@ -57,7 +56,6 @@ const SearchBoxBroker = ({ searchParams }) => {
         }
         if (searchParams.district) {
           const districtsData = await getDistricts(provinceId);
-          console.log(districtsData);
           const districtId = districtsData.districts.filter(
             (district) => district.name === searchParams.district
           )[0].code;
@@ -65,7 +63,7 @@ const SearchBoxBroker = ({ searchParams }) => {
         }
       };
       fetchProvinces();
-      
+
       setValue("key", searchParams.key);
       setValue("propertyTypes", searchParams.propertyTypes);
       setValue("province", searchParams.province);
@@ -129,6 +127,7 @@ const SearchBoxBroker = ({ searchParams }) => {
   };
 
   const onSubmit = async (data, e) => {
+    console.log(data);
     router.push(
       {
         pathname: "/danh-sach-nha-moi-gioi",

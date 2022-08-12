@@ -94,7 +94,6 @@ export const searchPosts = async (params, sortValue, pageNo) => {
 
 export const searchPayments = async (params, sortValue, pageNo) => {
   try {
-    console.log(params);
     const res = await Axios.get(`/list-payments`, {
       params: {
         keyword: params.key,

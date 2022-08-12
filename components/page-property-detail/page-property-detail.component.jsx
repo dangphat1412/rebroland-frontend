@@ -727,7 +727,6 @@ const PagePropertyDetail = ({
 };
 
 const FormRateBroker = ({ brokers }) => {
-  console.log("BROKERS: ", brokers);
   return (
     <Item.Group divided>
       {brokers &&
