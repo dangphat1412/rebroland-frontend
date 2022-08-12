@@ -732,10 +732,9 @@ const FormRateBroker = ({ brokers }) => {
     <Item.Group divided>
       {brokers &&
         brokers.length > 0 &&
-        brokers.map((broker) => {
-          console.log("broker 1: ", broker);
+        brokers.map((broker, index) => {
           return (
-            <Item>
+            <Item key={index}>
               <Item.Image
                 src={
                   broker.user.avatar ||

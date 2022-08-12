@@ -4,19 +4,15 @@ import {
   Polygon,
   useLoadScript,
 } from "@react-google-maps/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MapContainer } from "./map.styles";
 
 const Map = ({ position }) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyDg8ddyZibDZ1EnI_ZZxLOzKWw9RpqK6lE",
+    googleMapsApiKey: "AIzaSyCuih1YVsnPiQJcSVTqM5vSWbPFpOvOric",
   });
 
   const [coordinates, setCoordinates] = useState(position || []);
-
-  useEffect(() => {
-    console.log("coordinates: ", coordinates);
-  });
 
   const options = {
     strokeColor: "#FF0000",
