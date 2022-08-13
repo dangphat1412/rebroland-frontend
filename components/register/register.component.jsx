@@ -20,9 +20,9 @@ const Register = ({ handleOpenOtpRegister, setRegisterData }) => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (user) => {
-    console.log("user: ", user);
     const data = await registerUser(user, setErrorMessage);
     if (data) {
+      console.log(data);
       setRegisterData(data);
       handleOpenOtpRegister();
     }

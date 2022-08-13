@@ -22,6 +22,7 @@ const OtpRegister = ({ registerData, setOtpRegisterOpen }) => {
   const handleResentOtp = async () => {
     const data = await registerUser(user, setErrorMessage);
     if (data) {
+      console.log(data);
       setUser(data.user);
       setCounter(data.tokenTime * 60);
     }
