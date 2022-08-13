@@ -48,6 +48,13 @@ export const DetailBrokerContainer = styled.div`
       object-fit: cover;
     }
   }
+
+  .vote {
+    padding-left: 10px;
+    &:hover {
+      font-weight: bold;
+    }
+  }
 `;
 
 export const PaginationContainer = styled.div`

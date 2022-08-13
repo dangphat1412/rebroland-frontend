@@ -230,3 +230,59 @@ export const getTotalAmount = async () => {
     console.log(error);
   }
 };
+
+export const getDirectWithdraw = async (keyword, sortValue, pageNo) => {
+  try {
+    const res = await Axios.get(`/list-cashout/direct-withdraw`, {
+      params: {
+        keyword: keyword,
+        sortValue: sortValue,
+        pageNo: pageNo,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const getTransferWithdraw = async (keyword, sortValue, pageNo) => {
+  try {
+    const res = await Axios.get(`/list-cashout/transfer-withdraw`, {
+      params: {
+        keyword: keyword,
+        sortValue: sortValue,
+        pageNo: pageNo,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const acceptedWithdraw = async (withdrawId) => {
+  try {
+    const res = await Axios.post(`/list-cashout/accept/${withdrawId}`);
+    return res.status;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const deniedWithdraw = async (withdrawId, data) => {
+  try {
+    const res = await Axios.post(`/list-cashout/reject/${withdrawId}`, data);
+    return res.status;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};

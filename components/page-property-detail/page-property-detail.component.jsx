@@ -60,6 +60,11 @@ const PagePropertyDetail = ({
   setLoginOpen,
   setRegisterOpen,
 }) => {
+  console.log(
+    post.coordinates.sort(function (a, b) {
+      return a.id - b.id;
+    })
+  );
   const router = useRouter();
 
   const [reportOpen, setReportOpen] = useState(false);
@@ -457,12 +462,16 @@ const PagePropertyDetail = ({
                 <Header as="h2">Xem trên bản đồ</Header>
                 {post.coordinates && (
                   <Map
-                    position={post.coordinates.map((coordinate) => {
-                      return {
-                        lat: coordinate.latitude,
-                        lng: coordinate.longitude,
-                      };
-                    })}
+                    position={post.coordinates
+                      .sort(function (a, b) {
+                        return a.id - b.id;
+                      })
+                      .map((coordinate) => {
+                        return {
+                          lat: coordinate.latitude,
+                          lng: coordinate.longitude,
+                        };
+                      })}
                   />
                 )}
               </Segment>
@@ -484,9 +493,29 @@ const PagePropertyDetail = ({
                   verticalAlign="middle"
                 />
                 <p className="prefix-user">Được đăng bởi</p>
-                <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
-                  {post.user.fullName}
-                </Link>
+                {user ? (
+                  post.user.id === user.id ? (
+                    <Link href={`/trang-ca-nhan/bat-dong-san-cua-toi`}>
+                      {post.user.fullName}
+                    </Link>
+                  ) : post.user.broker === true ? (
+                    <Link href={`/danh-sach-nha-moi-gioi/${post.user.id}`}>
+                      {post.user.fullName}
+                    </Link>
+                  ) : (
+                    <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
+                      {post.user.fullName}
+                    </Link>
+                  )
+                ) : post.user.broker === true ? (
+                  <Link href={`/danh-sach-nha-moi-gioi/${post.user.id}`}>
+                    {post.user.fullName}
+                  </Link>
+                ) : (
+                  <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
+                    {post.user.fullName}
+                  </Link>
+                )}
               </UserInformationContainer>
 
               <ContactInformationContainer textAlign="center">
@@ -561,18 +590,21 @@ const PagePropertyDetail = ({
               >
                 Xem lịch sử bất động sản
               </Button>
-              {user && user.id !== post.user.id && user.currentRole === 3 && (
-                <Button
-                  fluid
-                  size="big"
-                  color="green"
-                  onClick={() => {
-                    createDerivativePost(post.postId);
-                  }}
-                >
-                  Tạo bài phái sinh
-                </Button>
-              )}
+              {user &&
+                user.id !== post.user.id &&
+                user.currentRole === 3 &&
+                post.originalPost === null && (
+                  <Button
+                    fluid
+                    size="big"
+                    color="green"
+                    onClick={() => {
+                      createDerivativePost(post.postId);
+                    }}
+                  >
+                    Tạo bài phái sinh
+                  </Button>
+                )}
               {post.originalPost !== null && (
                 <Link
                   href={`/bat-dong-san/${convertToSlug(post.title)}-${
@@ -858,7 +890,6 @@ const FormEndTransaction = ({ post }) => {
       ...data,
       propertyTypeId,
     });
-    console.log(status);
   };
 
   return (

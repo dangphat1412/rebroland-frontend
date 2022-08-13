@@ -12,6 +12,7 @@ const RealEstateForBroker = ({
   setFollowingPosts,
   params,
 }) => {
+  console.log("PARAMS: ", params);
   const [totalResult, setTotalResult] = useState(postsData.totalResult);
   return (
     <div>
@@ -52,7 +53,10 @@ export async function getServerSideProps(context) {
         maxPrice: params.maxPrice,
         minArea: params.minArea,
         maxArea: params.maxArea,
-        direction: params.directions ? params.directions.toString() : undefined,
+        direction:
+          params.directions && params.directions.length > 0
+            ? params.directions.toString()
+            : undefined,
         numberOfBedroom: params.numberOfBedrooms,
         sortValue: params.sortValue,
         pageNo: params.pageNo,

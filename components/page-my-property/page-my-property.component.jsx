@@ -15,7 +15,12 @@ import {
   Tab,
   Table,
 } from "semantic-ui-react";
-import { extendPost, getPostsByUser, getPricePerDay } from "../../actions/post";
+import {
+  extendPost,
+  getPostById,
+  getPostsByUser,
+  getPricePerDay,
+} from "../../actions/post";
 import convertToSlug from "../../utils/convertToSlug";
 import Pagination from "../pagination/pagination.component";
 import UserPanel from "../user-panel/user-panel.component";
@@ -30,6 +35,7 @@ import ModalItem from "../modal-item/modal-item.component";
 import { useForm } from "react-hook-form";
 import PaymentInformationForm from "../payment-information-form/payment-information-form.component";
 import { default as directionList } from "../../utils/directionList";
+import EditPostForm from "../form-edit-post/form-edit-post.component";
 
 const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
   const [data, setData] = useState(postsData || {});
@@ -61,6 +67,7 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
   const fetchAPI = async (propertyType, status, sortValue, pageNo) => {
     setLoading(true);
     const posts = await getPostsByUser(propertyType, status, sortValue, pageNo);
+    console.log(posts);
     setData(posts);
     setTotalResult(posts.totalResult);
     setLoading(false);
@@ -159,8 +166,12 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
 const ListProperty = ({ user, data, handlePaginationChange }) => {
   const [postList, setPostList] = useState(data.posts);
   const [openExtendPost, setOpenExtendPost] = useState(false);
+  const [openEditPost, setOpenEditPost] = useState(false);
   const [detailPost, setDetailPost] = useState(null);
+  const [editedPost, setEditedPost] = useState(null);
   const [priceData, setPriceData] = useState(null);
+
+  const [editedLoading, setEditedLoading] = useState(false);
 
   useEffect(() => {
     const fetchAPI = async () => {
@@ -173,7 +184,7 @@ const ListProperty = ({ user, data, handlePaginationChange }) => {
 
   return (
     <>
-      {postList.length > 0 ? (
+      {data.posts.length > 0 ? (
         <>
           <Table padded color="yellow">
             <Table.Header>
@@ -192,12 +203,16 @@ const ListProperty = ({ user, data, handlePaginationChange }) => {
 
             <Table.Body>
               {data &&
-                postList.map((post, index) => (
+                data.posts.length > 0 &&
+                data.posts.map((post, index) => (
                   <RealEstateItem
                     post={post}
                     key={index}
                     setOpenExtendPost={setOpenExtendPost}
                     setDetailPost={setDetailPost}
+                    setOpenEditPost={setOpenEditPost}
+                    setEditedPost={setEditedPost}
+                    setEditedLoading={setEditedLoading}
                   />
                 ))}
             </Table.Body>
@@ -242,6 +257,27 @@ const ListProperty = ({ user, data, handlePaginationChange }) => {
           </>
         )}
       </ModalItem>
+
+      <ModalItem
+        header="Chỉnh sửa bài viết"
+        size="small"
+        onOpen={openEditPost}
+        onClose={() => {
+          setOpenEditPost(false);
+          setEditedPost(null);
+        }}
+      >
+        {editedPost && (
+          <>
+            <EditPostForm
+              user={user}
+              editedPost={editedPost}
+              editedLoading={editedLoading}
+              setEditedLoading={setEditedLoading}
+            />
+          </>
+        )}
+      </ModalItem>
     </>
   );
 };
@@ -275,10 +311,10 @@ const FormExtendPost = ({
     const status = await extendPost(detailPost.postId, data);
     if (status === 201) {
       setOpenExtendPost(false);
-      const list = [...postList];
-      const index = list.findIndex((post) => post.postId === detailPost.postId);
-      list[index].status = { id: 1, name: "Đang hoạt động" };
-      setPostList(list);
+      // const list = [...postList];
+      // const index = list.findIndex((post) => post.postId === detailPost.postId);
+      // list[index].status = { id: 1, name: "Đang hoạt động" };
+      // setPostList(list);
     }
   };
 
@@ -300,7 +336,14 @@ const FormExtendPost = ({
   );
 };
 
-const RealEstateItem = ({ post, setOpenExtendPost, setDetailPost }) => {
+const RealEstateItem = ({
+  post,
+  setOpenExtendPost,
+  setOpenEditPost,
+  setDetailPost,
+  setEditedPost,
+  setEditedLoading,
+}) => {
   const { price, pricePerSquare } = calculatePrice(post);
   const directionName = directionList.find(
     (option) => option.id === post.directionId
@@ -381,16 +424,19 @@ const RealEstateItem = ({ post, setOpenExtendPost, setDetailPost }) => {
       </Table.Cell>
       <Table.Cell singleLine textAlign="center">
         {post.status.id === 1 && (
-          <Label circular color="green">
+          <>
+            <Label circular color="green">
+              {post.status.name}
+            </Label>
+            <br />
+            Ngày hết hạn: {post.endDate.split(" ")[0]}
+          </>
+        )}
+        {(post.status.id === 2 || post.status.id === 5) && (
+          <Label circular color="red">
             {post.status.name}
           </Label>
         )}
-        {post.status.id === 2 ||
-          (post.status.id === 5 && (
-            <Label circular color="red">
-              {post.status.name}
-            </Label>
-          ))}
         {post.status.id === 3 && (
           <Label circular color="blue">
             {post.status.name}
@@ -417,20 +463,26 @@ const RealEstateItem = ({ post, setOpenExtendPost, setDetailPost }) => {
           />
         </Link>
 
-        <Link href="/">
-          <Popup
-            content="Chỉnh sửa bài viết"
-            trigger={
-              <Icon
-                circular
-                inverted
-                color="green"
-                name="edit outline"
-                style={{ cursor: "pointer" }}
-              />
-            }
-          />
-        </Link>
+        <Popup
+          content="Chỉnh sửa bài viết"
+          trigger={
+            <Icon
+              circular
+              inverted
+              color="green"
+              name="edit outline"
+              style={{ cursor: "pointer" }}
+              onClick={async () => {
+                setOpenEditPost(true);
+                setEditedLoading(true);
+                const postData = await getPostById(post.postId);
+                setEditedPost(postData.post);
+                setEditedLoading(false);
+              }}
+            />
+          }
+        />
+
         {post.status.id === 5 && (
           <Popup
             content="Gia hạn bài viết"

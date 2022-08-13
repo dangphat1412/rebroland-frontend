@@ -53,7 +53,7 @@ const HandleContactBackRequestPage = ({
 
   const handleAccept = async () => {
     const data = {
-      userCareId: selectedCustomer.userRequest.id,
+      userCaredId: selectedCustomer.userRequest.id,
       postId: selectedCustomer.shortPost && selectedCustomer.shortPost.postId,
     };
     const status = await addNewCustomer(selectedContactId, data);

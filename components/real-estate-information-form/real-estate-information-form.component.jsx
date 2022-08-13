@@ -23,6 +23,7 @@ const RealEstateInformationForm = ({
   setValue,
   getValues,
   post,
+  editedPost,
 }) => {
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [unitPrices, setUnitPrices] = useState([]);
@@ -76,7 +77,6 @@ const RealEstateInformationForm = ({
       );
     })();
   }, []);
-
   return (
     <Segment size="large">
       <Header as="h1">Thông tin bất động sản</Header>
@@ -99,7 +99,6 @@ const RealEstateInformationForm = ({
           label="Loại bất động sản"
           value={post.propertyType.name}
           requiredField
-          disabled
         />
       )}
 
@@ -110,8 +109,7 @@ const RealEstateInformationForm = ({
           label="Diện tích"
           name="area"
           placeholder="Nhập diện tích"
-          onChange={!post ? handleChange : null}
-          disabled={post ? true : false}
+          onChange={handleChange}
           defaultValue={getValues("area")}
           error={errors.area}
           requiredField
@@ -128,8 +126,7 @@ const RealEstateInformationForm = ({
           name="price"
           placeholder="Nhập mức giá"
           defaultValue={getValues("price")}
-          onChange={!post ? handleChange : null}
-          disabled={post ? true : false}
+          onChange={handleChange}
           error={errors.price}
           requiredField
         >

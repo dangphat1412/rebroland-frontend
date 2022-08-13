@@ -12,13 +12,13 @@ const Axios = axios.create({
   },
 });
 
-export const userContact = async (data, userId, postId) => {
+export const userContact = async (data, userId, postId, setErrorMessage) => {
   try {
     const res = await Axios.post(`/${userId || 0}/${postId || 0}`, data);
-    return res.status;
+    if (res.status) return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
-    // setErrorMessage(messages);
+    setErrorMessage(messages);
     console.log(error);
   }
 };
@@ -33,6 +33,17 @@ export const deleteRequestContact = async (contactId) => {
     console.log(error);
   }
 };
+
+// export const acceptRequestContact = async (contactId) => {
+//   try {
+//     const res = await Axios.post(`/${contactId}`);
+//     return res.status;
+//   } catch (error) {
+//     const messages = convertToListMessages(error.response.data);
+//     // setErrorMessage(messages);
+//     console.log(error);
+//   }
+// };
 
 export const searchContacts = async (params, pageNo) => {
   try {

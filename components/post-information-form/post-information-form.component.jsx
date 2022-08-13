@@ -19,6 +19,7 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
         defaultValue={getValues("title")}
         error={errors.title}
         requiredField
+        maxLength={200}
       />
       <InputField
         {...register("description", { required: "Mô tả không được để trống" })}
@@ -31,6 +32,7 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
         defaultValue={getValues("description")}
         error={errors.description}
         requiredField
+        maxLength={2000}
       />
     </Segment>
   );

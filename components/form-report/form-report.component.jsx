@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { Button, Form, Image } from "semantic-ui-react";
 import { reportPost } from "../../actions/report";
 import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
-import ImageInformationForm from "../image-information-form/image-information-form.component";
 import {
   FormReportContainer,
   ImageContainer,

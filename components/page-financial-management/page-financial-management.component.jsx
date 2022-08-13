@@ -21,6 +21,7 @@ import {
 import { useForm } from "react-hook-form";
 import Pagination from "../pagination/pagination.component";
 import { getTotalAmount, searchPayments } from "../../actions/admin";
+import convertToCurrency from "../../utils/convertToCurrency";
 
 const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
   const { register, handleSubmit, setValue } = useForm({
@@ -80,7 +81,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                       <Statistic>
                         <Statistic.Label>Tổng doanh thu</Statistic.Label>
                         <Statistic.Value>
-                          {totalAmount.totalAmount} VNĐ
+                          {convertToCurrency(totalAmount.totalAmount)} VNĐ
                         </Statistic.Value>
                       </Statistic>
                     </Segment>
@@ -92,7 +93,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                       <Statistic size="small">
                         <Statistic.Label>Từ các bài đăng</Statistic.Label>
                         <Statistic.Value>
-                          {totalAmount.totalPostAmount} VNĐ
+                          {convertToCurrency(totalAmount.totalPostAmount)} VNĐ
                         </Statistic.Value>
                       </Statistic>
                     </Segment>
@@ -104,7 +105,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                           Từ việc đăng ký thành nhà môi giới
                         </Statistic.Label>
                         <Statistic.Value>
-                          {totalAmount.totalBrokerAmount} VNĐ
+                          {convertToCurrency(totalAmount.totalBrokerAmount)} VNĐ
                         </Statistic.Value>
                       </Statistic>
                     </Segment>
@@ -218,7 +219,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                         {payment.description}
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
-                        {payment.amount} VNĐ
+                        {convertToCurrency(payment.amount)} VNĐ
                       </Table.Cell>
                     </Table.Row>
                   );

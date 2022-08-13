@@ -42,7 +42,7 @@ const FormContact = ({
   const onSubmit = async (data) => {
     if (!currentUser) return;
 
-    const status = await userContact(data, userId, postId);
+    const status = await userContact(data, userId, postId, setErrorMessage);
     if (status === 201) {
       setTimeout(() => {
         toast({
@@ -51,6 +51,7 @@ const FormContact = ({
           description: <p>Yêu cầu liên hệ lại thành công</p>,
         });
       }, 100);
+      setContactOpen && setContactOpen(false);
     } else {
       setTimeout(() => {
         toast({
@@ -60,7 +61,6 @@ const FormContact = ({
         });
       }, 100);
     }
-    setContactOpen && setContactOpen(false);
   };
 
   return (

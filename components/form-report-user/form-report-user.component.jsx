@@ -10,7 +10,14 @@ import {
 } from "./form-report-user.styles";
 import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
 
-const ReportUserForm = ({ toast, setReportOpen, userId }) => {
+const ReportUserForm = ({
+  toast,
+  setReportOpen,
+  userId,
+  user,
+  setLoginOpen,
+  setRegisterOpen,
+}) => {
   const {
     register,
     handleSubmit,
@@ -89,6 +96,7 @@ const ReportUserForm = ({ toast, setReportOpen, userId }) => {
                 name="content"
                 value={content}
                 {...register("content")}
+                disabled={user ? false : true}
               />
               <label htmlFor={`content${index}`}>{content}</label>
               <br></br>
@@ -102,6 +110,7 @@ const ReportUserForm = ({ toast, setReportOpen, userId }) => {
           name="otherContent"
           rows="3"
           {...register("otherContent")}
+          disabled={user ? false : true}
         ></textarea>
 
         <br></br>
@@ -121,6 +130,7 @@ const ReportUserForm = ({ toast, setReportOpen, userId }) => {
             onClick={() => {
               mediaRef.current.click();
             }}
+            disabled={user ? false : true}
           >
             Chọn ảnh
           </Button>
@@ -149,10 +159,34 @@ const ReportUserForm = ({ toast, setReportOpen, userId }) => {
         </label>
 
         <br></br>
-        <Button fluid color="red">
+        <Button fluid color="red" disabled={user ? false : true}>
           Gửi báo cáo
         </Button>
       </Form>
+      {!user && (
+        <div className="alert-login-require">
+          <div>Yêu cầu đăng nhập để liên lạc</div>
+          <div>
+            <span
+              style={{ textDecoration: "underline", cursor: "pointer" }}
+              onClick={() => {
+                setLoginOpen(true);
+              }}
+            >
+              Đăng nhập
+            </span>{" "}
+            hoặc{" "}
+            <span
+              style={{ textDecoration: "underline", cursor: "pointer" }}
+              onClick={() => {
+                setRegisterOpen(true);
+              }}
+            >
+              Đăng ký
+            </span>
+          </div>
+        </div>
+      )}
     </FormReportContainer>
   );
 };

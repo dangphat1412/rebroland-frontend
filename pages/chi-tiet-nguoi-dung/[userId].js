@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import React from "react";
 import UserDetailPage from "../../components/page-user-detail/page-user-detail.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
@@ -12,26 +13,31 @@ const UserDetail = ({
   setLoginOpen,
   setRegisterOpen,
 }) => {
-  console.log(postsData);
-  return (
-    <div>
-      <SubHeader title="Chi tiết người dùng" background="/zyro-image.png" />
-      <UserDetailPage
-        postsData={postsData}
-        followingPosts={followingPosts}
-        setFollowingPosts={setFollowingPosts}
-        user={user}
-        setLoginOpen={setLoginOpen}
-        setRegisterOpen={setRegisterOpen}
-      />
-    </div>
-  );
+  const router = useRouter();
+
+  if (postsData.user.id === user.id) {
+    router.push("/trang-ca-nhan/bat-dong-san-cua-toi");
+  } else {
+    return (
+      <div>
+        <SubHeader title="Chi tiết người dùng" background="/zyro-image.png" />
+        <UserDetailPage
+          postsData={postsData}
+          followingPosts={followingPosts}
+          setFollowingPosts={setFollowingPosts}
+          user={user}
+          setLoginOpen={setLoginOpen}
+          setRegisterOpen={setRegisterOpen}
+        />
+      </div>
+    );
+  }
 };
 
 export async function getServerSideProps(context) {
   try {
     const { userId } = context.query;
-    const res = await axios.get(`${API_URL}/api/posts/user/${userId}`);
+    const res = await axios.get(`${API_URL}/api/posts/original/${userId}`);
 
     return { props: { postsData: res.data } };
   } catch (error) {

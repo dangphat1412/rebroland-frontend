@@ -1,8 +1,8 @@
 import React from "react";
 import TakeCareCustomerPage from "../../components/page-take-care-customer/page-take-care-customer.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
-import API_URL from "../../utils/apiUrl";
 import { parseCookies } from "nookies";
+import API_URL from "../../utils/apiUrl";
 import axios from "axios";
 
 const TakeCareCustomer = ({ user, caringList }) => {

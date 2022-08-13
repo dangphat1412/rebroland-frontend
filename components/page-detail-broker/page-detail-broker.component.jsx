@@ -26,6 +26,7 @@ import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import { getPostsByUserDetail } from "../../actions/post";
 import ModalItem from "../modal-item/modal-item.component";
 import ReportUserForm from "../form-report-user/form-report-user.component";
+import RatingForm from "../form-rating/form-rating.component";
 
 const DetailBrokerPage = ({
   user,
@@ -43,6 +44,7 @@ const DetailBrokerPage = ({
   const [propertyType, setPropertyType] = useState(0);
   const [sortValue, setSortValue] = useState(0);
   const [reportOpen, setReportOpen] = useState(false);
+  const [rating, setRating] = useState(postsData.user.avgRate);
 
   const handlePaginationChange = (e, { activePage }) =>
     fetchAPI(userDetail.id, propertyType, sortValue, activePage - 1);
@@ -74,6 +76,8 @@ const DetailBrokerPage = ({
       behavior: "smooth",
     });
   };
+
+  const [openRating, setOpenRating] = useState(false);
 
   return (
     <DetailBrokerContainer>
@@ -107,12 +111,22 @@ const DetailBrokerPage = ({
                     <Card.Description>
                       <Rating
                         maxRating={5}
-                        defaultRating={userDetail.avgRate.toFixed()}
+                        defaultRating={rating.toFixed()}
                         icon="star"
                         size="mini"
                         disabled
                       />
-                      <b> {userDetail.avgRate}</b>
+                      <b> {rating}</b>
+                      {user && (
+                        <a
+                          className="vote"
+                          onClick={() => {
+                            setOpenRating(true);
+                          }}
+                        >
+                          Đánh giá
+                        </a>
+                      )}
                     </Card.Description>
                     <Item.Description>
                       <Icon name="mobile alternate" />
@@ -159,20 +173,22 @@ const DetailBrokerPage = ({
                         />
                       </a>
                     </Item.Description>
-                    <Icon
-                      style={{
-                        cursor: "pointer",
-                        position: "absolute",
-                        right: "0px",
-                        top: "0px",
-                      }}
-                      onClick={() => {
-                        setReportOpen(true);
-                      }}
-                      color="orange"
-                      name="warning sign"
-                      size="large"
-                    />
+                    {user && (
+                      <Icon
+                        style={{
+                          cursor: "pointer",
+                          position: "absolute",
+                          right: "0px",
+                          top: "0px",
+                        }}
+                        onClick={() => {
+                          setReportOpen(true);
+                        }}
+                        color="orange"
+                        name="warning sign"
+                        size="large"
+                      />
+                    )}
                   </Item.Content>
                 </Item>
               </Item.Group>
@@ -290,9 +306,27 @@ const DetailBrokerPage = ({
         }}
       >
         <ReportUserForm
+          user={user}
           toast={toast}
           setReportOpen={setReportOpen}
           userId={postsData.user.id}
+          setLoginOpen={setLoginOpen}
+          setRegisterOpen={setRegisterOpen}
+        />
+      </ModalItem>
+      <ModalItem
+        header="Đánh giá người dùng"
+        onOpen={openRating}
+        onClose={() => {
+          setOpenRating(false);
+        }}
+      >
+        <RatingForm
+          type="broker"
+          toast={toast}
+          setOpenRating={setOpenRating}
+          ratedUser={postsData.user}
+          setRating={setRating}
         />
       </ModalItem>
     </DetailBrokerContainer>

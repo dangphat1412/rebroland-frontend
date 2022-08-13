@@ -58,6 +58,19 @@ export const createPost = async (post, images, setErrorMessage) => {
   }
 };
 
+export const editPost = async (post, mediaUrl, setErrorMessage) => {
+  try {
+    const data = mediaUrl ? { ...post, images: mediaUrl } : { ...post };
+    console.log(data);
+    const res = await Axios.put(`/${post.postId}`, data);
+    res.status === 200 && Router.reload();
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
 export const createDerivativePost = async (postId, post, images) => {
   try {
     const res = await Axios.post(`/derivative/${postId}`, { ...post, images });
@@ -169,7 +182,7 @@ export const searchOriginalPosts = async (data, sortValue, page) => {
 export const followPost = async (post, followingPosts, setFollowingPosts) => {
   try {
     const res = await Axios.post(`/follow/${post.postId}`);
-    res.status === 201 && setFollowingPosts([...followingPosts, post]);
+    res.status === 201 && setFollowingPosts([post, ...followingPosts]);
     res.status === 204 &&
       setFollowingPosts(
         followingPosts.filter(
@@ -201,9 +214,14 @@ export const getPostsByUser = async (
   pageNo
 ) => {
   try {
-    const res = await Axios.get(
-      `/user?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}&status=${status}`
-    );
+    const res = await Axios.get(`/user`, {
+      params: {
+        propertyType: propertyType,
+        status: status,
+        sortValue: sortValue,
+        pageNo: pageNo,
+      },
+    });
     return res.data;
   } catch (error) {
     console.log(error);
@@ -226,15 +244,35 @@ export const getPostsByUserDetail = async (
   }
 };
 
+export const getOriginalPostsByUserDetail = async (
+  userId,
+  propertyType,
+  sortValue,
+  pageNo
+) => {
+  try {
+    const res = await axios.get(
+      `${API_URL}/api/posts/original/${userId}?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
+    );
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getDerivativePostsByUser = async (
   propertyType,
   sortValue,
   pageNo
 ) => {
   try {
-    const res = await Axios.get(
-      `/derivative/list?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
-    );
+    const res = await Axios.get(`/derivative/list`, {
+      params: {
+        propertyType: propertyType,
+        sortValue: sortValue,
+        pageNo: pageNo,
+      },
+    });
     return res.data;
   } catch (error) {
     console.log(error);

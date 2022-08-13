@@ -159,24 +159,20 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                         <Header as="h4" image>
                           <Image
                             src={
-                              care.userCared.avatar ||
+                              care.user.avatar ||
                               "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
                             }
                             avatar
                             className="user-avatar-small"
                           />
-                          <Header.Content>
-                            {care.userCared.fullName}
-                          </Header.Content>
+                          <Header.Content>{care.user.fullName}</Header.Content>
                         </Header>
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
-                        {care.userCared.phone}
+                        {care.user.phone}
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
-                        {care.userCared.email
-                          ? care.userCared.email
-                          : "Đang cập nhật"}
+                        {care.user.email ? care.user.email : "Đang cập nhật"}
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
                         {care.startDate}
@@ -210,23 +206,23 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                   size="tiny"
                                   alt="image"
                                   src={
-                                    customerDetail.user.userCared.avatar ||
+                                    customerDetail.user.user.avatar ||
                                     "https://react.semantic-ui.com/images/avatar/large/jenny.jpg"
                                   }
                                   className="user-avatar"
                                 />
                                 <Item.Content verticalAlign="middle">
                                   <Item.Header>
-                                    {customerDetail.user.userCared.fullName}
+                                    {customerDetail.user.user.fullName}
                                   </Item.Header>
                                   <Item.Description>
                                     <Icon name="phone" />{" "}
-                                    {customerDetail.user.userCared.phone}
+                                    {customerDetail.user.user.phone}
                                   </Item.Description>
                                   <Item.Description>
                                     <Icon name="mail" />
-                                    {customerDetail.user.userCared.email
-                                      ? customerDetail.user.userCared.email
+                                    {customerDetail.user.user.email
+                                      ? customerDetail.user.user.email
                                       : "Đang cập nhật"}
                                   </Item.Description>
                                 </Item.Content>
@@ -342,12 +338,19 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                       key={index}
                                       className="vertical-timeline-element--work"
                                       contentStyle={{
-                                        background: "rgb(33, 150, 243)",
+                                        background:
+                                          tl.type === "NOTE"
+                                            ? "rgb(33, 150, 243)"
+                                            : "green",
                                         color: "#fff",
+                                        fontFamily: "Tahoma",
                                       }}
                                       contentArrowStyle={{
                                         borderRight:
-                                          "7px solid rgb(33, 150, 243)",
+                                          tl.type === "NOTE"
+                                            ? "7px solid rgb(33, 150, 243)"
+                                            : "7px solid green",
+                                        // "7px solid rgb(33, 150, 243)",
                                       }}
                                       date={tl.dateCreate}
                                       iconStyle={{
@@ -365,7 +368,10 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                         />
                                       }
                                     >
-                                      <h3 className="vertical-timeline-element-title">
+                                      <h3
+                                        className="vertical-timeline-element-title"
+                                        style={{ fontFamily: "Tahoma" }}
+                                      >
                                         {tl.type === "NOTE"
                                           ? "Ghi chú"
                                           : "Lịch hẹn"}

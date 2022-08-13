@@ -107,30 +107,6 @@ export const changePhone = async (data, setErrorMessage) => {
   }
 };
 
-export const otpTransfer = async (data, setErrorMessage) => {
-  try {
-    const res = await Axios.post(`/transfer/send-otp`, data);
-    console.log(res);
-    return res;
-  } catch (error) {
-    const messages = convertToListMessages(error.response.data);
-    setErrorMessage(messages);
-    console.log(error);
-  }
-};
-
-export const transfer = async (data, setErrorMessage) => {
-  try {
-    console.log(data);
-    const res = await Axios.post(`/transfer`, data);
-    return res.status;
-  } catch (error) {
-    const messages = convertToListMessages(error.response.data);
-    setErrorMessage(messages);
-    console.log(error);
-  }
-};
-
 export const otpRegisterUser = async (
   user,
   setErrorMessage,
@@ -175,7 +151,8 @@ export const otpForgotPasswordUser = async (
       handleOpenLogin();
     }
   } catch (error) {
-    setErrorMessage(error.response.data);
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
   }
 };

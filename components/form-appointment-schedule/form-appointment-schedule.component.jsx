@@ -31,7 +31,6 @@ const AppointmentScheduleForm = ({
   }, [register]);
 
   const onSubmit = async (data, e) => {
-    console.log(data);
     await addAppointment(
       userCareId,
       data,

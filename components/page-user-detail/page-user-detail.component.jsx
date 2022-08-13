@@ -12,7 +12,10 @@ import {
   Segment,
   Tab,
 } from "semantic-ui-react";
-import { getPostsByUserDetail } from "../../actions/post";
+import {
+  getOriginalPostsByUserDetail,
+  getPostsByUserDetail,
+} from "../../actions/post";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import Pagination from "../pagination/pagination.component";
 import {
@@ -56,7 +59,7 @@ const UserDetailPage = ({
 
   const fetchAPI = async (userId, propertyType, sortValue, pageNo) => {
     setLoading(true);
-    const posts = await getPostsByUserDetail(
+    const posts = await getOriginalPostsByUserDetail(
       userId,
       propertyType,
       sortValue,
@@ -262,6 +265,8 @@ const UserDetailPage = ({
           toast={toast}
           setReportOpen={setReportOpen}
           userId={postsData.user.id}
+          setLoginOpen={setLoginOpen}
+          setRegisterOpen={setRegisterOpen}
         />
       </ModalItem>
     </UserDetailPageContainer>

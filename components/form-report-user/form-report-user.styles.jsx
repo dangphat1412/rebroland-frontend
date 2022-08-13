@@ -28,6 +28,11 @@ export const FormReportContainer = styled.div`
   textarea {
     margin-bottom: 20px !important;
   }
+  .alert-login-require {
+    margin-top: 10px;
+    color: red;
+    font-weight: bold;
+  }
 `;
 
 export const PreviewContainer = styled.div`

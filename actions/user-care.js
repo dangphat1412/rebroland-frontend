@@ -1,8 +1,5 @@
 import axios from "axios";
-import Router from "next/router";
-import cookie from "js-cookie";
 import API_URL from "../utils/apiUrl";
-import { setToken } from "../utils/authUser";
 import Cookies from "js-cookie";
 import convertToListMessages from "../utils/convertToListMessages";
 

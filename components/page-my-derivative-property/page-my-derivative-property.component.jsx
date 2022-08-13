@@ -155,114 +155,152 @@ const ListProperty = ({ data, handlePaginationChange }) => {
 
             <Table.Body>
               {data &&
-                data.posts.map((post, index) => (
-                  <Table.Row key={index}>
-                    <Table.Cell width={11}>
-                      <Item.Group>
-                        <Item>
-                          <Item.Image
-                            size="medium"
-                            src={
-                              (post && post.thumbnail) ||
-                              "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
-                            }
-                            label={
-                              post.originalPost && post.originalPost !== 0
-                                ? {
-                                    color: "red",
-                                    content: "Bài phái sinh",
-                                    icon: "copy outline",
-                                    ribbon: true,
-                                  }
-                                : null
+                data.posts.map((post, index) => {
+                  const directionName = options.find(
+                    (option) => option.id === post.directionId
+                  );
+                  return (
+                    <Table.Row key={index}>
+                      <Table.Cell width={11}>
+                        <Item.Group>
+                          <Item>
+                            <Item.Image
+                              size="medium"
+                              src={
+                                (post && post.thumbnail) ||
+                                "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
+                              }
+                              label={
+                                post.originalPost && post.originalPost !== 0
+                                  ? {
+                                      color: "red",
+                                      content: "Bài phái sinh",
+                                      icon: "copy outline",
+                                      ribbon: true,
+                                    }
+                                  : null
+                              }
+                            />
+                            <Item.Content className="item-content">
+                              <Item.Header>{post.title}</Item.Header>
+                              <List horizontal>
+                                <List.Item>
+                                  <List.Content>
+                                    <List.Header>
+                                      {calculatePrice(post).price}
+                                    </List.Header>
+                                  </List.Content>
+                                </List.Item>
+                                <List.Item>
+                                  <List.Content>
+                                    <List.Header>
+                                      {calculatePrice(post).pricePerSquare}
+                                    </List.Header>
+                                  </List.Content>
+                                </List.Item>
+                                <List.Item>
+                                  <List.Content>
+                                    <List.Header>{post.area}m²</List.Header>
+                                  </List.Content>
+                                </List.Item>
+
+                                {post.numberOfBedroom > 0 && (
+                                  <List.Item>
+                                    <List.Content>
+                                      <List.Header>
+                                        {post.numberOfBedroom}{" "}
+                                        <span className="kikor kiko-bedroom"></span>
+                                      </List.Header>
+                                    </List.Content>
+                                  </List.Item>
+                                )}
+
+                                {post.numberOfBathroom > 0 && (
+                                  <List.Item>
+                                    <List.Content>
+                                      <List.Header>
+                                        {post.numberOfBedroom}{" "}
+                                        <span className="kikor kiko-bathroom"></span>
+                                      </List.Header>
+                                    </List.Content>
+                                  </List.Item>
+                                )}
+
+                                {directionName && (
+                                  <List.Item>
+                                    <List.Content>
+                                      <List.Header>
+                                        {directionName.name}{" "}
+                                        {/* <span className="kikor kiko-rise-prices"></span> */}
+                                      </List.Header>
+                                    </List.Content>
+                                  </List.Item>
+                                )}
+                              </List>
+                              <Item.Description>
+                                {post.description}
+                              </Item.Description>
+                              <Item.Description>
+                                {post.ward}, {post.district}, {post.province}
+                              </Item.Description>
+                              <Item.Extra>{post.startDate}</Item.Extra>
+                            </Item.Content>
+                          </Item>
+                        </Item.Group>
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        {post.status.name}
+                      </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        <Link
+                          href={`/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi/${convertToSlug(
+                            post.title
+                          )}-${post.postId}`}
+                        >
+                          <Icon
+                            circular
+                            inverted
+                            color="teal"
+                            name="eye"
+                            style={{ cursor: "pointer" }}
+                          />
+                        </Link>
+
+                        <Link href="/">
+                          <Popup
+                            content="Chỉnh sửa bài viết"
+                            trigger={
+                              <Icon
+                                circular
+                                inverted
+                                color="green"
+                                name="edit outline"
+                                style={{ cursor: "pointer" }}
+                              />
                             }
                           />
-                          <Item.Content className="item-content">
-                            <Item.Header>{post.title}</Item.Header>
-                            <List horizontal>
-                              <List.Item>
-                                <List.Content>
-                                  <List.Header>
-                                    {calculatePrice(post).price}
-                                  </List.Header>
-                                </List.Content>
-                              </List.Item>
-                              <List.Item>
-                                <List.Content>
-                                  <List.Header>
-                                    {calculatePrice(post).pricePerSquare}
-                                  </List.Header>
-                                </List.Content>
-                              </List.Item>
-                              <List.Item>
-                                <List.Content>
-                                  <List.Header>{post.area}m²</List.Header>
-                                </List.Content>
-                              </List.Item>
-                            </List>
-                            <Item.Description>
-                              {post.description}
-                            </Item.Description>
-                            <Item.Description>
-                              {post.ward}, {post.district}, {post.province}
-                            </Item.Description>
-                            <Item.Extra>{post.startDate}</Item.Extra>
-                          </Item.Content>
-                        </Item>
-                      </Item.Group>
-                    </Table.Cell>
-                    <Table.Cell singleLine textAlign="center">
-                      {post.status.name}
-                    </Table.Cell>
-                    <Table.Cell textAlign="center">
-                      <Link
-                        href={`/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi/${convertToSlug(
-                          post.title
-                        )}-${post.postId}`}
-                      >
-                        <Icon
-                          circular
-                          inverted
-                          color="teal"
-                          name="eye"
-                          style={{ cursor: "pointer" }}
-                        />
-                      </Link>
-
-                      <Link href="/">
-                        <Popup
-                          content="Chỉnh sửa bài viết"
-                          trigger={
-                            <Icon
-                              circular
-                              inverted
-                              color="green"
-                              name="edit outline"
-                              style={{ cursor: "pointer" }}
-                            />
-                          }
-                        />
-                      </Link>
-                      <Link href="/">
-                        <Popup
-                          content="Xoá bài viết"
-                          trigger={
-                            <Icon
-                              style={{ cursor: "pointer" }}
-                              circular
-                              inverted
-                              color="red"
-                              name="trash alternate"
-                              onClick={() => {
-                                setOpenDeleteConfirm(true);
-                              }}
-                            />
-                          }
-                        />
-                      </Link>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
+                        </Link>
+                        <Link href="/">
+                          <Popup
+                            content="Xoá bài viết"
+                            trigger={
+                              <Icon
+                                style={{ cursor: "pointer" }}
+                                circular
+                                inverted
+                                color="red"
+                                name="trash alternate"
+                                onClick={() => {
+                                  setOpenDeleteConfirm(true);
+                                }}
+                              />
+                            }
+                          />
+                        </Link>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
             </Table.Body>
 
             {/* <Confirm
