@@ -22,6 +22,7 @@ const AdminPanel = () => {
         router.push("/admin/quan-ly-rut-tien");
         break;
       case "payment":
+        console.log("1");
         router.push("/admin/quan-ly-tai-chinh");
         break;
       default:
@@ -84,7 +85,7 @@ const AdminPanel = () => {
           onClick={handleItemClick}
         >
           <Icon name="credit card outline" />
-          Quản lý giao dịch
+          Quản lý tài chính
         </Menu.Item>
         <Menu.Item
           onClick={async () => {

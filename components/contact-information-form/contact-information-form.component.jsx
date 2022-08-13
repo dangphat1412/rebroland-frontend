@@ -24,13 +24,17 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
           requiredField
         />
         <InputField
-          {...register("contactPhone")}
+          {...register("contactPhone", {
+            required: "Số điện thoại không được để trống",
+            pattern: {
+              value: /^(84|0[3|5|7|8|9])+([0-9]{8})$/,
+              message: "Số điện thoại là số Việt Nam và có 10 chữ số",
+            },
+          })}
           label="Số điện thoại"
           name="contactPhone"
           placeholder="Nhập số điện thoại"
-          defaultValue={getValues("contactPhone", {
-            required: "Số điện thoại liên hệ không được để trống",
-          })}
+          defaultValue={getValues("contactPhone")}
           onChange={handleChange}
           error={errors.contactPhone}
           requiredField

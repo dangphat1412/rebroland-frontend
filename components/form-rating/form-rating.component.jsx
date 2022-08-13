@@ -13,7 +13,14 @@ import { ratingBroker, ratingUser } from "../../actions/rating";
 import InputField from "../input-field/input-field.component";
 import { FormRatingContainer } from "./form-rating.styles";
 
-const RatingForm = ({ type, toast, ratedUser, setOpenRating, setRating }) => {
+const RatingForm = ({
+  type,
+  toast,
+  ratedUser,
+  setOpenRating,
+  setRating,
+  rating,
+}) => {
   const {
     register,
     handleSubmit,
@@ -87,7 +94,7 @@ const RatingForm = ({ type, toast, ratedUser, setOpenRating, setRating }) => {
             <Header.Subheader>
               <Rating
                 icon="star"
-                defaultRating={ratedUser.avgRate}
+                defaultRating={rating}
                 maxRating={5}
                 disabled
               />

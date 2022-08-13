@@ -239,6 +239,22 @@ const MainNavigation = ({
                             }}
                           />
                           <Dropdown.Item
+                            icon="volume control phone"
+                            text="Yêu cầu liên hệ lại"
+                            onClick={() => {
+                              Router.push("/trang-ca-nhan/yeu-cau-lien-he-lai");
+                            }}
+                          />
+                          <Dropdown.Item
+                            icon="phone"
+                            text="Đổi số điện thoại"
+                            onClick={() => {
+                              Router.push(
+                                "/trang-ca-nhan/thay-doi-so-dien-thoai"
+                              );
+                            }}
+                          />
+                          <Dropdown.Item
                             icon="sign out"
                             text="Đăng xuất"
                             onClick={async () => {
@@ -396,10 +412,10 @@ const NotificationList = ({
           Xem tất cả
         </Link>
         <Divider />
-        <Item.Group divided link>
+        <Item.Group divided link className="list-notification">
           {notifications.map((notification, index) => {
             return (
-              <Item key={index}>
+              <Item key={index} className="item-notification">
                 <Item.Image
                   src={
                     notification.type === "Contact"
@@ -420,7 +436,7 @@ const NotificationList = ({
                   )}
                   <Item.Extra>{notification.date}</Item.Extra>
                 </Item.Content>
-                {notification.unRead === false && (
+                {notification.unRead === true && (
                   <Item.Content
                     verticalAlign="middle"
                     style={{ width: "20px" }}

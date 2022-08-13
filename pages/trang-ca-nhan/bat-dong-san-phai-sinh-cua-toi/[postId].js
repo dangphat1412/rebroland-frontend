@@ -6,7 +6,6 @@ import API_URL from "../../../utils/apiUrl";
 import { parseCookies } from "nookies";
 
 const DetailMyDerivativeProperty = ({ user, postData }) => {
-  console.log(postData);
   return (
     <div>
       <SubHeader

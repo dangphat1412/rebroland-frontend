@@ -117,7 +117,6 @@ const CashOutPage = ({ user }) => {
       error = true;
     }
 
-    console.log(data);
     if (data.type === 2) {
       if (!data.bankName) {
         setError("bankName", {

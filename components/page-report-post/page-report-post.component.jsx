@@ -19,6 +19,7 @@ import {
 } from "semantic-ui-react";
 import {
   acceptReportPost,
+  getDetailPost,
   getDetailReportPost,
   searchPostReport,
 } from "../../actions/admin";
@@ -182,11 +183,15 @@ const ReportPostPage = ({
             <Table.HeaderCell singleLine textAlign="center">
               Hành động
             </Table.HeaderCell>
+            <Table.HeaderCell singleLine textAlign="center">
+              Ghi chú
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {reportPosts.length > 0 &&
+          {reportPosts &&
+            reportPosts.length > 0 &&
             reportPosts.map((post, index) => {
               return (
                 <Table.Row

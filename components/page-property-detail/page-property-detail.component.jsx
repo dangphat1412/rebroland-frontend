@@ -60,11 +60,6 @@ const PagePropertyDetail = ({
   setLoginOpen,
   setRegisterOpen,
 }) => {
-  console.log(
-    post.coordinates.sort(function (a, b) {
-      return a.id - b.id;
-    })
-  );
   const router = useRouter();
 
   const [reportOpen, setReportOpen] = useState(false);
@@ -593,7 +588,8 @@ const PagePropertyDetail = ({
               {user &&
                 user.id !== post.user.id &&
                 user.currentRole === 3 &&
-                post.originalPost === null && (
+                post.originalPost === null &&
+                post.allowDerivative === true && (
                   <Button
                     fluid
                     size="big"
@@ -759,48 +755,125 @@ const PagePropertyDetail = ({
 };
 
 const FormRateBroker = ({ brokers }) => {
-  return (
-    <Item.Group divided>
-      {brokers &&
-        brokers.length > 0 &&
-        brokers.map((broker, index) => {
-          return (
-            <Item key={index}>
-              <Item.Image
-                src={
-                  broker.user.avatar ||
-                  "https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                }
-              />
+  const [listRating, setListRating] = useState(
+    brokers.map((broker) => {
+      return { id: broker.user.id, rating: null, description: null };
+    })
+  );
 
-              <Item.Content>
-                <Item.Header as="a" style={{ fontFamily: "Tahoma" }}>
-                  {broker.user.fullName}{" "}
-                  <span style={{ marginLeft: "20px" }}>
-                    {broker.user.avgRate} <Icon name="star" color="yellow" />
-                  </span>
-                </Item.Header>
-                <Item.Extra>
-                  <Rating icon="star" maxRating={5} size="massive" />
-                </Item.Extra>
-                <Item.Extra>
-                  <InputField
-                    style={{ width: "100%" }}
-                    fieldType="textarea"
-                    rows={6}
-                    name="description"
-                    placeholder="Nhận xét về nhà môi giới này"
-                    // onChange={handleChange}
-                    // defaultValue={getValues("description")}
-                    // error={errors.description}
-                    // requiredField
+  useEffect(() => {
+    console.log(listRating);
+  });
+
+  const onSubmit = async (data) => {
+    console.log(data);
+  };
+
+  const handleChange = (e, { name, value }) => {
+    // setValue(name, value);
+  };
+
+  const handleRate = (e, { rating, maxRating }) => {
+    setListRating(
+      [...listRating].map((object) => {
+        if (object.id === user.username) {
+          return {
+            ...object,
+            favoriteFood: "Potatos",
+            someNewRandomAttribute: "X",
+          };
+        } else return object;
+      })
+    );
+  };
+
+  return (
+    <Form onSubmit={onSubmit}>
+      <List celled size="big">
+        {brokers &&
+          brokers.length > 0 &&
+          brokers.map((broker, index) => {
+            return (
+              <List.Item key={index}>
+                <Image
+                  avatar
+                  src={
+                    broker.user.avatar ||
+                    "https://react.semantic-ui.com/images/avatar/small/helen.jpg"
+                  }
+                />
+                <List.Content style={{ width: "600px" }}>
+                  <List.Header style={{ fontFamily: "Tahoma" }}>
+                    {broker.user.fullName}
+                  </List.Header>
+                  <b style={{ marginRight: "5px" }}> {broker.user.avgRate}</b>
+                  <Rating
+                    maxRating={5}
+                    defaultRating={broker.user.avgRate.toFixed()}
+                    icon="star"
+                    size="mini"
+                    disabled
                   />
-                </Item.Extra>
-              </Item.Content>
-            </Item>
-          );
-        })}
-    </Item.Group>
+                  <br />
+                  <br />
+                  <Rating
+                    icon="star"
+                    maxRating={5}
+                    size="massive"
+                    onRate={(e, { rating }) => {
+                      setListRating(
+                        [...listRating].map((object) => {
+                          if (object.id === broker.user.id) {
+                            return {
+                              ...object,
+                              rating: rating,
+                            };
+                          } else return object;
+                        })
+                      );
+                    }}
+                  />
+                  <br />
+                  <InputField
+                    style={{ width: "100% !important" }}
+                    fieldType="textarea"
+                    rows={3}
+                    name={`description_${broker.user.id}`}
+                    placeholder="Nhận xét về nhà môi giới này"
+                    onChange={(e, { name, value }) => {
+                      setListRating(
+                        [...listRating].map((object) => {
+                          if (object.id === broker.user.id) {
+                            return {
+                              ...object,
+                              description: value,
+                            };
+                          } else return object;
+                        })
+                      );
+                    }}
+                  />
+                </List.Content>
+              </List.Item>
+            );
+          })}
+      </List>
+      <Grid>
+        <Grid.Row>
+          <Grid.Column textAlign="center">
+            <Button
+              style={{
+                fontFamily: "Tahoma",
+                background: "#ff9219",
+                color: "#fff",
+              }}
+            >
+              Đánh giá
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Form>
   );
 };
 

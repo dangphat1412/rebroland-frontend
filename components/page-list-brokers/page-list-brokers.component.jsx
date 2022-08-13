@@ -18,7 +18,6 @@ import {
 } from "./page-list-brokers.styles";
 
 const ListBrokersPage = ({ brokersData, setTotalResult, searchParams }) => {
-  console.log(brokersData);
   const router = useRouter();
   const [data, setData] = useState(brokersData || {});
   const [sortValue, setSortValue] = useState(searchParams.sortValue || 0);
@@ -134,6 +133,8 @@ const BrokerItem = ({ broker, searchParams }) => {
         <Card.Content>
           <Card.Header>{broker.fullName}</Card.Header>
           <Card.Description>
+            <b style={{ marginRight: "5px" }}> {broker.avgRate}</b>
+
             <Rating
               maxRating={5}
               defaultRating={broker.avgRate.toFixed()}
@@ -141,7 +142,6 @@ const BrokerItem = ({ broker, searchParams }) => {
               size="mini"
               disabled
             />
-            <b> {broker.avgRate}</b>
           </Card.Description>
           <Card.Description>
             <Icon name="mobile alternate" />

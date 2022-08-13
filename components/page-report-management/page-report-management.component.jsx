@@ -7,8 +7,12 @@ import ReportUserPage from "../page-report-user/page-report-user.component";
 import { ReportManagementPageContainer } from "./page-report-management.styles";
 
 const ReportManagementPage = ({ postReport, setTotalResult }) => {
-  const [reportPostData, setReportPostData] = useState(postReport || {});
-  const [reportUserData, setReportUserData] = useState(null);
+  const [reportPostData, setReportPostData] = useState(
+    postReport.listPost || {}
+  );
+  const [reportUserData, setReportUserData] = useState(
+    postReport.listUser || {}
+  );
 
   const [images, setImages] = useState([]);
   const [showGallaryView, setShowGallaryView] = useState(false);
@@ -81,7 +85,6 @@ const ReportManagementPage = ({ postReport, setTotalResult }) => {
 
 const DisplayGallaryPictures = ({ images, setShowGallaryView }) => {
   const [pictureIndex, setPictureIndex] = useState(0);
-  console.log(images);
   return (
     <Lightbox
       mainSrc={images[pictureIndex]}

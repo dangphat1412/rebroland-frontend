@@ -9,6 +9,7 @@ import {
   Image,
   Item,
   Loader,
+  Rating,
   Segment,
   Tab,
 } from "semantic-ui-react";
@@ -27,6 +28,7 @@ import FormContact from "../form-contact/form-contact.component";
 import options from "../../utils/RealEstateSortValue";
 import ModalItem from "../modal-item/modal-item.component";
 import ReportUserForm from "../form-report-user/form-report-user.component";
+import RatingForm from "../form-rating/form-rating.component";
 
 const UserDetailPage = ({
   user,
@@ -42,6 +44,8 @@ const UserDetailPage = ({
   const [propertyType, setPropertyType] = useState(0);
   const [sortValue, setSortValue] = useState(0);
   const [reportOpen, setReportOpen] = useState(false);
+  const [openRating, setOpenRating] = useState(false);
+  const [rating, setRating] = useState(postsData.user.avgRate);
 
   const handlePaginationChange = (e, { activePage }) =>
     fetchAPI(userDetail.id, propertyType, sortValue, activePage - 1);
@@ -97,6 +101,20 @@ const UserDetailPage = ({
                   verticalAlign="middle"
                 />
                 <Card.Header>{userDetail.fullName}</Card.Header>
+                <Card.Description>
+                  <b style={{ marginRight: "5px" }}>{rating}</b>
+                  <Rating icon="star" rating={rating} maxRating={5} disabled />
+                  {user && (
+                    <a
+                      className="vote"
+                      onClick={() => {
+                        setOpenRating(true);
+                      }}
+                    >
+                      Đánh giá
+                    </a>
+                  )}
+                </Card.Description>
                 <Card.Description textAlign="left">
                   <Icon name="mobile alternate" />
                   {userDetail.phone}
@@ -143,16 +161,18 @@ const UserDetailPage = ({
                     </a>
                   )}
                 </Item.Description>
-                <Icon
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setReportOpen(true);
-                  }}
-                  color="orange"
-                  name="warning sign"
-                  size="large"
-                  className="report-icon"
-                />
+                {user && (
+                  <Icon
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setReportOpen(true);
+                    }}
+                    color="orange"
+                    name="warning sign"
+                    size="large"
+                    className="report-icon"
+                  />
+                )}
               </Card.Content>
             </Card>
             <Segment>
@@ -262,11 +282,29 @@ const UserDetailPage = ({
         }}
       >
         <ReportUserForm
+          user={user}
           toast={toast}
           setReportOpen={setReportOpen}
           userId={postsData.user.id}
           setLoginOpen={setLoginOpen}
           setRegisterOpen={setRegisterOpen}
+        />
+      </ModalItem>
+
+      <ModalItem
+        header="Đánh giá người dùng"
+        onOpen={openRating}
+        onClose={() => {
+          setOpenRating(false);
+        }}
+      >
+        <RatingForm
+          type="user"
+          toast={toast}
+          setOpenRating={setOpenRating}
+          ratedUser={postsData.user}
+          setRating={setRating}
+          rating={rating}
         />
       </ModalItem>
     </UserDetailPageContainer>

@@ -5,8 +5,6 @@ const calculateTime = (createdAt) => {
   const today = moment(Date.now());
   const postDate = moment(new Date(createdAt).getTime());
   const diffInHours = today.diff(postDate, "hours");
-  console.log(today);
-  console.log(postDate);
 
   if (diffInHours < 24) {
     return (

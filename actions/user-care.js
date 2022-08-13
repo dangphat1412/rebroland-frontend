@@ -40,6 +40,16 @@ export const deleteCustomer = async (userCareId) => {
   }
 };
 
+export const deleteTimeline = async (timelineId) => {
+  try {
+    const res = await Axios.delete(`/detail/${timelineId}`);
+    return res.status;
+  } catch (error) {
+    // const messages = convertToListMessages(error.response.data);
+    console.log(error);
+  }
+};
+
 export const getCustomerDetail = async (userCareId) => {
   try {
     const res = await Axios.get(`/details/${userCareId}`);

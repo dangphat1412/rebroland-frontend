@@ -7,7 +7,7 @@ import { parseCookies } from "nookies";
 import API_URL from "../../utils/apiUrl";
 import axios from "axios";
 
-const CashoutManagement = ({ directWithdrawData }) => {
+const CashoutManagement = ({ withdrawData }) => {
   return (
     <div style={{ display: "flex" }}>
       <AdminPanel />
@@ -18,7 +18,7 @@ const CashoutManagement = ({ directWithdrawData }) => {
           background="/zyro-image.png"
         />
         <div style={{ padding: "30px" }}>
-          <CashoutManagementPage directWithdrawData={directWithdrawData} />
+          <CashoutManagementPage withdrawData={withdrawData} />
         </div>
       </div>
     </div>
@@ -29,14 +29,11 @@ export async function getServerSideProps(context) {
   try {
     const { token } = parseCookies(context);
 
-    const res = await axios.get(
-      `${API_URL}/api/admin/list-cashout/direct-withdraw`,
-      {
-        headers: { Authorization: token },
-      }
-    );
+    const res = await axios.get(`${API_URL}/api/admin/list-cashout`, {
+      headers: { Authorization: token },
+    });
 
-    return { props: { directWithdrawData: res.data } };
+    return { props: { withdrawData: res.data } };
   } catch (error) {
     // return { props: { posts: [1, 2, 3] } };
   }

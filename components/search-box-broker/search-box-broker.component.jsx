@@ -127,7 +127,6 @@ const SearchBoxBroker = ({ searchParams }) => {
   };
 
   const onSubmit = async (data, e) => {
-    console.log(data);
     router.push(
       {
         pathname: "/danh-sach-nha-moi-gioi",

@@ -84,6 +84,13 @@ export const UserDetailPageContainer = styled.div`
       cursor: pointer;
     }
   }
+
+  .vote {
+    padding-left: 10px;
+    &:hover {
+      font-weight: bold;
+    }
+  }
 `;
 
 export const PaginationContainer = styled.div`

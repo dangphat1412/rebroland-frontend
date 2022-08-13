@@ -12,6 +12,7 @@ import {
   Image,
   Input,
   Item,
+  Label,
   Loader,
   Segment,
   Tab,
@@ -32,6 +33,7 @@ import NoteForm from "../form-note/form-note.component";
 import FormCreateCustomer from "../form-create-customer/form-create-customer.component";
 import {
   deleteCustomer,
+  deleteTimeline,
   editSummarize,
   endCare,
   getCustomerDetail,
@@ -39,6 +41,7 @@ import {
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import InputField from "../input-field/input-field.component";
 import { useForm } from "react-hook-form";
+import RatingForm from "../form-rating/form-rating.component";
 
 const TakeCareCustomerPage = ({ user, caringList }) => {
   const {
@@ -49,6 +52,8 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
     formState: { errors },
   } = useForm({});
 
+  console.log(caringList);
+
   const [cares, setCares] = useState(caringList.cares);
   const [customerDetail, setCustomerDetail] = useState(null);
   const [openAppointmentSchedule, setOpenAppointmentSchedule] = useState(false);
@@ -56,9 +61,16 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
   const [openEndTakeCare, setOpenEndTakeCare] = useState(false);
   const [openCreateCustomer, setOpenCreateCustomer] = useState(false);
   const [openDeteleCustomer, setOpenDeleteCustomer] = useState(false);
+  const [openDeleteTimeline, setOpenDeleteTimeline] = useState(false);
   const [selectedCustomerIndex, setSelectedCustomerIndex] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedTimeline, setSelectedTimeline] = useState(null);
   const [openUpdateCustomer, setOpenUpdateCustomer] = useState(false);
   const [openEditSummarize, setOpenEditSummarize] = useState(false);
+  const [openRating, setOpenRating] = useState(false);
+  const [rating, setRating] = useState(
+    selectedCustomer && selectedCustomer.user.avgRate
+  );
   const [timeline, setTimeline] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -96,7 +108,7 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
           title: "Xoá khách hàng",
           description: <p>Xoá khách hàng thành công</p>,
         });
-      }, 1000);
+      }, 100);
     } else {
       setTimeout(() => {
         toast({
@@ -104,13 +116,44 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
           title: "Xoá khách hàng",
           description: <p>Xoá khách hàng thất bại</p>,
         });
-      }, 1000);
+      }, 100);
     }
     setOpenDeleteCustomer(false);
   };
 
-  const handleEndTakeCare = async (userCareId) => {
-    const status = await endCare(userCareId);
+  const handleDeleteTimeline = async (timelineId) => {
+    const status = await deleteTimeline(timelineId);
+    if (status === 204) {
+      setTimeline(timeline.filter((t) => t.detailId !== timelineId));
+      setTimeout(() => {
+        toast({
+          type: "success",
+          title: "Xoá dòng thời gian",
+          description: <p>Xoá dòng thời gian thành công</p>,
+        });
+      }, 100);
+    } else {
+      setTimeout(() => {
+        toast({
+          type: "error",
+          title: "Xoá dòng thời gian",
+          description: <p>Xoá dòng thời gian thất bại</p>,
+        });
+      }, 100);
+    }
+    setOpenDeleteTimeline(false);
+  };
+
+  const handleEndTakeCare = async (selectedCustomer) => {
+    const status = await endCare(selectedCustomer.careId);
+    if (status === 200) {
+      const data = [...cares];
+      const index = data.findIndex((d) => d.careId === selectedCustomer.careId);
+      data[index].status = true;
+      setCares(data);
+      setOpenEndTakeCare(false);
+      setOpenRating(true);
+    }
   };
 
   return (
@@ -140,6 +183,9 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                     </Table.HeaderCell>
                     <Table.HeaderCell singleLine textAlign="center">
                       Hành động
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Xoá
                     </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
@@ -178,10 +224,43 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                         {care.startDate}
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
-                        Đang tư vấn
+                        {care.status === true ? (
+                          <Label circular color="green">
+                            Kết thúc tư vấn
+                          </Label>
+                        ) : (
+                          <Label circular color="blue">
+                            Đang tư vấn
+                          </Label>
+                        )}
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
-                        <Icon name="trash alternate outline" />
+                        {care.status === false && (
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log(care);
+                              setSelectedCustomer(care);
+                              setOpenEndTakeCare(true);
+                            }}
+                          >
+                            <Icon name="times" />
+                            Kết thúc
+                          </Button>
+                        )}
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        <Icon
+                          circular
+                          inverted
+                          color="red"
+                          name="trash alternate outline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCustomer(care);
+                            setOpenDeleteCustomer(true);
+                          }}
+                        />
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -317,14 +396,6 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                 <Icon name="pencil" />
                                 Ghi chú
                               </Button>
-                              <Button
-                                onClick={() => {
-                                  setOpenEndTakeCare(true);
-                                }}
-                              >
-                                <Icon name="times" />
-                                Kết thúc
-                              </Button>
                             </div>
                             <Divider />
                             <VerticalTimeline
@@ -335,6 +406,7 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                 timeline.map((tl, index) => {
                                   return (
                                     <VerticalTimelineElement
+                                      style={{ position: "relative" }}
                                       key={index}
                                       className="vertical-timeline-element--work"
                                       contentStyle={{
@@ -376,6 +448,23 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
                                           ? "Ghi chú"
                                           : "Lịch hẹn"}
                                       </h3>
+                                      <Icon
+                                        circular
+                                        inverted
+                                        color="red"
+                                        name="close"
+                                        style={{
+                                          position: "absolute",
+                                          top: "-10px",
+                                          right: "-15px",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedTimeline(tl);
+                                          setOpenDeleteTimeline(true);
+                                        }}
+                                      />
                                       <p>{tl.description}</p>
                                     </VerticalTimelineElement>
                                   );
@@ -479,7 +568,7 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
           setOpenEndTakeCare(false);
         }}
         onConfirm={() => {
-          handleEndTakeCare(selectedCustomerIndex);
+          handleEndTakeCare(selectedCustomer);
         }}
         cancelButton="Huỷ bỏ"
         confirmButton="Xác nhận"
@@ -493,12 +582,43 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
           setOpenDeleteCustomer(false);
         }}
         onConfirm={() => {
-          handleDeleteCustomer(selectedCustomerIndex);
+          handleDeleteCustomer(selectedCustomer.careId);
         }}
         cancelButton="Huỷ bỏ"
         confirmButton="Xác nhận"
         content="Bạn có chắc chắn muốn xoá khách hàng khỏi danh sách chăm sóc khách hàng không?"
       />
+
+      <Confirm
+        open={openDeleteTimeline}
+        header="Xác nhận xoá dòng thời gian"
+        onCancel={() => {
+          setOpenDeleteTimeline(false);
+        }}
+        onConfirm={() => {
+          handleDeleteTimeline(selectedTimeline.detailId);
+        }}
+        cancelButton="Huỷ bỏ"
+        confirmButton="Xác nhận"
+        content="Bạn có chắc chắn muốn xoá dòng thời gian này không?"
+      />
+
+      <ModalItem
+        header="Đánh giá người dùng"
+        onOpen={openRating}
+        onClose={() => {
+          setOpenRating(false);
+        }}
+      >
+        <RatingForm
+          type="user"
+          toast={toast}
+          setOpenRating={setOpenRating}
+          rating={rating}
+          ratedUser={selectedCustomer && selectedCustomer.user}
+          setRating={setRating}
+        />
+      </ModalItem>
     </TakeCareCustomerContainer>
   );
 };

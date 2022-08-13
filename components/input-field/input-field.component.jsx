@@ -14,6 +14,7 @@ const InputField = ({
   fieldType,
   error,
   label,
+  sublabel,
   requiredField,
   children,
   ...props
@@ -46,6 +47,7 @@ const InputField = ({
         {label} {requiredField && <span className="required">*</span>}
       </label>
       {renderSwitch(fieldType)}
+      <label style={{ fontWeight: "none", fontSize: "12px" }}>{sublabel}</label>
       {error && (
         <ErrorMessage basic color="red">
           {error.message}

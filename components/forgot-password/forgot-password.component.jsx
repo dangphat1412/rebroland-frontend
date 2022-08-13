@@ -25,9 +25,6 @@ const ForgotPassword = ({
   const onSubmit = async (user) => {
     // await loginUser(user, setErrorMessage, setLoginOpen, setLoading);
     const data = await forgotPasswordUser(user, setErrorMessage);
-    console.log("user: ", user);
-    console.log("data: ", data);
-
     if (data) {
       setForgotPasswordData(data);
       handleOpenOtpForgotPassword();

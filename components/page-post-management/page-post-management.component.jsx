@@ -64,7 +64,6 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
   const fetchAPI = async (params, sortValue, pageNo) => {
     setLoading(true);
     const posts = await searchPosts(params, sortValue, pageNo);
-    console.log(posts);
     setData(posts);
     setListPost(posts.posts);
     setTotalResult(posts.totalResult);

@@ -56,10 +56,6 @@ const GeographicInformationForm = ({
   };
 
   useEffect(() => {
-    console.log(position);
-  });
-
-  useEffect(() => {
     fetchProvinceAPI();
   }, []);
 

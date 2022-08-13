@@ -12,6 +12,8 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
       <Header as="h1">Thông tin bài đăng</Header>
       <InputField
         {...register("title", { required: "Tiêu đề không được để trống" })}
+        fieldType="textarea"
+        rows={2}
         label="Tiêu đề"
         name="title"
         placeholder="Nhập tiêu đề"
@@ -20,6 +22,7 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
         error={errors.title}
         requiredField
         maxLength={200}
+        sublabel="Tối thiểu 200 kí tự"
       />
       <InputField
         {...register("description", { required: "Mô tả không được để trống" })}
@@ -32,7 +35,8 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
         defaultValue={getValues("description")}
         error={errors.description}
         requiredField
-        maxLength={2000}
+        maxLength={3000}
+        sublabel="Tối thiểu 3000 kí tự"
       />
     </Segment>
   );

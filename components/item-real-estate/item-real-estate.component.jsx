@@ -19,7 +19,6 @@ const RealEstateItem = ({
   const directionName = options.find(
     (option) => option.id === post.directionId
   );
-  console.log("BEDROOM: ", post.numberOfBedroom > 0);
   const handleFollowingPost = async (
     e,
     post,

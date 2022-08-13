@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AdminNavigation from "../../components/admin-navigation/admin-navigation.component";
 import AdminPanel from "../../components/admin-panel/admin-panel.component";
 import PostManagementPage from "../../components/page-post-management/page-post-management.component";
 import API_URL from "../../utils/apiUrl";

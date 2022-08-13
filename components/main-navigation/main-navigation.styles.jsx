@@ -27,6 +27,10 @@ export const NavContainer = styled(Container)`
   .ui.popup>.header {
     font-family: "Tahoma", san-serif !important;
   }
+  .item-notification {
+      &:hover {
+        background: black !important;
+  }
 `;
 
 export const Menu = styled.div`

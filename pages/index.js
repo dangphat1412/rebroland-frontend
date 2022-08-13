@@ -9,7 +9,7 @@ export default function Home() {
       <HomeBackground background="/zyro-image.png" />
       <SearchBox />
       <Milestones />
-      <ListPropertiesRecommend />
+      {/* <ListPropertiesRecommend /> */}
     </div>
   );
 }

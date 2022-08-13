@@ -81,7 +81,6 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
   const fetchAPI = async (keyword, sortValue, pageNo) => {
     setLoading(true);
     const posts = await searchUsers(keyword, sortValue, pageNo);
-    console.log(posts);
     setData(posts);
     setListUser(posts.list);
     setTotalResult(posts.totalResult);
@@ -175,7 +174,6 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                     const data = await getPostsByUser(user.id, 0);
                     setPostsData(data);
                     setUserLoading(false);
-                    console.log(data);
                   }}
                 >
                   <Table.Cell singleLine textAlign="center">

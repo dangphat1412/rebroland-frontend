@@ -31,9 +31,11 @@ import {
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import ModalItem from "../modal-item/modal-item.component";
 
-const CashoutManagementPage = ({ directWithdrawData }) => {
-  const [directWithdraw, setDirectWithdraw] = useState(directWithdrawData);
-  const [transferWithdraw, setTransferWithdraw] = useState(null);
+const CashoutManagementPage = ({ withdrawData }) => {
+  const [directWithdraw, setDirectWithdraw] = useState(withdrawData.direct);
+  const [transferWithdraw, setTransferWithdraw] = useState(
+    withdrawData.transfer
+  );
 
   const handleOnTabChange = (e, { activeIndex }) => {
     if (activeIndex === 0) fetchDirectWithdrawAPI();

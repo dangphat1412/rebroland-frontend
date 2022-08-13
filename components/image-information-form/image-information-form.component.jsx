@@ -5,7 +5,7 @@ import PictureUploadPreview from "../picture-upload-preview/picture-upload-previ
 const ImageInformationForm = ({ images, setImages }) => {
   return (
     <Segment size="large">
-      <Header as="h1">Hình ảnh và Video</Header>
+      <Header as="h1">Hình ảnh</Header>
       <PictureUploadPreview images={images} setImages={setImages} />
     </Segment>
   );

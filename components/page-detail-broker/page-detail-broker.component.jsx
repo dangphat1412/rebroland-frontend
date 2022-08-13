@@ -109,14 +109,14 @@ const DetailBrokerPage = ({
                   <Item.Content style={{ position: "relative" }}>
                     <Item.Header>{userDetail.fullName}</Item.Header>
                     <Card.Description>
+                      <b style={{ marginRight: "5px" }}>{rating}</b>
                       <Rating
                         maxRating={5}
-                        defaultRating={rating.toFixed()}
+                        rating={rating.toFixed()}
                         icon="star"
                         size="mini"
                         disabled
                       />
-                      <b> {rating}</b>
                       {user && (
                         <a
                           className="vote"
@@ -150,28 +150,33 @@ const DetailBrokerPage = ({
                     </Item.Description>
 
                     <Item.Description className="social-media-list">
-                      <a
-                        href={userDetail.facebookLink}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Image
-                          src="https://cdn.icon-icons.com/icons2/2108/PNG/512/facebook_icon_130940.png"
-                          alt="fb"
-                          size="mini"
-                        />
-                      </a>
-                      <a
-                        href={userDetail.zaloLink}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Image
-                          src="https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png"
-                          alt="fb"
-                          size="mini"
-                        />
-                      </a>
+                      {userDetail.facebookLink && (
+                        <a
+                          href={userDetail.facebookLink}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image
+                            src="https://cdn.icon-icons.com/icons2/2108/PNG/512/facebook_icon_130940.png"
+                            alt="fb"
+                            size="mini"
+                          />
+                        </a>
+                      )}
+
+                      {userDetail.zaloLink && (
+                        <a
+                          href={userDetail.zaloLink}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image
+                            src="https://cdn1.iconfinder.com/data/icons/logos-brands-in-colors/2500/zalo-seeklogo.com-512.png"
+                            alt="fb"
+                            size="mini"
+                          />
+                        </a>
+                      )}
                     </Item.Description>
                     {user && (
                       <Icon

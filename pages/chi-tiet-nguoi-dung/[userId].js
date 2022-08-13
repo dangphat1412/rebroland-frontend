@@ -13,25 +13,19 @@ const UserDetail = ({
   setLoginOpen,
   setRegisterOpen,
 }) => {
-  const router = useRouter();
-
-  if (postsData.user.id === user.id) {
-    router.push("/trang-ca-nhan/bat-dong-san-cua-toi");
-  } else {
-    return (
-      <div>
-        <SubHeader title="Chi tiết người dùng" background="/zyro-image.png" />
-        <UserDetailPage
-          postsData={postsData}
-          followingPosts={followingPosts}
-          setFollowingPosts={setFollowingPosts}
-          user={user}
-          setLoginOpen={setLoginOpen}
-          setRegisterOpen={setRegisterOpen}
-        />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <SubHeader title="Chi tiết người dùng" background="/zyro-image.png" />
+      <UserDetailPage
+        postsData={postsData}
+        followingPosts={followingPosts}
+        setFollowingPosts={setFollowingPosts}
+        user={user}
+        setLoginOpen={setLoginOpen}
+        setRegisterOpen={setRegisterOpen}
+      />
+    </div>
+  );
 };
 
 export async function getServerSideProps(context) {

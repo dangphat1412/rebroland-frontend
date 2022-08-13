@@ -20,6 +20,11 @@ export const TakeCareCustomerContainer = styled.div`
     width: 30px !important;
     object-fit: cover;
   }
+  .user-avatar {
+    width: 100px !important;
+    height: 80px !important;
+    object-fit: cover;
+  }
 `;
 
 export const ListPostContainer = styled(Segment)`

@@ -9,7 +9,6 @@ const MyProfileProperty = () => {
   useEffect(() => {
     (async () => {
       const data = await getPostsByUser();
-      console.log(data);
       setPosts(data);
     })();
   }, []);

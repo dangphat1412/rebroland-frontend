@@ -323,3 +323,30 @@ export const extendPost = async (postId, data) => {
     console.log(error);
   }
 };
+
+export const reupPost = async (postId, data) => {
+  try {
+    const res = await Axios.put(`/repost/${postId}`, data);
+    return res.status;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const dropPost = async (postId) => {
+  try {
+    const res = await Axios.put(`/drop-post/${postId}`);
+    return res.status;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deletepPost = async (postId) => {
+  try {
+    const res = await Axios.put(`/delete-post/${postId}`);
+    return res.status;
+  } catch (error) {
+    console.log(error);
+  }
+};

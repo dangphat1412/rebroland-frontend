@@ -5,7 +5,6 @@ import { changePhone, otpChangePhone } from "../../actions/auth";
 import CustomButton from "../custom-button/custom-button.component";
 
 const OtpChangePhone = ({ phoneData, setOpenOtpChangePhone, toast }) => {
-  console.log(phoneData);
   const [phone, setPhone] = useState(phoneData.phoneData);
   const [counter, setCounter] = useState(phoneData.tokenTime * 60);
   const [errorMessage, setErrorMessage] = useState(null);

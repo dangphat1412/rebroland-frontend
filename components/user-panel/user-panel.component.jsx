@@ -191,11 +191,12 @@ const UserPanel = ({ user }) => {
           </Link>
 
           {user && user.currentRole === 2 && (
-            <Link href="/dang-tin">
+            <Link href="/trang-ca-nhan/yeu-cau-lien-he-lai">
               <List.Item>
                 <List.Content>
                   <List.Header as="h4">
-                    <span className="kikor kiko-pencil-write"></span> Đăng tin
+                    <span className="kikor kiko-address-book"></span> Yêu cầu
+                    liên hệ lại
                   </List.Header>
                 </List.Content>
               </List.Item>

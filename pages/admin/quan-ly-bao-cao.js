@@ -32,7 +32,7 @@ export async function getServerSideProps(context) {
   try {
     const { token } = parseCookies(context);
 
-    const res = await axios.get(`${API_URL}/api/admin/list-reports/posts`, {
+    const res = await axios.get(`${API_URL}/api/admin/list-reports`, {
       headers: { Authorization: token },
     });
 

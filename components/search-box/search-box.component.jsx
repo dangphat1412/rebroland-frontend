@@ -80,7 +80,6 @@ const SearchBox = ({ searchParams }) => {
         }
         if (searchParams.district) {
           const districtsData = await getDistricts(provinceId);
-          console.log(districtsData);
           const districtId = districtsData.districts.filter(
             (district) => district.name === searchParams.district
           )[0].code;

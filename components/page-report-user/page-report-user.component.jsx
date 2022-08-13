@@ -180,6 +180,9 @@ const ReportUserPage = ({
             <Table.HeaderCell singleLine textAlign="center">
               Hành động
             </Table.HeaderCell>
+            <Table.HeaderCell singleLine textAlign="center">
+              Ghi chú
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -197,7 +200,6 @@ const ReportUserPage = ({
                     const reportUserData = await getDetailReportUser(
                       user.reportId
                     );
-                    console.log(reportUserData);
                     setReportUserDetail(reportUserData);
                     setReportUserLoading(false);
                   }}

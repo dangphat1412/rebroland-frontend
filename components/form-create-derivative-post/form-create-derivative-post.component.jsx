@@ -36,7 +36,6 @@ const FormCreateDerivativePost = () => {
   }, [register]);
 
   const onSubmit = (data, e) => {
-    console.log("DATA: ", data);
     alert(JSON.stringify(data));
   };
 

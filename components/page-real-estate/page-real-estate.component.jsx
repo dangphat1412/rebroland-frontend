@@ -61,7 +61,6 @@ const RealEstatePage = ({
 
   const fetchAPI = async (params, sortValue, pageNo) => {
     const data = { ...params, sortValue, pageNo };
-    console.log(data);
     if (router.asPath === "/bat-dong-san")
       router.push(
         {
