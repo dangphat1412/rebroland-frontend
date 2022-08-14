@@ -17,6 +17,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { getNotifications } from "../../actions/notifications";
 
 const NotificationsPage = ({ notificationList }) => {
+  console.log(notificationList);
   const [notifications, setNotifications] = useState(notificationList || []);
   const [hasMore, setHasMore] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
@@ -77,11 +78,14 @@ const NotificationsPage = ({ notificationList }) => {
                               </Item.Description>
                             </>
                           )}
-                          {notification.type === "Report" && (
+                          {/* {notification.type === "Report" && (
                             <Item.Description>
                               {notification.content}
                             </Item.Description>
-                          )}
+                          )} */}
+                          <Item.Description>
+                            {notification.content}
+                          </Item.Description>
                           <Item.Extra>{notification.date} </Item.Extra>
                         </Item.Content>
                         {notification.unRead === true && (

@@ -434,6 +434,7 @@ const NotificationList = ({
                   {notification.type === "Report" && (
                     <Item.Description>{notification.content}</Item.Description>
                   )}
+                  <Item.Description>{notification.content}</Item.Description>
                   <Item.Extra>{notification.date}</Item.Extra>
                 </Item.Content>
                 {notification.unRead === true && (
