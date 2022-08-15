@@ -20,7 +20,10 @@ import {
   Segment,
 } from "semantic-ui-react";
 import { logoutUser, switchRole } from "../../actions/auth";
-import { getNotifications } from "../../actions/notifications";
+import {
+  getNotifications,
+  readNotifications,
+} from "../../actions/notifications";
 import { NavContainer, Menu, LogoContainer } from "./main-navigation.styles";
 
 const MainNavigation = ({
@@ -39,12 +42,14 @@ const MainNavigation = ({
   const [hasMore, setHasMore] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
   const isFirstTime = useRef(true);
+  const [openNotification, setOpenNotification] = useState(false);
 
   const handleSwitchBroker = async () => {
     await switchRole(setLoading);
   };
 
   const handleShowNotification = async () => {
+    setOpenNotification(true);
     if (isFirstTime.current === true || unreadNotification > 0) {
       const data = await getNotifications(0);
       setNotifications([...data]);
@@ -338,14 +343,18 @@ const MainNavigation = ({
                       content={
                         <NotificationList
                           notifications={notifications}
+                          setNotifications={setNotifications}
                           hasMore={hasMore}
                           fetchNotificationsOnScroll={
                             fetchNotificationsOnScroll
                           }
+                          setOpenNotification={setOpenNotification}
                         />
                       }
                       on="click"
                       onOpen={handleShowNotification}
+                      onClose={() => setOpenNotification(false)}
+                      open={openNotification}
                       basic
                       pinned
                       position="bottom center"
@@ -392,8 +401,10 @@ const MainNavigation = ({
 
 const NotificationList = ({
   notifications,
+  setNotifications,
   hasMore,
   fetchNotificationsOnScroll,
+  setOpenNotification,
 }) => {
   return (
     <>
@@ -416,10 +427,28 @@ const NotificationList = ({
           Xem tất cả
         </Link>
         <Divider />
-        <Item.Group divided link className="list-notification">
+        <Item.Group divided link>
           {notifications.map((notification, index) => {
             return (
-              <Item key={index} className="item-notification">
+              <Item
+                key={index}
+                onClick={async () => {
+                  const data = await readNotifications(notification.id);
+                  if (data) {
+                    const list = notifications;
+                    const index = list.findIndex(
+                      (n) => n.id === notification.id
+                    );
+                    list[index].unRead = false;
+                    setNotifications(list);
+                    setOpenNotification(false);
+                    console.log(notifications);
+                    if (data.type === "Contact") {
+                      Router.push("/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai");
+                    }
+                  }
+                }}
+              >
                 <Item.Image
                   src={
                     notification.type === "Contact"
@@ -442,10 +471,7 @@ const NotificationList = ({
                   <Item.Extra>{notification.date}</Item.Extra>
                 </Item.Content>
                 {notification.unRead === true && (
-                  <Item.Content
-                    verticalAlign="middle"
-                    style={{ width: "20px" }}
-                  >
+                  <Item.Content verticalAlign="right" style={{ width: "20px" }}>
                     <Item.Extra>
                       <Label floated="right" circular color="blue" empty />
                     </Item.Extra>

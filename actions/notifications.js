@@ -22,3 +22,14 @@ export const getNotifications = async (pageNo) => {
     console.log(error);
   }
 };
+
+export const readNotifications = async (notificationId) => {
+  try {
+    const res = await Axios.put(`/read/${notificationId}`);
+    return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};

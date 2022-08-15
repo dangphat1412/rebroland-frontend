@@ -11,6 +11,7 @@ import { RealEstateInfoContainer } from "./real-estate-information.styles";
 
 const RealEstateInformationForm = ({
   register,
+  unregister,
   errors,
   watch,
   setValue,
@@ -144,7 +145,7 @@ const RealEstateInformationForm = ({
             required: "Diện tích không được để trống",
             min: {
               value: 1,
-              message: "Diện tích phải lớn hơn 0",
+              message: "Diện tích tối thiểu 1m²",
             },
             max: {
               value: 10000,
@@ -156,11 +157,14 @@ const RealEstateInformationForm = ({
           label="Diện tích"
           name="area"
           placeholder="Nhập diện tích"
-          onChange={handleChange}
+          onChange={(e, { name, value }) => {
+            console.log(value);
+            setValue(name, value ? (value >= 0 ? Math.abs(value) : 0) : null);
+          }}
+          value={watch("area")}
           defaultValue={getValues("area")}
           error={errors.area}
           requiredField
-          sublabel="Diện tích tối đa 10000m²"
         >
           <input />
           <Label basic size="big">
@@ -170,10 +174,13 @@ const RealEstateInformationForm = ({
 
         <InputField
           {...register("price", {
-            required: "Mức giá không được để trống",
+            required:
+              watch("unitPriceId") === 3
+                ? false
+                : "Mức giá không được để trống",
             min: {
-              value: 1,
-              message: "Mức giá phải lớn hơn 0",
+              value: 1000,
+              message: "Mức giá tối thiểu 1,000 VNĐ",
             },
             max: {
               value: 100000000000,
@@ -185,10 +192,13 @@ const RealEstateInformationForm = ({
           name="price"
           placeholder="Nhập mức giá"
           defaultValue={getValues("price")}
-          onChange={handleChange}
+          onChange={(e, { name, value }) => {
+            console.log(value);
+            setValue(name, value ? (value >= 0 ? Math.abs(value) : 0) : null);
+          }}
+          value={watch("price")}
           error={errors.price}
           requiredField
-          sublabel="Mức giá tối đa 10000m²"
         >
           <input disabled={watch("unitPriceId") !== 3 ? false : true} />
           <Select
