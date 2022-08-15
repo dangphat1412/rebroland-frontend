@@ -39,6 +39,7 @@ import { useForm } from "react-hook-form";
 import PaymentInformationForm from "../payment-information-form/payment-information-form.component";
 import { default as directionList } from "../../utils/directionList";
 import EditPostForm from "../form-edit-post/form-edit-post.component";
+import Router from "next/router";
 
 const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
   const [data, setData] = useState(postsData || {});
@@ -196,11 +197,14 @@ const ListProperty = ({ user, data, setData, handlePaginationChange }) => {
     <>
       {data.posts.length > 0 ? (
         <>
-          <Table padded color="yellow">
+          <Table padded selectable color="yellow">
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell singleLine textAlign="center">
                   Bài đăng
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Mã bài đăng
                 </Table.HeaderCell>
                 <Table.HeaderCell singleLine textAlign="center">
                   Trạng thái
@@ -321,6 +325,8 @@ const ListProperty = ({ user, data, setData, handlePaginationChange }) => {
         open={openDropPost}
         header="Xác nhận hạ bài"
         content="Bạn có chắc chắn muốn hạ bài không? Nếu bạn hạ bài bạn sẽ mất những ngày còn lại"
+        cancelButton="Huỷ bỏ"
+        confirmButton="Xác nhận"
         onCancel={() => {
           setOpenDropPost(false);
         }}
@@ -349,13 +355,7 @@ const ListProperty = ({ user, data, setData, handlePaginationChange }) => {
         onConfirm={async () => {
           const status = await deletepPost(detailPost.postId);
           if (status === 201) {
-            const listData = data;
-            const listArray = data.posts.filter(
-              (p) => p.postId !== detailPost.postId
-            );
-            setData({ ...listData, posts: listArray });
-
-            setOpenDeletePost(false);
+            Router.reload();
           }
         }}
       />
@@ -391,12 +391,7 @@ const FormExtendPost = ({
   const onSubmit = async (timeData, e) => {
     const status = await extendPost(detailPost.postId, timeData);
     if (status === 201) {
-      const listData = data;
-      const listArray = data.posts;
-      const index = data.posts.findIndex((p) => p.postId === detailPost.postId);
-      listArray[index].status = { id: 1, name: "Đang hoạt động" };
-      setData({ ...listData, posts: listArray });
-      setOpenExtendPost(false);
+      Router.reload();
     }
   };
 
@@ -446,11 +441,7 @@ const FormReupPost = ({
   const onSubmit = async (data, e) => {
     const status = await extendPost(detailPost.postId, data);
     if (status === 201) {
-      setOpenReupPost(false);
-      // const list = [...postList];
-      // const index = list.findIndex((post) => post.postId === detailPost.postId);
-      // list[index].status = { id: 1, name: "Đang hoạt động" };
-      // setPostList(list);
+      Router.reload();
     }
   };
 
@@ -561,6 +552,7 @@ const RealEstateItem = ({
           </Item>
         </Item.Group>
       </Table.Cell>
+      <Table.Cell textAlign="center">{post.postId}</Table.Cell>
       <Table.Cell singleLine textAlign="center">
         {post.block === true && (
           <Label circular color="red">
@@ -573,7 +565,7 @@ const RealEstateItem = ({
               {post.status.name}
             </Label>
             <br />
-            Ngày hết hạn: {post.endDate.split(" ")[0]}
+            <b>Ngày hết hạn: {post.endDate.split(" ")[0]}</b>
           </>
         )}
         {post.block === false &&
@@ -593,20 +585,26 @@ const RealEstateItem = ({
           </Label>
         )}
       </Table.Cell>
-      <Table.Cell textAlign="center">
-        <Link
-          href={`/trang-ca-nhan/bat-dong-san-cua-toi/${convertToSlug(
-            post.title
-          )}-${post.postId}`}
-        >
-          <Icon
-            circular
-            inverted
-            color="teal"
-            name="eye"
-            style={{ cursor: "pointer" }}
-          />
-        </Link>
+      <Table.Cell singleLine textAlign="center">
+        <Popup
+          content="Xem bài viết"
+          trigger={
+            <Icon
+              circular
+              inverted
+              color="teal"
+              name="eye"
+              style={{ cursor: "pointer" }}
+              onClick={async () => {
+                Router.push(
+                  `/trang-ca-nhan/bat-dong-san-cua-toi/${convertToSlug(
+                    post.title
+                  )}-${post.postId}`
+                );
+              }}
+            />
+          }
+        />
 
         {post.status.id !== 3 && (
           <Popup

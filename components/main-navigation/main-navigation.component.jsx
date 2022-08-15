@@ -238,13 +238,17 @@ const MainNavigation = ({
                               Router.push("/trang-ca-nhan/thay-doi-mat-khau");
                             }}
                           />
-                          <Dropdown.Item
-                            icon="volume control phone"
-                            text="Yêu cầu liên hệ lại"
-                            onClick={() => {
-                              Router.push("/trang-ca-nhan/yeu-cau-lien-he-lai");
-                            }}
-                          />
+                          {user && user.currentRole === 2 && (
+                            <Dropdown.Item
+                              icon="volume control phone"
+                              text="Yêu cầu liên hệ lại"
+                              onClick={() => {
+                                Router.push(
+                                  "/trang-ca-nhan/yeu-cau-lien-he-lai"
+                                );
+                              }}
+                            />
+                          )}
                           <Dropdown.Item
                             icon="phone"
                             text="Đổi số điện thoại"

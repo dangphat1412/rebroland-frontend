@@ -23,6 +23,17 @@ export const userContact = async (data, userId, postId, setErrorMessage) => {
   }
 };
 
+export const confirmRequestContact = async (contactId) => {
+  try {
+    const res = await Axios.post(`/user/confirm/${contactId}`);
+    return res.status;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
 export const deleteRequestContact = async (contactId) => {
   try {
     const res = await Axios.delete(`/${contactId}`);
@@ -47,7 +58,23 @@ export const deleteRequestContact = async (contactId) => {
 
 export const searchContacts = async (params, pageNo) => {
   try {
-    const res = await Axios.get("", {
+    const res = await Axios.get("/broker", {
+      params: {
+        keyword: params.key,
+        pageNo: pageNo,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const searchUserContacts = async (params, pageNo) => {
+  try {
+    const res = await Axios.get("/user", {
       params: {
         keyword: params.key,
         pageNo: pageNo,

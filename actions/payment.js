@@ -23,7 +23,7 @@ export const payment = async (amount) => {
 export const otpTransfer = async (data, setErrorMessage) => {
   try {
     const res = await Axios.post(`/transfer/send-otp`, data);
-    return res;
+    return res.data;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);
@@ -35,7 +35,7 @@ export const handleTransfer = async (data, setErrorMessage) => {
   try {
     console.log(data);
     const res = await Axios.post(`/transfer`, data);
-    if (res.status === 200) {
+    if (res.status === 201) {
       Router.push({
         pathname: "/thanh-toan-thanh-cong",
         query: {

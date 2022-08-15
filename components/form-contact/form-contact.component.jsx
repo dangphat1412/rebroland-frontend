@@ -10,6 +10,7 @@ const FormContact = ({
   userId,
   postId,
   toast,
+  roleId,
   setContactOpen,
   currentUser,
   setLoginOpen,
@@ -28,6 +29,8 @@ const FormContact = ({
       email: currentUser && currentUser.email,
     },
   });
+  console.log(userId);
+  console.log(currentUser);
 
   useEffect(() => {
     register("fullName", { required: "Họ và tên không được để trống" });
@@ -42,7 +45,12 @@ const FormContact = ({
   const onSubmit = async (data) => {
     if (!currentUser) return;
 
-    const status = await userContact(data, userId, postId, setErrorMessage);
+    const status = await userContact(
+      { ...data, roleId },
+      userId,
+      postId,
+      setErrorMessage
+    );
     if (status === 201) {
       setTimeout(() => {
         toast({

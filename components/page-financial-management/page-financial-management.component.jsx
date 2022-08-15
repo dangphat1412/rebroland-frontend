@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Dimmer,
+  Divider,
   Dropdown,
   Form,
   Grid,
   Header,
   Icon,
   Image,
+  Input,
+  Label,
   Loader,
   Segment,
   Statistic,
@@ -20,7 +24,12 @@ import {
 } from "./page-financial-management.styles";
 import { useForm } from "react-hook-form";
 import Pagination from "../pagination/pagination.component";
-import { getTotalAmount, searchPayments } from "../../actions/admin";
+import {
+  getPricePerDayData,
+  getTotalAmount,
+  searchPayments,
+  updatePricePerDay,
+} from "../../actions/admin";
 import convertToCurrency from "../../utils/convertToCurrency";
 
 const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
@@ -33,6 +42,11 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
   const [data, setData] = useState(paymentData);
   const [totalAmount, setTotalAmount] = useState([]);
 
+  const [pricePerDayData, setPricePerDayData] = useState(null);
+  const [pricePerDay, setPricePerDay] = useState(null);
+  const [discountPricePerDay, setDiscountPricePerDay] = useState(null);
+  const [pricePerDayOptions, setPricePerDayOptions] = useState([]);
+
   useEffect(() => {
     const fetchAPI = async () => {
       const total = await getTotalAmount();
@@ -40,6 +54,29 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
     };
     fetchAPI();
   }, []);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      const data = await getPricePerDayData();
+      setPricePerDayData(data.currentPrice);
+      setPricePerDay(data.currentPrice.price);
+      setDiscountPricePerDay(data.currentPrice.discount);
+      setPricePerDayOptions(
+        data.listPrice.map((price) => {
+          return { key: price, text: price, value: price };
+        })
+      );
+    };
+    fetchAPI();
+  }, []);
+
+  const handleAddition = (e, { value }) => {
+    setPricePerDayOptions([{ text: value, value }, ...pricePerDayOptions]);
+  };
+
+  const handleChange = (e, { name, value }) => {
+    setPricePerDay(value);
+  };
 
   const [loading, setLoading] = useState(false);
 
@@ -68,17 +105,29 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
     setLoading(false);
   };
 
+  const handleSubmitPricePerDay = async (e) => {
+    e.preventDefault();
+    const data = await updatePricePerDay({
+      typeId: 1,
+      price: pricePerDay,
+      discount: discountPricePerDay,
+    });
+    if (data) {
+      setPricePerDayData(data);
+    }
+  };
+
   return (
     <FinancialManagementPageContainer>
       <Grid>
         <Grid.Row>
-          <Grid.Column width={8}>
+          <Grid.Column width={6}>
             <Segment>
               <Grid columns="equal">
                 <Grid.Row>
                   <Grid.Column>
                     <Segment textAlign="center">
-                      <Statistic>
+                      <Statistic size="small">
                         <Statistic.Label>Tổng doanh thu</Statistic.Label>
                         <Statistic.Value>
                           {convertToCurrency(totalAmount.totalAmount)} VNĐ
@@ -90,7 +139,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                 <Grid.Row>
                   <Grid.Column>
                     <Segment textAlign="center">
-                      <Statistic size="small">
+                      <Statistic size="tiny">
                         <Statistic.Label>Từ các bài đăng</Statistic.Label>
                         <Statistic.Value>
                           {convertToCurrency(totalAmount.totalPostAmount)} VNĐ
@@ -100,9 +149,9 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                   </Grid.Column>
                   <Grid.Column>
                     <Segment textAlign="center">
-                      <Statistic size="small">
+                      <Statistic size="tiny">
                         <Statistic.Label>
-                          Từ việc đăng ký thành nhà môi giới
+                          Đăng ký thành nhà môi giới
                         </Statistic.Label>
                         <Statistic.Value>
                           {convertToCurrency(totalAmount.totalBrokerAmount)} VNĐ
@@ -114,7 +163,72 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
               </Grid>
             </Segment>
           </Grid.Column>
-          <Grid.Column width={8}></Grid.Column>
+          <Grid.Column width={10}>
+            <Segment>
+              <Grid columns={2} relaxed="very" stackable>
+                <Grid.Column>
+                  <Header as="h3" style={{ marginBottom: "5px" }}>
+                    Cập nhật đơn giá bài đăng
+                  </Header>
+                  <Form onSubmit={handleSubmitPricePerDay}>
+                    <b>
+                      Đơn giá hiện tại:{" "}
+                      {pricePerDayData && (
+                        <>
+                          {convertToCurrency(pricePerDayData.price)} VNĐ
+                          <Label
+                            color="red"
+                            horizontal
+                            style={{ marginLeft: "5px" }}
+                          >
+                            -{pricePerDayData.discount}%
+                          </Label>
+                        </>
+                      )}
+                    </b>
+                    <br />
+                    <InputField
+                      fieldType="dropdown"
+                      label="Cập nhật mức giá bài đăng (VNĐ)"
+                      name="pricePerDay"
+                      placeholder="Chọn mức giá bài đăng"
+                      options={pricePerDayOptions}
+                      search
+                      selection
+                      fluid
+                      allowAdditions
+                      additionLabel="Thêm mức giá: "
+                      value={pricePerDay}
+                      onAddItem={handleAddition}
+                      onChange={handleChange}
+                    />
+                    <InputField
+                      type="number"
+                      label="Giảm giá (%)"
+                      name="discountPricePerDay"
+                      placeholder="Nhập tên liên hệ"
+                      value={discountPricePerDay}
+                      onInput={(e) => {
+                        setDiscountPricePerDay(
+                          e.target.value > 0
+                            ? e.target.value <= 100
+                              ? e.target.value
+                              : 100
+                            : 0
+                        );
+                      }}
+                    />
+                    <Button content="Cập nhật" primary />
+                  </Form>
+                </Grid.Column>
+
+                <Grid.Column>
+                  <Header as="h3">Cập nhật đơn giá đăng ký nhà môi giới</Header>
+                </Grid.Column>
+              </Grid>
+              <Divider vertical>Và</Divider>
+            </Segment>
+          </Grid.Column>
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={4}>

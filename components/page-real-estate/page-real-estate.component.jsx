@@ -8,7 +8,7 @@ import {
   Loader,
   Segment,
 } from "semantic-ui-react";
-import { getAllCategories } from "../../actions/post";
+import { getAllCategories, getAllOriginalCategories } from "../../actions/post";
 import SearchBox from "../search-box/search-box.component";
 import {
   CategoriesContainer,
@@ -38,11 +38,39 @@ const RealEstatePage = ({
 
   useEffect(() => {
     const fetchAPI = async () => {
-      const data = await getAllCategories();
+      let data;
+      if (router.asPath === "/bat-dong-san") {
+        data = await getAllCategories();
+      } else {
+        data = await getAllOriginalCategories();
+      }
       setCategoties(data);
     };
     fetchAPI();
   }, []);
+
+  const handleSearchCategory = (propertyTypeId) => {
+    if (router.asPath === "/bat-dong-san") {
+      router.push(
+        {
+          pathname: "/bat-dong-san",
+          query: { data: JSON.stringify({ propertyTypes: [propertyTypeId] }) },
+        },
+        "/bat-dong-san",
+        { scroll: true }
+      );
+    }
+    if (router.asPath === "/nha-moi-gioi/bat-dong-san") {
+      router.push(
+        {
+          pathname: "/nha-moi-gioi/bat-dong-san",
+          query: { data: JSON.stringify({ propertyTypes: [propertyTypeId] }) },
+        },
+        "/nha-moi-gioi/bat-dong-san",
+        { scroll: true }
+      );
+    }
+  };
 
   useEffect(() => {
     setData(postsData);
@@ -144,22 +172,46 @@ const RealEstatePage = ({
               {categories && (
                 <List divided verticalAlign="middle" size="large" relaxed>
                   <List.Item>
-                    <List.Content floated="right">
+                    <List.Content
+                      floated="right"
+                      as="a"
+                      onClick={() => {
+                        handleSearchCategory(1);
+                      }}
+                    >
                       {categories.house} bất động sản
                     </List.Content>
-                    <List.Content>Nhà ở</List.Content>
+                    <List.Content>
+                      <b>Nhà ở</b>
+                    </List.Content>
                   </List.Item>
                   <List.Item>
-                    <List.Content floated="right">
+                    <List.Content
+                      floated="right"
+                      as="a"
+                      onClick={() => {
+                        handleSearchCategory(2);
+                      }}
+                    >
                       {categories.apartment} bất động sản
                     </List.Content>
-                    <List.Content>Nhà chung cư</List.Content>
+                    <List.Content>
+                      <b>Nhà chung cư</b>
+                    </List.Content>
                   </List.Item>
                   <List.Item>
-                    <List.Content floated="right">
+                    <List.Content
+                      floated="right"
+                      as="a"
+                      onClick={() => {
+                        handleSearchCategory(3);
+                      }}
+                    >
                       {categories.land} bất động sản
                     </List.Content>
-                    <List.Content>Đất nền</List.Content>
+                    <List.Content>
+                      <b>Đất thổ cư</b>
+                    </List.Content>
                   </List.Item>
                 </List>
               )}

@@ -15,6 +15,7 @@ import {
   Label,
   List,
   Loader,
+  Message,
   Radio,
   Rating,
   Segment,
@@ -50,6 +51,7 @@ import HOST_URL from "../../utils/hostUrl";
 import Barcode from "react-hooks-barcode";
 import InputField from "../input-field/input-field.component";
 import { useForm } from "react-hook-form";
+import { ratingListBroker } from "../../actions/rating";
 
 const PagePropertyDetail = ({
   post,
@@ -562,15 +564,7 @@ const PagePropertyDetail = ({
               )}
 
               {post.status.id === 3 && (
-                <Button
-                  basic
-                  color="green"
-                  fluid
-                  size="big"
-                  onClick={() => {
-                    setOpenRate(true);
-                  }}
-                >
+                <Button basic color="green" fluid size="big">
                   <Icon name="check circle" color="green" /> Kết thúc giao dịch
                 </Button>
               )}
@@ -714,6 +708,7 @@ const PagePropertyDetail = ({
       >
         <FormContact
           currentUser={user}
+          roleId={post.originalPost ? 3 : 2}
           postId={post.postId}
           userId={post.user.id}
           toast={toast}
@@ -730,7 +725,11 @@ const PagePropertyDetail = ({
           setEndTransactionOpen(false);
         }}
       >
-        <FormEndTransaction post={post} />
+        <FormEndTransaction
+          post={post}
+          setEndTransactionOpen={setEndTransactionOpen}
+          setOpenRate={setOpenRate}
+        />
       </ModalItem>
       <ModalItem
         header="Đánh giá nhà môi giới"
@@ -740,7 +739,11 @@ const PagePropertyDetail = ({
           setOpenRate(false);
         }}
       >
-        <FormRateBroker brokers={brokers} />
+        <FormRateBroker
+          brokers={brokers}
+          user={user}
+          setOpenRate={setOpenRate}
+        />
       </ModalItem>
       <Script
         async
@@ -754,37 +757,22 @@ const PagePropertyDetail = ({
   );
 };
 
-const FormRateBroker = ({ brokers }) => {
+const FormRateBroker = ({ user, brokers, setOpenRate }) => {
   const [listRating, setListRating] = useState(
     brokers.map((broker) => {
-      return { id: broker.user.id, rating: null, description: null };
+      return { userRated: broker.user.id, starRate: null, description: null };
     })
   );
 
-  useEffect(() => {
-    console.log(listRating);
-  });
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (e) => {
+    const data = { lists: listRating };
     console.log(data);
-  };
-
-  const handleChange = (e, { name, value }) => {
-    // setValue(name, value);
-  };
-
-  const handleRate = (e, { rating, maxRating }) => {
-    setListRating(
-      [...listRating].map((object) => {
-        if (object.id === user.username) {
-          return {
-            ...object,
-            favoriteFood: "Potatos",
-            someNewRandomAttribute: "X",
-          };
-        } else return object;
-      })
-    );
+    const status = await ratingListBroker(data, setErrorMessage);
+    if (status === 200) {
+      setOpenRate(false);
+    }
   };
 
   return (
@@ -823,10 +811,10 @@ const FormRateBroker = ({ brokers }) => {
                     onRate={(e, { rating }) => {
                       setListRating(
                         [...listRating].map((object) => {
-                          if (object.id === broker.user.id) {
+                          if (object.userRated === broker.user.id) {
                             return {
                               ...object,
-                              rating: rating,
+                              starRate: rating,
                             };
                           } else return object;
                         })
@@ -843,7 +831,7 @@ const FormRateBroker = ({ brokers }) => {
                     onChange={(e, { name, value }) => {
                       setListRating(
                         [...listRating].map((object) => {
-                          if (object.id === broker.user.id) {
+                          if (object.userRated === broker.user.id) {
                             return {
                               ...object,
                               description: value,
@@ -877,7 +865,7 @@ const FormRateBroker = ({ brokers }) => {
   );
 };
 
-const FormEndTransaction = ({ post }) => {
+const FormEndTransaction = ({ post, setEndTransactionOpen, setOpenRate }) => {
   const {
     register,
     handleSubmit,
@@ -891,7 +879,7 @@ const FormEndTransaction = ({ post }) => {
     defaultValues: {
       provideInfo: true,
       owner: post.owner,
-      ownerPhone: post.ownerPhone,
+      phone: post.phone,
       barcode: post.barcode,
       plotNumber: post.plotNumber,
       buildingName: post.buildingName,
@@ -902,6 +890,8 @@ const FormEndTransaction = ({ post }) => {
   const handleChange = (e, { name, value }) => {
     setValue(name, value);
   };
+
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (data, e) => {
     const propertyTypeId = post.propertyType.id;
@@ -916,8 +906,8 @@ const FormEndTransaction = ({ post }) => {
         error = true;
       }
 
-      if (data.ownerPhone === null) {
-        setError("ownerPhone", {
+      if (data.phone === null) {
+        setError("phone", {
           type: "not null",
           message: "Nhập số điện thoại chủ hộ",
         });
@@ -959,10 +949,18 @@ const FormEndTransaction = ({ post }) => {
       if (error === true) return;
     }
 
-    const status = await finishTransaction(post.postId, {
-      ...data,
-      propertyTypeId,
-    });
+    const status = await finishTransaction(
+      post.postId,
+      {
+        ...data,
+        typeId: propertyTypeId,
+      },
+      setErrorMessage
+    );
+    if (status === 200) {
+      setEndTransactionOpen(false);
+      setOpenRate(true);
+    }
   };
 
   return (
@@ -971,7 +969,12 @@ const FormEndTransaction = ({ post }) => {
         Xác nhận kết thúc giao dịch
       </Header>
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)} error={errorMessage !== null}>
+        <Message
+          error
+          list={errorMessage}
+          onDismiss={() => setErrorMessage(null)}
+        />
         <Form.Checkbox
           name="provideInfo"
           label="Cung cấp thông tin bất động sản"
@@ -999,12 +1002,12 @@ const FormEndTransaction = ({ post }) => {
 
               <InputField
                 label="Số điện thoại"
-                name="ownerPhone"
-                {...register("ownerPhone")}
+                name="phone"
+                {...register("phone")}
                 placeholder="Nhập số điện thoại"
-                defaultValue={post.ownerPhone}
+                defaultValue={post.phone}
                 onChange={handleChange}
-                error={errors.ownerPhone}
+                error={errors.phone}
                 requiredField
               />
             </Form.Group>
@@ -1085,75 +1088,83 @@ const FormHistory = ({ post, historyData }) => {
     <>
       {historyData ? (
         <>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column width={5}>
-                <Header as="h5">Mã vạch:</Header>
-              </Grid.Column>
-              <Grid.Column width={5}>
-                <Barcode value={post.barcode} {...config} />
-              </Grid.Column>
-            </Grid.Row>
+          {Object.values(historyData)[0] ? (
+            <>
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column width={5}>
+                    <Header as="h5">Mã vạch:</Header>
+                  </Grid.Column>
+                  <Grid.Column width={5}>
+                    <Barcode value={post.barcode} {...config} />
+                  </Grid.Column>
+                </Grid.Row>
 
-            {post.plotNumber && (
-              <Grid.Row>
-                <Grid.Column width={5}>
-                  <Header as="h5">Số thửa:</Header>
-                </Grid.Column>
-                <Grid.Column width={5}>{post.plotNumber}</Grid.Column>
-              </Grid.Row>
-            )}
+                {post.plotNumber && (
+                  <Grid.Row>
+                    <Grid.Column width={5}>
+                      <Header as="h5">Số thửa:</Header>
+                    </Grid.Column>
+                    <Grid.Column width={5}>{post.plotNumber}</Grid.Column>
+                  </Grid.Row>
+                )}
 
-            {post.buildingName && (
-              <Grid.Row>
-                <Grid.Column width={5}>
-                  <Header as="h5">Tên toà nhà:</Header>
-                </Grid.Column>
-                <Grid.Column width={5}>{post.buildingName}</Grid.Column>
-              </Grid.Row>
-            )}
+                {post.buildingName && (
+                  <Grid.Row>
+                    <Grid.Column width={5}>
+                      <Header as="h5">Tên toà nhà:</Header>
+                    </Grid.Column>
+                    <Grid.Column width={5}>{post.buildingName}</Grid.Column>
+                  </Grid.Row>
+                )}
 
-            {post.roomNumber && (
-              <Grid.Row>
-                <Grid.Column width={5}>
-                  <Header as="h5">Phòng số:</Header>
-                </Grid.Column>
-                <Grid.Column width={5}>{post.roomNumber}</Grid.Column>
-              </Grid.Row>
-            )}
-          </Grid>
-          <Table celled>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Số thứ tự</Table.HeaderCell>
-                <Table.HeaderCell>Họ và tên chủ hộ</Table.HeaderCell>
-                <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
-                <Table.HeaderCell>Sở hữu từ</Table.HeaderCell>
-                <Table.HeaderCell>Mã vạch</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-
-            <Table.Body>
-              {Object.values(historyData)[0].map((d, index) => {
-                return (
-                  <Table.Row key={index}>
-                    <Table.Cell>{index + 1}</Table.Cell>
-                    <Table.Cell>{d.owner}</Table.Cell>
-                    <Table.Cell>{d.phone}</Table.Cell>
-                    <Table.Cell>{d.startDate}</Table.Cell>
-                    <Table.Cell>
-                      <Barcode value={d.barcode} {...config} />
-                    </Table.Cell>
+                {post.roomNumber && (
+                  <Grid.Row>
+                    <Grid.Column width={5}>
+                      <Header as="h5">Phòng số:</Header>
+                    </Grid.Column>
+                    <Grid.Column width={5}>{post.roomNumber}</Grid.Column>
+                  </Grid.Row>
+                )}
+              </Grid>
+              <Table celled>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Số thứ tự</Table.HeaderCell>
+                    <Table.HeaderCell>Họ và tên chủ hộ</Table.HeaderCell>
+                    <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
+                    <Table.HeaderCell>Sở hữu từ</Table.HeaderCell>
+                    <Table.HeaderCell>Mã vạch</Table.HeaderCell>
                   </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table>
+                </Table.Header>
+
+                <Table.Body>
+                  {Object.values(historyData)[0].map((d, index) => {
+                    return (
+                      <Table.Row key={index}>
+                        <Table.Cell>{index + 1}</Table.Cell>
+                        <Table.Cell>{d.owner}</Table.Cell>
+                        <Table.Cell>{d.phone}</Table.Cell>
+                        <Table.Cell>{d.startDate}</Table.Cell>
+                        <Table.Cell>
+                          <Barcode value={d.barcode} {...config} />
+                        </Table.Cell>
+                      </Table.Row>
+                    );
+                  })}
+                </Table.Body>
+              </Table>
+            </>
+          ) : (
+            <Header as="h3" style={{ fontFamily: "Tahoma" }}>
+              Không ghi nhận lịch sử bất động sản nào
+            </Header>
+          )}
         </>
       ) : (
         <>
           <Dimmer active inverted>
-            <Loader inverted>Loading</Loader>
+            <Loader inverted>Đang tải</Loader>
           </Dimmer>
         </>
       )}

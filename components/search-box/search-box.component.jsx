@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Dropdown, Form } from "semantic-ui-react";
+import { Button, Dropdown, Form } from "semantic-ui-react";
 import { getDirections, getPropertyTypes } from "../../actions/post";
 import {
   getDistricts,
@@ -341,14 +341,14 @@ const SearchBox = ({ searchParams }) => {
                     setValue("maxArea", undefined);
                   }}
                 />
-                <Dropdown.Item
+                {/* <Dropdown.Item
                   text="Thoả thuận"
                   onClick={() => {
                     setAreaPlaceholder("Thoả thuận");
                     setValue("minArea", 0);
                     setValue("maxArea", 0);
                   }}
-                />
+                /> */}
               </Dropdown.Menu>
             </InputField>
             <InputField
@@ -373,6 +373,14 @@ const SearchBox = ({ searchParams }) => {
               onChange={handleChange}
               compact
               selection
+            />
+            <Button
+              icon="refresh"
+              type="button"
+              onClick={() => {
+                router.reload();
+              }}
+              style={{ height: "37px" }}
             />
           </Form.Group>
         </Form>
@@ -537,14 +545,14 @@ const SearchBox = ({ searchParams }) => {
                   setValue("maxArea", undefined);
                 }}
               />
-              <Dropdown.Item
+              {/* <Dropdown.Item
                 text="Thoả thuận"
                 onClick={() => {
                   setAreaPlaceholder("Thoả thuận");
                   setValue("minArea", 0);
                   setValue("maxArea", 0);
                 }}
-              />
+              /> */}
             </Dropdown.Menu>
           </InputField>
         </Form.Group>
@@ -573,7 +581,18 @@ const SearchBox = ({ searchParams }) => {
           selection
           defaultValue={searchParams && searchParams.numberOfBedrooms}
         />
-        <Form.Button fluid>Tìm kiếm</Form.Button>
+        <Button
+          type="button"
+          icon="refresh"
+          content="Đặt lại"
+          style={{ margin: "0px !important" }}
+          onClick={() => {
+            router.reload();
+          }}
+        />
+        <Form.Button fluid style={{ marginTop: "15px !important" }}>
+          Tìm kiếm
+        </Form.Button>
       </FormSearchContainer>
     );
   }

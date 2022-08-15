@@ -306,11 +306,22 @@ export const getAllCategories = async () => {
   }
 };
 
-export const finishTransaction = async (postId, data) => {
+export const getAllOriginalCategories = async () => {
+  try {
+    const res = await Axios.get(`/broker/categories`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const finishTransaction = async (postId, data, setErrorMessage) => {
   try {
     const res = await Axios.post(`/history/${postId}`, data);
     return res.status;
   } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
   }
 };

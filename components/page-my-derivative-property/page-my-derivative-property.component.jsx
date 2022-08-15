@@ -145,6 +145,9 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                   Bài đăng
                 </Table.HeaderCell>
                 <Table.HeaderCell singleLine textAlign="center">
+                  Mã bài đăng
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
                   Trạng thái
                 </Table.HeaderCell>
                 <Table.HeaderCell singleLine textAlign="center">
@@ -247,6 +250,9 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                             </Item.Content>
                           </Item>
                         </Item.Group>
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        {post.postId}
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
                         {post.status.name}

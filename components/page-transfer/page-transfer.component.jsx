@@ -55,10 +55,10 @@ const TransferPage = ({ user }) => {
   }, [register]);
 
   const onSubmit = async (data, e) => {
-    const res = await otpTransfer(data, setErrorMessage);
-    if (res.status === 200) {
-      console.log(res.data);
-      setTransferData(res.data);
+    const transferData = await otpTransfer(data, setErrorMessage);
+    if (transferData) {
+      console.log(transferData);
+      setTransferData(transferData);
       setOpenOtpTransfer(true);
     }
   };
@@ -77,9 +77,9 @@ const TransferPage = ({ user }) => {
                 <Card.Header textAlign="center">Chuyển khoản</Card.Header>
               </Card.Content>
               <Card.Content>
-                <Grid centered>
+                <Grid centered={true}>
                   <Grid.Row>
-                    <Grid.Column width={6} centered>
+                    <Grid.Column width={6} centered={true}>
                       <Form
                         onSubmit={handleSubmit(onSubmit)}
                         error={errorMessage !== null}
@@ -167,27 +167,18 @@ const OtpTransfer = ({ transferData, setOpenOtpTransfer, toast }) => {
   };
 
   const handleResentOtp = async () => {
-    setTransfer((prev) => ({ ...prev, token: "" }));
-    const res = await otpTransfer(transfer, setErrorMessage);
-    if (res.status === 200) {
-      setTransfer(res.data.transferData);
-      setCounter(res.data.tokenTime * 60);
+    const data = await otpTransfer(transfer, setErrorMessage);
+    console.log(data);
+    if (data) {
+      setTransfer(data.transferData);
+      setCounter(data.tokenTime * 60);
+      setTransfer((prev) => ({ ...prev, token: "" }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const status = await handleTransfer(transfer, setErrorMessage);
-    if (status === 200) {
-      setOpenOtpTransfer(false);
-      setTimeout(() => {
-        toast({
-          type: "success",
-          title: "Chuyển khoản",
-          description: <p>Chuyển khoản thành công</p>,
-        });
-      }, 100);
-    }
+    await handleTransfer(transfer, setErrorMessage);
   };
 
   return (

@@ -81,7 +81,7 @@ const DetailBrokerPage = ({
 
   return (
     <DetailBrokerContainer>
-      <SemanticToastContainer position="bottom-right" maxToasts={3} />
+      <SemanticToastContainer position="bottom-right" maxToasts={1} />
       <Grid>
         <Grid.Row>
           <Grid.Column width={4}>
@@ -294,6 +294,7 @@ const DetailBrokerPage = ({
               <FormContact
                 title="Liên lạc với nhà môi giới"
                 toast={toast}
+                roleId={3}
                 userId={userDetail.id}
                 currentUser={user}
                 setLoginOpen={setLoginOpen}

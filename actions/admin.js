@@ -44,7 +44,7 @@ export const changeUserStatus = async (userId) => {
     return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
-    setErrorMessage(messages);
+    // setErrorMessage(messages);
     console.log(error);
   }
 };
@@ -227,6 +227,24 @@ export const getTotalAmount = async () => {
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const getPricePerDayData = async () => {
+  try {
+    const res = await Axios.get(`/list-price/price-post`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updatePricePerDay = async (data) => {
+  try {
+    const res = await Axios.put(`/list-price/price-post`, data);
+    return res.data;
+  } catch (error) {
     console.log(error);
   }
 };

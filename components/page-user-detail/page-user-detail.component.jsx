@@ -264,6 +264,8 @@ const UserDetailPage = ({
           <Grid.Column width={4}>
             <Segment>
               <FormContact
+                roleId={2}
+                toast={toast}
                 currentUser={user}
                 title="Liên hệ với chủ sở hữu"
                 userId={userDetail.id}

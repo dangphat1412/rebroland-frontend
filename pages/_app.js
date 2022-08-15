@@ -32,7 +32,7 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <SemanticToastContainer position="bottom-right" maxToasts={3} />
+      <SemanticToastContainer position="bottom-right" maxToasts={1} />
       <Dimmer active={loading}>
         <Loader />
       </Dimmer>

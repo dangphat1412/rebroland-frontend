@@ -76,13 +76,13 @@ const Login = ({
 
         <Grid>
           <Grid.Column width={8}>
-            <Form.Checkbox label="Duy trì đăng nhập" />
+            {/* <Form.Checkbox label="Duy trì đăng nhập" /> */}
           </Grid.Column>
           <Grid.Column textAlign="right" width={8} className="forgot-password">
             <span onClick={handleOpenForgotPassword}>Quên mật khẩu</span>
           </Grid.Column>
         </Grid>
-        <Grid>
+        <Grid style={{ marginTop: "0px" }}>
           <Grid.Column textAlign="center">
             <CustomButton type="submit">Đăng nhập</CustomButton>
           </Grid.Column>
