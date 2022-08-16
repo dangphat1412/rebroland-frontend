@@ -108,7 +108,7 @@ const MainNavigation = ({
                 )}
                 {user && user.currentRole === 3 && (
                   <Link href="/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai">
-                    <List.Item as="a">Xử lý yêu cầu liên hệ lại</List.Item>
+                    <List.Item as="a">Yêu cầu liên hệ lại</List.Item>
                   </Link>
                 )}
                 {user && user.currentRole === 3 && (
@@ -116,6 +116,9 @@ const MainNavigation = ({
                     <List.Item as="a">Chăm sóc khách hàng</List.Item>
                   </Link>
                 )}
+                <Link href="/lien-he">
+                  <List.Item as="a">Liên hệ</List.Item>
+                </Link>
               </List>
             </Grid.Column>
             <Grid.Column width={4} textAlign="right" verticalAlign="middle">

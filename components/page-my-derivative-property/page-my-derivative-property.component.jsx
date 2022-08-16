@@ -16,6 +16,7 @@ import {
   Table,
 } from "semantic-ui-react";
 import {
+  deletepPost,
   dropPost,
   getDerivativePostsByUser,
   getPostById,
@@ -32,7 +33,7 @@ import {
 import statusOptions from "../../utils/typePropertyOptions";
 import ModalItem from "../modal-item/modal-item.component";
 import EditPostForm from "../form-edit-post/form-edit-post.component";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 
 const MyDerivativePropertyPage = ({ user, postsData, setTotalResult }) => {
   const router = useRouter();
@@ -509,18 +510,19 @@ const ListProperty = ({ user, data, handlePaginationChange, setData }) => {
           }
         }}
       />
+
       <Confirm
         open={openDeleteConfirm}
-        content="Xác nhận xoá bài phái sinh"
+        header="Xác nhận xoá bài phái sinh"
+        content="Bạn có chắc chắn muốn xoá bài viết không?"
         onCancel={() => {
           setOpenDeleteConfirm(false);
         }}
         onConfirm={async () => {
-          // const status = await reupPost(detailPost.postId);
-          // if (status === 201) {
-          //   Router.reload();
-          //   // setOpenDeleteConfirm(false);
-          // }
+          const status = await deletepPost(detailPost.postId);
+          if (status === 201) {
+            Router.reload();
+          }
         }}
       />
     </>
