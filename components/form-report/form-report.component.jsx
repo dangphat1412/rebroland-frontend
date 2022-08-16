@@ -103,7 +103,7 @@ const FormReport = ({ toast, setReportOpen, postId }) => {
           id="otherContent"
           name="otherContent"
           rows="3"
-          maxlength="100"
+          maxLength={100}
           {...register("otherContent")}
         ></textarea>
         <label htmlFor="sublabel-otherContent">Không vượt quá 100 ký tự</label>

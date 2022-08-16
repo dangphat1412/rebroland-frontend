@@ -59,7 +59,11 @@ const Footer = () => {
               <Header as="h2">Liên lạc với RebroLand</Header>
               <span className="divider-left"></span>
 
-              <a href="https://www.facebook.com/ngdangphat" target="_blank">
+              <a
+                href="https://www.facebook.com/ngdangphat"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <Icon
                   circular
                   inverted

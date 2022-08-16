@@ -111,7 +111,7 @@ const ReportUserForm = ({
           id="otherContent"
           name="otherContent"
           rows="3"
-          maxlength="100"
+          maxLength={100}
           {...register("otherContent")}
           disabled={user ? false : true}
         ></textarea>
