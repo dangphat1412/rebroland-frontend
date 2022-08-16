@@ -565,7 +565,7 @@ const RealEstateItem = ({
               {post.status.name}
             </Label>
             <br />
-            <b>Ngày hết hạn: {post.endDate.split(" ")[0]}</b>
+            <b>Ngày hết hạn: {post.endDate && post.endDate.split(" ")[0]}</b>
           </>
         )}
         {post.block === false &&
@@ -575,11 +575,6 @@ const RealEstateItem = ({
             </Label>
           )}
         {post.block === false && post.status.id === 3 && (
-          <Label circular color="blue">
-            {post.status.name}
-          </Label>
-        )}
-        {post.block === false && post.status.id === 4 && (
           <Label circular color="blue">
             {post.status.name}
           </Label>
@@ -647,25 +642,6 @@ const RealEstateItem = ({
           />
         )}
 
-        {post.block === true && (
-          <Popup
-            content="Khiếu nại"
-            trigger={
-              <Icon
-                style={{ cursor: "pointer" }}
-                circular
-                inverted
-                color="orange"
-                name="file alternate outline"
-                onClick={() => {
-                  // setDetailPost(post);
-                  // setOpenExtendPost(true);
-                }}
-              />
-            }
-          />
-        )}
-
         {post.block === false && post.status.id === 2 && (
           <Popup
             content="Đăng lại"
@@ -704,24 +680,22 @@ const RealEstateItem = ({
           />
         )}
 
-        <Link href="/">
-          <Popup
-            content="Xoá bài viết"
-            trigger={
-              <Icon
-                style={{ cursor: "pointer" }}
-                circular
-                inverted
-                color="red"
-                name="trash alternate"
-                onClick={() => {
-                  setDetailPost(post);
-                  setOpenDeletePost(true);
-                }}
-              />
-            }
-          />
-        </Link>
+        <Popup
+          content="Xoá bài viết"
+          trigger={
+            <Icon
+              style={{ cursor: "pointer" }}
+              circular
+              inverted
+              color="red"
+              name="trash alternate"
+              onClick={() => {
+                setDetailPost(post);
+                setOpenDeletePost(true);
+              }}
+            />
+          }
+        />
       </Table.Cell>
     </Table.Row>
   );

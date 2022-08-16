@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import {
+  Confirm,
   Dimmer,
   Dropdown,
   Grid,
@@ -14,7 +15,12 @@ import {
   Tab,
   Table,
 } from "semantic-ui-react";
-import { getDerivativePostsByUser } from "../../actions/post";
+import {
+  dropPost,
+  getDerivativePostsByUser,
+  getPostById,
+  reupPost,
+} from "../../actions/post";
 import calculatePrice from "../../utils/calculatePrice";
 import convertToSlug from "../../utils/convertToSlug";
 import Pagination from "../pagination/pagination.component";
@@ -24,16 +30,17 @@ import {
   PaginationContainer,
 } from "./page-my-derivative-property.styles";
 import statusOptions from "../../utils/typePropertyOptions";
+import ModalItem from "../modal-item/modal-item.component";
+import EditPostForm from "../form-edit-post/form-edit-post.component";
+import { useRouter } from "next/router";
 
 const MyDerivativePropertyPage = ({ user, postsData, setTotalResult }) => {
+  const router = useRouter();
   const [data, setData] = useState(postsData || {});
   const [loading, setLoading] = useState(false);
   const [propertyType, setPropertyType] = useState(0);
   const [sortValue, setSortValue] = useState(0);
   const [status, setStatus] = useState(0);
-
-  const [detailPost, setDetailPost] = useState(null);
-  const [openDropPost, setOpenDropPost] = useState(false);
 
   const handlePaginationChange = (e, { activePage }) =>
     fetchAPI(propertyType, status, sortValue, activePage - 1);
@@ -107,9 +114,9 @@ const MyDerivativePropertyPage = ({ user, postsData, setTotalResult }) => {
                   render: () => (
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
+                        user={user}
                         data={data}
-                        setDetailPost={setDetailPost}
-                        setOpenDropPost={setOpenDropPost}
+                        setData={setData}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -120,9 +127,9 @@ const MyDerivativePropertyPage = ({ user, postsData, setTotalResult }) => {
                   render: () => (
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
+                        user={user}
                         data={data}
-                        setDetailPost={setDetailPost}
-                        setOpenDropPost={setOpenDropPost}
+                        setData={setData}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -133,9 +140,9 @@ const MyDerivativePropertyPage = ({ user, postsData, setTotalResult }) => {
                   render: () => (
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
+                        user={user}
                         data={data}
-                        setDetailPost={setDetailPost}
-                        setOpenDropPost={setOpenDropPost}
+                        setData={setData}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -146,9 +153,9 @@ const MyDerivativePropertyPage = ({ user, postsData, setTotalResult }) => {
                   render: () => (
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
+                        user={user}
                         data={data}
-                        setDetailPost={setDetailPost}
-                        setOpenDropPost={setOpenDropPost}
+                        setData={setData}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -163,15 +170,18 @@ const MyDerivativePropertyPage = ({ user, postsData, setTotalResult }) => {
   );
 };
 
-const ListProperty = ({
-  data,
-  handlePaginationChange,
-  setDetailPost,
-  setOpenDropPost,
-}) => {
+const ListProperty = ({ user, data, handlePaginationChange, setData }) => {
+  const [detailPost, setDetailPost] = useState(null);
+  const [openDropPost, setOpenDropPost] = useState(false);
+  const [openReupPost, setOpenReupPost] = useState(false);
+  const [openEditPost, setOpenEditPost] = useState(false);
+  const [editedPost, setEditedPost] = useState(null);
+  const [editedLoading, setEditedLoading] = useState(false);
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+
   return (
     <>
-      {data.posts.length > 0 ? (
+      {data && data.posts.length > 0 ? (
         <>
           <Table padded color="yellow">
             <Table.Header>
@@ -301,7 +311,9 @@ const ListProperty = ({
                               {post.status.name}
                             </Label>
                             <br />
-                            {/* <b>Ngày hết hạn: {post.endDate.split(" ")[0]}</b> */}
+                            {post.endDate && (
+                              <b>Ngày hết hạn: {post.endDate.split(" ")[0]}</b>
+                            )}
                           </>
                         )}
                         {post.block === false &&
@@ -315,13 +327,8 @@ const ListProperty = ({
                             {post.status.name}
                           </Label>
                         )}
-                        {post.block === false && post.status.id === 4 && (
-                          <Label circular color="blue">
-                            {post.status.name}
-                          </Label>
-                        )}
                       </Table.Cell>
-                      <Table.Cell textAlign="center">
+                      <Table.Cell singleLine textAlign="center">
                         <Link
                           href={`/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi/${convertToSlug(
                             post.title
@@ -336,18 +343,29 @@ const ListProperty = ({
                           />
                         </Link>
 
-                        <Popup
-                          content="Chỉnh sửa bài viết"
-                          trigger={
-                            <Icon
-                              circular
-                              inverted
-                              color="green"
-                              name="edit outline"
-                              style={{ cursor: "pointer" }}
-                            />
-                          }
-                        />
+                        {post.status.id !== 3 && (
+                          <Popup
+                            content="Chỉnh sửa bài viết"
+                            trigger={
+                              <Icon
+                                circular
+                                inverted
+                                color="green"
+                                name="edit outline"
+                                style={{ cursor: "pointer" }}
+                                onClick={async () => {
+                                  setOpenEditPost(true);
+                                  setEditedLoading(true);
+                                  const postData = await getPostById(
+                                    post.postId
+                                  );
+                                  setEditedPost(postData.post);
+                                  setEditedLoading(false);
+                                }}
+                              />
+                            }
+                          />
+                        )}
 
                         {post.block === false && post.status.id === 1 && (
                           <Popup
@@ -368,6 +386,25 @@ const ListProperty = ({
                           />
                         )}
 
+                        {post.block === false && post.status.id === 2 && (
+                          <Popup
+                            content="Đăng lại"
+                            trigger={
+                              <Icon
+                                style={{ cursor: "pointer" }}
+                                circular
+                                inverted
+                                color="orange"
+                                name="redo"
+                                onClick={() => {
+                                  setDetailPost(post);
+                                  setOpenReupPost(true);
+                                }}
+                              />
+                            }
+                          />
+                        )}
+
                         <Popup
                           content="Xoá bài viết"
                           trigger={
@@ -378,6 +415,7 @@ const ListProperty = ({
                               color="red"
                               name="trash alternate"
                               onClick={() => {
+                                setDetailPost(post);
                                 setOpenDeleteConfirm(true);
                               }}
                             />
@@ -388,13 +426,6 @@ const ListProperty = ({
                   );
                 })}
             </Table.Body>
-
-            {/* <Confirm
-        open={openDeleteConfirm}
-        content="Xác nhận xoá bài viết"
-        onCancel={handleCancel}
-        onConfirm={handleConfirm}
-      /> */}
           </Table>
           <PaginationContainer>
             <Pagination
@@ -413,6 +444,85 @@ const ListProperty = ({
       ) : (
         <Header>Không có bất động sản nào</Header>
       )}
+      <Confirm
+        open={openDropPost}
+        header="Xác nhận hạ bài"
+        content="Bạn có chắc chắn muốn hạ bài không?"
+        cancelButton="Huỷ bỏ"
+        confirmButton="Xác nhận"
+        onCancel={() => {
+          setOpenDropPost(false);
+        }}
+        onConfirm={async () => {
+          const status = await dropPost(detailPost.postId);
+          if (status === 201) {
+            const listData = data;
+            const listArray = data.posts;
+            const index = data.posts.findIndex(
+              (p) => p.postId === detailPost.postId
+            );
+            listArray[index].status = { id: 2, name: "Hạ bài" };
+            setData({ ...listData, posts: listArray });
+            setOpenDropPost(false);
+          }
+        }}
+      />
+
+      <ModalItem
+        header="Chỉnh sửa bài viết"
+        size="large"
+        onOpen={openEditPost}
+        onClose={() => {
+          setOpenEditPost(false);
+          setEditedPost(null);
+        }}
+      >
+        {editedPost && (
+          <>
+            <EditPostForm
+              user={user}
+              editedPost={editedPost}
+              editedLoading={editedLoading}
+              setEditedLoading={setEditedLoading}
+            />
+          </>
+        )}
+      </ModalItem>
+
+      <Confirm
+        open={openReupPost}
+        content="Xác nhận đăng lại bài phái sinh"
+        onCancel={() => {
+          setOpenReupPost(false);
+        }}
+        onConfirm={async () => {
+          const status = await reupPost(detailPost.postId);
+          if (status === 201) {
+            const listData = data;
+            const listArray = data.posts;
+            const index = data.posts.findIndex(
+              (p) => p.postId === detailPost.postId
+            );
+            listArray[index].status = { id: 1, name: "Đang hoạt động" };
+            setData({ ...listData, posts: listArray });
+            setOpenReupPost(false);
+          }
+        }}
+      />
+      <Confirm
+        open={openDeleteConfirm}
+        content="Xác nhận xoá bài phái sinh"
+        onCancel={() => {
+          setOpenDeleteConfirm(false);
+        }}
+        onConfirm={async () => {
+          // const status = await reupPost(detailPost.postId);
+          // if (status === 201) {
+          //   Router.reload();
+          //   // setOpenDeleteConfirm(false);
+          // }
+        }}
+      />
     </>
   );
 };

@@ -337,9 +337,9 @@ export const extendPost = async (postId, data) => {
   }
 };
 
-export const reupPost = async (postId, data) => {
+export const reupPost = async (postId) => {
   try {
-    const res = await Axios.put(`/repost/${postId}`, data);
+    const res = await Axios.put(`/repost/${postId}`);
     return res.status;
   } catch (error) {
     console.log(error);
