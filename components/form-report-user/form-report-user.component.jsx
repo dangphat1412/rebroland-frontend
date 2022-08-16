@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Button, Form, Image } from "semantic-ui-react";
+import { Button, Form, Image, Message } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
 import { reportUser } from "../../actions/report";
 import {
@@ -27,6 +27,8 @@ const ReportUserForm = ({
   } = useForm();
 
   const mediaRef = useRef(null);
+
+  const [errorMessage, setErrorMessage] = useState({});
 
   const [images, setImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
@@ -62,7 +64,7 @@ const ReportUserForm = ({
           return;
         }
       }
-      const status = await reportUser(data, mediaUrl, userId);
+      const status = await reportUser(data, mediaUrl, userId, setErrorMessage);
       if (status === 201) {
         setTimeout(() => {
           toast({
@@ -71,6 +73,7 @@ const ReportUserForm = ({
             description: <p>Báo cáo bài viết thành công</p>,
           });
         }, 1000);
+        setReportOpen(false);
       } else {
         setTimeout(() => {
           toast({
@@ -80,7 +83,6 @@ const ReportUserForm = ({
           });
         }, 1000);
       }
-      setReportOpen(false);
     }
   };
 
@@ -109,11 +111,12 @@ const ReportUserForm = ({
           id="otherContent"
           name="otherContent"
           rows="3"
+          maxlength="100"
           {...register("otherContent")}
           disabled={user ? false : true}
         ></textarea>
+        <label htmlFor="sublabel-otherContent">Không vượt quá 100 ký tự</label>
 
-        <br></br>
         <label htmlFor="media">Hình ảnh bằng chứng</label>
         <input
           ref={mediaRef}

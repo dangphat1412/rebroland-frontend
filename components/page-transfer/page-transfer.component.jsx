@@ -101,12 +101,15 @@ const TransferPage = ({ user }) => {
                           requiredField
                         />
                         <InputField
+                          type="number"
                           label="Số tiền (VNĐ)"
                           placeholder="Nhập số tiền"
                           name="amount"
-                          onChange={async (e, { name, value }) => {
-                            setValue(name, value);
+                          onChange={(e, { name, value }) => {
+                            e.target.validity.valid && setValue(name, value);
                           }}
+                          value={watch("amount")}
+                          min={0}
                           error={errors.amount}
                           requiredField
                         />

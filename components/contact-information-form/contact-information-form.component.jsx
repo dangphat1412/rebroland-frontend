@@ -42,7 +42,13 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
       </Form.Group>
       <Form.Group widths={2}>
         <InputField
-          {...register("contactEmail")}
+          {...register("contactEmail", {
+            pattern: {
+              value:
+                /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/,
+              message: "Nhập đúng định dạng Email",
+            },
+          })}
           label="Email"
           name="contactEmail"
           placeholder="Nhập Email"

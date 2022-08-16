@@ -80,6 +80,7 @@ const FormContact = ({
       <Message
         error
         list={errorMessage}
+        hidden={errorMessage === null}
         onDismiss={() => setErrorMessage(null)}
       />
 
@@ -133,6 +134,8 @@ const FormContact = ({
         onChange={async (e, { name, value }) => {
           setValue(name, value);
         }}
+        // maxLength={200}
+        sublabel="Không quá 200 ký tự"
         disabled={!currentUser}
       />
       <Button type="submit" fluid disabled={!currentUser}>

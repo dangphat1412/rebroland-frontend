@@ -5,6 +5,18 @@ export const TransferPageContainer = styled.div`
   margin-top: 20px;
   margin-right: 95px;
   margin-left: 95px;
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 `;
 
 export const TransferContainer = styled(Card)`

@@ -446,6 +446,9 @@ const NotificationList = ({
                     if (data.type === "Contact") {
                       Router.push("/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai");
                     }
+                    if (data.type === "Refund") {
+                      Router.push("/trang-ca-nhan/thong-tin-ca-nhan");
+                    }
                   }
                 }}
               >

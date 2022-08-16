@@ -14,6 +14,7 @@ const Axios = axios.create({
 
 export const userContact = async (data, userId, postId, setErrorMessage) => {
   try {
+    setErrorMessage(null);
     const res = await Axios.post(`/${userId || 0}/${postId || 0}`, data);
     if (res.status) return res.status;
   } catch (error) {

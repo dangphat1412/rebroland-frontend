@@ -28,17 +28,18 @@ const PaymentPage = ({ user }) => {
       required: "Nhập số tiền bạn muốn nạp",
       min: {
         value: 10000,
-        message: "Số tiền giao dịch tối thiểu 10.000VNĐ",
+        message: "Số tiền giao dịch tối thiểu 10,000VNĐ",
       },
       max: {
         value: 50000000,
-        message: "Số tiền giao dịch tối thiểu 50.000.000VNĐ",
+        message: "Số tiền giao dịch tối đa 50,000,000VNĐ",
       },
       valueAsNumber: true,
     });
   }, [register]);
 
   const onSubmit = async (data, e) => {
+    console.log(data);
     const dataPayment = await payment(data);
     if (dataPayment.message === "success") {
       router.push(dataPayment.data);
@@ -61,9 +62,9 @@ const PaymentPage = ({ user }) => {
                 </Card.Header>
               </Card.Content>
               <Card.Content>
-                <Grid centered>
+                <Grid centered={true}>
                   <Grid.Row>
-                    <Grid.Column width={6} centered>
+                    <Grid.Column width={6} centered={true}>
                       <Form
                         onSubmit={handleSubmit(onSubmit)}
                         error={errorMessage !== null}
@@ -75,13 +76,14 @@ const PaymentPage = ({ user }) => {
                           onDismiss={() => setErrorMessage(null)}
                         />
                         <InputField
-                          // type="number"
+                          type="number"
                           label="Số tiền muốn nạp"
-                          placeholder="Nạp tối thiểu 10.000VNĐ. Hạn mức 50.000.000VNĐ"
+                          placeholder="Nạp tối thiểu 10,000VNĐ. Hạn mức 50,000,000VNĐ"
                           name="amount"
-                          onChange={async (e, { name, value }) => {
-                            setValue(name, value);
+                          onChange={(e, { name, value }) => {
+                            e.target.validity.valid && setValue(name, value);
                           }}
+                          value={watch("amount")}
                           error={errors.amount}
                           requiredField
                         />

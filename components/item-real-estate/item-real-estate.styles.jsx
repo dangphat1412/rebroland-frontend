@@ -56,6 +56,6 @@ export const RealEstateItemContainer = styled(Card)`
   }
 
   .item {
-    padding: 9px !important;
+    padding: 7px !important;
   }
 `;

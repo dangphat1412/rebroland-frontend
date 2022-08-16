@@ -14,7 +14,11 @@ const MyDerivativeProperty = ({ user, postsData }) => {
         subtitle={`Có tất cả ${totalResult} bất động sản`}
         background="/bg-real-estate.jpg"
       />
-      <MyDerivativePropertyPage user={user} postsData={postsData} />
+      <MyDerivativePropertyPage
+        user={user}
+        setTotalResult={setTotalResult}
+        postsData={postsData}
+      />
     </div>
   );
 };

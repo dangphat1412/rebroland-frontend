@@ -7,6 +7,7 @@ import {
   Header,
   Icon,
   Item,
+  Label,
   List,
   Loader,
   Popup,
@@ -22,35 +23,49 @@ import {
   MyDerivativePropertyContainer,
   PaginationContainer,
 } from "./page-my-derivative-property.styles";
+import statusOptions from "../../utils/typePropertyOptions";
 
-const MyDerivativePropertyPage = ({ user, postsData }) => {
+const MyDerivativePropertyPage = ({ user, postsData, setTotalResult }) => {
   const [data, setData] = useState(postsData || {});
   const [loading, setLoading] = useState(false);
   const [propertyType, setPropertyType] = useState(0);
   const [sortValue, setSortValue] = useState(0);
+  const [status, setStatus] = useState(0);
+
+  const [detailPost, setDetailPost] = useState(null);
+  const [openDropPost, setOpenDropPost] = useState(false);
 
   const handlePaginationChange = (e, { activePage }) =>
-    fetchAPI(propertyType, sortValue, activePage - 1);
+    fetchAPI(propertyType, status, sortValue, activePage - 1);
 
   const handleOnTabChange = (e, { activeIndex }) => {
     setPropertyType(activeIndex);
     setSortValue(0);
-    fetchAPI(activeIndex, 0, 0);
+    setStatus(0);
+    fetchAPI(activeIndex, 0, 0, 0);
   };
 
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
-    fetchAPI(propertyType, value, 0);
+    fetchAPI(propertyType, status, value, 0);
   };
 
-  const fetchAPI = async (propertyType, sortValue, pageNo) => {
+  const handleFilterStatusOption = (e, { value }) => {
+    setStatus(value);
+    fetchAPI(propertyType, value, 0, 0);
+  };
+
+  const fetchAPI = async (propertyType, status, sortValue, pageNo) => {
     setLoading(true);
     const posts = await getDerivativePostsByUser(
       propertyType,
+      status,
       sortValue,
       pageNo
     );
+    console.log(posts);
     setData(posts);
+    setTotalResult(posts.totalResult);
     setLoading(false);
     window.scrollTo({
       top: 0,
@@ -66,6 +81,13 @@ const MyDerivativePropertyPage = ({ user, postsData }) => {
             <UserPanel user={user} />
           </Grid.Column>
           <Grid.Column width={13} className="my-derivative-property">
+            <Dropdown
+              selection
+              options={statusOptions}
+              className="filter-status"
+              value={status}
+              onChange={handleFilterStatusOption}
+            />
             <Dropdown
               selection
               options={options}
@@ -86,6 +108,8 @@ const MyDerivativePropertyPage = ({ user, postsData }) => {
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
                         data={data}
+                        setDetailPost={setDetailPost}
+                        setOpenDropPost={setOpenDropPost}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -97,6 +121,8 @@ const MyDerivativePropertyPage = ({ user, postsData }) => {
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
                         data={data}
+                        setDetailPost={setDetailPost}
+                        setOpenDropPost={setOpenDropPost}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -108,6 +134,8 @@ const MyDerivativePropertyPage = ({ user, postsData }) => {
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
                         data={data}
+                        setDetailPost={setDetailPost}
+                        setOpenDropPost={setOpenDropPost}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -119,6 +147,8 @@ const MyDerivativePropertyPage = ({ user, postsData }) => {
                     <Tab.Pane as="div" attached={false}>
                       <ListProperty
                         data={data}
+                        setDetailPost={setDetailPost}
+                        setOpenDropPost={setOpenDropPost}
                         handlePaginationChange={handlePaginationChange}
                       />
                     </Tab.Pane>
@@ -133,7 +163,12 @@ const MyDerivativePropertyPage = ({ user, postsData }) => {
   );
 };
 
-const ListProperty = ({ data, handlePaginationChange }) => {
+const ListProperty = ({
+  data,
+  handlePaginationChange,
+  setDetailPost,
+  setOpenDropPost,
+}) => {
   return (
     <>
       {data.posts.length > 0 ? (
@@ -255,7 +290,36 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                         {post.postId}
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
-                        {post.status.name}
+                        {post.block === true && (
+                          <Label circular color="red">
+                            Bị chặn
+                          </Label>
+                        )}
+                        {post.block === false && post.status.id === 1 && (
+                          <>
+                            <Label circular color="green">
+                              {post.status.name}
+                            </Label>
+                            <br />
+                            {/* <b>Ngày hết hạn: {post.endDate.split(" ")[0]}</b> */}
+                          </>
+                        )}
+                        {post.block === false &&
+                          (post.status.id === 2 || post.status.id === 5) && (
+                            <Label circular color="red">
+                              {post.status.name}
+                            </Label>
+                          )}
+                        {post.block === false && post.status.id === 3 && (
+                          <Label circular color="blue">
+                            {post.status.name}
+                          </Label>
+                        )}
+                        {post.block === false && post.status.id === 4 && (
+                          <Label circular color="blue">
+                            {post.status.name}
+                          </Label>
+                        )}
                       </Table.Cell>
                       <Table.Cell textAlign="center">
                         <Link
@@ -272,37 +336,53 @@ const ListProperty = ({ data, handlePaginationChange }) => {
                           />
                         </Link>
 
-                        <Link href="/">
+                        <Popup
+                          content="Chỉnh sửa bài viết"
+                          trigger={
+                            <Icon
+                              circular
+                              inverted
+                              color="green"
+                              name="edit outline"
+                              style={{ cursor: "pointer" }}
+                            />
+                          }
+                        />
+
+                        {post.block === false && post.status.id === 1 && (
                           <Popup
-                            content="Chỉnh sửa bài viết"
+                            content="Hạ bài"
                             trigger={
                               <Icon
-                                circular
-                                inverted
-                                color="green"
-                                name="edit outline"
-                                style={{ cursor: "pointer" }}
-                              />
-                            }
-                          />
-                        </Link>
-                        <Link href="/">
-                          <Popup
-                            content="Xoá bài viết"
-                            trigger={
-                              <Icon
                                 style={{ cursor: "pointer" }}
                                 circular
                                 inverted
-                                color="red"
-                                name="trash alternate"
+                                color="orange"
+                                name="hand point down outline"
                                 onClick={() => {
-                                  setOpenDeleteConfirm(true);
+                                  setDetailPost(post);
+                                  setOpenDropPost(true);
                                 }}
                               />
                             }
                           />
-                        </Link>
+                        )}
+
+                        <Popup
+                          content="Xoá bài viết"
+                          trigger={
+                            <Icon
+                              style={{ cursor: "pointer" }}
+                              circular
+                              inverted
+                              color="red"
+                              name="trash alternate"
+                              onClick={() => {
+                                setOpenDeleteConfirm(true);
+                              }}
+                            />
+                          }
+                        />
                       </Table.Cell>
                     </Table.Row>
                   );

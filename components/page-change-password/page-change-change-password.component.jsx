@@ -16,10 +16,15 @@ const ChangePasswordPage = ({ user }) => {
     handleSubmit,
     setValue,
     watch,
+    reset,
     getValues,
     formState: { errors },
   } = useForm({
-    defaultValues: {},
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    },
   });
 
   const [errorMessage, setErrorMessage] = useState(null);
@@ -52,6 +57,7 @@ const ChangePasswordPage = ({ user }) => {
   const onSubmit = async (data, e) => {
     const status = await changePasswordUser(data, setErrorMessage);
     if (status === 201) {
+      reset();
       setErrorMessage(null);
       setTimeout(() => {
         toast({
@@ -97,6 +103,7 @@ const ChangePasswordPage = ({ user }) => {
                           onChange={async (e, { name, value }) => {
                             setValue(name, value);
                           }}
+                          value={watch("oldPassword")}
                           error={errors.oldPassword}
                           requiredField
                         />
@@ -107,6 +114,7 @@ const ChangePasswordPage = ({ user }) => {
                           onChange={async (e, { name, value }) => {
                             setValue(name, value);
                           }}
+                          value={watch("newPassword")}
                           error={errors.newPassword}
                           requiredField
                         />
@@ -117,6 +125,7 @@ const ChangePasswordPage = ({ user }) => {
                           onChange={async (e, { name, value }) => {
                             setValue(name, value);
                           }}
+                          value={watch("confirmNewPassword")}
                           error={errors.confirmNewPassword}
                           requiredField
                         />

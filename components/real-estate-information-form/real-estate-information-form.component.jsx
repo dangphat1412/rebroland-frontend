@@ -193,7 +193,6 @@ const RealEstateInformationForm = ({
           placeholder="Nhập mức giá"
           defaultValue={getValues("price")}
           onChange={(e, { name, value }) => {
-            console.log(value);
             setValue(name, value ? (value >= 0 ? Math.abs(value) : 0) : null);
           }}
           value={watch("price")}
@@ -226,12 +225,12 @@ const RealEstateInformationForm = ({
             <InputField
               {...register("numberOfBedroom", {
                 min: {
-                  value: 1,
-                  message: "Nhập số phòng ngủ hợp lệ",
+                  value: 0,
+                  message: "Phòng ngủ tối thiểu 0 phòng",
                 },
                 max: {
-                  value: 50,
-                  message: "Phòng ngủ tối đa 50 phòng",
+                  value: 100,
+                  message: "Phòng ngủ tối đa 100 phòng",
                 },
               })}
               type="number"
@@ -239,37 +238,47 @@ const RealEstateInformationForm = ({
               name="numberOfBedroom"
               placeholder="Nhập số phòng ngủ"
               error={errors.numberOfBedroom}
-              onChange={handleChange}
-              defaultValue={getValues("numberOfBedroom")}
-              sublabel="Phòng ngủ tối đa 50 phòng"
+              onChange={(e, { name, value }) => {
+                setValue(
+                  name,
+                  value ? (value >= 0 ? Math.abs(value) : 0) : null
+                );
+              }}
+              value={watch("numberOfBedroom")}
+              defaultValue={getValues("numberOfBedroom") || 0}
             />
           </Form.Group>
           <Form.Group widths="equal">
             <InputField
               {...register("numberOfBathroom", {
                 min: {
-                  value: 1,
-                  message: "Nhập số phòng tắm hợp lệ",
+                  value: 0,
+                  message: "Phòng tắm tối thiểu 0 phòng",
                 },
                 max: {
-                  value: 50,
-                  message: "Phòng tắm tối đa 50 phòng",
+                  value: 100,
+                  message: "Phòng tắm tối đa 100 phòng",
                 },
               })}
               type="number"
               label="Số phòng tắm, vệ sinh"
               name="numberOfBathroom"
               placeholder="Nhập số phòng tắm, vệ sinh"
-              onChange={handleChange}
+              onChange={(e, { name, value }) => {
+                setValue(
+                  name,
+                  value ? (value >= 0 ? Math.abs(value) : 0) : null
+                );
+              }}
+              value={watch("numberOfBathroom")}
               error={errors.numberOfBathroom}
               defaultValue={getValues("numberOfBathroom")}
-              sublabel="Phòng tắm tối đa 50 phòng"
             />
             {watch("propertyTypeId") === 1 ? (
               <InputField
                 {...register("numberOfFloor", {
                   min: {
-                    value: 1,
+                    value: 0,
                     message: "Nhập số tầng hợp lệ",
                   },
                   max: {
@@ -281,16 +290,21 @@ const RealEstateInformationForm = ({
                 label="Số tầng"
                 name="numberOfFloor"
                 placeholder="Nhập tầng"
-                onChange={handleChange}
+                onChange={(e, { name, value }) => {
+                  setValue(
+                    name,
+                    value ? (value >= 0 ? Math.abs(value) : 0) : null
+                  );
+                }}
+                value={watch("numberOfFloor")}
                 error={errors.numberOfFloor}
                 defaultValue={getValues("numberOfFloor")}
-                sublabel="Số tầng tối đa 100 tầng"
               />
             ) : (
               <InputField
                 {...register("floorNumber", {
                   min: {
-                    value: 1,
+                    value: 0,
                     message: "Nhập tầng số hợp lệ",
                   },
                   max: {
@@ -302,10 +316,15 @@ const RealEstateInformationForm = ({
                 label="Tầng số"
                 name="floorNumber"
                 placeholder="Nhập tầng"
-                onChange={handleChange}
+                onChange={(e, { name, value }) => {
+                  setValue(
+                    name,
+                    value ? (value >= 0 ? Math.abs(value) : 0) : null
+                  );
+                }}
+                value={watch("floorNumber")}
                 error={errors.floorNumber}
                 defaultValue={getValues("floorNumber")}
-                sublabel="Số tầng tối đa 100 tầng"
               />
             )}
           </Form.Group>
@@ -447,9 +466,11 @@ const RealEstateInformationForm = ({
           label="Mặt tiền"
           name="frontispiece"
           placeholder="Nhập mặt tiền"
-          onChange={handleChange}
+          onChange={(e, { name, value }) => {
+            setValue(name, value ? (value >= 0 ? Math.abs(value) : 0) : null);
+          }}
+          value={watch("frontispiece")}
           defaultValue={getValues("frontispiece")}
-          sublabel="Mặt tiền tối đa 100m"
         >
           <input />
           <Label basic size="big">
@@ -466,7 +487,7 @@ const RealEstateInformationForm = ({
         onChange={handleChange}
         defaultValue={getValues("additionalDescription")}
         maxLength={200}
-        sublabel="Tối thiểu 200 kí tự"
+        sublabel="Tối đa 200 kí tự"
       />
     </RealEstateInfoContainer>
   );

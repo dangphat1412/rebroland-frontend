@@ -262,6 +262,7 @@ export const getOriginalPostsByUserDetail = async (
 
 export const getDerivativePostsByUser = async (
   propertyType,
+  status,
   sortValue,
   pageNo
 ) => {
@@ -269,6 +270,7 @@ export const getDerivativePostsByUser = async (
     const res = await Axios.get(`/derivative/list`, {
       params: {
         propertyType: propertyType,
+        status: status,
         sortValue: sortValue,
         pageNo: pageNo,
       },

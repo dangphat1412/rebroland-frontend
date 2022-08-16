@@ -22,6 +22,7 @@ const OtpForgotPassword = ({ forgotPasswordData, handleOpenLogin }) => {
   const handleResentOtp = async () => {
     const data = await forgotPasswordUser(user, setErrorMessage);
     if (data) {
+      console.log(data);
       setUser(data.user);
       setCounter(data.tokenTime * 60);
     }

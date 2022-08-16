@@ -26,12 +26,18 @@ export const FormReportContainer = styled.div`
     font-size: 13px;
   }
   textarea {
-    margin-bottom: 20px !important;
+    // margin-bottom: 20px !important;
   }
   .alert-login-require {
     margin-top: 10px;
     color: red;
     font-weight: bold;
+  }
+  label[for="sublabel-otherContent"] {
+    font-weight: bold;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 20px;
   }
 `;
 

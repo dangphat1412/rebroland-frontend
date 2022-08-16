@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import API_URL from "../utils/apiUrl";
+import convertToListMessages from "../utils/convertToListMessages";
 
 const Axios = axios.create({
   baseURL: `${API_URL}/api/report`,
@@ -11,8 +12,9 @@ const Axios = axios.create({
   },
 });
 
-export const reportPost = async (data, mediaUrl, postId) => {
+export const reportPost = async (data, mediaUrl, postId, setErrorMessage) => {
   try {
+    setErrorMessage(null);
     const content = {
       content: data.content
         ? [...data.content, data.otherContent].join(";")
@@ -22,6 +24,8 @@ export const reportPost = async (data, mediaUrl, postId) => {
     const res = await Axios.post(`/post/${postId}`, content);
     return res.status;
   } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
   }
 };

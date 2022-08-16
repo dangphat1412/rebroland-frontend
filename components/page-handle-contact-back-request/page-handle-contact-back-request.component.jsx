@@ -52,11 +52,7 @@ const HandleContactBackRequestPage = ({
   });
 
   const handleAccept = async () => {
-    const data = {
-      userCaredId: selectedCustomer.userRequest.id,
-      postId: selectedCustomer.shortPost && selectedCustomer.shortPost.postId,
-    };
-    const status = await addNewCustomer(selectedContactId, data);
+    const status = await addNewCustomer(selectedContactId);
     if (status === 201) {
       setContacts(
         contacts.filter((contact) => {

@@ -50,7 +50,13 @@ const MyProfilePage = ({ user }) => {
 
   useEffect(() => {
     register("fullName", { required: "Họ và tên không được để trống" });
-    register("email");
+    register("email", {
+      pattern: {
+        value:
+          /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/,
+        message: "Nhập đúng định dạng Email",
+      },
+    });
     register("dob", { validate: { isBefore } });
     register("gender");
     register("province");

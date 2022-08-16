@@ -119,6 +119,7 @@ const GeographicInformationForm = ({
             options={dataProvinces.provinces}
             onChange={handleChange}
             error={errors.province}
+            // clearable
             requiredField
           />
         ) : (
