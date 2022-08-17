@@ -726,6 +726,7 @@ const PagePropertyDetail = ({
         }}
       >
         <FormEndTransaction
+          toast={toast}
           post={post}
           brokers={brokers}
           setEndTransactionOpen={setEndTransactionOpen}
@@ -867,6 +868,7 @@ const FormRateBroker = ({ user, brokers, setOpenRate }) => {
 };
 
 const FormEndTransaction = ({
+  toast,
   post,
   setEndTransactionOpen,
   setOpenRate,
@@ -900,72 +902,20 @@ const FormEndTransaction = ({
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (data, e) => {
-    const propertyTypeId = post.propertyType.id;
-
-    if (data.provideInfo === true) {
-      let error = false;
-      if (data.owner === null) {
-        setError("owner", {
-          type: "not null",
-          message: "Nhập tên chủ hộ",
-        });
-        error = true;
-      }
-
-      if (data.phone === null) {
-        setError("phone", {
-          type: "not null",
-          message: "Nhập số điện thoại chủ hộ",
-        });
-        error = true;
-      }
-
-      if (data.barcode === null) {
-        setError("barcode", {
-          type: "not null",
-          message: "Nhập mã vạch",
-        });
-        error = true;
-      }
-      if (data.plotNumber === null) {
-        setError("plotNumber", {
-          type: "not null",
-          message: "Nhập số thửa",
-        });
-        error = true;
-      }
-
-      if (post.propertyType.id === 2) {
-        if (data.buildingName === null) {
-          setError("buildingName", {
-            type: "not null",
-            message: "Tên toà nhà không được để trống",
-          });
-          error = true;
-        }
-
-        if (data.roomNumber === null) {
-          setError("roomNumber", {
-            type: "not null",
-            message: "Phòng số không được để trống",
-          });
-          error = true;
-        }
-      }
-      if (error === true) return;
-    }
-
     const status = await finishTransaction(
       post.postId,
       {
         ...data,
-        typeId: propertyTypeId,
+        typeId: post.propertyTypeId,
       },
       setErrorMessage
     );
     if (status === 200) {
       setEndTransactionOpen(false);
-      setOpenRate(true);
+
+      if (brokers && brokers.length > 0) {
+        setOpenRate(true);
+      }
     }
   };
 
@@ -998,7 +948,13 @@ const FormEndTransaction = ({
                 fluid
                 label="Tên chủ hộ"
                 name="owner"
-                {...register("owner")}
+                {...register("owner", {
+                  validate: (value) =>
+                    (getValues("provideInfo") === true &&
+                      !value &&
+                      "Nhập tên chủ hộ") ||
+                    true,
+                })}
                 placeholder="Nhập tên chủ hộ"
                 onChange={handleChange}
                 defaultValue={post.owner}
@@ -1009,7 +965,13 @@ const FormEndTransaction = ({
               <InputField
                 label="Số điện thoại"
                 name="phone"
-                {...register("phone")}
+                {...register("phone", {
+                  validate: (value) =>
+                    (getValues("provideInfo") === true &&
+                      !/^(84|0[3|5|7|8|9])+([0-9]{8})$/.test(value) &&
+                      "Nhập đúng định dạng số điện thoại") ||
+                    true,
+                })}
                 placeholder="Nhập số điện thoại"
                 defaultValue={post.phone}
                 onChange={handleChange}
@@ -1023,8 +985,15 @@ const FormEndTransaction = ({
                 label="Mã vạch"
                 name="barcode"
                 placeholder="Nhập mã vạch"
-                {...register("barcode")}
+                {...register("barcode", {
+                  validate: (value) =>
+                    (getValues("provideInfo") === true &&
+                      !/^(^\d{13}$)|(^\d{15}$)$/.test(value) &&
+                      "Nhập mã vạch gồm 13 hoặc 15 số") ||
+                    true,
+                })}
                 onChange={handleChange}
+                value={watch("barcode")}
                 defaultValue={post.barcode}
                 error={errors.barcode}
                 requiredField
@@ -1032,12 +1001,21 @@ const FormEndTransaction = ({
 
               <InputField
                 label="Số thửa"
+                type="number"
                 name="plotNumber"
                 placeholder="Nhập số thửa"
-                {...register("plotNumber")}
+                {...register("plotNumber", {
+                  validate: (value) =>
+                    (getValues("provideInfo") === true &&
+                      !value &&
+                      "Nhập số thửa") ||
+                    true,
+                })}
                 defaultValue={post.plotNumber}
                 onChange={handleChange}
+                value={watch("plotNumber")}
                 error={errors.plotNumber}
+                maxLength={5}
                 requiredField
               />
             </Form.Group>

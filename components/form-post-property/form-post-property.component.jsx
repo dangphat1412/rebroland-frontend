@@ -68,17 +68,18 @@ const FormPostProperty = ({ user, priceData }) => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data, e) => {
-    setLoading(true);
-    let mediaUrl;
-    if (images.length !== 0) {
-      mediaUrl = await uploadMultipleMedia(images);
-      if (!mediaUrl) {
-        console.log("ERROR UPLOAD");
-        return;
-      }
-    }
-    await createPost(data, mediaUrl, setErrorMessage);
-    setLoading(false);
+    // setLoading(true);
+    // let mediaUrl;
+    // if (images.length !== 0) {
+    //   mediaUrl = await uploadMultipleMedia(images);
+    //   if (!mediaUrl) {
+    //     console.log("ERROR UPLOAD");
+    //     return;
+    //   }
+    // }
+    // await createPost(data, mediaUrl, setErrorMessage);
+    // setLoading(false);
+    console.log(data);
   };
 
   return (

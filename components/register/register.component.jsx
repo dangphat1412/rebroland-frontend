@@ -40,14 +40,20 @@ const Register = ({ handleOpenOtpRegister, setRegisterData }) => {
           label="Họ và tên"
           name="fullName"
           placeholder="Nhập họ và tên"
-          {...register("fullName", { required: "Họ tên không được để trống" })}
+          {...register("fullName", {
+            required: "Họ tên không được để trống",
+            validate: (value) =>
+              !/[$&+,:;=\\\\?@#|/'<>.^*()%!-1234567890]/.test(value) ||
+              "Họ và tên không hợp lệ",
+            // value === password.current || "Mật khẩu không khớp",
+          })}
           onChange={(e, { name, value }) => {
             setValue(name, value);
           }}
           error={errors.fullName}
           requiredField
         />
-
+        {/* [$&+,:;=\\\\?@#|/'<>.^*()%!-1234567890] */}
         <InputField
           label="Số điện thoại"
           name="phone"
