@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TakeCareCustomerPage from "../../components/page-take-care-customer/page-take-care-customer.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import { parseCookies } from "nookies";
@@ -6,10 +6,19 @@ import API_URL from "../../utils/apiUrl";
 import axios from "axios";
 
 const TakeCareCustomer = ({ user, caringList }) => {
+  const [totalResult, setTotalResult] = useState(caringList.totalResult);
   return (
     <div>
-      <SubHeader title="Chăm sóc khách hàng" background="/bg-real-estate.jpg" />
-      <TakeCareCustomerPage user={user} caringList={caringList} />
+      <SubHeader
+        title="Chăm sóc khách hàng"
+        subtitle={`Có tất cả ${totalResult} khách hàng`}
+        background="/bg-real-estate.jpg"
+      />
+      <TakeCareCustomerPage
+        user={user}
+        caringList={caringList}
+        setTotalResult={setTotalResult}
+      />
     </div>
   );
 };

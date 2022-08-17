@@ -14,13 +14,13 @@ const Axios = axios.create({
 
 export const reportPost = async (data, mediaUrl, postId, setErrorMessage) => {
   try {
-    setErrorMessage(null);
     const content = {
       content: data.content
         ? [...data.content, data.otherContent].join(";")
         : data.otherContent,
       images: mediaUrl,
     };
+    console.log(data);
     const res = await Axios.post(`/post/${postId}`, content);
     return res.status;
   } catch (error) {

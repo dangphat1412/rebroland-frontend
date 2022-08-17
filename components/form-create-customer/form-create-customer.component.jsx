@@ -4,20 +4,23 @@ import {
   CardDescription,
   Form,
   Header,
+  Image,
   Message,
 } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
 import InputField from "../input-field/input-field.component";
-import { addNewCustomer, upadteCustomer } from "../../actions/user-care";
+import {
+  addNewCustomer,
+  getInfoNewCustomer,
+  upadteCustomer,
+} from "../../actions/user-care";
+import ModalItem from "../modal-item/modal-item.component";
 
 const FormCreateCustomer = ({
-  customerInfo,
   toast,
-  setOpenCreateCustomer,
   cares,
   setCares,
-  userCareId,
-  setOpenUpdateCustomer,
+  setOpenCreateCustomer,
 }) => {
   const {
     register,
@@ -26,17 +29,10 @@ const FormCreateCustomer = ({
     getValues,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      fullName: customerInfo && customerInfo.fullName,
-      phone: customerInfo && customerInfo.phone,
-      email: customerInfo && customerInfo.email,
-      postId:
-        customerInfo && customerInfo.shortPost && customerInfo.shortPost.postId,
-    },
+    defaultValues: {},
   });
 
   useEffect(() => {
-    register("fullName", { required: "Họ và tên không được để trống" });
     register("phone", {
       required: "Số điện thoại không được để trống",
       pattern: {
@@ -44,115 +40,107 @@ const FormCreateCustomer = ({
         message: "Số điện thoại là số Việt Nam và có 10 chữ số",
       },
     });
-    register("email");
-    register("summarize");
-    register("postId");
   }, [register]);
 
   const [errorMessage, setErrorMessage] = useState(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [newCustomerData, setNewCustomerData] = useState(null);
 
-  const onSubmit = async (data) => {
-    if (!userCareId) {
-      const res = await addNewCustomer(data);
-      if (res.status === 201) {
-        setCares([...cares, res.data]);
-        setTimeout(() => {
-          toast({
-            type: "success",
-            title: "Thêm khách hàng",
-            description: <p>Thêm khách hàng thành công</p>,
-          });
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          toast({
-            type: "error",
-            title: "Thêm khách hàng",
-            description: <p>Thêm khách hàng thất bại</p>,
-          });
-        }, 1000);
-      }
-      setOpenCreateCustomer(false);
-    } else {
-      const res = await upadteCustomer(userCareId, data);
-      if (res.status === 200) {
-        const list = [...cares];
-        const index = list.findIndex((el) => el.careId === userCareId);
-        list[index] = res.data;
-        setCares(list);
-        setTimeout(() => {
-          toast({
-            type: "success",
-            title: "Cập nhật thông tin khách hàng",
-            description: <p>Cập nhật thông tin khách hàng thành công</p>,
-          });
-        }, 300);
-      } else {
-        setTimeout(() => {
-          toast({
-            type: "error",
-            title: "Cập nhật thông tin khách hàng",
-            description: <p>Cập nhật thông tin khách hàng thất bại</p>,
-          });
-        }, 300);
-      }
-      setOpenUpdateCustomer(false);
+  const onSubmit = async (phone) => {
+    console.log(phone);
+    const data = await getInfoNewCustomer(phone, setErrorMessage);
+    if (data) {
+      setNewCustomerData(data);
+      setOpenConfirm(true);
     }
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} error={errorMessage !== null}>
-      <Header as="h2">Thông tin khách hàng</Header>
-      <Message
-        error
-        list={errorMessage}
-        onDismiss={() => setErrorMessage(null)}
-      />
-      <InputField
-        label="Họ và tên"
-        name="fullName"
-        onChange={async (e, { name, value }) => {
-          setValue(name, value);
+    <>
+      <Form onSubmit={handleSubmit(onSubmit)} error={errorMessage !== null}>
+        <Header as="h2">Thông tin khách hàng</Header>
+        <Message
+          error
+          list={errorMessage}
+          onDismiss={() => setErrorMessage(null)}
+        />
+        <InputField
+          label="Số điện thoại"
+          name="phone"
+          error={errors.phone}
+          defaultValue={getValues("phone")}
+          requiredField
+          onChange={async (e, { name, value }) => {
+            setValue(name, value);
+          }}
+        />
+        <Button type="submit" fluid>
+          Tiếp tục
+        </Button>
+      </Form>
+      <ModalItem
+        header="Xác nhận khách hàng"
+        center={true}
+        size="tiny"
+        onOpen={openConfirm}
+        onClose={() => {
+          setOpenConfirm(false);
         }}
-        error={errors.fullName}
-        defaultValue={getValues("fullName")}
-        requiredField
-      />
-      <InputField
-        label="Số điện thoại"
-        name="phone"
-        error={errors.phone}
-        defaultValue={getValues("phone")}
-        requiredField
-        onChange={
-          !customerInfo
-            ? async (e, { name, value }) => {
-                setValue(name, value);
-              }
-            : null
-        }
-        disable={!customerInfo ? true : false}
-      />
-      <InputField
-        label="Email"
-        name="email"
-        onChange={async (e, { name, value }) => {
-          setValue(name, value);
-        }}
-        defaultValue={getValues("email")}
-      />
-      <InputField
-        fieldType="textarea"
-        label="Nội dung"
-        name="summarize"
-        onChange={async (e, { name, value }) => {
-          setValue(name, value);
-        }}
-      />
-      <Button type="submit" fluid>
-        Tạo mới
-      </Button>
-    </Form>
+      >
+        {newCustomerData && (
+          <>
+            <Header as="h1">
+              <Image circular src={newCustomerData.avatar} />
+              <Header.Content>
+                <Header.Subheader>
+                  <b>Họ và tên: </b> {newCustomerData.fullName}
+                </Header.Subheader>
+                <Header.Subheader>
+                  <b>Số điện thoại: </b> {newCustomerData.phone}
+                </Header.Subheader>
+                <Header.Subheader>
+                  <b>Email: </b>{" "}
+                  {newCustomerData.email
+                    ? newCustomerData.email
+                    : "Đang cập nhật"}
+                </Header.Subheader>
+              </Header.Content>
+            </Header>
+            <div className="ui two buttons">
+              <Button
+                basic
+                color="green"
+                onClick={async () => {
+                  setOpenConfirm(false);
+                  setOpenCreateCustomer(false);
+                  const data = await addNewCustomer(newCustomerData.id);
+                  if (data) {
+                    setTimeout(() => {
+                      toast({
+                        type: "success",
+                        title: "Thêm khách hàng",
+                        description: <p>Thêm khách hàng thành công</p>,
+                      });
+                    }, 100);
+                  }
+                }}
+              >
+                Xác nhận
+              </Button>
+              <Button
+                basic
+                color="red"
+                onClick={() => {
+                  setOpenConfirm(false);
+                }}
+              >
+                Huỷ bỏ
+              </Button>
+            </div>
+          </>
+        )}
+      </ModalItem>
+    </>
   );
 };
 

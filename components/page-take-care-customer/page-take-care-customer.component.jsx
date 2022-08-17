@@ -37,13 +37,15 @@ import {
   editSummarize,
   endCare,
   getCustomerDetail,
+  searchCustomer,
 } from "../../actions/user-care";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import InputField from "../input-field/input-field.component";
 import { useForm } from "react-hook-form";
 import RatingForm from "../form-rating/form-rating.component";
+import options from "../../utils/takeCareOptions";
 
-const TakeCareCustomerPage = ({ user, caringList }) => {
+const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
   const {
     register,
     handleSubmit,
@@ -52,8 +54,7 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
     formState: { errors },
   } = useForm({});
 
-  console.log(caringList);
-
+  const [careData, setCareData] = useState(caringList);
   const [cares, setCares] = useState(caringList.cares);
   const [customerDetail, setCustomerDetail] = useState(null);
   const [openAppointmentSchedule, setOpenAppointmentSchedule] = useState(false);
@@ -65,7 +66,6 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
   const [selectedCustomerIndex, setSelectedCustomerIndex] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedTimeline, setSelectedTimeline] = useState(null);
-  const [openUpdateCustomer, setOpenUpdateCustomer] = useState(false);
   const [openEditSummarize, setOpenEditSummarize] = useState(false);
   const [openRating, setOpenRating] = useState(false);
   const [rating, setRating] = useState(
@@ -73,6 +73,7 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
   );
   const [timeline, setTimeline] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [customerLoading, setCustomerLoading] = useState(false);
 
   const onSubmitEditSummarize = async (data, e) => {
     const status = await editSummarize(selectedCustomerIndex, data);
@@ -156,6 +157,32 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
     }
   };
 
+  const onSearchSubmit = async (data, e) => {
+    setStatus(0);
+    setKeyword(data.keyword);
+    fetchAPI(data.keyword, 0, 0);
+  };
+
+  const [status, setStatus] = useState(0);
+  const [keyword, setKeyword] = useState(null);
+
+  const handlePaginationChange = (e, { activePage }) =>
+    fetchAPI(keyword, status, activePage - 1);
+
+  const handleFilterStatusOption = (e, { value }) => {
+    setStatus(value);
+    fetchAPI(keyword, value, 0);
+  };
+
+  const fetchAPI = async (keyword, status, pageNo) => {
+    setCustomerLoading(true);
+    const data = await searchCustomer(keyword, status, pageNo);
+    setCareData(data);
+    setCares(data.cares);
+    setTotalResult(data.totalResult);
+    setCustomerLoading(false);
+  };
+
   return (
     <TakeCareCustomerContainer>
       <SemanticToastContainer position="bottom-right" maxToasts={3} />
@@ -163,109 +190,153 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
         <Grid.Row>
           <Grid.Column width={10}>
             <Segment>
-              <Table celled selectable sortable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell singleLine textAlign="center">
-                      Họ và tên
-                    </Table.HeaderCell>
-                    <Table.HeaderCell singleLine textAlign="center">
-                      Số điện thoại
-                    </Table.HeaderCell>
-                    <Table.HeaderCell singleLine textAlign="center">
-                      Email
-                    </Table.HeaderCell>
-                    <Table.HeaderCell singleLine textAlign="center">
-                      Ngày bắt đầu
-                    </Table.HeaderCell>
-                    <Table.HeaderCell singleLine textAlign="center">
-                      Trạng thái
-                    </Table.HeaderCell>
-                    <Table.HeaderCell singleLine textAlign="center">
-                      Hành động
-                    </Table.HeaderCell>
-                    <Table.HeaderCell singleLine textAlign="center">
-                      Xoá
-                    </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-
-                <Table.Body>
-                  {cares.map((care, index) => (
-                    <Table.Row
-                      key={index}
-                      style={{ cursor: "pointer" }}
-                      active={care.careId === selectedCustomerIndex}
-                      onClick={(e) => {
-                        setSelectedCustomerIndex(care.careId);
-                        handleGetCustomerDetail(care.careId);
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column width={5}>
+                    <Form onSubmit={handleSubmit(onSearchSubmit)}>
+                      <InputField
+                        icon="search"
+                        name="keyword"
+                        placeholder="Tìm kiếm"
+                        onChange={async (e, { name, value }) => {
+                          setValue(name, value);
+                        }}
+                        error={errors.keyword}
+                      />
+                    </Form>
+                  </Grid.Column>
+                  <Grid.Column width={11}>
+                    <Dropdown
+                      selection
+                      options={options}
+                      className="filter-status"
+                      value={status}
+                      onChange={handleFilterStatusOption}
+                    />
+                    <Button
+                      floated="right"
+                      onClick={() => {
+                        setOpenCreateCustomer(true);
                       }}
                     >
-                      <Table.Cell>
-                        <Header as="h4" image>
-                          <Image
-                            src={
-                              care.user.avatar ||
-                              "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                            }
-                            avatar
-                            className="user-avatar-small"
-                          />
-                          <Header.Content>{care.user.fullName}</Header.Content>
-                        </Header>
-                      </Table.Cell>
-                      <Table.Cell singleLine textAlign="center">
-                        {care.user.phone}
-                      </Table.Cell>
-                      <Table.Cell singleLine textAlign="center">
-                        {care.user.email ? care.user.email : "Đang cập nhật"}
-                      </Table.Cell>
-                      <Table.Cell singleLine textAlign="center">
-                        {care.startDate}
-                      </Table.Cell>
-                      <Table.Cell singleLine textAlign="center">
-                        {care.status === true ? (
-                          <Label circular color="green">
-                            Kết thúc tư vấn
-                          </Label>
-                        ) : (
-                          <Label circular color="blue">
-                            Đang tư vấn
-                          </Label>
-                        )}
-                      </Table.Cell>
-                      <Table.Cell singleLine textAlign="center">
-                        {care.status === false && (
-                          <Button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              console.log(care);
-                              setSelectedCustomer(care);
-                              setOpenEndTakeCare(true);
-                            }}
-                          >
-                            <Icon name="times" />
-                            Kết thúc
-                          </Button>
-                        )}
-                      </Table.Cell>
-                      <Table.Cell singleLine textAlign="center">
-                        <Icon
-                          circular
-                          inverted
-                          color="red"
-                          name="trash alternate outline"
+                      Thêm mới
+                    </Button>
+                  </Grid.Column>
+                </Grid.Row>
+
+                <Dimmer active={customerLoading} inverted>
+                  <Loader inverted></Loader>
+                </Dimmer>
+                {careData && (
+                  <Table celled selectable sortable>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell singleLine textAlign="center">
+                          Họ và tên
+                        </Table.HeaderCell>
+                        <Table.HeaderCell singleLine textAlign="center">
+                          Số điện thoại
+                        </Table.HeaderCell>
+                        <Table.HeaderCell singleLine textAlign="center">
+                          Email
+                        </Table.HeaderCell>
+                        <Table.HeaderCell singleLine textAlign="center">
+                          Ngày bắt đầu
+                        </Table.HeaderCell>
+                        <Table.HeaderCell singleLine textAlign="center">
+                          Trạng thái
+                        </Table.HeaderCell>
+                        <Table.HeaderCell singleLine textAlign="center">
+                          Hành động
+                        </Table.HeaderCell>
+                        <Table.HeaderCell singleLine textAlign="center">
+                          Xoá
+                        </Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+
+                    <Table.Body>
+                      {cares.map((care, index) => (
+                        <Table.Row
+                          key={index}
+                          style={{ cursor: "pointer" }}
+                          active={care.careId === selectedCustomerIndex}
                           onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedCustomer(care);
-                            setOpenDeleteCustomer(true);
+                            setSelectedCustomerIndex(care.careId);
+                            handleGetCustomerDetail(care.careId);
                           }}
-                        />
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table>
+                        >
+                          <Table.Cell>
+                            <Header as="h4" image>
+                              <Image
+                                src={
+                                  care.user.avatar ||
+                                  "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+                                }
+                                avatar
+                                className="user-avatar-small"
+                              />
+                              <Header.Content>
+                                {care.user.fullName}
+                              </Header.Content>
+                            </Header>
+                          </Table.Cell>
+                          <Table.Cell singleLine textAlign="center">
+                            {care.user.phone}
+                          </Table.Cell>
+                          <Table.Cell singleLine textAlign="center">
+                            {care.user.email
+                              ? care.user.email
+                              : "Đang cập nhật"}
+                          </Table.Cell>
+                          <Table.Cell singleLine textAlign="center">
+                            {care.startDate}
+                          </Table.Cell>
+                          <Table.Cell singleLine textAlign="center">
+                            {care.status === true ? (
+                              <Label circular color="green">
+                                Kết thúc tư vấn
+                              </Label>
+                            ) : (
+                              <Label circular color="blue">
+                                Đang tư vấn
+                              </Label>
+                            )}
+                          </Table.Cell>
+                          <Table.Cell singleLine textAlign="center">
+                            {care.status === false && (
+                              <Button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  console.log(care);
+                                  setSelectedCustomer(care);
+                                  setOpenEndTakeCare(true);
+                                }}
+                              >
+                                {/* <Icon name="times" /> */}
+                                Kết thúc
+                              </Button>
+                            )}
+                          </Table.Cell>
+                          <Table.Cell singleLine textAlign="center">
+                            <Icon
+                              circular
+                              inverted
+                              color="red"
+                              name="trash alternate outline"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedCustomer(care);
+                                setOpenDeleteCustomer(true);
+                              }}
+                            />
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </Table.Body>
+                  </Table>
+                )}
+              </Grid>
             </Segment>
           </Grid.Column>
           <Grid.Column width={6}>
@@ -511,19 +582,17 @@ const TakeCareCustomerPage = ({ user, caringList }) => {
       </ModalItem>
 
       <ModalItem
-        header="Chỉnh sửa thông tin khách hàng"
-        onOpen={openUpdateCustomer}
+        header="Thêm khách hàng"
+        onOpen={openCreateCustomer}
         onClose={() => {
-          setOpenUpdateCustomer(false);
+          setOpenCreateCustomer(false);
         }}
       >
         <FormCreateCustomer
-          userCareId={selectedCustomerIndex}
-          customerInfo={cares.find((c) => c.careId === selectedCustomerIndex)}
           cares={cares}
           setCares={setCares}
           toast={toast}
-          setOpenUpdateCustomer={setOpenUpdateCustomer}
+          setOpenCreateCustomer={setOpenCreateCustomer}
         />
       </ModalItem>
 

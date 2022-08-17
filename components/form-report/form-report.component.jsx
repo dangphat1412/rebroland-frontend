@@ -72,7 +72,7 @@ const FormReport = ({ toast, setReportOpen, postId }) => {
             title: "Lỗi",
             description: <p>Có lỗi xảy ra, hãy thử lại sau</p>,
           });
-        }, 1000);
+        }, 100);
       }
       setReportOpen(false);
     }

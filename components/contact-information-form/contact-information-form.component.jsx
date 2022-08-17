@@ -53,6 +53,7 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
           name="contactEmail"
           placeholder="Nhập Email"
           onChange={handleChange}
+          error={errors.contactEmail}
           defaultValue={getValues("contactEmail")}
         />
         <InputField

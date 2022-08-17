@@ -10,12 +10,39 @@ const Axios = axios.create({
   },
 });
 
-export const addNewCustomer = async (contactId) => {
+export const searchCustomer = async (keyword, status, pageNo) => {
   try {
-    const res = await Axios.post(`/add-customer/${contactId}`);
-    return res.status;
+    const res = await Axios.get(`/`, {
+      params: {
+        keyword: keyword,
+        status: status,
+        pageNo: pageNo,
+      },
+    });
+    return res.data;
   } catch (error) {
     // const messages = convertToListMessages(error.response.data);
+    console.log(error);
+  }
+};
+
+export const addNewCustomer = async (userId) => {
+  try {
+    const res = await Axios.post(`/add-usercare/${userId}`);
+    return res.data;
+  } catch (error) {
+    // const messages = convertToListMessages(error.response.data);
+    console.log(error);
+  }
+};
+
+export const getInfoNewCustomer = async (data, setErrorMessage) => {
+  try {
+    const res = await Axios.get(`/add-customer/get-info/${data.phone}`);
+    return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
   }
 };

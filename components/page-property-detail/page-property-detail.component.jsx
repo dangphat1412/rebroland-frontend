@@ -727,6 +727,7 @@ const PagePropertyDetail = ({
       >
         <FormEndTransaction
           post={post}
+          brokers={brokers}
           setEndTransactionOpen={setEndTransactionOpen}
           setOpenRate={setOpenRate}
         />
@@ -865,7 +866,12 @@ const FormRateBroker = ({ user, brokers, setOpenRate }) => {
   );
 };
 
-const FormEndTransaction = ({ post, setEndTransactionOpen, setOpenRate }) => {
+const FormEndTransaction = ({
+  post,
+  setEndTransactionOpen,
+  setOpenRate,
+  brokers,
+}) => {
   const {
     register,
     handleSubmit,

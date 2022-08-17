@@ -19,18 +19,21 @@ import {
 } from "semantic-ui-react";
 import {
   acceptReportPost,
+  cancelReportPost,
   getDetailPost,
   getDetailReportPost,
   searchPostReport,
 } from "../../actions/admin";
 import calculatePrice from "../../utils/calculatePrice";
 import InputField from "../input-field/input-field.component";
+import ModalItem from "../modal-item/modal-item.component";
 import ViewPostModal from "../modal-view-post/modal-view-post.component";
 import Pagination from "../pagination/pagination.component";
 import {
   PaginationContainer,
   ReportPostPageContainer,
 } from "./page-report-post.styles";
+import { SemanticToastContainer, toast } from "react-semantic-toasts";
 
 const ReportPostPage = ({
   reportData,
@@ -61,6 +64,7 @@ const ReportPostPage = ({
   const [openConfirmCancel, setOpenConfirmCancel] = useState(false);
 
   const [selectedReportIndex, setSelectedReportIndex] = useState(null);
+  const [openAccept, setOpenAccept] = useState(false);
 
   const handlePaginationChange = (e, { activePage }) =>
     fetchAPI(params, sortValue, activePage - 1);
@@ -86,16 +90,16 @@ const ReportPostPage = ({
   };
 
   const handleAcceptReportPost = async () => {
-    const status = await acceptReportPost(selectedReportIndex);
-    if (status === 200) {
-      const list = [...reportPosts];
-      const index = list.findIndex(
-        (report) => report.reportId === selectedReportIndex
-      );
-      list[index].reportStatus = 2;
-      setReportPosts(list);
-    }
-    setOpenConfirmAccept(false);
+    // const status = await acceptReportPost(selectedReportIndex);
+    // if (status === 200) {
+    //   const list = [...reportPosts];
+    //   const index = list.findIndex(
+    //     (report) => report.reportId === selectedReportIndex
+    //   );
+    //   list[index].reportStatus = 2;
+    //   setReportPosts(list);
+    // }
+    // setOpenConfirmAccept(false);
   };
 
   const handleRejectReportPost = async () => {
@@ -113,6 +117,7 @@ const ReportPostPage = ({
 
   return (
     <ReportPostPageContainer>
+      <SemanticToastContainer position="bottom-right" maxToasts={1} />
       <Grid>
         <Grid.Row>
           <Dimmer active={loading} inverted>
@@ -207,9 +212,7 @@ const ReportPostPage = ({
                     setReportPostLoading(false);
                   }}
                 >
-                  <Table.Cell singleLine textAlign="center">
-                    {post.postId}
-                  </Table.Cell>
+                  <Table.Cell textAlign="center">{post.postId}</Table.Cell>
                   <Table.Cell>
                     <Item.Group>
                       <Item>
@@ -309,7 +312,7 @@ const ReportPostPage = ({
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedReportIndex(post.reportId);
-                            setOpenConfirmAccept(true);
+                            setOpenAccept(true);
                           }}
                         >
                           Chấp nhận
@@ -338,6 +341,7 @@ const ReportPostPage = ({
                       </Label>
                     )}
                   </Table.Cell>
+                  <Table.Cell textAlign="center">{post.comment}</Table.Cell>
                 </Table.Row>
               );
             })}
@@ -394,7 +398,105 @@ const ReportPostPage = ({
           handleRejectReportPost();
         }}
       />
+
+      <ModalItem
+        header="Xác nhận báo cáo"
+        onOpen={openAccept}
+        onClose={() => {
+          setOpenAccept(false);
+        }}
+      >
+        <AcceptForm
+          toast={toast}
+          setOpenAccept={setOpenAccept}
+          reportPosts={reportPosts}
+          setReportPosts={setReportPosts}
+          selectedReportIndex={selectedReportIndex}
+          data={data}
+          setData={setData}
+        />
+      </ModalItem>
     </ReportPostPageContainer>
+  );
+};
+
+const AcceptForm = ({
+  toast,
+  reportPosts,
+  setReportPosts,
+  setOpenAccept,
+  selectedReportIndex,
+  data,
+  setData,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({});
+
+  const onSubmit = async (commentData, e) => {
+    console.log(selectedReportIndex);
+    console.log(data);
+    const status = await acceptReportPost(selectedReportIndex, commentData);
+    if (status === 200) {
+      const list = [...reportPosts];
+      const index = list.findIndex(
+        (report) => report.reportId === selectedReportIndex
+      );
+      list[index].reportStatus = 2;
+      list[index].comment = commentData.content;
+      setReportPosts(list);
+      setTimeout(() => {
+        toast({
+          type: "success",
+          title: "Xử lý báo cáo",
+          description: <p>Xử lý báo cáo thành công</p>,
+        });
+      }, 100);
+    }
+    setOpenAccept(false);
+  };
+
+  const handleChange = (e, { name, value }) => {
+    setValue(name, value);
+  };
+
+  return (
+    <>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <InputField
+          {...register("content", {
+            required: "Nhập lý do",
+          })}
+          fieldType="textarea"
+          rows={5}
+          label="Lý do"
+          name="content"
+          placeholder="Nhập lý do huỷ bỏ thanh toán"
+          onChange={handleChange}
+          error={errors.content}
+          requiredField
+        />
+        <Grid>
+          <Grid.Row>
+            <Grid.Column textAlign="right">
+              <Button
+                type="button"
+                onClick={() => {
+                  setOpenAccept(false);
+                }}
+              >
+                Huỷ bỏ
+              </Button>
+              <Button type="submit">Xác nhận</Button>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Form>
+    </>
   );
 };
 

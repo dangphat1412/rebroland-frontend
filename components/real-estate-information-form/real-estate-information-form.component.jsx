@@ -26,46 +26,28 @@ const RealEstateInformationForm = ({
 
   const handleChange = (e, { name, value }) => {
     if (name === "propertyTypeId") {
-      setValue("longevityId", undefined);
-      setValue("numberOfBedroom", undefined);
-      setValue("numberOfBathroom", undefined);
-      setValue("floorNumber", undefined);
-      setValue("numberOfFloor", undefined);
-      setValue("barcode", undefined);
-      setValue("plotNumber", undefined);
-      setValue("roomNumber", undefined);
-      setValue("buildingName", undefined);
-      setValue("owner", undefined);
-      setValue("ownerPhone", undefined);
-      clearErrors([
-        "numberOfBedroom",
-        "numberOfBathroom",
-        "floorNumber",
-        "numberOfFloor",
-        "barcode",
-        "plotNumber",
-        "roomNumber",
-        "buildingName",
-        "owner",
-        "ownerPhone",
-      ]);
+      resetCertification();
     }
     setValue(name, value);
   };
 
   const handleOnTabChange = (e, { activeIndex }) => {
     setValue("certification", activeIndex === 0 ? true : false);
+    resetCertification();
+  };
+
+  const resetCertification = () => {
     setValue("barcode", undefined);
     setValue("plotNumber", undefined);
-    setValue("roomNumber", undefined);
     setValue("buildingName", undefined);
+    setValue("roomNumber", undefined);
     setValue("owner", undefined);
     setValue("ownerPhone", undefined);
     clearErrors([
       "barcode",
       "plotNumber",
-      "roomNumber",
       "buildingName",
+      "roomNumber",
       "owner",
       "ownerPhone",
     ]);
@@ -344,57 +326,167 @@ const RealEstateInformationForm = ({
                 menuItem: "Sổ đỏ / Sổ hồng",
                 render: () => (
                   <Tab.Pane attached={false} size="large">
+                    <label
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: "13px",
+                        display: "inline-block",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      Yêu cầu điền tất cả các trường (Nếu nhập)
+                    </label>
                     <Form.Group widths="equal">
-                      <InputField
-                        {...register("barcode", {
-                          pattern: {
-                            value: /^(^\d{13}$)|(^\d{15}$)$/,
-                            message: "Nhập mã vạch hợp lệ",
-                          },
-                        })}
-                        label="Mã vạch trên sổ đỏ"
-                        name="barcode"
-                        placeholder="Nhập mã vạch"
-                        error={errors.barcode}
-                        onChange={handleChange}
-                        defaultValue={getValues("barcode")}
-                      />
-                      <InputField
-                        {...register("plotNumber", {
-                          min: {
-                            value: 1,
-                            message: "Nhập tầng số thửa hợp lệ",
-                          },
-                          max: {
-                            value: 99999,
-                            message: "Số thửa tối đa 99999",
-                          },
-                        })}
-                        label="Số thửa"
-                        name="plotNumber"
-                        error={errors.plotNumber}
-                        placeholder="Nhập số thửa"
-                        onChange={handleChange}
-                        defaultValue={getValues("plotNumber")}
-                      />
+                      {watch("propertyTypeId") === 1 && (
+                        <>
+                          <InputField
+                            {...register("barcode", {
+                              pattern: {
+                                value: /^(^\d{13}$)|(^\d{15}$)$/,
+                                message: "Nhập mã vạch hợp lệ",
+                              },
+                              validate: (value) =>
+                                (!value &&
+                                  (getValues("plotNumber") ||
+                                    getValues("buildingName") ||
+                                    getValues("roomNumber") ||
+                                    getValues("owner") ||
+                                    getValues("ownerPhone")) &&
+                                  "Mã vạch không được để trống") ||
+                                true,
+                            })}
+                            label="Mã vạch trên sổ đỏ"
+                            name="barcode"
+                            placeholder="Nhập mã vạch"
+                            error={errors.barcode}
+                            onChange={handleChange}
+                            value={watch("barcode")}
+                            defaultValue={getValues("barcode")}
+                          />
+                          <InputField
+                            {...register("plotNumber", {
+                              min: {
+                                value: 1,
+                                message: "Nhập số thửa hợp lệ",
+                              },
+                              max: {
+                                value: 99999,
+                                message: "Số thửa tối đa 99999",
+                              },
+                              validate: (value) =>
+                                (!value &&
+                                  (getValues("barcode") ||
+                                    getValues("buildingName") ||
+                                    getValues("roomNumber") ||
+                                    getValues("owner") ||
+                                    getValues("ownerPhone")) &&
+                                  "Số thửa không được để trống") ||
+                                true,
+                            })}
+                            label="Số thửa"
+                            name="plotNumber"
+                            error={errors.plotNumber}
+                            placeholder="Nhập số thửa"
+                            onChange={handleChange}
+                            value={watch("plotNumber")}
+                            defaultValue={getValues("plotNumber")}
+                          />
+                        </>
+                      )}
                       {watch("propertyTypeId") === 2 && (
                         <>
                           <InputField
-                            {...register("buildingName")}
+                            {...register("barcode", {
+                              pattern: {
+                                value: /^(^\d{13}$)|(^\d{15}$)$/,
+                                message: "Nhập mã vạch hợp lệ",
+                              },
+                              validate: (value) =>
+                                (!value &&
+                                  (getValues("plotNumber") ||
+                                    getValues("buildingName") ||
+                                    getValues("roomNumber") ||
+                                    getValues("owner") ||
+                                    getValues("ownerPhone")) &&
+                                  "Mã vạch không được để trống") ||
+                                true,
+                            })}
+                            label="Mã vạch trên sổ đỏ"
+                            name="barcode"
+                            placeholder="Nhập mã vạch"
+                            error={errors.barcode}
+                            onChange={handleChange}
+                            value={watch("barcode")}
+                            defaultValue={getValues("barcode")}
+                          />
+                          <InputField
+                            {...register("plotNumber", {
+                              min: {
+                                value: 1,
+                                message: "Nhập số thửa hợp lệ",
+                              },
+                              max: {
+                                value: 99999,
+                                message: "Số thửa tối đa 99999",
+                              },
+                              validate: (value) =>
+                                (!value &&
+                                  (getValues("barcode") ||
+                                    getValues("buildingName") ||
+                                    getValues("roomNumber") ||
+                                    getValues("owner") ||
+                                    getValues("ownerPhone")) &&
+                                  "Mã vạch không được để trống") ||
+                                true,
+                            })}
+                            label="Số thửa"
+                            name="plotNumber"
+                            error={errors.plotNumber}
+                            placeholder="Nhập số thửa"
+                            onChange={handleChange}
+                            value={watch("plotNumber")}
+                            defaultValue={getValues("plotNumber")}
+                          />
+                          <InputField
+                            {...register("buildingName", {
+                              validate: (value) =>
+                                (!value &&
+                                  (getValues("barcode") ||
+                                    getValues("plotNumber") ||
+                                    getValues("roomNumber") ||
+                                    getValues("owner") ||
+                                    getValues("ownerPhone")) &&
+                                  "Mã vạch không được để trống") ||
+                                true,
+                            })}
                             label="Tên toà nhà"
                             name="buildingName"
                             placeholder="Nhập tên toà"
                             onChange={handleChange}
+                            value={watch("buildingName")}
+                            error={errors.buildingName}
                             defaultValue={getValues("buildingName")}
                             maxLength={50}
                           />
 
                           <InputField
-                            {...register("roomNumber")}
-                            label="Phòng số"
+                            {...register("roomNumber", {
+                              validate: (value) =>
+                                (!value &&
+                                  (getValues("barcode") ||
+                                    getValues("buildingName") ||
+                                    getValues("plotNumber") ||
+                                    getValues("owner") ||
+                                    getValues("ownerPhone")) &&
+                                  "Mã vạch không được để trống") ||
+                                true,
+                            })}
+                            label="Tên phòng"
                             name="roomNumber"
-                            placeholder="Nhập phòng"
+                            placeholder="Nhập tên phòng"
                             onChange={handleChange}
+                            value={watch("roomNumber")}
+                            error={errors.roomNumber}
                             defaultValue={getValues("roomNumber")}
                             maxLength={10}
                           />
@@ -403,11 +495,23 @@ const RealEstateInformationForm = ({
                     </Form.Group>
                     <Form.Group widths="equal">
                       <InputField
-                        {...register("owner")}
+                        {...register("owner", {
+                          validate: (value) =>
+                            (!value &&
+                              (getValues("barcode") ||
+                                getValues("buildingName") ||
+                                getValues("roomNumber") ||
+                                getValues("plotNumber") ||
+                                getValues("ownerPhone")) &&
+                              "Mã vạch không được để trống") ||
+                            true,
+                        })}
                         label="Tên chủ hộ"
                         name="owner"
                         placeholder="Nhập tên chủ hộ"
                         onChange={handleChange}
+                        value={watch("owner")}
+                        error={errors.owner}
                         defaultValue={getValues("owner")}
                       />
                       <InputField
@@ -417,12 +521,22 @@ const RealEstateInformationForm = ({
                             message:
                               "Số điện thoại là số Việt Nam và có 10 chữ số",
                           },
+                          validate: (value) =>
+                            (!value &&
+                              (getValues("barcode") ||
+                                getValues("buildingName") ||
+                                getValues("roomNumber") ||
+                                getValues("plotNumber") ||
+                                getValues("plotNumber")) &&
+                              "Mã vạch không được để trống") ||
+                            true,
                         })}
                         label="Số điện thoại chủ hộ"
                         name="ownerPhone"
                         placeholder="Nhập số điện thoại"
                         error={errors.ownerPhone}
                         onChange={handleChange}
+                        value={watch("ownerPhone")}
                         defaultValue={getValues("ownerPhone")}
                       />
                     </Form.Group>

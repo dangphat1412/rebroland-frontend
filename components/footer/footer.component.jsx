@@ -18,6 +18,27 @@ const Footer = () => {
         <Grid.Row color="black" style={{ paddingLeft: "95px" }}>
           <Grid.Column>
             <Segment color="black" inverted>
+              <Link href="/" passHref>
+                <a>
+                  <Image src="/logo-slogan.png" alt="ReBroLand" size="medium" />
+                </a>
+              </Link>
+              <Header as="h3">
+                <span>REBROLAND</span> - lựa chọn chung cho mái ấm gia đình
+              </Header>
+              <PropertyItem
+                iconClass="kikor kiko-marker-map"
+                title="Đại học FPT, Km29 Đại lộ Thăng Long, Thạch Thất, Hà Nội"
+              />
+              <PropertyItem
+                iconClass="kikor kiko-email"
+                title="rebroland@gmail.com"
+              />
+              <PropertyItem iconClass="kikor kiko-phone" title="0869009629" />
+            </Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Segment color="black" inverted>
               <Header as="h2">Truy cập nhanh</Header>
               <span className="divider-left"></span>
               <List animated verticalAlign="middle">
@@ -75,27 +96,6 @@ const Footer = () => {
               <a href="mailto://rebroland@gmail.com">
                 <Icon circular inverted color="red" name="mail" size="large" />
               </a>
-            </Segment>
-          </Grid.Column>
-          <Grid.Column>
-            <Segment color="black" inverted>
-              <Link href="/" passHref>
-                <a>
-                  <Image src="/logo-slogan.png" alt="ReBroLand" size="medium" />
-                </a>
-              </Link>
-              <Header as="h3">
-                <span>REBROLAND</span> - lựa chọn chung cho mái ấm gia đình
-              </Header>
-              <PropertyItem
-                iconClass="kikor kiko-marker-map"
-                title="Đại học FPT, Km29 Đại lộ Thăng Long, Thạch Thất, Hà Nội"
-              />
-              <PropertyItem
-                iconClass="kikor kiko-email"
-                title="rebroland@gmail.com"
-              />
-              <PropertyItem iconClass="kikor kiko-phone" title="0869009629" />
             </Segment>
           </Grid.Column>
         </Grid.Row>

@@ -24,7 +24,7 @@ export const NavContainer = styled(Container)`
   .btn-radio {
     padding-left: 16px !important;
   }
-  .ui.popup>.header {
+  .ui.popup>.header, .button {
     font-family: "Tahoma", san-serif !important;
   }
   .item-notification {

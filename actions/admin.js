@@ -178,7 +178,7 @@ export const getDetailReportUser = async (reportId) => {
 
 export const cancelReportPost = async (reportId) => {
   try {
-    const res = await Axios.get(`/list-reports/posts/reject/${reportId}`);
+    const res = await Axios.put(`/list-reports/posts/reject/${reportId}`);
     return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
@@ -187,9 +187,12 @@ export const cancelReportPost = async (reportId) => {
   }
 };
 
-export const acceptReportPost = async (reportId) => {
+export const acceptReportPost = async (reportId, component) => {
   try {
-    const res = await Axios.get(`/list-reports/posts/accept/${reportId}`);
+    const res = await Axios.put(
+      `/list-reports/posts/accept/${reportId}`,
+      component
+    );
     return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
@@ -200,7 +203,7 @@ export const acceptReportPost = async (reportId) => {
 
 export const cancelReportUser = async (reportId) => {
   try {
-    const res = await Axios.get(`/list-reports/users/reject/${reportId}`);
+    const res = await Axios.put(`/list-reports/users/reject/${reportId}`);
     return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
@@ -209,9 +212,9 @@ export const cancelReportUser = async (reportId) => {
   }
 };
 
-export const acceptReportUser = async (reportId) => {
+export const acceptReportUser = async (reportId, data) => {
   try {
-    const res = await Axios.get(`/list-reports/users/accept/${reportId}`);
+    const res = await Axios.put(`/list-reports/users/accept/${reportId}`, data);
     return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);

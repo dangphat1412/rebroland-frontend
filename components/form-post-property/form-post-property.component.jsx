@@ -23,6 +23,7 @@ const FormPostProperty = ({ user, priceData }) => {
     control,
     watch,
     clearErrors,
+    setError,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -67,7 +68,6 @@ const FormPostProperty = ({ user, priceData }) => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data, e) => {
-    console.log(data);
     setLoading(true);
     let mediaUrl;
     if (images.length !== 0) {

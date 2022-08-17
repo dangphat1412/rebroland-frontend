@@ -1,3 +1,3 @@
-const HOST_URL = "https://rebroland-frontend.vercel.app";
+const HOST_URL = "https://rebroland.vercel.app";
 
 module.exports = HOST_URL;
