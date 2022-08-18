@@ -11,7 +11,6 @@ import { RealEstateInfoContainer } from "./real-estate-information.styles";
 
 const RealEstateInformationForm = ({
   register,
-  unregister,
   errors,
   watch,
   setValue,
@@ -133,15 +132,20 @@ const RealEstateInformationForm = ({
               value: 10000,
               message: "Diện tích tối đa 10000m²",
             },
+            validate: (value) =>
+              /^[0-9]*(\.[0-9]{0,2})?$/.test(value) ||
+              "Tối đa 2 số sau phần thập phân",
           })}
           fluid
           type="number"
+          step={0.01}
           label="Diện tích"
           name="area"
           placeholder="Nhập diện tích"
+          maxLength={7}
           onChange={(e, { name, value }) => {
             console.log(value);
-            setValue(name, value ? (value >= 0 ? Math.abs(value) : 0) : null);
+            e.target.validity.valid && setValue(name, value);
           }}
           value={watch("area")}
           defaultValue={getValues("area")}
@@ -221,10 +225,10 @@ const RealEstateInformationForm = ({
               placeholder="Nhập số phòng ngủ"
               error={errors.numberOfBedroom}
               onChange={(e, { name, value }) => {
-                setValue(
-                  name,
-                  value ? (value >= 0 ? Math.abs(value) : 0) : null
-                );
+                e.target.validity.valid && setValue(name, value);
+              }}
+              onBlur={(e) => {
+                !e.target.value && setValue(e.target.name, 0);
               }}
               value={watch("numberOfBedroom")}
               defaultValue={getValues("numberOfBedroom") || 0}
@@ -247,14 +251,14 @@ const RealEstateInformationForm = ({
               name="numberOfBathroom"
               placeholder="Nhập số phòng tắm, vệ sinh"
               onChange={(e, { name, value }) => {
-                setValue(
-                  name,
-                  value ? (value >= 0 ? Math.abs(value) : 0) : null
-                );
+                e.target.validity.valid && setValue(name, value);
+              }}
+              onBlur={(e) => {
+                !e.target.value && setValue(e.target.name, 0);
               }}
               value={watch("numberOfBathroom")}
               error={errors.numberOfBathroom}
-              defaultValue={getValues("numberOfBathroom")}
+              defaultValue={getValues("numberOfBathroom") || 0}
             />
             {watch("propertyTypeId") === 1 ? (
               <InputField
@@ -273,14 +277,14 @@ const RealEstateInformationForm = ({
                 name="numberOfFloor"
                 placeholder="Nhập tầng"
                 onChange={(e, { name, value }) => {
-                  setValue(
-                    name,
-                    value ? (value >= 0 ? Math.abs(value) : 0) : null
-                  );
+                  e.target.validity.valid && setValue(name, value);
+                }}
+                onBlur={(e) => {
+                  !e.target.value && setValue(e.target.name, 0);
                 }}
                 value={watch("numberOfFloor")}
                 error={errors.numberOfFloor}
-                defaultValue={getValues("numberOfFloor")}
+                defaultValue={getValues("numberOfFloor") || 0}
               />
             ) : (
               <InputField
@@ -299,14 +303,14 @@ const RealEstateInformationForm = ({
                 name="floorNumber"
                 placeholder="Nhập tầng"
                 onChange={(e, { name, value }) => {
-                  setValue(
-                    name,
-                    value ? (value >= 0 ? Math.abs(value) : 0) : null
-                  );
+                  e.target.validity.valid && setValue(name, value);
+                }}
+                onBlur={(e) => {
+                  !e.target.value && setValue(e.target.name, 0);
                 }}
                 value={watch("floorNumber")}
                 error={errors.floorNumber}
-                defaultValue={getValues("floorNumber")}
+                defaultValue={getValues("floorNumber") || 0}
               />
             )}
           </Form.Group>

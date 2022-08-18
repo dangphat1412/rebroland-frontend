@@ -49,13 +49,13 @@ export const changeUserStatus = async (userId) => {
   }
 };
 
-export const changePostStatus = async (postId) => {
+export const changePostStatus = async (postId, setErrorMessage) => {
   try {
     const res = await Axios.put(`/post/status/${postId}`);
     return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
-    // setErrorMessage(messages);
+    setErrorMessage(messages);
     console.log(error);
   }
 };

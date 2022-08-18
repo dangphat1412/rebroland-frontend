@@ -425,7 +425,9 @@ const NotificationList = ({
         dataLength={notifications.length}
         style={{ height: "80vh", width: "400px", overflowY: "scroll" }}
       >
-        <Header as="h3">Thông báo</Header>
+        <Header as="h3" style={{ fontFamily: "Tahoma" }}>
+          Thông báo
+        </Header>
         <Link href={"/thong-bao"} floated="right">
           Xem tất cả
         </Link>
@@ -453,8 +455,15 @@ const NotificationList = ({
                     if (data.type === "Refund") {
                       Router.push("/trang-ca-nhan/thong-tin-ca-nhan");
                     }
+                    if (data.type === "Report") {
+                      Router.push(
+                        `/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`
+                      );
+                    }
                     if (data.type === "PostStatus") {
-                      Router.push("/trang-ca-nhan/bat-dong-san-cua-toi/");
+                      Router.push(
+                        `/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`
+                      );
                     }
                   }
                 }}
@@ -475,6 +484,9 @@ const NotificationList = ({
                     </Item.Description>
                   )}
                   {notification.type === "Report" && (
+                    <Item.Description>{notification.content}</Item.Description>
+                  )}
+                  {notification.type === "PostStatus" && (
                     <Item.Description>{notification.content}</Item.Description>
                   )}
                   <Item.Extra>{notification.date}</Item.Extra>

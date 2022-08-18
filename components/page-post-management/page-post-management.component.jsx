@@ -34,6 +34,7 @@ import {
 } from "../../actions/admin";
 import Map from "../map/map.component";
 import ReactImageGallery from "react-image-gallery";
+import { SemanticToastContainer, toast } from "react-semantic-toasts";
 
 const PostManagementPage = ({ postsData, setTotalResult }) => {
   const { register, handleSubmit, setValue } = useForm({
@@ -77,19 +78,31 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
     fetchAPI(data, 0, 0);
   };
 
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const handleChangeStatus = async () => {
-    const status = await changePostStatus(selectedPostIndex);
+    const status = await changePostStatus(selectedPostIndex, setErrorMessage);
+    console.log(status);
     if (status === 200) {
       const list = [...listPost];
       const index = list.findIndex((post) => post.postId === selectedPostIndex);
       list[index].block = !list[index].block;
       setListPost(list);
+    } else {
+      setTimeout(() => {
+        toast({
+          type: "error",
+          title: "Chủ bài đăng bị khoá tài khoản",
+          description: <p>{errorMessage}</p>,
+        });
+      }, 100);
     }
     setOpenConfirm(false);
   };
 
   return (
     <PostManagementPageContainer>
+      <SemanticToastContainer position="bottom-right" maxToasts={1} />
       <Dimmer active={loading} inverted>
         <Loader>Đang tải dữ liệu</Loader>
       </Dimmer>
@@ -149,157 +162,182 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Table padded color="yellow" selectable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell singleLine textAlign="center">
-              Mã bài đăng
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Bài đăng
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Người đăng
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Ngày đăng
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Trạng thái
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Hành động
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Xem chi tiết
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-
-        <Table.Body>
-          {listPost.length > 0 &&
-            listPost.map((post, index) => (
-              <Table.Row key={index} style={{ cursor: "pointer" }}>
-                <Table.Cell singleLine textAlign="center">
-                  {post.postId}
-                </Table.Cell>
-                <Table.Cell width={11}>
-                  <Item.Group>
-                    <Item>
-                      <Item.Image
-                        size="medium"
-                        src={
-                          (post && post.thumbnail) ||
-                          "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
-                        }
-                        label={
-                          post.originalPost && post.originalPost !== 0
-                            ? {
-                                color: "red",
-                                content: "Bài phái sinh",
-                                icon: "copy outline",
-                                ribbon: true,
-                              }
-                            : null
-                        }
-                      />
-                      <Item.Content className="item-content">
-                        <Item.Header>{post.title}</Item.Header>
-                        <List horizontal>
-                          <List.Item>
-                            <List.Content>
-                              <List.Header>
-                                {calculatePrice(post).price}
-                              </List.Header>
-                            </List.Content>
-                          </List.Item>
-                          <List.Item>
-                            <List.Content>
-                              <List.Header>
-                                {post.unitPrice.id === 3
-                                  ? ""
-                                  : calculatePrice(post).pricePerSquare}
-                              </List.Header>
-                            </List.Content>
-                          </List.Item>
-                          <List.Item>
-                            <List.Content>
-                              <List.Header>{post.area}m²</List.Header>
-                            </List.Content>
-                          </List.Item>
-                        </List>
-                        <Item.Description>{post.description}</Item.Description>
-                        <Item.Extra>
-                          {post.ward}, {post.district}, {post.province}
-                        </Item.Extra>
-                      </Item.Content>
-                    </Item>
-                  </Item.Group>
-                </Table.Cell>
-                <Table.Cell singleLine textAlign="center">
-                  <b>{post.user.fullName}</b> <br />
-                  {post.user.phone}
-                </Table.Cell>
-                <Table.Cell singleLine textAlign="center">
-                  {post.startDate}
-                </Table.Cell>
-                <Table.Cell singleLine textAlign="center">
-                  {post.block === false && post.status.id === 1 && (
-                    <Label circular color="green">
-                      ĐANG HOẠT ĐỘNG
-                    </Label>
-                  )}
-                  {post.block === false && post.status.id === 2 && (
-                    <Label circular color="orange">
-                      HẠ BÀI
-                    </Label>
-                  )}
-                  {post.block === false && post.status.id === 5 && (
-                    <Label circular color="orange">
-                      HẾT HẠN
-                    </Label>
-                  )}
-                  {post.block === false && post.status.id === 3 && (
-                    <Label circular color="blue">
-                      GIAO DỊCH XONG
-                    </Label>
-                  )}
-                  {post.block === true && (
-                    <Label circular color="red">
-                      KHÔNG HOẠT ĐỘNG
-                    </Label>
-                  )}
-                </Table.Cell>
-                <Table.Cell singleLine textAlign="center">
-                  <Radio
-                    toggle
-                    onChange={() => {
-                      setSelectedPostIndex(post.postId);
-                      setOpenConfirm(true);
-                    }}
-                    checked={post.block === false}
-                  />
-                </Table.Cell>
-                <Table.Cell textAlign="center">
-                  <Icon
-                    circular
-                    inverted
-                    color="teal"
-                    name="eye"
-                    style={{ cursor: "pointer" }}
-                    onClick={async () => {
-                      setOpenView(true);
-                      setPostLoading(true);
-                      const detailPost = await getDetailPost(post.postId);
-                      setDetailPost(detailPost);
-                      setPostLoading(false);
-                    }}
-                  />
-                </Table.Cell>
+      {listPost.length > 0 ? (
+        <>
+          <Table padded color="yellow" selectable>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Mã bài đăng
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Bài đăng
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Người đăng
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Ngày đăng
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Trạng thái
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Hành động
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Xem chi tiết
+                </Table.HeaderCell>
               </Table.Row>
-            ))}
-        </Table.Body>
-      </Table>
+            </Table.Header>
+
+            <Table.Body>
+              {listPost.length > 0 &&
+                listPost.map((post, index) => (
+                  <Table.Row key={index} style={{ cursor: "pointer" }}>
+                    <Table.Cell singleLine textAlign="center">
+                      {post.postId}
+                    </Table.Cell>
+                    <Table.Cell width={11}>
+                      <Item.Group>
+                        <Item>
+                          <Item.Image
+                            size="medium"
+                            src={
+                              (post && post.thumbnail) ||
+                              "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
+                            }
+                            label={
+                              post.originalPost && post.originalPost !== 0
+                                ? {
+                                    color: "red",
+                                    content: "Bài phái sinh",
+                                    icon: "copy outline",
+                                    ribbon: true,
+                                  }
+                                : null
+                            }
+                          />
+                          <Item.Content className="item-content">
+                            <Item.Header>{post.title}</Item.Header>
+                            <List horizontal>
+                              <List.Item>
+                                <List.Content>
+                                  <List.Header>
+                                    {calculatePrice(post).price}
+                                  </List.Header>
+                                </List.Content>
+                              </List.Item>
+                              <List.Item>
+                                <List.Content>
+                                  <List.Header>
+                                    {post.unitPrice.id === 3
+                                      ? ""
+                                      : calculatePrice(post).pricePerSquare}
+                                  </List.Header>
+                                </List.Content>
+                              </List.Item>
+                              <List.Item>
+                                <List.Content>
+                                  <List.Header>{post.area}m²</List.Header>
+                                </List.Content>
+                              </List.Item>
+                            </List>
+                            <Item.Description>
+                              {post.description}
+                            </Item.Description>
+                            <Item.Extra>
+                              {post.ward}, {post.district}, {post.province}
+                            </Item.Extra>
+                          </Item.Content>
+                        </Item>
+                      </Item.Group>
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      <b>{post.user.fullName}</b> <br />
+                      {post.user.phone}
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      {post.startDate}
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      {post.block === false && post.status.id === 1 && (
+                        <Label circular color="green">
+                          ĐANG HOẠT ĐỘNG
+                        </Label>
+                      )}
+                      {post.block === false && post.status.id === 2 && (
+                        <Label circular color="orange">
+                          HẠ BÀI
+                        </Label>
+                      )}
+                      {post.block === false && post.status.id === 5 && (
+                        <Label circular color="orange">
+                          HẾT HẠN
+                        </Label>
+                      )}
+                      {post.block === false && post.status.id === 3 && (
+                        <Label circular color="blue">
+                          GIAO DỊCH XONG
+                        </Label>
+                      )}
+                      {post.block === true && (
+                        <Label circular color="red">
+                          KHÔNG HOẠT ĐỘNG
+                        </Label>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      <Radio
+                        toggle
+                        onChange={() => {
+                          setSelectedPostIndex(post.postId);
+                          setOpenConfirm(true);
+                        }}
+                        checked={post.block === false}
+                      />
+                    </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      <Icon
+                        circular
+                        inverted
+                        color="teal"
+                        name="eye"
+                        style={{ cursor: "pointer" }}
+                        onClick={async () => {
+                          setOpenView(true);
+                          setPostLoading(true);
+                          const detailPost = await getDetailPost(post.postId);
+                          setDetailPost(detailPost);
+                          setPostLoading(false);
+                        }}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+            </Table.Body>
+          </Table>
+          <PaginationContainer>
+            <Pagination
+              activePage={data.pageNo}
+              boundaryRange={1}
+              siblingRange={1}
+              ellipsisItem={{
+                content: <Icon name="ellipsis horizontal" />,
+                icon: true,
+              }}
+              totalPages={data.totalPages}
+              onPageChange={handlePaginationChange}
+            />
+          </PaginationContainer>
+        </>
+      ) : (
+        <>
+          <br />
+          <Header as="h4">Không có bài đăng nào</Header>
+        </>
+      )}
+
       <Confirm
         cancelButton="Huỷ bỏ"
         confirmButton="Xác nhận"
@@ -310,19 +348,6 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
         }}
         onConfirm={handleChangeStatus}
       />
-      <PaginationContainer>
-        <Pagination
-          activePage={data.pageNo}
-          boundaryRange={1}
-          siblingRange={1}
-          ellipsisItem={{
-            content: <Icon name="ellipsis horizontal" />,
-            icon: true,
-          }}
-          totalPages={data.totalPages}
-          onPageChange={handlePaginationChange}
-        />
-      </PaginationContainer>
 
       <DetailPostContainer
         size="large"

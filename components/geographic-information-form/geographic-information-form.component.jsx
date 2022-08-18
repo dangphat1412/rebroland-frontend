@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Grid, Header, Segment } from "semantic-ui-react";
 import {
-  getDistrictById,
   getDistricts,
   getProvinces,
-  getProvincesById,
   getWards,
 } from "../../actions/vietnam-provinces";
 import InputField from "../input-field/input-field.component";
@@ -24,7 +22,7 @@ const GeographicInformationForm = ({
     fields: coordinatesFields,
     append: coordinatesAppend,
     remove: coordinatesRemove,
-  } = useFieldArray({ control, name: "coordinates" });
+  } = useFieldArray({ control, name: "coordinates", rules: { minLength: 4 } });
 
   const [position, setPosition] = useState([
     { lat: 21.01286, lng: 105.526657 },
@@ -91,6 +89,12 @@ const GeographicInformationForm = ({
         };
       }),
     }));
+    setDataProvinces((prev) => ({
+      ...prev,
+      wards: [],
+    }));
+    setValue("district", undefined);
+    setValue("ward", undefined);
   };
 
   const fetchWardsAPI = async (id) => {
@@ -101,6 +105,7 @@ const GeographicInformationForm = ({
         return { key: w.code, text: w.name, value: w.code };
       }),
     }));
+    setValue("ward", undefined);
   };
 
   return (
@@ -198,19 +203,58 @@ const GeographicInformationForm = ({
                   <Form.Group widths="equal" key={field.id}>
                     <InputField
                       name={`coordinates[${index}].latitude`}
+                      {...register(`coordinates[${index}].latitude`, {
+                        validate: {
+                          isCoordinate: (value) =>
+                            !value ||
+                            /^(-?\d+(\.\d+)?)$/.test(value) ||
+                            "Toạ độ không hợp lệ",
+                          checkNull: (value) =>
+                            (!value &&
+                              getValues(`coordinates[${index}].longitude`) &&
+                              "Nhập toạ độ") ||
+                            true,
+                        },
+                      })}
                       placeholder="Nhập vĩ độ"
                       onChange={(e) => {
-                        getValues("coordinates")[index].latitude =
-                          e.target.value;
+                        setValue(
+                          `coordinates[${index}].latitude`,
+                          e.target.value
+                        );
                       }}
+                      error={
+                        errors.coordinates && errors.coordinates[index].latitude
+                      }
                     />
                     <InputField
                       name={`coordinates.[${index}].longitude`}
+                      {...register(`coordinates[${index}].longitude`, {
+                        validate: {
+                          isCoordinate: (value) =>
+                            !value ||
+                            /^(-?\d+(\.\d+)?)$/.test(value) ||
+                            "Toạ độ không hợp lệ",
+                          checkNull: (value) =>
+                            (!value &&
+                              getValues(`coordinates[${index}].latitude`) &&
+                              "Nhập toạ độ") ||
+                            true,
+                        },
+                      })}
                       placeholder="Nhập kinh độ"
                       onChange={(e) => {
-                        getValues("coordinates")[index].longitude =
-                          e.target.value;
+                        setValue(
+                          `coordinates[${index}].longitude`,
+                          e.target.value
+                        );
+                        // getValues("coordinates")[index].longitude =
+                        //   e.target.value;
                       }}
+                      error={
+                        errors.coordinates &&
+                        errors.coordinates[index].longitude
+                      }
                     />
                     <Form.Field>
                       <Button
