@@ -20,8 +20,8 @@ export const UserManagementPageContainer = styled.div`
     margin-right: 20px;
   }
   .user-avatar-big {
-    width: 150px !important;
-    height: 150px !important;
+    width: 120px !important;
+    height: 120px !important;
     object-fit: cover;
     margin-right: 20px;
   }

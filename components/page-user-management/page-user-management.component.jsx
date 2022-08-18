@@ -58,7 +58,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
     if (status === 200) {
       const list = [...listUser];
       const index = list.findIndex((user) => user.id === selectedUserIndex);
-      list[index].block = !list[index].block;
+      list[index].block = list[index].block === true ? false : true;
       setListUser(list);
     }
     setOpenConfirm(false);
@@ -84,6 +84,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
     setData(posts);
     setListUser(posts.list);
     setTotalResult(posts.totalResult);
+    setUserDetail(null);
     setLoading(false);
   };
 
@@ -112,7 +113,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
               options={[
                 {
                   key: 0,
-                  text: "Thông thường",
+                  text: "Tất cả",
                   value: 0,
                 },
                 {
@@ -133,117 +134,121 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Table size="large" selectable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell singleLine textAlign="center">
-              Mã người dùng
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Tài khoản
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Họ và tên
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Vai trò
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Ngày tham gia
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Trạng thái
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Thao tác
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {listUser.length > 0 &&
-            listUser.map((user, index) => {
-              return (
-                <Table.Row
-                  key={index}
-                  style={{ cursor: "pointer" }}
-                  active={user.id === selectedUserIndex}
-                  onClick={async (e) => {
-                    setSelectedUserIndex(user.id);
-                    setUserDetail(user);
-                    setUserLoading(true);
-                    const data = await getPostsByUser(user.id, 0);
-                    setPostsData(data);
-                    setUserLoading(false);
-                  }}
-                >
-                  <Table.Cell singleLine textAlign="center">
-                    {user.id}
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    <Header as="h4" image>
-                      <Image
-                        src={
-                          user.avatar ||
-                          "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                        }
-                        avatar
-                        className="user-avatar-small"
+      {listUser && listUser.length > 0 ? (
+        <Table size="large" selectable>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell singleLine textAlign="center">
+                Mã người dùng
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine textAlign="center">
+                Tài khoản
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine textAlign="center">
+                Họ và tên
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine textAlign="center">
+                Vai trò
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine textAlign="center">
+                Ngày tham gia
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine textAlign="center">
+                Trạng thái
+              </Table.HeaderCell>
+              <Table.HeaderCell singleLine textAlign="center">
+                Thao tác
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {listUser.length > 0 &&
+              listUser.map((user, index) => {
+                return (
+                  <Table.Row
+                    key={index}
+                    style={{ cursor: "pointer" }}
+                    active={user.id === selectedUserIndex}
+                    onClick={async (e) => {
+                      setSelectedUserIndex(user.id);
+                      setUserDetail(user);
+                      setUserLoading(true);
+                      const data = await getPostsByUser(user.id, 0);
+                      setPostsData(data);
+                      setUserLoading(false);
+                    }}
+                  >
+                    <Table.Cell singleLine textAlign="center">
+                      {user.id}
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      <Header as="h4" image>
+                        <Image
+                          src={
+                            user.avatar ||
+                            "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+                          }
+                          avatar
+                          className="user-avatar-small"
+                        />
+                        <Header.Content>{user.phone}</Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      {user.fullName}
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      {user.broker ? "Nhà môi giới" : "Người dùng"}
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      {user.startDate}
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      {user.block ? (
+                        <Label circular color="red">
+                          VÔ HIỆU HOÁ
+                        </Label>
+                      ) : (
+                        <Label circular color="green">
+                          ĐANG HOẠT ĐỘNG
+                        </Label>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell singleLine textAlign="center">
+                      <Radio
+                        toggle
+                        onChange={() => {
+                          setOpenConfirm(true);
+                        }}
+                        checked={!user.block}
                       />
-                      <Header.Content>{user.phone}</Header.Content>
-                    </Header>
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    {user.fullName}
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    {user.broker ? "Nhà môi giới" : "Người dùng"}
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    {user.startDate}
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    {user.block ? (
-                      <Label circular color="red">
-                        VÔ HIỆU HOÁ
-                      </Label>
-                    ) : (
-                      <Label circular color="green">
-                        ĐANG HOẠT ĐỘNG
-                      </Label>
-                    )}
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    <Radio
-                      toggle
-                      onChange={() => {
-                        setOpenConfirm(true);
-                      }}
-                      checked={!user.block}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              );
-            })}
-        </Table.Body>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+          </Table.Body>
 
-        <Table.Footer>
-          <Table.Row>
-            <Table.HeaderCell colSpan="6">
-              <Pagination
-                activePage={data.pageNo}
-                boundaryRange={1}
-                siblingRange={1}
-                ellipsisItem={{
-                  content: <Icon name="ellipsis horizontal" />,
-                  icon: true,
-                }}
-                totalPages={data.totalPages}
-                onPageChange={handlePaginationChange}
-              />
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Footer>
-      </Table>
+          <Table.Footer>
+            <Table.Row>
+              <Table.HeaderCell colSpan="7">
+                <Pagination
+                  activePage={data.pageNo}
+                  boundaryRange={1}
+                  siblingRange={1}
+                  ellipsisItem={{
+                    content: <Icon name="ellipsis horizontal" />,
+                    icon: true,
+                  }}
+                  totalPages={data.totalPages}
+                  onPageChange={handlePaginationChange}
+                />
+              </Table.HeaderCell>
+            </Table.Row>
+          </Table.Footer>
+        </Table>
+      ) : (
+        <Header as="h3">Không có người dùng nào</Header>
+      )}
       <Confirm
         cancelButton="Huỷ bỏ"
         confirmButton="Xác nhận"
@@ -268,7 +273,18 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
             </Dimmer>
             <Grid>
               <Grid.Row>
-                <Grid.Column width={5}>
+                <Grid.Column width={2}>
+                  <Image
+                    src={
+                      userDetail.avatar ||
+                      "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+                    }
+                    size="medium"
+                    circular
+                    className="user-avatar-big"
+                  />
+                </Grid.Column>
+                <Grid.Column width={4}>
                   <div className="user-information">
                     <label>Họ và tên:</label>
                     <span>{userDetail.fullName}</span>
@@ -291,6 +307,28 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                     <label>Ngày sinh:</label>
                     <span>
                       {userDetail.dob ? userDetail.dob : "Đang cập nhật"}
+                    </span>
+                  </div>
+                  <div className="user-information">
+                    <label>Số bài đăng:</label>
+                    <span>
+                      {postsData ? (
+                        <>
+                          <span>{postsData.totalResult} </span>
+                          {postsData.totalResult > 0 && (
+                            <span
+                              onClick={() => {
+                                setOpenViewPost(true);
+                              }}
+                              style={{ color: "blue", cursor: "pointer" }}
+                            >
+                              Xem tất cả
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        "Đang cập nhật"
+                      )}
                     </span>
                   </div>
                 </Grid.Column>
@@ -342,7 +380,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                     </span>
                   </div>
                 </Grid.Column>
-                <Grid.Column width={6}>
+                <Grid.Column width={4}>
                   <div className="user-information">
                     <label>Mô tả:</label>
                     <span>
@@ -351,37 +389,6 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                         : "Đang cập nhật"}
                     </span>
                   </div>
-                  <div className="user-information">
-                    <label>Số bài đăng:</label>
-                    <span>
-                      {postsData ? (
-                        <>
-                          <span>{postsData.totalResult} </span>
-                          {postsData.totalResult > 0 && (
-                            <span
-                              onClick={() => {
-                                setOpenViewPost(true);
-                              }}
-                              style={{ color: "blue", cursor: "pointer" }}
-                            >
-                              Xem tất cả
-                            </span>
-                          )}
-                        </>
-                      ) : (
-                        "Đang cập nhật"
-                      )}
-                    </span>
-                  </div>
-                  {/* <Image
-                    src={
-                      userDetail.avatar ||
-                      "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                    }
-                    size="medium"
-                    circular
-                    className="user-avatar-big"
-                  /> */}
                 </Grid.Column>
               </Grid.Row>
             </Grid>

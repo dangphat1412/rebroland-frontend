@@ -105,19 +105,23 @@ const HandleContactBackRequestPage = ({
                 <Card.Header>Xử lý yêu cầu liên hệ lại</Card.Header>
               </Card.Content>
               <Card.Content>
-                <Dimmer active={loading} inverted>
-                  <Loader>Đang tải dữ liệu</Loader>
-                </Dimmer>
                 <Card.Header textAlign="center">
-                  <Form onSubmit={handleSubmit(onSubmit)}>
-                    <InputField
-                      name="key"
-                      placeholder="Tìm kiếm người dùng"
-                      onChange={(e, { name, value }) => {
-                        setValue(name, value);
-                      }}
-                    />
-                  </Form>
+                  <Grid>
+                    <Grid.Row>
+                      <Grid.Column width={4}>
+                        <Form onSubmit={handleSubmit(onSubmit)}>
+                          <InputField
+                            icon="search"
+                            name="key"
+                            placeholder="Tìm kiếm"
+                            onChange={(e, { name, value }) => {
+                              setValue(name, value);
+                            }}
+                          />
+                        </Form>
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
                 </Card.Header>
                 {contacts.length > 0 ? (
                   contacts.map((contact, index) => {
@@ -138,6 +142,9 @@ const HandleContactBackRequestPage = ({
                     <b>Không có yêu cầu liên hệ lại</b>
                   </>
                 )}
+                <Dimmer active={loading} inverted>
+                  <Loader>Đang tải dữ liệu</Loader>
+                </Dimmer>
               </Card.Content>
             </Card>
             {data.totalPages > 0 && (

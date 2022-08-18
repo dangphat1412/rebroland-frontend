@@ -337,7 +337,8 @@ const RealEstateInformationForm = ({
                       Yêu cầu điền tất cả các trường (Nếu nhập)
                     </label>
                     <Form.Group widths="equal">
-                      {watch("propertyTypeId") === 1 && (
+                      {(watch("propertyTypeId") === 1 ||
+                        watch("propertyTypeId") === 3) && (
                         <>
                           <InputField
                             {...register("barcode", {

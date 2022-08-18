@@ -3,6 +3,7 @@ import {
   Breadcrumb,
   Button,
   Checkbox,
+  Confirm,
   Dimmer,
   Divider,
   Dropdown,
@@ -33,13 +34,17 @@ import {
 import ModalItem from "../modal-item/modal-item.component";
 import FormReport from "../form-report/form-report.component";
 import {
+  deletepPost,
+  dropPost,
+  extendPost,
   finishTransaction,
   followPost,
+  getPricePerDay,
   historyPost,
   switchAllowCreateDerivative,
 } from "../../actions/post";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import ReactImageGallery from "react-image-gallery";
 import Script from "next/script";
 import Head from "next/head";
@@ -52,6 +57,8 @@ import Barcode from "react-hooks-barcode";
 import InputField from "../input-field/input-field.component";
 import { useForm } from "react-hook-form";
 import { ratingListBroker } from "../../actions/rating";
+import PaymentInformationForm from "../payment-information-form/payment-information-form.component";
+import EditPostForm from "../form-edit-post/form-edit-post.component";
 
 const PagePropertyDetail = ({
   post,
@@ -73,10 +80,24 @@ const PagePropertyDetail = ({
     post.allowDerivative
   );
   const [openRate, setOpenRate] = useState(false);
-
   const { price, pricePerSquare } = calculatePrice(post);
-
   const [items, setItems] = useState([]);
+
+  const [openEditPost, setOpenEditPost] = useState(false);
+  const [openDeletePost, setOpenDeletePost] = useState(false);
+  const [openReupPost, setOpenReupPost] = useState(false);
+  const [openDropPost, setOpenDropPost] = useState(false);
+  const [openExtendPost, setOpenExtendPost] = useState(false);
+  const [priceData, setPriceData] = useState(null);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      const data = await getPricePerDay();
+      setPriceData(data);
+    };
+
+    fetchAPI();
+  }, []);
 
   useEffect(() => {
     setItems(
@@ -203,6 +224,28 @@ const PagePropertyDetail = ({
                     </Label>
                   )}
                 </Header>
+                {post.status.id !== 1 && (
+                  <Label
+                    as="a"
+                    color={post.status.id === 3 ? "green" : "orange"}
+                    ribbon="right"
+                    size="huge"
+                    style={{
+                      position: "absolute",
+                      top: "50px",
+                      left: "1280px",
+                    }}
+                  >
+                    {post.status.id === 3 ? (
+                      <>
+                        <Icon name="check circle outline" /> Xác nhận là đã bán
+                      </>
+                    ) : (
+                      post.status.name
+                    )}
+                  </Label>
+                )}
+
                 <Breadcrumb>
                   <Breadcrumb.Section
                     link
@@ -322,6 +365,104 @@ const PagePropertyDetail = ({
                             </Dropdown.Menu>
                           </Dropdown>
                         </List.Item>
+                        <List.Item>
+                          <Dropdown icon="ellipsis vertical" floating>
+                            <Dropdown.Menu>
+                              {post.block === false && post.status.id === 5 && (
+                                <Dropdown.Item
+                                  onClick={() => {
+                                    setOpenExtendPost(true);
+                                  }}
+                                >
+                                  <b>
+                                    <Icon
+                                      name="clock outline"
+                                      circular
+                                      inverted
+                                      color="orange"
+                                      style={{ marginRight: "10px" }}
+                                    />
+                                    Gia hạn bài viết
+                                  </b>
+                                </Dropdown.Item>
+                              )}
+
+                              {post.block === false && post.status.id === 2 && (
+                                <Dropdown.Item
+                                  onClick={() => {
+                                    setOpenReupPost(true);
+                                  }}
+                                >
+                                  <b>
+                                    <Icon
+                                      name="redo"
+                                      circular
+                                      inverted
+                                      color="orange"
+                                      style={{ marginRight: "10px" }}
+                                    />
+                                    Đăng lại
+                                  </b>
+                                </Dropdown.Item>
+                              )}
+
+                              {post.block === false && post.status.id === 1 && (
+                                <Dropdown.Item
+                                  onClick={() => {
+                                    setOpenDropPost(true);
+                                  }}
+                                >
+                                  <b>
+                                    <Icon
+                                      name="hand point down"
+                                      circular
+                                      inverted
+                                      color="orange"
+                                      style={{ marginRight: "10px" }}
+                                    />
+                                    Hạ bài
+                                  </b>
+                                </Dropdown.Item>
+                              )}
+
+                              {post.status.id !== 3 && (
+                                <Dropdown.Item
+                                  onClick={() => {
+                                    setOpenEditPost(true);
+                                  }}
+                                >
+                                  <b>
+                                    <Icon
+                                      color="green"
+                                      name="edit outline"
+                                      circular
+                                      inverted
+                                      style={{ marginRight: "10px" }}
+                                    />
+                                    Chỉnh sửa
+                                  </b>
+                                </Dropdown.Item>
+                              )}
+
+                              <Dropdown.Item
+                                onClick={() => {
+                                  setOpenDeletePost(true);
+                                }}
+                              >
+                                <b>
+                                  <Icon
+                                    color="red"
+                                    name="trash alternate"
+                                    circular
+                                    inverted
+                                    style={{ marginRight: "10px" }}
+                                  />
+                                  Xoá bài viết
+                                </b>
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </List.Item>
                         {user && user.id !== post.user.id && (
                           <List.Item>
                             <Icon
@@ -337,7 +478,7 @@ const PagePropertyDetail = ({
                                           <p>Đăng nhập để báo cáo bài viết</p>
                                         ),
                                       });
-                                    }, 1000);
+                                    }, 100);
                               }}
                             />
                           </List.Item>
@@ -563,12 +704,6 @@ const PagePropertyDetail = ({
                 </Button>
               )}
 
-              {post.status.id === 3 && (
-                <Button basic color="green" fluid size="big">
-                  <Icon name="check circle" color="green" /> Kết thúc giao dịch
-                </Button>
-              )}
-
               <Button
                 fluid
                 size="big"
@@ -676,6 +811,74 @@ const PagePropertyDetail = ({
           </Grid.Row>
         </Grid>
       </Form>
+
+      <ModalItem
+        header="Gia hạn bài viết"
+        size="small"
+        onOpen={openExtendPost}
+        onClose={() => {
+          setOpenExtendPost(false);
+        }}
+      >
+        <FormReupPost user={user} priceData={priceData} detailPost={post} />
+      </ModalItem>
+
+      <ModalItem
+        header="Chỉnh sửa bài viết"
+        size="large"
+        onOpen={openEditPost}
+        onClose={() => {
+          setOpenEditPost(false);
+        }}
+      >
+        <EditPostForm user={user} editedPost={post} />
+      </ModalItem>
+
+      <Confirm
+        open={openDropPost}
+        header="Xác nhận hạ bài"
+        content="Bạn có chắc chắn muốn hạ bài không? Nếu bạn hạ bài bạn sẽ mất những ngày còn lại"
+        cancelButton="Huỷ bỏ"
+        confirmButton="Xác nhận"
+        onCancel={() => {
+          setOpenDropPost(false);
+        }}
+        onConfirm={async () => {
+          const status = await dropPost(post.postId);
+          if (status === 201) {
+            Router.reload();
+          }
+        }}
+      />
+
+      <Confirm
+        open={openDeletePost}
+        header="Xác nhận xoá bài viết"
+        content="Bạn có chắc chắn muốn xoá bài viết không?"
+        onCancel={() => {
+          setOpenDeletePost(false);
+        }}
+        onConfirm={async () => {
+          const status = await deletepPost(post.postId);
+          if (status === 201) {
+            Router.push("/trang-ca-nhan/bat-dong-san-cua-toi");
+          }
+        }}
+      />
+
+      <ModalItem
+        header="Đăng lại"
+        size="small"
+        onOpen={openReupPost}
+        onClose={() => {
+          setOpenReupPost(false);
+        }}
+      >
+        <>
+          <FormReupPost user={user} priceData={priceData} detailPost={post} />
+        </>
+      </ModalItem>
+
       <ModalItem
         header="Báo cáo tin đăng"
         onOpen={reportOpen}
@@ -756,6 +959,49 @@ const PagePropertyDetail = ({
       ></Script>
       <Script src="https://sp.zalo.me/plugins/sdk.js"></Script>
     </FormPropertyDetailContainer>
+  );
+};
+
+const FormReupPost = ({ user, priceData, detailPost }) => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    clearError,
+    getValues,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      numberOfPostedDay: 7,
+    },
+  });
+
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const onSubmit = async (data, e) => {
+    const status = await extendPost(detailPost.postId, data);
+    if (status === 201) {
+      Router.reload();
+    }
+  };
+
+  return (
+    <>
+      {priceData && detailPost && (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <PaymentInformationForm
+            user={user}
+            priceData={priceData}
+            setValue={setValue}
+            getValues={getValues}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+          />
+        </Form>
+      )}
+    </>
   );
 };
 
@@ -887,7 +1133,7 @@ const FormEndTransaction = ({
     defaultValues: {
       provideInfo: true,
       owner: post.owner,
-      phone: post.phone,
+      phone: post.ownerPhone,
       barcode: post.barcode,
       plotNumber: post.plotNumber,
       buildingName: post.buildingName,
@@ -913,10 +1159,11 @@ const FormEndTransaction = ({
     if (status === 200) {
       setEndTransactionOpen(false);
 
-      if (brokers && brokers.length > 0) {
-        setOpenRate(true);
-      }
+      // if (brokers.length > 0) {
+      //   setOpenRate(true);
+      // }
     }
+    console.log(data);
   };
 
   return (
@@ -973,6 +1220,7 @@ const FormEndTransaction = ({
                     true,
                 })}
                 placeholder="Nhập số điện thoại"
+                value={watch("phone")}
                 defaultValue={post.phone}
                 onChange={handleChange}
                 error={errors.phone}

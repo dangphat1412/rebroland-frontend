@@ -582,15 +582,16 @@ const SearchBox = ({ searchParams }) => {
           defaultValue={searchParams && searchParams.numberOfBedrooms}
         />
         <Button
+          className="reset-button"
           type="button"
           icon="refresh"
           content="Đặt lại"
-          style={{ margin: "0px !important" }}
           onClick={() => {
             router.reload();
           }}
         />
-        <Form.Button fluid style={{ marginTop: "15px !important" }}>
+
+        <Form.Button fluid className="search-button">
           Tìm kiếm
         </Form.Button>
       </FormSearchContainer>

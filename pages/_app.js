@@ -53,7 +53,8 @@ export default function MyApp({ Component, pageProps }) {
         setLoginOpen={setLoginOpen}
         setRegisterOpen={setRegisterOpen}
       />
-      <Footer />
+      {(!pageProps.user || pageProps.user.currentRole !== 1) && <Footer />}
+
       <LoginRegisterModal
         loginOpen={loginOpen}
         setLoginOpen={setLoginOpen}

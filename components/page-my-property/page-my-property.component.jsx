@@ -302,7 +302,7 @@ const ListProperty = ({ user, data, setData, handlePaginationChange }) => {
 
       <ModalItem
         header="Chỉnh sửa bài viết"
-        size="small"
+        size="large"
         onOpen={openEditPost}
         onClose={() => {
           setOpenEditPost(false);
@@ -363,14 +363,7 @@ const ListProperty = ({ user, data, setData, handlePaginationChange }) => {
   );
 };
 
-const FormExtendPost = ({
-  user,
-  priceData,
-  detailPost,
-  setOpenExtendPost,
-  data,
-  setData,
-}) => {
+const FormExtendPost = ({ user, priceData, detailPost }) => {
   const {
     register,
     handleSubmit,
@@ -413,14 +406,7 @@ const FormExtendPost = ({
   );
 };
 
-const FormReupPost = ({
-  user,
-  priceData,
-  detailPost,
-  setOpenReupPost,
-  postList,
-  setPostList,
-}) => {
+const FormReupPost = ({ user, priceData, detailPost }) => {
   const {
     register,
     handleSubmit,

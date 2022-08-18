@@ -67,6 +67,7 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
     setData(posts);
     setListPost(posts.posts);
     setTotalResult(posts.totalResult);
+    console.log(posts);
     setLoading(false);
   };
 
@@ -81,7 +82,7 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
     if (status === 200) {
       const list = [...listPost];
       const index = list.findIndex((post) => post.postId === selectedPostIndex);
-      list[index].status.id = list[index].status.id === 1 ? 2 : 1;
+      list[index].block = !list[index].block;
       setListPost(list);
     }
     setOpenConfirm(false);
@@ -112,7 +113,7 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
               options={[
                 {
                   key: 0,
-                  text: "Thông thường",
+                  text: "Tất cả",
                   value: 0,
                 },
                 {
@@ -121,14 +122,24 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
                   value: 1,
                 },
                 {
+                  key: 5,
+                  text: "Hết hạn",
+                  value: 5,
+                },
+                {
                   key: 2,
-                  text: "Không hoạt động",
+                  text: "Hạ bài",
                   value: 2,
                 },
                 {
                   key: 3,
                   text: "Giao dịch xong",
                   value: 3,
+                },
+                {
+                  key: 4,
+                  text: "Không hoạt động",
+                  value: 4,
                 },
               ]}
               className="filter"
@@ -233,33 +244,41 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
                   {post.startDate}
                 </Table.Cell>
                 <Table.Cell singleLine textAlign="center">
-                  {post.status.id === 1 && (
+                  {post.block === false && post.status.id === 1 && (
                     <Label circular color="green">
                       ĐANG HOẠT ĐỘNG
                     </Label>
                   )}
-                  {post.status.id === 2 && (
-                    <Label circular color="red">
-                      KHÔNG HOẠT ĐỘNG
+                  {post.block === false && post.status.id === 2 && (
+                    <Label circular color="orange">
+                      HẠ BÀI
                     </Label>
                   )}
-                  {post.status.id === 3 && (
+                  {post.block === false && post.status.id === 5 && (
+                    <Label circular color="orange">
+                      HẾT HẠN
+                    </Label>
+                  )}
+                  {post.block === false && post.status.id === 3 && (
                     <Label circular color="blue">
                       GIAO DỊCH XONG
                     </Label>
                   )}
+                  {post.block === true && (
+                    <Label circular color="red">
+                      KHÔNG HOẠT ĐỘNG
+                    </Label>
+                  )}
                 </Table.Cell>
                 <Table.Cell singleLine textAlign="center">
-                  {post.status.id !== 3 && (
-                    <Radio
-                      toggle
-                      onChange={() => {
-                        setSelectedPostIndex(post.postId);
-                        setOpenConfirm(true);
-                      }}
-                      checked={post.status.id === 1}
-                    />
-                  )}
+                  <Radio
+                    toggle
+                    onChange={() => {
+                      setSelectedPostIndex(post.postId);
+                      setOpenConfirm(true);
+                    }}
+                    checked={post.block === false}
+                  />
                 </Table.Cell>
                 <Table.Cell textAlign="center">
                   <Icon

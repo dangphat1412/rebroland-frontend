@@ -36,6 +36,7 @@ const ReportUserPage = ({
   setImages,
   setShowGallaryView,
 }) => {
+  console.log(reportData);
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
       key: undefined,
@@ -61,20 +62,6 @@ const ReportUserPage = ({
   const [openViewDetailReport, setOpenViewDetailReport] = useState(false);
   const [reportUserLoading, setReportUserLoading] = useState(false);
   const [reportUserDetail, setReportUserDetail] = useState(null);
-
-  const handleAcceptReportPost = async () => {
-    // const status = await acceptReportUser(selectedReportIndex);
-    // if (status === 200) {
-    //   const list = [...reportUsers];
-    //   const index = list.findIndex(
-    //     (report) => report.reportId === selectedReportIndex
-    //   );
-    //   list[index].status = 2;
-    //   setReportUsers(list);
-    // }
-    // setOpenConfirmAccept(false);
-    setOpenAccept(true);
-  };
 
   const handleRejectReportPost = async () => {
     const status = await cancelReportUser(selectedReportIndex);
@@ -161,161 +148,170 @@ const ReportUserPage = ({
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Table padded color="yellow" selectable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell singleLine textAlign="center">
-              Mã người dùng
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Người dùng
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Họ và tên
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Xem thông tin người dùng
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Tổng số báo cáo
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Trạng thái
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Hành động
-            </Table.HeaderCell>
-            <Table.HeaderCell singleLine textAlign="center">
-              Ghi chú
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
+      {reportUsers && reportUsers.length > 0 ? (
+        <>
+          <Table padded color="yellow" selectable>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Mã người dùng
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Người dùng
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Họ và tên
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Xem thông tin người dùng
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Tổng số báo cáo
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Trạng thái
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Hành động
+                </Table.HeaderCell>
+                <Table.HeaderCell singleLine textAlign="center">
+                  Ghi chú
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
 
-        <Table.Body>
-          {reportUsers &&
-            reportUsers.length > 0 &&
-            reportUsers.map((user, index) => {
-              return (
-                <Table.Row
-                  key={index}
-                  style={{ cursor: "pointer" }}
-                  onClick={async () => {
-                    setOpenViewDetailReport(true);
-                    setReportUserLoading(true);
-                    const reportUserData = await getDetailReportUser(
-                      user.reportId
-                    );
-                    setReportUserDetail(reportUserData);
-                    setReportUserLoading(false);
-                  }}
-                >
-                  <Table.Cell singleLine textAlign="center">
-                    {user.user.id}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Header as="h4" image>
-                      <Image
-                        src={
-                          user.user.avatar ||
-                          "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                        }
-                        avatar
-                        className="user-avatar-small"
-                      />
-                      <Header.Content>{user.user.phone}</Header.Content>
-                    </Header>
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    <span>{user.user.fullName}</span>
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    <Icon
-                      circular
-                      inverted
-                      color="teal"
-                      name="eye"
+            <Table.Body>
+              {reportUsers &&
+                reportUsers.length > 0 &&
+                reportUsers.map((user, index) => {
+                  return (
+                    <Table.Row
+                      key={index}
                       style={{ cursor: "pointer" }}
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        // setOpenViewPost(true);
-                        // setLoading(true);
-                        // const detailPost = await getDetailPost(post.postId);
-                        // setDetailPost(detailPost);
-                        // setLoading(false);
+                      onClick={async () => {
+                        setOpenViewDetailReport(true);
+                        setReportUserLoading(true);
+                        const reportUserData = await getDetailReportUser(
+                          user.reportId
+                        );
+                        setReportUserDetail(reportUserData);
+                        setReportUserLoading(false);
                       }}
-                    />
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    {user.numberOfUserReport}
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    {user.status === 1 ? (
-                      <Label circular color="red">
-                        ĐANG XỬ LÝ
-                      </Label>
-                    ) : (
-                      <Label circular color="green">
-                        ĐÃ XỬ LÝ
-                      </Label>
-                    )}
-                  </Table.Cell>
-                  <Table.Cell singleLine textAlign="center">
-                    {user.status === 1 && (
-                      <div className="ui two buttons">
-                        <Button
-                          basic
-                          color="green"
-                          onClick={(e) => {
+                    >
+                      <Table.Cell singleLine textAlign="center">
+                        {user.user.id}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Header as="h4" image>
+                          <Image
+                            src={
+                              user.user.avatar ||
+                              "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+                            }
+                            avatar
+                            className="user-avatar-small"
+                          />
+                          <Header.Content>{user.user.phone}</Header.Content>
+                        </Header>
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        <span>{user.user.fullName}</span>
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        <Icon
+                          circular
+                          inverted
+                          color="teal"
+                          name="eye"
+                          style={{ cursor: "pointer" }}
+                          onClick={async (e) => {
                             e.stopPropagation();
-                            setSelectedReportIndex(user.reportId);
-                            setOpenAccept(true);
+                            // setOpenViewPost(true);
+                            // setLoading(true);
+                            // const detailPost = await getDetailPost(post.postId);
+                            // setDetailPost(detailPost);
+                            // setLoading(false);
                           }}
-                        >
-                          Chấp nhận
-                        </Button>
-                        <Button
-                          basic
-                          color="red"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedReportIndex(user.reportId);
-                            setOpenConfirmCancel(true);
-                          }}
-                        >
-                          Huỷ bỏ
-                        </Button>
-                      </div>
-                    )}
-                    {user.status === 2 && (
-                      <Label circular color="green">
-                        CHẤP NHẬN
-                      </Label>
-                    )}
-                    {user.status === 3 && (
-                      <Label circular color="red">
-                        BỎ QUA
-                      </Label>
-                    )}
-                  </Table.Cell>
-                  <Table.Cell>{user.comment}</Table.Cell>
-                </Table.Row>
-              );
-            })}
-        </Table.Body>
-      </Table>
-      <PaginationContainer>
-        <Pagination
-          activePage={data.pageNo}
-          boundaryRange={1}
-          siblingRange={1}
-          ellipsisItem={{
-            content: <Icon name="ellipsis horizontal" />,
-            icon: true,
-          }}
-          totalPages={data.totalPages}
-          //   onPageChange={handlePaginationChange}
-        />
-      </PaginationContainer>
+                        />
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        {user.numberOfUserReport}
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        {user.status === 1 ? (
+                          <Label circular color="red">
+                            ĐANG XỬ LÝ
+                          </Label>
+                        ) : (
+                          <Label circular color="green">
+                            ĐÃ XỬ LÝ
+                          </Label>
+                        )}
+                      </Table.Cell>
+                      <Table.Cell singleLine textAlign="center">
+                        {user.status === 1 && (
+                          <div className="ui two buttons">
+                            <Button
+                              basic
+                              color="green"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedReportIndex(user.reportId);
+                                setOpenAccept(true);
+                              }}
+                            >
+                              Chấp nhận
+                            </Button>
+                            <Button
+                              basic
+                              color="red"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedReportIndex(user.reportId);
+                                setOpenConfirmCancel(true);
+                              }}
+                            >
+                              Huỷ bỏ
+                            </Button>
+                          </div>
+                        )}
+                        {user.status === 2 && (
+                          <Label circular color="green">
+                            CHẤP NHẬN
+                          </Label>
+                        )}
+                        {user.status === 3 && (
+                          <Label circular color="red">
+                            BỎ QUA
+                          </Label>
+                        )}
+                      </Table.Cell>
+                      <Table.Cell>{user.comment}</Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+            </Table.Body>
+          </Table>
+          <PaginationContainer>
+            <Pagination
+              activePage={data.pageNo}
+              boundaryRange={1}
+              siblingRange={1}
+              ellipsisItem={{
+                content: <Icon name="ellipsis horizontal" />,
+                icon: true,
+              }}
+              totalPages={data.totalPages}
+              onPageChange={handlePaginationChange}
+            />
+          </PaginationContainer>
+        </>
+      ) : (
+        <>
+          <br />
+          <Header as="h4">Không có báo cáo nào</Header>
+        </>
+      )}
 
       {/* <ViewPostModal
         loading={loading}
@@ -396,6 +392,7 @@ const AcceptForm = ({
   } = useForm({});
 
   const onSubmit = async (commentData, e) => {
+    console.log(commentData);
     const status = await acceptReportUser(selectedReportIndex, commentData);
     if (status === 200) {
       const list = [...reportUsers];
@@ -403,7 +400,7 @@ const AcceptForm = ({
         (report) => report.reportId === selectedReportIndex
       );
       list[index].status = 2;
-      list[index].comment = commentData.content;
+      list[index].comment = commentData.comment;
       setReportUsers(list);
       setTimeout(() => {
         toast({
@@ -424,16 +421,16 @@ const AcceptForm = ({
     <>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <InputField
-          {...register("content", {
+          {...register("comment", {
             required: "Nhập lý do",
           })}
           fieldType="textarea"
           rows={5}
           label="Lý do"
-          name="content"
+          name="comment"
           placeholder="Nhập lý do huỷ bỏ thanh toán"
           onChange={handleChange}
-          error={errors.content}
+          error={errors.comment}
           requiredField
         />
         <Grid>

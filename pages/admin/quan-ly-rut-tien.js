@@ -6,13 +6,14 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 import { parseCookies } from "nookies";
 import API_URL from "../../utils/apiUrl";
 import axios from "axios";
+import SubHeaderAdmin from "../../components/sub-header-admin/sub-header-admin.component";
 
 const CashoutManagement = ({ withdrawData }) => {
   return (
     <div style={{ display: "flex" }}>
       <AdminPanel />
       <div style={{ width: "83%" }}>
-        <SubHeader
+        <SubHeaderAdmin
           title="Quản lý rút tiền"
           //   subtitle={`Có tất cả ${totalResult} người dùng`}
           background="/zyro-image.png"

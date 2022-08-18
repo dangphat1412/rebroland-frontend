@@ -90,15 +90,22 @@ const ContactRequestPage = ({ user, contactList, setTotalResult }) => {
                   <Loader>Đang tải dữ liệu</Loader>
                 </Dimmer>
                 <Card.Header textAlign="center">
-                  <Form onSubmit={handleSubmit(onSubmit)}>
-                    <InputField
-                      name="key"
-                      placeholder="Tìm kiếm người dùng"
-                      onChange={(e, { name, value }) => {
-                        setValue(name, value);
-                      }}
-                    />
-                  </Form>
+                  <Grid>
+                    <Grid.Row centered={true}>
+                      <Grid.Column>
+                        <Form onSubmit={handleSubmit(onSubmit)}>
+                          <InputField
+                            icon="search"
+                            name="key"
+                            placeholder="Tìm kiếm"
+                            onChange={(e, { name, value }) => {
+                              setValue(name, value);
+                            }}
+                          />
+                        </Form>
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
                 </Card.Header>
                 {contacts.length > 0 ? (
                   contacts.map((contact, index) => {

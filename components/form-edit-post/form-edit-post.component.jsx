@@ -73,8 +73,7 @@ const EditPostForm = ({
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (data, e) => {
-    console.log(data);
-    setEditedLoading(true);
+    setEditedLoading && setEditedLoading(true);
     let mediaUrl;
     if (images.length !== 0) {
       mediaUrl = await uploadMultipleMedia(images);
@@ -85,7 +84,6 @@ const EditPostForm = ({
     }
     console.log(mediaUrl);
     await editPost(data, mediaUrl, setErrorMessage);
-    // await setEditedLoading(false);
   };
 
   return (
@@ -138,9 +136,11 @@ const EditPostForm = ({
           </Button>
         </Grid>
       </Form>
-      <Dimmer active={editedLoading} inverted>
-        <Loader>Đang tải</Loader>
-      </Dimmer>
+      {editedLoading && (
+        <Dimmer active={editedLoading} inverted>
+          <Loader>Đang tải</Loader>
+        </Dimmer>
+      )}
     </EditPostFormContainer>
   );
 };

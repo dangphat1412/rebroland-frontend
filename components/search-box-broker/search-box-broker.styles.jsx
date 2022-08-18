@@ -17,4 +17,7 @@ export const FormSearchContainer = styled(Form)`
   .divider.default.text {
     color: black !important;
   }
+  .reset-button {
+    margin-top: 0px !important;
+  }
 `;

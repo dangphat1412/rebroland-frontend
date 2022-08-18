@@ -3,6 +3,7 @@ import { parseCookies } from "nookies";
 import React, { useState } from "react";
 import AdminPanel from "../../components/admin-panel/admin-panel.component";
 import ReportManagementPage from "../../components/page-report-management/page-report-management.component";
+import SubHeaderAdmin from "../../components/sub-header-admin/sub-header-admin.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 
@@ -12,10 +13,9 @@ const ReportManagement = ({ reportData }) => {
     <div style={{ display: "flex" }}>
       <AdminPanel />
       <div style={{ width: "83%" }}>
-        <SubHeader
+        <SubHeaderAdmin
           title="Quản lý báo cáo"
           subtitle={`Có tất cả ${totalResult} bài đăng bị báo cáo`}
-          background="/zyro-image.png"
         />
         <div className="main" style={{ padding: "30px" }}>
           <ReportManagementPage

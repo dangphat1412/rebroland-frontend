@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Form } from "semantic-ui-react";
+import { Button, Form } from "semantic-ui-react";
 import { getPropertyTypes } from "../../actions/post";
 import {
   getDistricts,
@@ -185,6 +185,15 @@ const SearchBoxBroker = ({ searchParams }) => {
         options={dataProvinces.wards}
         onChange={handleChange}
         defaultValue={searchParams && searchParams.ward}
+      />
+      <Button
+        className="reset-button"
+        type="button"
+        icon="refresh"
+        content="Đặt lại"
+        onClick={() => {
+          router.reload();
+        }}
       />
       <Form.Button fluid>Tìm kiếm</Form.Button>
     </FormSearchContainer>

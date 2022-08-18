@@ -438,6 +438,7 @@ const NotificationList = ({
                 onClick={async () => {
                   const data = await readNotifications(notification.id);
                   if (data) {
+                    console.log("NOTIFICATION: ", data);
                     const list = notifications;
                     const index = list.findIndex(
                       (n) => n.id === notification.id
@@ -451,6 +452,9 @@ const NotificationList = ({
                     }
                     if (data.type === "Refund") {
                       Router.push("/trang-ca-nhan/thong-tin-ca-nhan");
+                    }
+                    if (data.type === "PostStatus") {
+                      Router.push("/trang-ca-nhan/bat-dong-san-cua-toi/");
                     }
                   }
                 }}
@@ -473,7 +477,6 @@ const NotificationList = ({
                   {notification.type === "Report" && (
                     <Item.Description>{notification.content}</Item.Description>
                   )}
-                  <Item.Description>{notification.content}</Item.Description>
                   <Item.Extra>{notification.date}</Item.Extra>
                 </Item.Content>
                 {notification.unRead === true && (

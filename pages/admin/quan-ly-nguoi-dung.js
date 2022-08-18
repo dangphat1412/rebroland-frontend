@@ -4,7 +4,7 @@ import UserManagementPage from "../../components/page-user-management/page-user-
 import API_URL from "../../utils/apiUrl";
 import { parseCookies } from "nookies";
 import axios from "axios";
-import SubHeader from "../../components/sub-header/sub-header.component";
+import SubHeaderAdmin from "../../components/sub-header-admin/sub-header-admin.component";
 
 const UserManagement = ({ usersData }) => {
   const [totalResult, setTotalResult] = useState(usersData.totalResult);
@@ -12,10 +12,9 @@ const UserManagement = ({ usersData }) => {
     <div style={{ display: "flex" }}>
       <AdminPanel />
       <div style={{ width: "83%" }}>
-        <SubHeader
+        <SubHeaderAdmin
           title="Quản lý người dùng"
           subtitle={`Có tất cả ${totalResult} người dùng`}
-          background="/zyro-image.png"
         />
         <div style={{ padding: "30px" }}>
           <UserManagementPage

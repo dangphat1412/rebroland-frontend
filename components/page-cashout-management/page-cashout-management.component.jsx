@@ -165,6 +165,7 @@ const DirectWithdrawal = ({ directWithdraw, toast }) => {
                 onChange={async (e, { name, value }) => {
                   setValue(name, value);
                 }}
+                action="Tìm kiếm"
               />
             </Form>
           </Grid.Column>
@@ -196,7 +197,7 @@ const DirectWithdrawal = ({ directWithdraw, toast }) => {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
-            {directWithdraw && (
+            {directWithdraw && data && data.length > 0 ? (
               <Table selectable size="large">
                 <Table.Header>
                   <Table.Row>
@@ -335,6 +336,10 @@ const DirectWithdrawal = ({ directWithdraw, toast }) => {
                   </Table.Row>
                 </Table.Footer>
               </Table>
+            ) : (
+              <>
+                <Header as="h4">Không có yêu cầu nào</Header>
+              </>
             )}
             <Dimmer active={loading} inverted>
               <Loader>Đang tải dữ liệu</Loader>
@@ -516,6 +521,7 @@ const BankTransfer = ({ transferWithdraw, toast }) => {
                 onChange={async (e, { name, value }) => {
                   setValue(name, value);
                 }}
+                action="Tìm kiếm"
               />
             </Form>
           </Grid.Column>
@@ -547,7 +553,7 @@ const BankTransfer = ({ transferWithdraw, toast }) => {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>
-            {transferWithdraw && (
+            {transferWithdraw && data && data.length > 0 ? (
               <Table selectable>
                 <Table.Header>
                   <Table.Row>
@@ -688,7 +694,7 @@ const BankTransfer = ({ transferWithdraw, toast }) => {
                 </Table.Body>
                 <Table.Footer>
                   <Table.Row>
-                    <Table.HeaderCell colSpan="9">
+                    <Table.HeaderCell colSpan="12">
                       <Pagination
                         activePage={transferWithdrawData.pageNo}
                         boundaryRange={1}
@@ -704,7 +710,7 @@ const BankTransfer = ({ transferWithdraw, toast }) => {
                   </Table.Row>
                 </Table.Footer>
               </Table>
-            )}
+            ): <Header as="h4">Không có yêu cầu nào</Header>}
             <Dimmer active={loading} inverted>
               <Loader>Đang tải dữ liệu</Loader>
             </Dimmer>
