@@ -101,7 +101,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                 name="key"
                 placeholder="Tìm kiếm người dùng"
                 onChange={(e, { name, value }) => {
-                  setValue(name, value);
+                  setValue(name, value.trim());
                 }}
                 action="Tìm kiếm"
               />

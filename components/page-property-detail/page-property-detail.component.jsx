@@ -425,7 +425,7 @@ const PagePropertyDetail = ({
                                 </Dropdown.Item>
                               )}
 
-                              {post.status.id !== 3 && (
+                              {post.status.id !== 3 && post.block === false && (
                                 <Dropdown.Item
                                   onClick={() => {
                                     setOpenEditPost(true);

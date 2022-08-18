@@ -132,7 +132,7 @@ const ReportPostPage = ({
                 name="key"
                 placeholder="Tìm kiếm bài đăng"
                 onChange={(e, { name, value }) => {
-                  setValue(name, value);
+                  setValue(name, value.trim());
                 }}
                 action="Tìm kiếm"
               />

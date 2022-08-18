@@ -34,6 +34,7 @@ export const DetailBrokerContainer = styled.div`
 
   .list-property {
     position: relative;
+    margin-bottom: 50px !important;
     & .filter {
       position: absolute;
       right: 0px;
@@ -53,6 +54,15 @@ export const DetailBrokerContainer = styled.div`
     padding-left: 10px;
     &:hover {
       font-weight: bold;
+    }
+  }
+
+  .rater-avatar {
+    height: 30px !important;
+    width: 30px !important;
+    img {
+      border-radius: 50% !important;
+      object-fit: cover;
     }
   }
 `;

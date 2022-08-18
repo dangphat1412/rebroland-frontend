@@ -33,7 +33,7 @@ const CashOutPage = ({ user }) => {
   } = useForm({
     defaultValues: {
       type: 1,
-      content: `${user.fullName} rút tiền`,
+      content: `${user.fullName.trim()} rút tiền`,
     },
   });
 
@@ -241,8 +241,10 @@ const CashOutPage = ({ user }) => {
                           name="money"
                           {...register("money")}
                           onChange={async (e, { name, value }) => {
-                            setValue(name, value);
+                            (/^\d+$/.test(value) || !value) &&
+                              setValue(name, value);
                           }}
+                          value={watch("money")}
                           error={errors.money}
                           requiredField
                         />
@@ -338,6 +340,7 @@ const OtpCashout = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(cashout);
     const data = await handleCashout(cashout, setErrorMessage);
     if (data) {
       setOpenOtpCashout(false);

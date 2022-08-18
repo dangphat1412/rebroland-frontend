@@ -587,7 +587,7 @@ const RealEstateItem = ({
           }
         />
 
-        {post.status.id !== 3 && (
+        {post.status.id !== 3 && post.block === false && (
           <Popup
             content="Chỉnh sửa bài viết"
             trigger={

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
+  Comment,
   Dimmer,
   Dropdown,
   Grid,
@@ -29,6 +30,10 @@ import options from "../../utils/RealEstateSortValue";
 import ModalItem from "../modal-item/modal-item.component";
 import ReportUserForm from "../form-report-user/form-report-user.component";
 import RatingForm from "../form-rating/form-rating.component";
+import {
+  getListRateByBrokerId,
+  getListRateByUserId,
+} from "../../actions/rating";
 
 const UserDetailPage = ({
   user,
@@ -46,6 +51,22 @@ const UserDetailPage = ({
   const [reportOpen, setReportOpen] = useState(false);
   const [openRating, setOpenRating] = useState(false);
   const [rating, setRating] = useState(postsData.user.avgRate);
+  const [listRate, setListRate] = useState({});
+  const [rateLoading, setRateLoading] = useState(false);
+
+  useEffect(() => {
+    fetchRateListAPI(0);
+  }, []);
+
+  const fetchRateListAPI = async (pageNo) => {
+    setRateLoading(true);
+    const listRateData = await getListRateByUserId(postsData.user.id, pageNo);
+    setListRate(listRateData);
+    setRateLoading(false);
+  };
+
+  const handleRatePaginationChange = (e, { activePage }) =>
+    fetchRateListAPI(activePage - 1);
 
   const handlePaginationChange = (e, { activePage }) =>
     fetchAPI(userDetail.id, propertyType, sortValue, activePage - 1);
@@ -260,6 +281,63 @@ const UserDetailPage = ({
                 },
               ]}
             />
+            <Comment.Group>
+              <Dimmer active={rateLoading} inverted>
+                <Loader inverted content="Đang tải" />
+              </Dimmer>
+              <Header as="h3" dividing>
+                Đánh giá{" "}
+                <span style={{ fontSize: "13px" }}>
+                  (Có {listRate.totalResult} đánh giá)
+                </span>
+              </Header>
+
+              {listRate &&
+                listRate.lists &&
+                listRate.lists.length > 0 &&
+                listRate.lists.map((rate, index) => (
+                  <Comment key={index}>
+                    <Comment.Avatar
+                      className="rater-avatar"
+                      src={rate.user.avatar}
+                    />
+                    <Comment.Content>
+                      <Comment.Author as="a">
+                        {rate.user.fullName}
+                      </Comment.Author>
+                      <Comment.Metadata>
+                        <div>{rate.startDate}</div>
+                      </Comment.Metadata>
+                      <Comment.Actions>
+                        <Comment.Action>
+                          <Rating
+                            icon="star"
+                            defaultRating={rate.starRate}
+                            maxRating={5}
+                            disabled
+                          />
+                        </Comment.Action>
+                      </Comment.Actions>
+                      <Comment.Text>{rate.description}</Comment.Text>
+                    </Comment.Content>
+                  </Comment>
+                ))}
+              {listRate.totalPages > 1 && (
+                <Pagination
+                  activePage={listRate.pageNo}
+                  boundaryRange={1}
+                  siblingRange={1}
+                  ellipsisItem={{
+                    content: <Icon name="ellipsis horizontal" />,
+                    icon: true,
+                  }}
+                  totalPages={listRate.totalPages}
+                  onPageChange={handleRatePaginationChange}
+                  pointing
+                  secondary
+                />
+              )}
+            </Comment.Group>
           </Grid.Column>
           <Grid.Column width={4}>
             <Segment>

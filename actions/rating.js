@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Router } from "next/router";
 import API_URL from "../utils/apiUrl";
 import convertToListMessages from "../utils/convertToListMessages";
 
@@ -42,6 +41,36 @@ export const ratingListBroker = async (data, setErrorMessage) => {
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const getListRateByBrokerId = async (brokerId, pageNo) => {
+  try {
+    const res = await Axios.get(`/broker/${brokerId}`, {
+      params: {
+        pageNo: pageNo,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const getListRateByUserId = async (userId, pageNo) => {
+  try {
+    const res = await Axios.get(`/broker/${userId}`, {
+      params: {
+        pageNo: pageNo,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    // setErrorMessage(messages);
     console.log(error);
   }
 };
