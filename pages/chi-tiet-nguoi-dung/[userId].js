@@ -12,11 +12,13 @@ const UserDetail = ({
   setFollowingPosts,
   setLoginOpen,
   setRegisterOpen,
+  allowRate,
 }) => {
   return (
     <div>
       <SubHeader title="Chi tiết người dùng" background="/zyro-image.png" />
       <UserDetailPage
+        allowRate={allowRate}
         postsData={postsData}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
@@ -30,10 +32,10 @@ const UserDetail = ({
 
 export async function getServerSideProps(context) {
   try {
-    const { userId } = context.query;
+    const { userId, allowRate } = context.query;
     const res = await axios.get(`${API_URL}/api/posts/original/${userId}`);
 
-    return { props: { postsData: res.data } };
+    return { props: { postsData: res.data, allowRate: allowRate || false } };
   } catch (error) {
     // return { props: { posts: [1, 2, 3] } };
   }

@@ -949,6 +949,7 @@ const PagePropertyDetail = ({
         }}
       >
         <FormRateBroker
+          toast={toast}
           brokers={brokers}
           user={user}
           setOpenRate={setOpenRate}
@@ -1009,7 +1010,7 @@ const FormReupPost = ({ user, priceData, detailPost }) => {
   );
 };
 
-const FormRateBroker = ({ user, brokers, setOpenRate }) => {
+const FormRateBroker = ({ user, brokers, setOpenRate, toast }) => {
   const [listRating, setListRating] = useState(
     brokers.map((broker) => {
       return { userRated: broker.user.id, starRate: null, description: null };
@@ -1024,6 +1025,12 @@ const FormRateBroker = ({ user, brokers, setOpenRate }) => {
     const status = await ratingListBroker(data, setErrorMessage);
     if (status === 200) {
       setOpenRate(false);
+      toast({
+        type: "success",
+        title: "Đánh giá nhà môi giới",
+        description: "Đánh giá nhà môi giới thành công",
+      });
+      Router.reload();
     }
   };
 
@@ -1163,9 +1170,9 @@ const FormEndTransaction = ({
     if (status === 200) {
       setEndTransactionOpen(false);
 
-      // if (brokers.length > 0) {
-      //   setOpenRate(true);
-      // }
+      if (brokers.length > 0) {
+        setOpenRate(true);
+      }
     }
     console.log(data);
   };

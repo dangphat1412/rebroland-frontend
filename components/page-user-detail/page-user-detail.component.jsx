@@ -39,6 +39,7 @@ const UserDetailPage = ({
   setFollowingPosts,
   setLoginOpen,
   setRegisterOpen,
+  allowRate,
 }) => {
   const [data, setData] = useState(postsData.lists || {});
   const [userDetail, setUserDetail] = useState(postsData.user || {});
@@ -53,6 +54,10 @@ const UserDetailPage = ({
 
   useEffect(() => {
     fetchRateListAPI(0);
+  }, []);
+
+  useEffect(() => {
+    allowRate === "false" && setOpenRating(true);
   }, []);
 
   const fetchRateListAPI = async (pageNo) => {
@@ -395,6 +400,7 @@ const UserDetailPage = ({
           type="user"
           toast={toast}
           setOpenRating={setOpenRating}
+          allowRate={allowRate}
           ratedUser={postsData.user}
           setRating={setRating}
           rating={rating}

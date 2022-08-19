@@ -471,8 +471,16 @@ const NotificationList = ({
                           pathname: `/danh-sach-nha-moi-gioi/${data.sender}`,
                           query: { allowRate: data.unread },
                         },
-                        `/danh-sach-nha-moi-gioi/${data.sender}`,
-                        { shallow: true }
+                        `/danh-sach-nha-moi-gioi/${data.sender}`
+                      );
+                    }
+                    if (data.type === "FinishTransaction") {
+                      Router.push(
+                        {
+                          pathname: `/chi-tiet-nguoi-dung/${data.sender}`,
+                          query: { allowRate: data.unread },
+                        },
+                        `/chi-tiet-nguoi-dung/${data.sender}`
                       );
                     }
                   }

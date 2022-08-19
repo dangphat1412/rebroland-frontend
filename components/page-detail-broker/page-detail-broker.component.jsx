@@ -64,7 +64,6 @@ const DetailBrokerPage = ({
   }, []);
 
   useEffect(() => {
-    console.log("RATE");
     allowRate === "false" && setOpenRating(true);
   }, []);
 
