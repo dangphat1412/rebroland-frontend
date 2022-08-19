@@ -31,7 +31,7 @@ const Navigation = ({
 
     pusher = new Pusher("242a962515021986a8d8", {
       cluster: "ap1",
-      enabledTransports: ["wss"],
+      enabledTransports: ["ws"],
     });
     let channel;
     if (user) channel = pusher.subscribe(`my-channel-${user.id}`);
