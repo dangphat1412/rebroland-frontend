@@ -465,6 +465,16 @@ const NotificationList = ({
                         `/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`
                       );
                     }
+                    if (data.type === "FinishTakeCare") {
+                      Router.push(
+                        {
+                          pathname: `/danh-sach-nha-moi-gioi/${data.sender}`,
+                          query: { allowRate: data.unread },
+                        },
+                        `/danh-sach-nha-moi-gioi/${data.sender}`,
+                        { shallow: true }
+                      );
+                    }
                   }
                 }}
               >
@@ -486,7 +496,10 @@ const NotificationList = ({
                   {notification.type === "Report" && (
                     <Item.Description>{notification.content}</Item.Description>
                   )}
-                  {notification.type === "PostStatus" && (
+                  {notification.type === "Post Status" && (
+                    <Item.Description>{notification.content}</Item.Description>
+                  )}
+                  {notification.type === "FinishTakeCare" && (
                     <Item.Description>{notification.content}</Item.Description>
                   )}
                   <Item.Extra>{notification.date}</Item.Extra>

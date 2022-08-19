@@ -97,7 +97,6 @@ const MyProfilePage = ({ user }) => {
     if (user) {
       const fetchProvinces = async () => {
         let provinceId;
-
         if (user.province) {
           const provincesData = await getProvinces();
           provinceId = provincesData.filter(

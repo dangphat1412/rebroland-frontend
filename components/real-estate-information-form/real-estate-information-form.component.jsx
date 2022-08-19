@@ -134,18 +134,15 @@ const RealEstateInformationForm = ({
             },
             validate: (value) =>
               /^[0-9]*(\.[0-9]{0,2})?$/.test(value) ||
-              "Tối đa 2 số sau phần thập phân",
+              "Nhập diện tích hợp lệ với tối đa 2 số sau phần thập phân",
           })}
           fluid
-          type="number"
-          step={0.01}
           label="Diện tích"
           name="area"
           placeholder="Nhập diện tích"
           maxLength={7}
           onChange={(e, { name, value }) => {
-            console.log(value);
-            e.target.validity.valid && setValue(name, value);
+            (/\d*\.?\d*/.test(value) || !value) && setValue(name, value);
           }}
           value={watch("area")}
           defaultValue={getValues("area")}
@@ -173,13 +170,12 @@ const RealEstateInformationForm = ({
               message: "Mức giá tối đa 100 tỷ",
             },
           })}
-          type="number"
           label="Mức giá"
           name="price"
           placeholder="Nhập mức giá"
           defaultValue={getValues("price")}
           onChange={(e, { name, value }) => {
-            setValue(name, value ? (value >= 0 ? Math.abs(value) : 0) : null);
+            (/^\d+$/.test(value) || !value) && setValue(name, value);
           }}
           value={watch("price")}
           error={errors.price}
@@ -225,7 +221,7 @@ const RealEstateInformationForm = ({
               placeholder="Nhập số phòng ngủ"
               error={errors.numberOfBedroom}
               onChange={(e, { name, value }) => {
-                e.target.validity.valid && setValue(name, value);
+                (/^\d+$/.test(value) || !value) && setValue(name, value);
               }}
               onBlur={(e) => {
                 !e.target.value && setValue(e.target.name, 0);
@@ -246,12 +242,11 @@ const RealEstateInformationForm = ({
                   message: "Phòng tắm tối đa 100 phòng",
                 },
               })}
-              type="number"
               label="Số phòng tắm, vệ sinh"
               name="numberOfBathroom"
               placeholder="Nhập số phòng tắm, vệ sinh"
               onChange={(e, { name, value }) => {
-                e.target.validity.valid && setValue(name, value);
+                (/^\d+$/.test(value) || !value) && setValue(name, value);
               }}
               onBlur={(e) => {
                 !e.target.value && setValue(e.target.name, 0);
@@ -277,7 +272,7 @@ const RealEstateInformationForm = ({
                 name="numberOfFloor"
                 placeholder="Nhập tầng"
                 onChange={(e, { name, value }) => {
-                  e.target.validity.valid && setValue(name, value);
+                  (/^\d+$/.test(value) || !value) && setValue(name, value);
                 }}
                 onBlur={(e) => {
                   !e.target.value && setValue(e.target.name, 0);
@@ -303,7 +298,7 @@ const RealEstateInformationForm = ({
                 name="floorNumber"
                 placeholder="Nhập tầng"
                 onChange={(e, { name, value }) => {
-                  e.target.validity.valid && setValue(name, value);
+                  (/^\d+$/.test(value) || !value) && setValue(name, value);
                 }}
                 onBlur={(e) => {
                   !e.target.value && setValue(e.target.name, 0);
@@ -441,7 +436,7 @@ const RealEstateInformationForm = ({
                                     getValues("roomNumber") ||
                                     getValues("owner") ||
                                     getValues("ownerPhone")) &&
-                                  "Mã vạch không được để trống") ||
+                                  "Số thửa không được để trống") ||
                                 true,
                             })}
                             label="Số thửa"
@@ -461,7 +456,7 @@ const RealEstateInformationForm = ({
                                     getValues("roomNumber") ||
                                     getValues("owner") ||
                                     getValues("ownerPhone")) &&
-                                  "Mã vạch không được để trống") ||
+                                  "Tên toà nhà không được để trống") ||
                                 true,
                             })}
                             label="Tên toà nhà"
@@ -483,7 +478,7 @@ const RealEstateInformationForm = ({
                                     getValues("plotNumber") ||
                                     getValues("owner") ||
                                     getValues("ownerPhone")) &&
-                                  "Mã vạch không được để trống") ||
+                                  "Tên phòng không được để trống") ||
                                 true,
                             })}
                             label="Tên phòng"
@@ -501,15 +496,21 @@ const RealEstateInformationForm = ({
                     <Form.Group widths="equal">
                       <InputField
                         {...register("owner", {
-                          validate: (value) =>
-                            (!value &&
-                              (getValues("barcode") ||
-                                getValues("buildingName") ||
-                                getValues("roomNumber") ||
-                                getValues("plotNumber") ||
-                                getValues("ownerPhone")) &&
-                              "Mã vạch không được để trống") ||
-                            true,
+                          validate: {
+                            checkNull: (value) =>
+                              (!value &&
+                                (getValues("barcode") ||
+                                  getValues("buildingName") ||
+                                  getValues("roomNumber") ||
+                                  getValues("plotNumber") ||
+                                  getValues("ownerPhone")) &&
+                                "Tên chủ hộ không được để trống") ||
+                              true,
+                            checkValid: (value) =>
+                              !/[$&+,:;=\\\\?@#|/'<>.^*()%!-1234567890]/.test(
+                                value
+                              ) || "Tên chủ hộ không hợp lệ",
+                          },
                         })}
                         label="Tên chủ hộ"
                         name="owner"
@@ -533,7 +534,7 @@ const RealEstateInformationForm = ({
                                 getValues("roomNumber") ||
                                 getValues("plotNumber") ||
                                 getValues("plotNumber")) &&
-                              "Mã vạch không được để trống") ||
+                              "Số điện thoại không được để trống") ||
                             true,
                         })}
                         label="Số điện thoại chủ hộ"

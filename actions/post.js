@@ -363,3 +363,12 @@ export const deletepPost = async (postId) => {
     console.log(error);
   }
 };
+
+export const getOutStandingPost = async () => {
+  try {
+    const res = await Axios.get(`/outstanding`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

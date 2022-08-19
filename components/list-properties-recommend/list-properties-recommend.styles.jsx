@@ -11,4 +11,8 @@ export const ListPropertiesRecommendContainer = styled.div`
     width: 45px;
     margin: 20px 0 30px 0;
   }
+
+  .header {
+    font-family: "Tahoma", san-serif !important;
+  }
 `;

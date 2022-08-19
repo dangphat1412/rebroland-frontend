@@ -14,10 +14,7 @@ import {
   Segment,
   Tab,
 } from "semantic-ui-react";
-import {
-  getOriginalPostsByUserDetail,
-  getPostsByUserDetail,
-} from "../../actions/post";
+import { getOriginalPostsByUserDetail } from "../../actions/post";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import Pagination from "../pagination/pagination.component";
 import {
@@ -31,7 +28,7 @@ import ModalItem from "../modal-item/modal-item.component";
 import ReportUserForm from "../form-report-user/form-report-user.component";
 import RatingForm from "../form-rating/form-rating.component";
 import {
-  getListRateByBrokerId,
+  checkAllowRatingUser,
   getListRateByUserId,
 } from "../../actions/rating";
 
@@ -128,8 +125,24 @@ const UserDetailPage = ({
                   {user && (
                     <a
                       className="vote"
-                      onClick={() => {
-                        setOpenRating(true);
+                      onClick={async () => {
+                        const status = await checkAllowRatingUser(
+                          postsData.user.id
+                        );
+                        if (status === 200) {
+                          setOpenRating(true);
+                        } else {
+                          toast({
+                            type: "error",
+                            title: "Đánh giá thất bại",
+                            description: (
+                              <p>
+                                Bạn đã đánh giá người này trong vòng 7 ngày gần
+                                đây
+                              </p>
+                            ),
+                          });
+                        }
                       }}
                     >
                       Đánh giá
@@ -282,9 +295,9 @@ const UserDetailPage = ({
               ]}
             />
             <Comment.Group>
-              <Dimmer active={rateLoading} inverted>
+              {/* <Dimmer active={rateLoading} inverted>
                 <Loader inverted content="Đang tải" />
-              </Dimmer>
+              </Dimmer> */}
               <Header as="h3" dividing>
                 Đánh giá{" "}
                 <span style={{ fontSize: "13px" }}>
@@ -385,6 +398,7 @@ const UserDetailPage = ({
           ratedUser={postsData.user}
           setRating={setRating}
           rating={rating}
+          fetchRateListAPI={fetchRateListAPI}
         />
       </ModalItem>
     </UserDetailPageContainer>

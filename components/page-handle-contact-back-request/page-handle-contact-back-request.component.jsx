@@ -28,7 +28,8 @@ import Pagination from "../pagination/pagination.component";
 import calculatePrice from "../../utils/calculatePrice";
 import Link from "next/link";
 import convertToSlug from "../../utils/convertToSlug";
-import { addNewCustomer } from "../../actions/user-care";
+import { addCustomer } from "../../actions/user-care";
+import { SemanticToastContainer, toast } from "react-semantic-toasts";
 
 const HandleContactBackRequestPage = ({
   user,
@@ -52,13 +53,18 @@ const HandleContactBackRequestPage = ({
   });
 
   const handleAccept = async () => {
-    const status = await addNewCustomer(selectedContactId);
+    const status = await addCustomer(selectedContactId);
     if (status === 201) {
       setContacts(
         contacts.filter((contact) => {
           return contact.contactId !== selectedContactId;
         })
       );
+      toast({
+        type: "success",
+        title: "Thêm khách hàng",
+        description: <p>Thêm khách hàng thành công</p>,
+      });
       setOpenAcceptConfirm(false);
     }
   };
@@ -71,6 +77,11 @@ const HandleContactBackRequestPage = ({
           return contact.contactId !== contactId;
         })
       );
+      toast({
+        type: "success",
+        title: "Bỏ qua khách hàng",
+        description: <p>Xác nhận bỏ qua khách hàng</p>,
+      });
       setOpenRefuseConfirm(false);
     }
   };
@@ -94,6 +105,7 @@ const HandleContactBackRequestPage = ({
 
   return (
     <HandleContactBackRequestContainer>
+      <SemanticToastContainer position="bottom-right" maxToasts={1} />
       <Grid>
         <Grid.Row>
           <Grid.Column width={3}>

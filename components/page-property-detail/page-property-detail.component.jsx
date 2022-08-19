@@ -636,6 +636,10 @@ const PagePropertyDetail = ({
                     <Link href={`/trang-ca-nhan/bat-dong-san-cua-toi`}>
                       {post.user.fullName}
                     </Link>
+                  ) : user.broker === true ? (
+                    <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
+                      {post.user.fullName}
+                    </Link>
                   ) : post.user.broker === true ? (
                     <Link href={`/danh-sach-nha-moi-gioi/${post.user.id}`}>
                       {post.user.fullName}

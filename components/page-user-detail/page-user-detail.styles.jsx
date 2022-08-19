@@ -91,6 +91,17 @@ export const UserDetailPageContainer = styled.div`
       font-weight: bold;
     }
   }
+
+  .rater-avatar {
+    height: 30px !important;
+    width: 30px !important;
+    img {
+      height: 100% !important;
+      width: 100% !important;
+      border-radius: 50% !important;
+      object-fit: cover;
+    }
+  }
 `;
 
 export const PaginationContainer = styled.div`

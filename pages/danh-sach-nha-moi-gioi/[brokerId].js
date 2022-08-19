@@ -13,7 +13,9 @@ const DetailBroker = ({
   params,
   setLoginOpen,
   setRegisterOpen,
+  allowRate,
 }) => {
+  const router = useRouter();
   const [totalResult, setTotalResult] = useState(postsData.lists.totalResult);
   return (
     <>
@@ -23,6 +25,7 @@ const DetailBroker = ({
         background="/zyro-image.png"
       />
       <DetailBrokerPage
+        key={router.asPath}
         user={user}
         postsData={postsData}
         followingPosts={followingPosts}
@@ -31,6 +34,7 @@ const DetailBroker = ({
         searchParams={params}
         setLoginOpen={setLoginOpen}
         setRegisterOpen={setRegisterOpen}
+        allowRate={allowRate}
       />
     </>
   );
@@ -39,12 +43,18 @@ const DetailBroker = ({
 export async function getServerSideProps(context) {
   try {
     const { brokerId } = context.query;
-    const { data } = context.query;
+    const { data, allowRate } = context.query;
     let params = {};
     if (data) params = JSON.parse(data) || {};
     const res = await axios.get(`${API_URL}/api/posts/user/${brokerId}`);
 
-    return { props: { postsData: res.data, params: params } };
+    return {
+      props: {
+        postsData: res.data,
+        params: params,
+        allowRate: allowRate || false,
+      },
+    };
   } catch (error) {
     // return { props: { posts: [1, 2, 3] } };
   }

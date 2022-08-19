@@ -29,8 +29,6 @@ const FormContact = ({
       email: currentUser && currentUser.email,
     },
   });
-  console.log(userId);
-  console.log(currentUser);
 
   useEffect(() => {
     register("fullName", { required: "Họ và tên không được để trống" });
@@ -39,18 +37,22 @@ const FormContact = ({
     register("email");
     register("content");
   }, [register]);
+  const [loading, setLoading] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (data) => {
     if (!currentUser) return;
 
+    setLoading(true);
     const status = await userContact(
       { ...data, roleId },
       userId,
       postId,
       setErrorMessage
     );
+    setLoading(false);
+
     if (status === 201) {
       setTimeout(() => {
         toast({
@@ -134,11 +136,16 @@ const FormContact = ({
         onChange={async (e, { name, value }) => {
           setValue(name, value);
         }}
-        // maxLength={200}
+        maxLength={200}
         sublabel="Không quá 200 ký tự"
         disabled={!currentUser}
       />
-      <Button type="submit" fluid disabled={!currentUser}>
+      <Button
+        type="submit"
+        fluid
+        disabled={!currentUser || loading}
+        loading={loading}
+      >
         Gửi tin nhắn
       </Button>
       {!currentUser && (

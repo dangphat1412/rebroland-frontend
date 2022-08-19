@@ -9,7 +9,12 @@ import {
   Message,
   Rating,
 } from "semantic-ui-react";
-import { ratingBroker, ratingUser } from "../../actions/rating";
+import {
+  allowRatingBroker,
+  allowRatingUser,
+  ratingBroker,
+  ratingUser,
+} from "../../actions/rating";
 import InputField from "../input-field/input-field.component";
 import { FormRatingContainer } from "./form-rating.styles";
 
@@ -20,6 +25,8 @@ const RatingForm = ({
   setOpenRating,
   setRating,
   rating,
+  fetchRateListAPI,
+  allowRate,
 }) => {
   const {
     register,
@@ -47,11 +54,24 @@ const RatingForm = ({
 
   const onSubmit = async (data) => {
     let ratingData;
-    if (type === "broker") {
-      ratingData = await ratingBroker(ratedUser.id, data, setErrorMessage);
+    if (allowRate && allowRate === true) {
+      if (type === "broker") {
+        ratingData = await allowRatingBroker(
+          ratedUser.id,
+          data,
+          setErrorMessage
+        );
+      } else {
+        ratingData = await allowRatingUser(ratedUser.id, data, setErrorMessage);
+      }
     } else {
-      ratingData = await ratingUser(ratedUser.id, data, setErrorMessage);
+      if (type === "broker") {
+        ratingData = await ratingBroker(ratedUser.id, data, setErrorMessage);
+      } else {
+        ratingData = await ratingUser(ratedUser.id, data, setErrorMessage);
+      }
     }
+
     if (ratingData) {
       setTimeout(() => {
         toast({
@@ -62,6 +82,7 @@ const RatingForm = ({
       }, 100);
       setRating(ratingData.starRate);
       setOpenRating(false);
+      fetchRateListAPI && fetchRateListAPI(0);
     } else {
       setTimeout(() => {
         toast({

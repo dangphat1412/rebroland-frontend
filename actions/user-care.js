@@ -36,6 +36,16 @@ export const addNewCustomer = async (userId) => {
   }
 };
 
+export const addCustomer = async (userId) => {
+  try {
+    const res = await Axios.post(`/add-customer/${userId}`);
+    return res.status;
+  } catch (error) {
+    // const messages = convertToListMessages(error.response.data);
+    console.log(error);
+  }
+};
+
 export const getInfoNewCustomer = async (data, setErrorMessage) => {
   try {
     const res = await Axios.get(`/add-customer/get-info/${data.phone}`);

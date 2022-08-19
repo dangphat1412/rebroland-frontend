@@ -154,6 +154,11 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
       setCares(data);
       setOpenEndTakeCare(false);
       setOpenRating(true);
+      toast({
+        type: "success",
+        title: "Chăm sóc khách hàng",
+        description: <p>Hoàn thành kết thúc chăm sóc khách hàng</p>,
+      });
     }
   };
 
@@ -185,7 +190,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
 
   return (
     <TakeCareCustomerContainer>
-      <SemanticToastContainer position="bottom-right" maxToasts={3} />
+      <SemanticToastContainer position="bottom-right" maxToasts={1} />
       <Grid>
         <Grid.Row>
           <Grid.Column width={10}>

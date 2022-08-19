@@ -28,7 +28,11 @@ import { getPostsByUserDetail } from "../../actions/post";
 import ModalItem from "../modal-item/modal-item.component";
 import ReportUserForm from "../form-report-user/form-report-user.component";
 import RatingForm from "../form-rating/form-rating.component";
-import { getListRateByBrokerId } from "../../actions/rating";
+import {
+  checkAllowRatingBroker,
+  getListRateByBrokerId,
+} from "../../actions/rating";
+import { useRouter } from "next/router";
 
 const DetailBrokerPage = ({
   user,
@@ -39,6 +43,7 @@ const DetailBrokerPage = ({
   searchParams,
   setLoginOpen,
   setRegisterOpen,
+  allowRate,
 }) => {
   const [userDetail, setUserDetail] = useState(postsData.user);
   const [data, setData] = useState(postsData.lists);
@@ -50,10 +55,17 @@ const DetailBrokerPage = ({
   const [listRate, setListRate] = useState({});
   const [rateLoading, setRateLoading] = useState(false);
 
-  console.log(postsData);
+  const [openRating, setOpenRating] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     fetchRateListAPI(0);
+  }, []);
+
+  useEffect(() => {
+    console.log("RATE");
+    allowRate === "false" && setOpenRating(true);
   }, []);
 
   const fetchRateListAPI = async (pageNo) => {
@@ -97,11 +109,10 @@ const DetailBrokerPage = ({
     });
   };
 
-  const [openRating, setOpenRating] = useState(false);
-
   return (
     <DetailBrokerContainer>
       <SemanticToastContainer position="bottom-right" maxToasts={1} />
+
       <Grid>
         <Grid.Row>
           <Grid.Column width={4}>
@@ -140,8 +151,24 @@ const DetailBrokerPage = ({
                       {user && (
                         <a
                           className="vote"
-                          onClick={() => {
-                            setOpenRating(true);
+                          onClick={async () => {
+                            const status = await checkAllowRatingBroker(
+                              postsData.user.id
+                            );
+                            if (status === 200) {
+                              setOpenRating(true);
+                            } else {
+                              toast({
+                                type: "error",
+                                title: "Đánh giá thất bại",
+                                description: (
+                                  <p>
+                                    Bạn đã đánh giá người này trong vòng 7 ngày
+                                    gần đây
+                                  </p>
+                                ),
+                              });
+                            }
                           }}
                         >
                           Đánh giá
@@ -309,9 +336,9 @@ const DetailBrokerPage = ({
               />
             </div>
             <Comment.Group>
-              <Dimmer active={rateLoading} inverted>
+              {/* <Dimmer active={rateLoading} inverted>
                 <Loader inverted content="Đang tải" />
-              </Dimmer>
+              </Dimmer> */}
               <Header as="h3" dividing>
                 Đánh giá{" "}
                 <span style={{ fontSize: "13px" }}>
@@ -409,6 +436,7 @@ const DetailBrokerPage = ({
           toast={toast}
           setOpenRating={setOpenRating}
           ratedUser={postsData.user}
+          allowRate={allowRate}
           setRating={setRating}
         />
       </ModalItem>

@@ -14,6 +14,9 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
         <InputField
           {...register("contactName", {
             required: "Tên liên hệ không được để trống",
+            validate: (value) =>
+              !/[$&+,:;=\\\\?@#|/'<>.^*()%!-1234567890]/.test(value) ||
+              "Tên liên lạc không hợp lệ",
           })}
           label="Tên liên hệ"
           name="contactName"

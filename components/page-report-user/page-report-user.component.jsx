@@ -163,7 +163,7 @@ const ReportUserPage = ({
                   Họ và tên
                 </Table.HeaderCell>
                 <Table.HeaderCell singleLine textAlign="center">
-                  Xem thông tin người dùng
+                  Xem thông tin
                 </Table.HeaderCell>
                 <Table.HeaderCell singleLine textAlign="center">
                   Tổng số báo cáo
@@ -250,17 +250,17 @@ const ReportUserPage = ({
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
                         {user.status === 1 && (
-                          <div className="ui two buttons">
+                          <div className="ui three buttons">
                             <Button
                               basic
                               color="green"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedReportIndex(user.reportId);
-                                setOpenAccept(true);
+                                setOpenConfirmCancel(true);
                               }}
                             >
-                              Chấp nhận
+                              Bỏ qua
                             </Button>
                             <Button
                               basic
@@ -268,10 +268,20 @@ const ReportUserPage = ({
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedReportIndex(user.reportId);
-                                setOpenConfirmCancel(true);
+                                setOpenAccept(true);
                               }}
                             >
-                              Huỷ bỏ
+                              Cảnh cáo
+                            </Button>
+                            <Button
+                              color="red"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                // setSelectedReportIndex(user.reportId);
+                                // setOpenConfirmCancel(true);
+                              }}
+                            >
+                              Chặn
                             </Button>
                           </div>
                         )}

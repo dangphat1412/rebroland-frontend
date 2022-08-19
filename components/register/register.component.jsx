@@ -45,7 +45,6 @@ const Register = ({ handleOpenOtpRegister, setRegisterData }) => {
             validate: (value) =>
               !/[$&+,:;=\\\\?@#|/'<>.^*()%!-1234567890]/.test(value) ||
               "Họ và tên không hợp lệ",
-            // value === password.current || "Mật khẩu không khớp",
           })}
           onChange={(e, { name, value }) => {
             setValue(name, value);
