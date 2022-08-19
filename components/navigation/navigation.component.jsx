@@ -29,13 +29,13 @@ const Navigation = ({
 
     let pusher;
 
-    if (user)
-      pusher = new Pusher("242a962515021986a8d8", {
-        cluster: user.id,
-      });
-
-    if (pusher) {
-      var channel = pusher.subscribe("my-channel");
+    pusher = new Pusher("242a962515021986a8d8", {
+      cluster: "ap1",
+      enabledTransports: ["wss"],
+    });
+    let channel;
+    if (user) channel = pusher.subscribe(`my-channel-${user.id}`);
+    user &&
       channel.bind("my-event", function (data) {
         if (data.message) {
           setUnreadNotification(unreadNotification + 1);
@@ -48,9 +48,7 @@ const Navigation = ({
             });
           }, 100);
         }
-        alert(JSON.stringify(data));
       });
-    }
   });
 
   const controlSubnavigation = () => {
