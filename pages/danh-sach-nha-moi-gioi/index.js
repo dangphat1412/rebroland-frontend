@@ -6,6 +6,7 @@ import API_URL from "../../utils/apiUrl";
 import { parseCookies } from "nookies";
 
 const Broker = ({ brokersData, params }) => {
+  console.log(params);
   const [totalResult, setTotalResult] = useState(brokersData.totalResult);
   return (
     <div>

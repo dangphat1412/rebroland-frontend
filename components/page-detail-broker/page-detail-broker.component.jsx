@@ -437,6 +437,7 @@ const DetailBrokerPage = ({
           ratedUser={postsData.user}
           allowRate={allowRate}
           rating={rating}
+          fetchRateListAPI={fetchRateListAPI}
           setRating={setRating}
         />
       </ModalItem>

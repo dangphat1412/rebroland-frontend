@@ -89,22 +89,23 @@ const TransferPage = ({ user }) => {
                           placeholder="Nhập số tiền"
                           name="amount"
                           {...register("amount", {
-                            required: "Nhập số tiền bạn muốn nạp",
+                            required: "Số tiền không được để trống",
                             min: {
                               value: 10000,
-                              message: "Số tiền giao dịch tối thiểu 10,000VNĐ",
+                              message: "Số tiền tối thiểu 10,000 VNĐ",
                             },
                             max: {
                               value: 50000000,
-                              message:
-                                "Số tiền giao dịch tối thiểu 50,000,000VNĐ",
+                              message: "Số tiền tối đa 50,000,000 VNĐ",
                             },
-                            valueAsNumber: true,
                           })}
                           onChange={(e, { name, value }) => {
                             setValue(name, value.replace(/[^0-9]/g, ""));
                           }}
-                          value={watch("amount")}
+                          value={
+                            watch("amount") &&
+                            new Intl.NumberFormat().format(watch("amount"))
+                          }
                           error={errors.amount}
                           requiredField
                         />

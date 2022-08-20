@@ -568,28 +568,28 @@ const PagePropertyDetail = ({
                         description={post.direction.name}
                       />
                     )}
-                    {post.numberOfBedroom && (
+                    {post.numberOfBedroom > 0 && (
                       <PropertyItem
                         iconClass="kikor kiko-bedroom"
                         title="Phòng ngủ"
                         description={post.numberOfBedroom}
                       />
                     )}
-                    {post.numberOfBathroom && (
+                    {post.numberOfBathroom > 0 && (
                       <PropertyItem
                         iconClass="kikor kiko-bathroom"
                         title="Phòng tắm"
                         description={post.numberOfBathroom}
                       />
                     )}
-                    {post.numberOfFloor && (
+                    {post.numberOfFloor > 0 && (
                       <PropertyItem
                         iconClass="kikor kiko-stairs"
                         title="Số tầng"
                         description={post.numberOfFloor}
                       />
                     )}
-                    {post.frontispiece && (
+                    {post.frontispiece > 0 && (
                       <PropertyItem
                         iconClass="kikor kiko-real-estate-auction"
                         title="Mặt tiền"

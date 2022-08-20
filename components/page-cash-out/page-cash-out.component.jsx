@@ -217,7 +217,10 @@ const CashOutPage = ({ user }) => {
                           onChange={(e, { name, value }) => {
                             setValue(name, value.replace(/[^0-9]/g, ""));
                           }}
-                          value={watch("money")}
+                          value={
+                            watch("money") &&
+                            new Intl.NumberFormat().format(watch("money"))
+                          }
                           error={errors.money}
                           requiredField
                         />

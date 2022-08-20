@@ -11,6 +11,7 @@ const RealEstate = ({
   setFollowingPosts,
   params,
 }) => {
+  console.log(params);
   const [totalResult, setTotalResult] = useState(postsData.totalResult);
   return (
     <div>

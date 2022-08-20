@@ -58,7 +58,7 @@ const PaymentPage = ({ user }) => {
                           onDismiss={() => setErrorMessage(null)}
                         />
                         <InputField
-                          label="Số tiền muốn nạp"
+                          label="Số tiền muốn nạp (VNĐ)"
                           name="amount"
                           {...register("amount", {
                             required: "Nhập số tiền bạn muốn nạp",
@@ -75,7 +75,10 @@ const PaymentPage = ({ user }) => {
                           onChange={async (e, { name, value }) => {
                             setValue(name, value.replace(/[^0-9]/g, ""));
                           }}
-                          value={watch("amount")}
+                          value={
+                            watch("amount") &&
+                            new Intl.NumberFormat().format(watch("amount"))
+                          }
                           error={errors.amount}
                           requiredField
                         />

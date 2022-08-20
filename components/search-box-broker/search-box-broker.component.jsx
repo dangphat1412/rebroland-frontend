@@ -15,11 +15,11 @@ const SearchBoxBroker = ({ searchParams }) => {
   const router = useRouter();
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
-      key: undefined,
-      propertyTypes: undefined,
-      province: undefined,
-      district: undefined,
-      ward: undefined,
+      key: (searchParams && searchParams.key) || undefined,
+      propertyTypes: (searchParams && searchParams.propertyTypes) || undefined,
+      province: (searchParams && searchParams.province) || undefined,
+      district: (searchParams && searchParams.district) || undefined,
+      ward: (searchParams && searchParams.ward) || undefined,
     },
   });
 
@@ -150,7 +150,7 @@ const SearchBoxBroker = ({ searchParams }) => {
       <InputField
         fieldType="select"
         label="Loại bất động sản"
-        name="propertyType"
+        name="propertyTypes"
         placeholder="Loại bất động sản"
         options={propertyTypes}
         multiple

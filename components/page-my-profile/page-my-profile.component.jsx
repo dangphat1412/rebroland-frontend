@@ -266,6 +266,10 @@ const MyProfilePage = ({ user }) => {
                             name="dob"
                             value={getValues("dob")}
                             onDateChange={handleDateChange}
+                            showErrors={true}
+                            errorFormat="Ngày không hợp lệ"
+                            errorMax="Ngày không hợp lệ"
+                            maxDate={new Date()}
                             error={errors.dob}
                           />
                         </Form.Group>

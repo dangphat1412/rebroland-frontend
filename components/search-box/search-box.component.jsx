@@ -16,17 +16,18 @@ const SearchBox = ({ searchParams }) => {
   const router = useRouter();
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
-      key: undefined,
-      propertyTypes: undefined,
-      province: undefined,
-      district: undefined,
-      ward: undefined,
-      minPrice: undefined,
-      maxPrice: undefined,
-      minArea: undefined,
-      maxArea: undefined,
-      directions: undefined,
-      numberOfBedrooms: undefined,
+      key: (searchParams && searchParams.key) || undefined,
+      propertyTypes: (searchParams && searchParams.propertyTypes) || undefined,
+      province: (searchParams && searchParams.province) || undefined,
+      district: (searchParams && searchParams.district) || undefined,
+      ward: (searchParams && searchParams.ward) || undefined,
+      minPrice: (searchParams && searchParams.minPrice) || undefined,
+      maxPrice: (searchParams && searchParams.maxPrice) || undefined,
+      minArea: (searchParams && searchParams.minArea) || undefined,
+      maxArea: (searchParams && searchParams.maxArea) || undefined,
+      directions: (searchParams && searchParams.directions) || undefined,
+      numberOfBedrooms:
+        (searchParams && searchParams.numberOfBedrooms) || undefined,
     },
   });
 

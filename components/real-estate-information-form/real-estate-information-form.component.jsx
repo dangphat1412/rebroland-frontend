@@ -177,7 +177,9 @@ const RealEstateInformationForm = ({
           onChange={(e, { name, value }) => {
             setValue(name, value.replace(/[^0-9]/g, ""));
           }}
-          value={watch("price")}
+          value={
+            watch("price") && new Intl.NumberFormat().format(watch("price"))
+          }
           error={errors.price}
           requiredField
         >

@@ -115,7 +115,7 @@ const RatingForm = ({
             <Header.Subheader>
               <Rating
                 icon="star"
-                defaultRating={rating.toFix()}
+                defaultRating={rating.toFixed()}
                 maxRating={5}
                 disabled
               />
