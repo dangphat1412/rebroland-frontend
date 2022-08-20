@@ -243,9 +243,45 @@ export const getPricePerDayData = async () => {
   }
 };
 
+export const getDiscountEndTransaction = async () => {
+  try {
+    const res = await Axios.get(`/list-refund-percent`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getBrokerPrice = async () => {
+  try {
+    const res = await Axios.get(`/list-price-broker`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const updatePricePerDay = async (data) => {
   try {
     const res = await Axios.put(`/list-price/price-post`, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateRefund = async (data) => {
+  try {
+    const res = await Axios.put(`/list-refund-percent`, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updatePriceBroker = async (data) => {
+  try {
+    const res = await Axios.put(`/update-price-broker`, data);
     return res.data;
   } catch (error) {
     console.log(error);

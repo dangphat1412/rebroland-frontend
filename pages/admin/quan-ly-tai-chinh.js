@@ -3,7 +3,7 @@ import { parseCookies } from "nookies";
 import React, { useState } from "react";
 import AdminPanel from "../../components/admin-panel/admin-panel.component";
 import FinancialManagementPage from "../../components/page-financial-management/page-financial-management.component";
-import SubHeader from "../../components/sub-header/sub-header.component";
+import SubHeaderAdmin from "../../components/sub-header-admin/sub-header-admin.component";
 import API_URL from "../../utils/apiUrl";
 
 const TransationManagement = ({ paymentData }) => {
@@ -12,7 +12,7 @@ const TransationManagement = ({ paymentData }) => {
     <div style={{ display: "flex" }}>
       <AdminPanel />
       <div style={{ width: "83%" }}>
-        <SubHeader
+        <SubHeaderAdmin
           title="Quản lý tài chính"
           subtitle={`Có tổng cộng ${totalResult} giao dịch`}
           background="/zyro-image.png"

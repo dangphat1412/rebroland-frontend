@@ -257,10 +257,10 @@ const ReportUserPage = ({
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedReportIndex(user.reportId);
-                                setOpenConfirmCancel(true);
+                                setOpenAccept(true);
                               }}
                             >
-                              Bỏ qua
+                              Chấp nhận
                             </Button>
                             <Button
                               basic
@@ -268,20 +268,10 @@ const ReportUserPage = ({
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedReportIndex(user.reportId);
-                                setOpenAccept(true);
+                                setOpenConfirmCancel(true);
                               }}
                             >
-                              Cảnh cáo
-                            </Button>
-                            <Button
-                              color="red"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                // setSelectedReportIndex(user.reportId);
-                                // setOpenConfirmCancel(true);
-                              }}
-                            >
-                              Chặn
+                              Huỷ bỏ
                             </Button>
                           </div>
                         )}

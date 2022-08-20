@@ -25,8 +25,6 @@ const Navigation = ({
   useEffect(() => {
     const sound = new Audio("/light.mp3");
 
-    Pusher.logToConsole = true;
-
     let pusher;
 
     pusher = new Pusher("242a962515021986a8d8", {
