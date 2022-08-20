@@ -17,6 +17,14 @@ export const MyProfilePageContainer = styled.div`
   .ui.form .field :disabled {
     opacity: 1;
   }
+
+  .has-error {
+    p {
+      color: red;
+      font-weight: bold;
+      font-size: 13px;
+    }
+  }
 `;
 
 export const ProfileContainer = styled(Card)`

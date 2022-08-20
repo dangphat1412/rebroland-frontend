@@ -126,7 +126,12 @@ const UserDetailPage = ({
                 <Card.Header>{userDetail.fullName}</Card.Header>
                 <Card.Description>
                   <b style={{ marginRight: "5px" }}>{rating}</b>
-                  <Rating icon="star" rating={rating} maxRating={5} disabled />
+                  <Rating
+                    icon="star"
+                    rating={rating.toFixed()}
+                    maxRating={5}
+                    disabled
+                  />
                   {user && (
                     <a
                       className="vote"

@@ -710,7 +710,9 @@ const BankTransfer = ({ transferWithdraw, toast }) => {
                   </Table.Row>
                 </Table.Footer>
               </Table>
-            ): <Header as="h4">Không có yêu cầu nào</Header>}
+            ) : (
+              <Header as="h4">Không có yêu cầu nào</Header>
+            )}
             <Dimmer active={loading} inverted>
               <Loader>Đang tải dữ liệu</Loader>
             </Dimmer>

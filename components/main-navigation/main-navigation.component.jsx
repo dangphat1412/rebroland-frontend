@@ -380,19 +380,19 @@ const MainNavigation = ({
                   </>
                 )}
 
-                {user && (
-                  <List.Item as="a">
-                    <Link href="/dang-tin">
-                      <Button
-                        inverted
-                        color="red"
-                        disabled={user && user.currentRole === 3}
-                      >
-                        Đăng tin
-                      </Button>
-                    </Link>
-                  </List.Item>
-                )}
+                <List.Item as="a">
+                  <Button
+                    inverted
+                    color="red"
+                    disabled={user && user.currentRole === 3}
+                    onClick={() => {
+                      user && Router.push("/dang-tin");
+                      !user && setLoginOpen(true);
+                    }}
+                  >
+                    Đăng tin
+                  </Button>
+                </List.Item>
               </List>
             </Grid.Column>
           </Grid>

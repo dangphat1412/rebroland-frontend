@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Card, Form, Grid, Message } from "semantic-ui-react";
 import UserPanel from "../user-panel/user-panel.component";
 import { PaymentContainer, PaymentPageContainer } from "./page-payment.styes";
@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import InputField from "../input-field/input-field.component";
 import { payment } from "../../actions/payment";
 import { useRouter } from "next/router";
-import convertToCurrency from "../../utils/convertToCurrency";
 
 const PaymentPage = ({ user }) => {
   const router = useRouter();
@@ -23,27 +22,10 @@ const PaymentPage = ({ user }) => {
 
   const [errorMessage, setErrorMessage] = useState(null);
 
-  useEffect(() => {
-    register("amount", {
-      required: "Nhập số tiền bạn muốn nạp",
-      min: {
-        value: 10000,
-        message: "Số tiền giao dịch tối thiểu 10,000VNĐ",
-      },
-      max: {
-        value: 50000000,
-        message: "Số tiền giao dịch tối đa 50,000,000VNĐ",
-      },
-      valueAsNumber: true,
-    });
-  }, [register]);
-
   const onSubmit = async (data, e) => {
-    console.log(data);
     const dataPayment = await payment(data);
     if (dataPayment.message === "success") {
       router.push(dataPayment.data);
-    } else {
     }
   };
 
@@ -76,12 +58,22 @@ const PaymentPage = ({ user }) => {
                           onDismiss={() => setErrorMessage(null)}
                         />
                         <InputField
-                          type="number"
                           label="Số tiền muốn nạp"
-                          placeholder="Nạp tối thiểu 10,000VNĐ. Hạn mức 50,000,000VNĐ"
                           name="amount"
-                          onChange={(e, { name, value }) => {
-                            e.target.validity.valid && setValue(name, value);
+                          {...register("amount", {
+                            required: "Nhập số tiền bạn muốn nạp",
+                            min: {
+                              value: 10000,
+                              message: "Số tiền giao dịch tối thiểu 10,000 VNĐ",
+                            },
+                            max: {
+                              value: 50000000,
+                              message:
+                                "Số tiền giao dịch tối đa 50,000,000 VNĐ",
+                            },
+                          })}
+                          onChange={async (e, { name, value }) => {
+                            setValue(name, value.replace(/[^0-9]/g, ""));
                           }}
                           value={watch("amount")}
                           error={errors.amount}

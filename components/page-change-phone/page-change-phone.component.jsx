@@ -28,22 +28,10 @@ const ChangePhonePage = ({ user }) => {
   const [openOtpChangePhone, setOpenOtpChangePhone] = useState(false);
   const [phoneData, setPhoneData] = useState({});
 
-  useEffect(() => {
-    register("phone", {
-      required: "Số điện thoại không được để trống",
-      pattern: {
-        value: /^(84|0[3|5|7|8|9])+([0-9]{8})$/,
-        message: "Số điện thoại là số Việt Nam và có 10 chữ số",
-      },
-      validate: (value) =>
-        value !== user.phone || "Bạn đang sử dụng số điện thoại này",
-    });
-  }, [register]);
-
   const onSubmit = async (data, e) => {
-    const res = await otpChangePhone(data, setErrorMessage);
-    if (res.status === 200) {
-      setPhoneData(res.data);
+    const dataPhone = await otpChangePhone(data, setErrorMessage);
+    if (dataPhone) {
+      setPhoneData(dataPhone);
       setOpenOtpChangePhone(true);
     }
   };
@@ -80,9 +68,21 @@ const ChangePhonePage = ({ user }) => {
                         <InputField
                           label="Số điện thoại mới"
                           name="phone"
+                          {...register("phone", {
+                            required: "Số điện thoại không được để trống",
+                            pattern: {
+                              value: /^(84|0[3|5|7|8|9])+([0-9]{8})$/,
+                              message:
+                                "Số điện thoại là số Việt Nam và có 10 chữ số",
+                            },
+                            validate: (value) =>
+                              value !== user.phone ||
+                              "Bạn đang sử dụng số điện thoại này",
+                          })}
                           onChange={async (e, { name, value }) => {
-                            setValue(name, value);
+                            setValue(name, value.replace(/[^0-9]/g, ""));
                           }}
+                          value={watch("phone")}
                           error={errors.phone}
                           requiredField
                         />

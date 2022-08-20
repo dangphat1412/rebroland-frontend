@@ -436,6 +436,7 @@ const DetailBrokerPage = ({
           setOpenRating={setOpenRating}
           ratedUser={postsData.user}
           allowRate={allowRate}
+          rating={rating}
           setRating={setRating}
         />
       </ModalItem>

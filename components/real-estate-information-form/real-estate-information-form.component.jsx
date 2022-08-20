@@ -173,9 +173,9 @@ const RealEstateInformationForm = ({
           label="Mức giá"
           name="price"
           placeholder="Nhập mức giá"
-          defaultValue={getValues("price")}
+          defaultValue={""}
           onChange={(e, { name, value }) => {
-            (/^\d+$/.test(value) || !value) && setValue(name, value);
+            setValue(name, value.replace(/[^0-9]/g, ""));
           }}
           value={watch("price")}
           error={errors.price}
@@ -215,13 +215,12 @@ const RealEstateInformationForm = ({
                   message: "Phòng ngủ tối đa 100 phòng",
                 },
               })}
-              type="number"
               label="Số phòng ngủ"
               name="numberOfBedroom"
               placeholder="Nhập số phòng ngủ"
               error={errors.numberOfBedroom}
               onChange={(e, { name, value }) => {
-                (/^\d+$/.test(value) || !value) && setValue(name, value);
+                setValue(name, value.replace(/[^0-9]/g, ""));
               }}
               onBlur={(e) => {
                 !e.target.value && setValue(e.target.name, 0);
@@ -246,7 +245,7 @@ const RealEstateInformationForm = ({
               name="numberOfBathroom"
               placeholder="Nhập số phòng tắm, vệ sinh"
               onChange={(e, { name, value }) => {
-                (/^\d+$/.test(value) || !value) && setValue(name, value);
+                setValue(name, value.replace(/[^0-9]/g, ""));
               }}
               onBlur={(e) => {
                 !e.target.value && setValue(e.target.name, 0);
@@ -267,12 +266,11 @@ const RealEstateInformationForm = ({
                     message: "Số tầng tối đa 100 tầng",
                   },
                 })}
-                type="number"
                 label="Số tầng"
                 name="numberOfFloor"
                 placeholder="Nhập tầng"
                 onChange={(e, { name, value }) => {
-                  (/^\d+$/.test(value) || !value) && setValue(name, value);
+                  setValue(name, value.replace(/[^0-9]/g, ""));
                 }}
                 onBlur={(e) => {
                   !e.target.value && setValue(e.target.name, 0);
@@ -293,12 +291,11 @@ const RealEstateInformationForm = ({
                     message: "Số tầng tối đa 100 tầng",
                   },
                 })}
-                type="number"
                 label="Tầng số"
                 name="floorNumber"
                 placeholder="Nhập tầng"
                 onChange={(e, { name, value }) => {
-                  (/^\d+$/.test(value) || !value) && setValue(name, value);
+                  setValue(name, value.replace(/[^0-9]/g, ""));
                 }}
                 onBlur={(e) => {
                   !e.target.value && setValue(e.target.name, 0);
@@ -387,7 +384,9 @@ const RealEstateInformationForm = ({
                             name="plotNumber"
                             error={errors.plotNumber}
                             placeholder="Nhập số thửa"
-                            onChange={handleChange}
+                            onChange={(e, { name, value }) =>
+                              setValue(name, value.replace(/[^0-9]/g, ""))
+                            }
                             value={watch("plotNumber")}
                             defaultValue={getValues("plotNumber")}
                           />
@@ -443,7 +442,9 @@ const RealEstateInformationForm = ({
                             name="plotNumber"
                             error={errors.plotNumber}
                             placeholder="Nhập số thửa"
-                            onChange={handleChange}
+                            onChange={(e, { name, value }) =>
+                              setValue(name, value.replace(/[^0-9]/g, ""))
+                            }
                             value={watch("plotNumber")}
                             defaultValue={getValues("plotNumber")}
                           />
@@ -541,7 +542,9 @@ const RealEstateInformationForm = ({
                         name="ownerPhone"
                         placeholder="Nhập số điện thoại"
                         error={errors.ownerPhone}
-                        onChange={handleChange}
+                        onChange={(e, { name, value }) =>
+                          setValue(name, value.replace(/[^0-9]/g, ""))
+                        }
                         value={watch("ownerPhone")}
                         defaultValue={getValues("ownerPhone")}
                       />

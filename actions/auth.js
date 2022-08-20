@@ -85,8 +85,7 @@ export const changePasswordUser = async (data, setErrorMessage) => {
 export const otpChangePhone = async (data, setErrorMessage) => {
   try {
     const res = await Axios.post(`/change-phone/send-otp`, data);
-    console.log(res);
-    return res;
+    return res.data;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);

@@ -365,104 +365,106 @@ const PagePropertyDetail = ({
                             </Dropdown.Menu>
                           </Dropdown>
                         </List.Item>
-                        <List.Item>
-                          <Dropdown icon="ellipsis vertical" floating>
-                            <Dropdown.Menu>
-                              {post.block === false && post.status.id === 5 && (
+                        {user && user.id === post.user.id && (
+                          <List.Item>
+                            <Dropdown icon="ellipsis vertical" floating>
+                              <Dropdown.Menu>
+                                {post.block === false && post.status.id === 5 && (
+                                  <Dropdown.Item
+                                    onClick={() => {
+                                      setOpenExtendPost(true);
+                                    }}
+                                  >
+                                    <b>
+                                      <Icon
+                                        name="clock outline"
+                                        circular
+                                        inverted
+                                        color="orange"
+                                        style={{ marginRight: "10px" }}
+                                      />
+                                      Gia hạn bài viết
+                                    </b>
+                                  </Dropdown.Item>
+                                )}
+
+                                {post.block === false && post.status.id === 2 && (
+                                  <Dropdown.Item
+                                    onClick={() => {
+                                      setOpenReupPost(true);
+                                    }}
+                                  >
+                                    <b>
+                                      <Icon
+                                        name="redo"
+                                        circular
+                                        inverted
+                                        color="orange"
+                                        style={{ marginRight: "10px" }}
+                                      />
+                                      Đăng lại
+                                    </b>
+                                  </Dropdown.Item>
+                                )}
+
+                                {post.block === false && post.status.id === 1 && (
+                                  <Dropdown.Item
+                                    onClick={() => {
+                                      setOpenDropPost(true);
+                                    }}
+                                  >
+                                    <b>
+                                      <Icon
+                                        name="hand point down"
+                                        circular
+                                        inverted
+                                        color="orange"
+                                        style={{ marginRight: "10px" }}
+                                      />
+                                      Hạ bài
+                                    </b>
+                                  </Dropdown.Item>
+                                )}
+
+                                {post.status.id !== 3 && post.block === false && (
+                                  <Dropdown.Item
+                                    onClick={() => {
+                                      setOpenEditPost(true);
+                                    }}
+                                  >
+                                    <b>
+                                      <Icon
+                                        color="green"
+                                        name="edit outline"
+                                        circular
+                                        inverted
+                                        style={{ marginRight: "10px" }}
+                                      />
+                                      Chỉnh sửa
+                                    </b>
+                                  </Dropdown.Item>
+                                )}
+
                                 <Dropdown.Item
                                   onClick={() => {
-                                    setOpenExtendPost(true);
+                                    setOpenDeletePost(true);
                                   }}
                                 >
                                   <b>
                                     <Icon
-                                      name="clock outline"
-                                      circular
-                                      inverted
-                                      color="orange"
-                                      style={{ marginRight: "10px" }}
-                                    />
-                                    Gia hạn bài viết
-                                  </b>
-                                </Dropdown.Item>
-                              )}
-
-                              {post.block === false && post.status.id === 2 && (
-                                <Dropdown.Item
-                                  onClick={() => {
-                                    setOpenReupPost(true);
-                                  }}
-                                >
-                                  <b>
-                                    <Icon
-                                      name="redo"
-                                      circular
-                                      inverted
-                                      color="orange"
-                                      style={{ marginRight: "10px" }}
-                                    />
-                                    Đăng lại
-                                  </b>
-                                </Dropdown.Item>
-                              )}
-
-                              {post.block === false && post.status.id === 1 && (
-                                <Dropdown.Item
-                                  onClick={() => {
-                                    setOpenDropPost(true);
-                                  }}
-                                >
-                                  <b>
-                                    <Icon
-                                      name="hand point down"
-                                      circular
-                                      inverted
-                                      color="orange"
-                                      style={{ marginRight: "10px" }}
-                                    />
-                                    Hạ bài
-                                  </b>
-                                </Dropdown.Item>
-                              )}
-
-                              {post.status.id !== 3 && post.block === false && (
-                                <Dropdown.Item
-                                  onClick={() => {
-                                    setOpenEditPost(true);
-                                  }}
-                                >
-                                  <b>
-                                    <Icon
-                                      color="green"
-                                      name="edit outline"
+                                      color="red"
+                                      name="trash alternate"
                                       circular
                                       inverted
                                       style={{ marginRight: "10px" }}
                                     />
-                                    Chỉnh sửa
+                                    Xoá bài viết
                                   </b>
                                 </Dropdown.Item>
-                              )}
-
-                              <Dropdown.Item
-                                onClick={() => {
-                                  setOpenDeletePost(true);
-                                }}
-                              >
-                                <b>
-                                  <Icon
-                                    color="red"
-                                    name="trash alternate"
-                                    circular
-                                    inverted
-                                    style={{ marginRight: "10px" }}
-                                  />
-                                  Xoá bài viết
-                                </b>
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </List.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </List.Item>
+                        )}
                         {user && user.id !== post.user.id && (
                           <List.Item>
                             <Icon
@@ -734,7 +736,7 @@ const PagePropertyDetail = ({
                     Tạo bài phái sinh
                   </Button>
                 )}
-              {post.originalPost !== null && (
+              {post.originalPost !== null && user.id === post.user.id && (
                 <Link
                   href={`/bat-dong-san/${convertToSlug(post.title)}-${
                     post.originalPost

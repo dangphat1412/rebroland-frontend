@@ -329,7 +329,7 @@ const ReportPostPage = ({
                                 setOpenConfirmCancel(true);
                               }}
                             >
-                              Huỷ bỏ
+                              Bỏ qua
                             </Button>
                           </div>
                         )}

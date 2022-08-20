@@ -39,12 +39,6 @@ const CashOutPage = ({ user }) => {
 
   const router = useRouter();
 
-  useEffect(() => {
-    register("bankName");
-    register("accountNumber");
-    register("accountName");
-  }, [register]);
-
   const [errorMessage, setErrorMessage] = useState(null);
   const [listBank, setListBank] = useState([]);
   const [openOtpCashout, setOpenOtpCashout] = useState(false);
@@ -84,66 +78,6 @@ const CashOutPage = ({ user }) => {
   }, []);
 
   const onSubmit = async (data, e) => {
-    let error = false;
-    if (!data.content) {
-      setError("content", {
-        type: "not null",
-        message: "Nhập nội dung chuyển khoản",
-      });
-      error = true;
-    }
-
-    if (!data.money) {
-      setError("money", {
-        type: "not null",
-        message: "Nhập số tiền bạn muốn rút",
-      });
-      error = true;
-    }
-
-    if (data.money && data.money < 10000) {
-      setError("money", {
-        type: "not null",
-        message: "Số tiền giao dịch tối thiểu 10.000VNĐ",
-      });
-      error = true;
-    }
-
-    if (data.money && data.money > 50000000) {
-      setError("money", {
-        type: "not null",
-        message: "Số tiền giao dịch tối đa 50.000.000VNĐ",
-      });
-      error = true;
-    }
-
-    if (data.type === 2) {
-      if (!data.bankName) {
-        setError("bankName", {
-          type: "not null",
-          message: "Tên ngân hàng không được để trống",
-        });
-        error = true;
-      }
-
-      if (!data.accountNumber) {
-        setError("accountNumber", {
-          type: "not null",
-          message: "Số tài khoản không được để trống",
-        });
-        error = true;
-      }
-
-      if (!data.accountName) {
-        setError("accountName", {
-          type: "not null",
-          message: "Tên tài khoản không được để trống",
-        });
-        error = true;
-      }
-    }
-    if (error === true) return;
-
     const cashout = await otpCashout(data, setErrorMessage);
     if (cashout) {
       console.log(cashout);
@@ -209,6 +143,13 @@ const CashOutPage = ({ user }) => {
                               fieldType="select"
                               label="Tên ngân hàng"
                               name="bankName"
+                              {...register("bankName", {
+                                validate: (value) =>
+                                  (getValues("type") === 2 &&
+                                    !value &&
+                                    "Tên ngân hàng không được để trống") ||
+                                  true,
+                              })}
                               placeholder="Chọn ngân hàng"
                               options={listBank}
                               search
@@ -219,17 +160,40 @@ const CashOutPage = ({ user }) => {
                             />
                             <InputField
                               label="Số tài khoản"
-                              placeholder="Nhập tên tài khoản"
+                              placeholder="Nhập số tài khoản"
                               name="accountNumber"
-                              onChange={handleChange}
+                              {...register("accountNumber", {
+                                validate: (value) =>
+                                  (getValues("type") === 2 &&
+                                    !value &&
+                                    "Số tài khoản không được để trống") ||
+                                  true,
+                              })}
+                              onChange={(e, { name, value }) => {
+                                setValue(name, value.replace(/[^0-9]/g, ""));
+                              }}
+                              value={watch("accountNumber")}
                               error={errors.accountNumber}
                               requiredField
                             />
                             <InputField
                               label="Tên tài khoản"
+                              {...register("accountName", {
+                                validate: (value) =>
+                                  (getValues("type") === 2 &&
+                                    !value &&
+                                    "Tên tài khoản không được để trống") ||
+                                  true,
+                              })}
                               placeholder="Nhập tên tài khoản"
                               name="accountName"
-                              onChange={handleChange}
+                              onChange={(e, { name, value }) => {
+                                setValue(
+                                  name,
+                                  value.replace(/[^a-z ]/gi, "").toUpperCase()
+                                );
+                              }}
+                              value={watch("accountName")}
                               error={errors.accountName}
                               requiredField
                             />
@@ -239,10 +203,19 @@ const CashOutPage = ({ user }) => {
                           label="Số tiền (VNĐ)"
                           placeholder="Nhập số tiền"
                           name="money"
-                          {...register("money")}
-                          onChange={async (e, { name, value }) => {
-                            (/^\d+$/.test(value) || !value) &&
-                              setValue(name, value);
+                          {...register("money", {
+                            required: "Số tiền không được để trống",
+                            min: {
+                              value: 10000,
+                              message: "Số tiền tối thiểu 10,000 VNĐ",
+                            },
+                            max: {
+                              value: 50000000,
+                              message: "Số tiền tối đa 50,000,000 VNĐ",
+                            },
+                          })}
+                          onChange={(e, { name, value }) => {
+                            setValue(name, value.replace(/[^0-9]/g, ""));
                           }}
                           value={watch("money")}
                           error={errors.money}

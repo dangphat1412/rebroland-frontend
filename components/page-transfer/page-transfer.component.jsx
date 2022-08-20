@@ -29,31 +29,6 @@ const TransferPage = ({ user }) => {
   const [openOtpTransfer, setOpenOtpTransfer] = useState(false);
   const [transferData, setTransferData] = useState({});
 
-  useEffect(() => {
-    register("phone", {
-      required: "Số điện thoại không được để trống",
-      pattern: {
-        value: /^(84|0[3|5|7|8|9])+([0-9]{8})$/,
-        message: "Số điện thoại là số Việt Nam và có 10 chữ số",
-      },
-    });
-    register("amount", {
-      required: "Nhập số tiền bạn muốn nạp",
-      min: {
-        value: 10000,
-        message: "Số tiền giao dịch tối thiểu 10.000VNĐ",
-      },
-      max: {
-        value: 50000000,
-        message: "Số tiền giao dịch tối thiểu 50.000.000VNĐ",
-      },
-      valueAsNumber: true,
-    });
-    register("content", {
-      required: "Nhập nội dung chuyển khoản",
-    });
-  }, [register]);
-
   const onSubmit = async (data, e) => {
     const transferData = await otpTransfer(data, setErrorMessage);
     if (transferData) {
@@ -94,22 +69,42 @@ const TransferPage = ({ user }) => {
                           label="Số điện thoại hưởng thụ"
                           placeholder="Nhập số điện thoại"
                           name="phone"
+                          {...register("phone", {
+                            required: "Số điện thoại không được để trống",
+                            pattern: {
+                              value: /^(84|0[3|5|7|8|9])+([0-9]{8})$/,
+                              message:
+                                "Số điện thoại là số Việt Nam và có 10 chữ số",
+                            },
+                          })}
                           onChange={async (e, { name, value }) => {
-                            setValue(name, value);
+                            setValue(name, value.replace(/[^0-9]/g, ""));
                           }}
+                          value={watch("phone")}
                           error={errors.phone}
                           requiredField
                         />
                         <InputField
-                          type="number"
                           label="Số tiền (VNĐ)"
                           placeholder="Nhập số tiền"
                           name="amount"
+                          {...register("amount", {
+                            required: "Nhập số tiền bạn muốn nạp",
+                            min: {
+                              value: 10000,
+                              message: "Số tiền giao dịch tối thiểu 10,000VNĐ",
+                            },
+                            max: {
+                              value: 50000000,
+                              message:
+                                "Số tiền giao dịch tối thiểu 50,000,000VNĐ",
+                            },
+                            valueAsNumber: true,
+                          })}
                           onChange={(e, { name, value }) => {
-                            e.target.validity.valid && setValue(name, value);
+                            setValue(name, value.replace(/[^0-9]/g, ""));
                           }}
                           value={watch("amount")}
-                          min={0}
                           error={errors.amount}
                           requiredField
                         />
@@ -117,6 +112,9 @@ const TransferPage = ({ user }) => {
                           label="Nội dung"
                           placeholder="Nhập nội dung chuyển khoản"
                           name="content"
+                          {...register("content", {
+                            required: "Nhập nội dung chuyển khoản",
+                          })}
                           onChange={async (e, { name, value }) => {
                             setValue(name, value);
                           }}

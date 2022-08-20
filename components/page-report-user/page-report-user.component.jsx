@@ -271,7 +271,7 @@ const ReportUserPage = ({
                                 setOpenConfirmCancel(true);
                               }}
                             >
-                              Huỷ bỏ
+                              Bỏ qua
                             </Button>
                           </div>
                         )}

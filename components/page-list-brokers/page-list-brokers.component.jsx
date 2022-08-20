@@ -54,14 +54,14 @@ const ListBrokersPage = ({ brokersData, setTotalResult, searchParams }) => {
       <Grid>
         <Grid.Row>
           <Grid.Column width={4}>
-            <Dropdown
+            {/* <Dropdown
               fluid
               selection
               options={options}
               className="filter"
               value={sortValue}
               onChange={handleFilterOption}
-            />
+            /> */}
             <Segment
               style={{
                 backgroundImage: "url('/zyro-image.png')",

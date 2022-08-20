@@ -22,7 +22,7 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
         error={errors.title}
         requiredField
         maxLength={200}
-        sublabel="Tối thiểu 200 kí tự"
+        sublabel="Tối đa 200 kí tự"
       />
       <InputField
         {...register("description", { required: "Mô tả không được để trống" })}
@@ -36,7 +36,7 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
         error={errors.description}
         requiredField
         maxLength={3000}
-        sublabel="Tối thiểu 3000 kí tự"
+        sublabel="Tối đa 3000 kí tự"
       />
     </Segment>
   );
