@@ -31,7 +31,13 @@ export const otpTransfer = async (data, setErrorMessage) => {
   }
 };
 
-export const handleTransfer = async (data, setErrorMessage) => {
+export const handleTransfer = async (
+  data,
+  setTransfer,
+  setErrorMessage,
+  remainTime,
+  setRemainTime
+) => {
   try {
     console.log(data);
     const res = await Axios.post(`/transfer`, data);
@@ -49,6 +55,8 @@ export const handleTransfer = async (data, setErrorMessage) => {
     return res.status;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
+    setRemainTime(remainTime - 1);
+    setTransfer((prev) => ({ ...prev, token: undefined }));
     setErrorMessage(messages);
     console.log(error);
   }
@@ -65,7 +73,13 @@ export const otpCashout = async (data, setErrorMessage) => {
   }
 };
 
-export const handleCashout = async (data, setErrorMessage) => {
+export const handleCashout = async (
+  data,
+  setCashout,
+  setErrorMessage,
+  setRemainTime,
+  remainTime
+) => {
   try {
     console.log(data);
     const res = await Axios.post(`/cash-out`, data);
@@ -74,6 +88,8 @@ export const handleCashout = async (data, setErrorMessage) => {
     return res;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
+    setRemainTime(remainTime - 1);
+    setCashout((prev) => ({ ...prev, token: undefined }));
     setErrorMessage(messages);
     console.log(error);
   }

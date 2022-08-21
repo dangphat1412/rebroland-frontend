@@ -46,10 +46,7 @@ const UserPanel = ({ user }) => {
             }}
           >
             <Image
-              src={
-                imagePreview ||
-                "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-              }
+              src={imagePreview || "/default-avatar.png"}
               circular
               alt="avatar"
               verticalAlign="middle"

@@ -5,6 +5,17 @@ export const TakeCareCustomerContainer = styled.div`
   margin-top: 20px;
   margin-right: 95px;
   margin-left: 95px;
+
+  pre {
+    font-family: "Tahoma", san-serif !important;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin-top: 0px;
+  }
+
   .item,
   .header,
   .button {

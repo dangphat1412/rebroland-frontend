@@ -124,7 +124,7 @@ const BrokerItem = ({ broker, searchParams }) => {
         <Image
           src={
             broker.avatar ||
-            "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
+            "/default-avatar.png"
           }
           wrapped
           alt="broker"

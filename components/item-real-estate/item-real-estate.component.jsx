@@ -43,7 +43,7 @@ const RealEstateItem = ({
         {type === "card" ? (
           <>
             <Image
-              src={post.thumbnail}
+              src={post.thumbnail || "/default-thumbnail.png"}
               wrapped
               ui={false}
               alt="real estate"
@@ -61,7 +61,7 @@ const RealEstateItem = ({
             />
             <Card.Content>
               <Card.Header>{post.title}</Card.Header>
-              <List horizontal size="large">
+              <List horizontal size="large" style={{ marginBottom: "0px" }}>
                 <List.Item>
                   <List.Content>
                     <List.Header>
@@ -82,9 +82,46 @@ const RealEstateItem = ({
                   </List.Content>
                 </List.Item>
               </List>
+              <List
+                horizontal
+                size="large"
+                style={{ marginTop: "0px", display: "block" }}
+              >
+                {post.numberOfBedroom > 0 && (
+                  <List.Item>
+                    <List.Content>
+                      <List.Header>
+                        {post.numberOfBedroom}{" "}
+                        <span className="kikor kiko-bedroom"></span>
+                      </List.Header>
+                    </List.Content>
+                  </List.Item>
+                )}
+
+                {post.numberOfBathroom > 0 && (
+                  <List.Item>
+                    <List.Content>
+                      <List.Header>
+                        {post.numberOfBedroom}{" "}
+                        <span className="kikor kiko-bathroom"></span>
+                      </List.Header>
+                    </List.Content>
+                  </List.Item>
+                )}
+
+                {directionName && (
+                  <List.Item>
+                    <List.Content>
+                      <List.Header>{directionName.name} </List.Header>
+                    </List.Content>
+                  </List.Item>
+                )}
+              </List>
               <Card.Description>{post.description}</Card.Description>
 
               <div>
+                <div>{post.district + ", " + post.province}</div>
+
                 {post.startDate}
                 {(!user || (user && user.id !== post.user.id)) && (
                   <Button
@@ -122,10 +159,7 @@ const RealEstateItem = ({
             <Item>
               <Item.Image
                 size="medium"
-                src={
-                  post.thumbnail ||
-                  "https://www.phoenixpropertymaster.com/wp-content/uploads/2021/12/Real-Estate.jpg"
-                }
+                src={post.thumbnail || "/default-thumbnail.png"}
                 label={
                   post.originalPost && post.originalPost !== 0
                     ? {

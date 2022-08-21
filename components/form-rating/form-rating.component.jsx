@@ -104,13 +104,7 @@ const RatingForm = ({
           onDismiss={() => setErrorMessage(null)}
         />
         <Header as="h4">
-          <Image
-            src={
-              ratedUser.avatar ||
-              "https://react.semantic-ui.com/images/avatar/large/matthew.png"
-            }
-            avatar
-          />
+          <Image src={ratedUser.avatar || "/default-avatar.png"} avatar />
           <Header.Content>
             {ratedUser.fullName}
             <Header.Subheader>

@@ -9,6 +9,7 @@ import GeographicInformationForm from "../geographic-information-form/geographic
 import { createDerivativePost } from "../../actions/post";
 import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
+import RealEstateInformationForm from "../real-estate-information-form/real-estate-information-form.component";
 
 const CreateDerivativePost = ({ user, post }) => {
   const contextRef = createRef();
@@ -19,6 +20,7 @@ const CreateDerivativePost = ({ user, post }) => {
     setValue,
     getValues,
     control,
+    clearErrors,
     watch,
     formState: { errors },
   } = useForm({
@@ -82,6 +84,15 @@ const CreateDerivativePost = ({ user, post }) => {
                 register={register}
                 setValue={setValue}
                 getValues={getValues}
+              />
+              <RealEstateInformationForm
+                register={register}
+                clearErrors={clearErrors}
+                errors={errors}
+                watch={watch}
+                setValue={setValue}
+                getValues={getValues}
+                post={post}
               />
               <GeographicInformationForm
                 register={register}

@@ -110,10 +110,6 @@ const BrokerRegisterPage = ({ priceList }) => {
                   <Card.Description>
                     - Hệ thống sẽ tính phí ngay tại thời điểm đăng ký.
                   </Card.Description>
-                  <Card.Description>
-                    - Gói dịch vụ sẽ được tự động gia hạn vào cuối kì. Sau khi
-                    đăng ký, bạn có thể tắt chế độ tự động nếu không có nhu cầu.
-                  </Card.Description>
                 </Card.Content>
               </Card>
               <Message

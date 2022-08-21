@@ -217,7 +217,7 @@ const ListProperty = ({ user, data, handlePaginationChange, setData }) => {
                               size="medium"
                               src={
                                 (post && post.thumbnail) ||
-                                "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
+                                "/default-thumbnail.png"
                               }
                               label={
                                 post.originalPost && post.originalPost !== 0
@@ -344,7 +344,7 @@ const ListProperty = ({ user, data, handlePaginationChange, setData }) => {
                           />
                         </Link>
 
-                        {post.status.id !== 3 && (
+                        {post.status.id !== 3 && post.block === false && (
                           <Popup
                             content="Chỉnh sửa bài viết"
                             trigger={

@@ -66,7 +66,8 @@ export const registerUser = async (user, setErrorMessage) => {
     console.log(res.data);
     return res.data;
   } catch (error) {
-    setErrorMessage(error.response.data);
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
   }
 };
@@ -93,7 +94,13 @@ export const otpChangePhone = async (data, setErrorMessage) => {
   }
 };
 
-export const changePhone = async (data, setErrorMessage) => {
+export const changePhone = async (
+  data,
+  setPhone,
+  setErrorMessage,
+  remainTime,
+  setRemainTime
+) => {
   try {
     console.log(data);
     const res = await Axios.post(`/change-phone`, data);
@@ -102,14 +109,19 @@ export const changePhone = async (data, setErrorMessage) => {
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);
+    setRemainTime(remainTime - 1);
+    setPhone((prev) => ({ ...prev, token: undefined }));
     console.log(error);
   }
 };
 
 export const otpRegisterUser = async (
   user,
+  setUser,
   setErrorMessage,
-  setOtpRegisterOpen
+  setOtpRegisterOpen,
+  remainTime,
+  setRemainTime
 ) => {
   try {
     const res = await axios.post(`${API_URL}/api/users/signup/otp`, user);
@@ -120,7 +132,10 @@ export const otpRegisterUser = async (
       Router.push(Router.pathname);
     }
   } catch (error) {
-    setErrorMessage(error.response.data);
+    const messages = convertToListMessages(error.response.data);
+    setRemainTime(remainTime - 1);
+    setUser((prev) => ({ ...prev, token: undefined }));
+    setErrorMessage(messages);
     console.log(error);
   }
 };
@@ -133,13 +148,15 @@ export const forgotPasswordUser = async (user, setErrorMessage) => {
     );
     return res.data;
   } catch (error) {
-    setErrorMessage(error.response.data);
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
   }
 };
 
 export const otpForgotPasswordUser = async (
   user,
+  setUser,
   setErrorMessage,
   handleOpenLogin,
   setRemainTime,
@@ -154,6 +171,7 @@ export const otpForgotPasswordUser = async (
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setRemainTime(remainTime - 1);
+    setUser((prev) => ({ ...prev, token: undefined }));
     setErrorMessage(messages);
     console.log(error);
   }

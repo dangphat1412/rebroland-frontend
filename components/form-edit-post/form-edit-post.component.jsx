@@ -23,6 +23,7 @@ const EditPostForm = ({
     getValues,
     control,
     watch,
+    clearErrors,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -104,6 +105,7 @@ const EditPostForm = ({
               />
               <RealEstateInformationForm
                 register={register}
+                clearErrors={clearErrors}
                 errors={errors}
                 watch={watch}
                 setValue={setValue}
@@ -116,6 +118,7 @@ const EditPostForm = ({
                 getValues={getValues}
                 setValue={setValue}
                 control={control}
+                post={editedPost}
               />
               <ImageInformationForm images={images} setImages={setImages} />
               <ContactInformationForm

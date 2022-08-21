@@ -72,7 +72,7 @@ const ReportUserForm = ({
             title: "Báo cáo bài viết",
             description: <p>Báo cáo bài viết thành công</p>,
           });
-        }, 1000);
+        }, 100);
         setReportOpen(false);
       } else {
         setTimeout(() => {
@@ -81,7 +81,7 @@ const ReportUserForm = ({
             title: "Lỗi",
             description: <p>Có lỗi xảy ra, hãy thử lại sau</p>,
           });
-        }, 1000);
+        }, 100);
       }
     }
   };

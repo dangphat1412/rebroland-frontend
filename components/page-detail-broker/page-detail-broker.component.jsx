@@ -130,10 +130,7 @@ const DetailBrokerPage = ({
                 <Item>
                   <Item.Image
                     size="small"
-                    src={
-                      userDetail.avatar ||
-                      "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                    }
+                    src={userDetail.avatar || "/default-avatar.png"}
                     className="broker-avatar"
                   />
                   <Item.Content style={{ position: "relative" }}>
@@ -352,7 +349,7 @@ const DetailBrokerPage = ({
                   <Comment key={index}>
                     <Comment.Avatar
                       className="rater-avatar"
-                      src={rate.user.avatar}
+                      src={rate.user.avatar || "/default-avatar.png"}
                     />
                     <Comment.Content>
                       <Comment.Author as="a">

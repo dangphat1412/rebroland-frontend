@@ -33,7 +33,7 @@ const Register = ({ handleOpenOtpRegister, setRegisterData }) => {
       <Form onSubmit={handleSubmit(onSubmit)} error={errorMessage !== null}>
         <Message
           error
-          content={errorMessage}
+          list={errorMessage}
           onDismiss={() => setErrorMessage(null)}
         />
         <InputField
@@ -52,7 +52,6 @@ const Register = ({ handleOpenOtpRegister, setRegisterData }) => {
           error={errors.fullName}
           requiredField
         />
-        {/* [$&+,:;=\\\\?@#|/'<>.^*()%!-1234567890] */}
         <InputField
           label="Số điện thoại"
           name="phone"

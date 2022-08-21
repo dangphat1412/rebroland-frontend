@@ -177,10 +177,7 @@ const ContactBackRequestItem = ({
                 floated="left"
                 size="tiny"
                 alt="image"
-                src={
-                  contact.userRequest.avatar ||
-                  "https://react.semantic-ui.com/images/avatar/large/steve.jpg"
-                }
+                src={contact.userRequest.avatar || "/default-avatar.png"}
                 style={{ height: "85px", width: "85px", objectFit: "cover" }}
               />
               <Card.Header>{contact.userRequest.fullName}</Card.Header>

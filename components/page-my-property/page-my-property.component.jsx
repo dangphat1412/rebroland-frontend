@@ -471,10 +471,7 @@ const RealEstateItem = ({
           <Item>
             <Item.Image
               size="medium"
-              src={
-                post.thumbnail ||
-                "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
-              }
+              src={post.thumbnail || "/default-thumbnail.png"}
             />
             <Item.Content className="item-content">
               <Item.Header>{post.title}</Item.Header>

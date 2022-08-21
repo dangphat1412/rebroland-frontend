@@ -140,10 +140,7 @@ const MainNavigation = ({
                           <>
                             <Image
                               avatar
-                              src={
-                                user.avatar ||
-                                "https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg"
-                              }
+                              src={user.avatar || "/default-avatar.png"}
                               alt="avatar"
                             />
                             <span>{user.fullName}</span>

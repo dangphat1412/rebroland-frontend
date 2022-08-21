@@ -34,6 +34,7 @@ import { SemanticToastContainer, toast } from "react-semantic-toasts";
 const HandleContactBackRequestPage = ({
   user,
   contactList,
+  totalResult,
   setTotalResult,
 }) => {
   const [contacts, setContacts] = useState(contactList.contacts);
@@ -60,6 +61,7 @@ const HandleContactBackRequestPage = ({
           return contact.contactId !== selectedContactId;
         })
       );
+      setTotalResult(totalResult - 1);
       toast({
         type: "success",
         title: "Thêm khách hàng",
@@ -77,6 +79,7 @@ const HandleContactBackRequestPage = ({
           return contact.contactId !== contactId;
         })
       );
+      setTotalResult(totalResult - 1);
       toast({
         type: "success",
         title: "Bỏ qua khách hàng",
@@ -159,7 +162,7 @@ const HandleContactBackRequestPage = ({
                 </Dimmer>
               </Card.Content>
             </Card>
-            {data.totalPages > 0 && (
+            {data.totalPages > 1 && (
               <PaginationContainer>
                 <Pagination
                   activePage={data.pageNo}
@@ -224,10 +227,7 @@ const ContactBackRequestItem = ({
                 floated="left"
                 size="tiny"
                 alt="image"
-                src={
-                  contact.userRequest.avatar ||
-                  "https://react.semantic-ui.com/images/avatar/large/steve.jpg"
-                }
+                src={contact.userRequest.avatar || "/default-avatar.png"}
                 style={{ height: "85px", width: "85px", objectFit: "cover" }}
               />
               <Card.Header>{contact.userRequest.fullName}</Card.Header>

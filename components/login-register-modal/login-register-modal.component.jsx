@@ -142,6 +142,7 @@ const LoginRegisterModal = ({
         }
       >
         <OtpForgotPassword
+          setOtpForgotPasswordOpen={setOtpForgotPasswordOpen}
           forgotPasswordData={forgotPasswordData}
           handleOpenLogin={handleOpenLogin}
         />

@@ -141,22 +141,21 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
   }, []);
 
   const handleAddition = (e, { name, value }) => {
-    name === "pricePerDay" &&
+    if (name === "pricePerDay") {
       setPricePerDayOptions([{ text: value, value }, ...pricePerDayOptions]);
-    name === "refundWithoutInfo" &&
+    }
+    if (name === "refundWithoutInfo") {
       setRefundWithoutInfoOptions([
         { text: value, value },
         ...refundWithoutInfoOptions,
       ]);
-    name === "refundWithInfo" &&
+    }
+    if (name === "refundWithInfo") {
       setRefundWithInfoOptions([
         { text: value, value },
         ...refundWithInfoOptions,
       ]);
-  };
-
-  const handleChange = (e, { name, value }) => {
-    setPricePerDay(value);
+    }
   };
 
   const [loading, setLoading] = useState(false);
@@ -329,7 +328,15 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                         additionLabel="Thêm mức giá: "
                         value={pricePerDay}
                         onAddItem={handleAddition}
-                        onChange={handleChange}
+                        onChange={(e, data) => {
+                          console.log(data);
+                        }}
+                        onSearchChange={(e, data) => {
+                          console.log(data);
+                          // setPricePerDay(
+                          //   value.toString().replace(/[^0-9]/g, "")
+                          // );
+                        }}
                       />
                       <InputField
                         type="number"

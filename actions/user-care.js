@@ -103,7 +103,8 @@ export const addAppointment = async (
   data,
   setOpenAppointmentSchedule,
   setTimeline,
-  timeline
+  timeline,
+  setErrorMessage
 ) => {
   try {
     const res = await Axios.post(`/${userCareId}`, data);
@@ -112,7 +113,8 @@ export const addAppointment = async (
     }
     setOpenAppointmentSchedule(false);
   } catch (error) {
-    // const messages = convertToListMessages(error.response.data);
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
     console.log(error);
   }
 };

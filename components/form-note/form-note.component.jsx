@@ -38,6 +38,8 @@ const NoteForm = ({ timeline, setTimeline, userCareId, setOpenNote }) => {
         }}
         error={errors.description}
         requiredField
+        sublabel="Tối đa 200 ký tự"
+        maxLength={200}
       />
       <Grid>
         <Grid.Column textAlign="right">

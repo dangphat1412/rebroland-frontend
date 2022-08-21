@@ -15,8 +15,10 @@ import {
   upadteCustomer,
 } from "../../actions/user-care";
 import ModalItem from "../modal-item/modal-item.component";
+import { FormCreateCustomerContainer } from "./form-create-customer.styles";
 
 const FormCreateCustomer = ({
+  user,
   toast,
   cares,
   setCares,
@@ -27,6 +29,7 @@ const FormCreateCustomer = ({
     handleSubmit,
     setValue,
     getValues,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {},
@@ -39,6 +42,8 @@ const FormCreateCustomer = ({
         value: /^(84|0[3|5|7|8|9])+([0-9]{8})$/,
         message: "Số điện thoại là số Việt Nam và có 10 chữ số",
       },
+      validate: (value) =>
+        value !== user.phone || "Số điện thoại trùng với số điện thoại của bạn",
     });
   }, [register]);
 
@@ -47,7 +52,6 @@ const FormCreateCustomer = ({
   const [newCustomerData, setNewCustomerData] = useState(null);
 
   const onSubmit = async (phone) => {
-    console.log(phone);
     const data = await getInfoNewCustomer(phone, setErrorMessage);
     if (data) {
       setNewCustomerData(data);
@@ -56,7 +60,7 @@ const FormCreateCustomer = ({
   };
 
   return (
-    <>
+    <FormCreateCustomerContainer>
       <Form onSubmit={handleSubmit(onSubmit)} error={errorMessage !== null}>
         <Header as="h2">Thông tin khách hàng</Header>
         <Message
@@ -71,8 +75,9 @@ const FormCreateCustomer = ({
           defaultValue={getValues("phone")}
           requiredField
           onChange={async (e, { name, value }) => {
-            setValue(name, value);
+            setValue(name, value.replace(/[^0-9]/g, ""));
           }}
+          value={watch("phone")}
         />
         <Button type="submit" fluid>
           Tiếp tục
@@ -90,15 +95,19 @@ const FormCreateCustomer = ({
         {newCustomerData && (
           <>
             <Header as="h1">
-              <Image circular src={newCustomerData.avatar} />
+              <Image
+                circular
+                src={newCustomerData.avatar || "/default-avatar.png"}
+                style={{ height: "60px", width: "60px", objectFit: "cover" }}
+              />
               <Header.Content>
-                <Header.Subheader>
+                <Header.Subheader style={{ fontFamily: "Tahoma" }}>
                   <b>Họ và tên: </b> {newCustomerData.fullName}
                 </Header.Subheader>
-                <Header.Subheader>
+                <Header.Subheader style={{ fontFamily: "Tahoma" }}>
                   <b>Số điện thoại: </b> {newCustomerData.phone}
                 </Header.Subheader>
-                <Header.Subheader>
+                <Header.Subheader style={{ fontFamily: "Tahoma" }}>
                   <b>Email: </b>{" "}
                   {newCustomerData.email
                     ? newCustomerData.email
@@ -115,6 +124,8 @@ const FormCreateCustomer = ({
                   setOpenCreateCustomer(false);
                   const data = await addNewCustomer(newCustomerData.id);
                   if (data) {
+                    console.log(data);
+                    setCares([data, ...cares]);
                     setTimeout(() => {
                       toast({
                         type: "success",
@@ -140,7 +151,7 @@ const FormCreateCustomer = ({
           </>
         )}
       </ModalItem>
-    </>
+    </FormCreateCustomerContainer>
   );
 };
 

@@ -41,6 +41,7 @@ import {
   followPost,
   getPricePerDay,
   historyPost,
+  reupPost,
   switchAllowCreateDerivative,
 } from "../../actions/post";
 import Link from "next/link";
@@ -89,6 +90,7 @@ const PagePropertyDetail = ({
   const [openDropPost, setOpenDropPost] = useState(false);
   const [openExtendPost, setOpenExtendPost] = useState(false);
   const [priceData, setPriceData] = useState(null);
+  const [openReupDerivativePost, setOpenReupDerivativePost] = useState(false);
 
   useEffect(() => {
     const fetchAPI = async () => {
@@ -391,7 +393,10 @@ const PagePropertyDetail = ({
                                 {post.block === false && post.status.id === 2 && (
                                   <Dropdown.Item
                                     onClick={() => {
-                                      setOpenReupPost(true);
+                                      user.currentRole === 2 &&
+                                        setOpenReupPost(true);
+                                      user.currentRole === 3 &&
+                                        setOpenReupDerivativePost(true);
                                     }}
                                   >
                                     <b>
@@ -514,15 +519,17 @@ const PagePropertyDetail = ({
                   </Grid.Row>
                 </Grid>
                 <Divider />
-                <Header as="h2">Hình ảnh</Header>
-                {post.images && (
-                  <ReactImageGallery
-                    items={items}
-                    showIndex={true}
-                    disableKeyDown={false}
-                    originalHeight={200}
-                    originalWidth={200}
-                  />
+                {post.images && post.images.length > 0 && (
+                  <>
+                    <Header as="h2">Hình ảnh</Header>
+                    <ReactImageGallery
+                      items={items}
+                      showIndex={true}
+                      disableKeyDown={false}
+                      originalHeight={200}
+                      originalWidth={200}
+                    />
+                  </>
                 )}
                 <Header as="h2">Thông tin mô tả</Header>
                 <div>
@@ -598,6 +605,13 @@ const PagePropertyDetail = ({
                     )}
                   </Grid.Row>
                 </Grid>
+                {post.additionalDescription && (
+                  <Grid.Row>
+                    <div style={{ fontSize: "16px" }}>
+                      <b>Mô tả bổ sung: </b> {post.additionalDescription}
+                    </div>
+                  </Grid.Row>
+                )}
 
                 <Header as="h2">Xem trên bản đồ</Header>
                 {post.coordinates && (
@@ -619,10 +633,7 @@ const PagePropertyDetail = ({
             <Grid.Column width={4}>
               <UserInformationContainer textAlign="center">
                 <Image
-                  src={
-                    post.user.avatar ||
-                    "https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
-                  }
+                  src={post.user.avatar || "/default-avatar.png"}
                   style={{
                     height: "150px",
                     width: "150px",
@@ -697,18 +708,21 @@ const PagePropertyDetail = ({
                 )}
               </ContactInformationContainer>
 
-              {user && user.id === post.user.id && post.status.id !== 3 && (
-                <Button
-                  fluid
-                  size="big"
-                  color="red"
-                  onClick={() => {
-                    setEndTransactionOpen(true);
-                  }}
-                >
-                  Kết thúc giao dịch
-                </Button>
-              )}
+              {user &&
+                user.id === post.user.id &&
+                post.status.id !== 3 &&
+                post.originalPost === null && (
+                  <Button
+                    fluid
+                    size="big"
+                    color="red"
+                    onClick={() => {
+                      setEndTransactionOpen(true);
+                    }}
+                  >
+                    Kết thúc giao dịch
+                  </Button>
+                )}
 
               <Button
                 fluid
@@ -736,7 +750,7 @@ const PagePropertyDetail = ({
                     Tạo bài phái sinh
                   </Button>
                 )}
-              {post.originalPost !== null && user.id === post.user.id && (
+              {post.originalPost !== null && user && user.id === post.user.id && (
                 <Link
                   href={`/bat-dong-san/${convertToSlug(post.title)}-${
                     post.originalPost
@@ -868,6 +882,20 @@ const PagePropertyDetail = ({
           const status = await deletepPost(post.postId);
           if (status === 201) {
             Router.push("/trang-ca-nhan/bat-dong-san-cua-toi");
+          }
+        }}
+      />
+
+      <Confirm
+        open={openReupDerivativePost}
+        content="Xác nhận đăng lại bài phái sinh"
+        onCancel={() => {
+          setOpenReupDerivativePost(false);
+        }}
+        onConfirm={async () => {
+          const status = await reupPost(post.postId);
+          if (status === 201) {
+            Router.reload();
           }
         }}
       />
@@ -1161,21 +1189,21 @@ const FormEndTransaction = ({
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (data, e) => {
-    const status = await finishTransaction(
-      post.postId,
-      {
-        ...data,
-        typeId: post.propertyTypeId,
-      },
-      setErrorMessage
-    );
-    if (status === 200) {
-      setEndTransactionOpen(false);
+    // const status = await finishTransaction(
+    //   post.postId,
+    //   {
+    //     ...data,
+    //     typeId: post.propertyTypeId,
+    //   },
+    //   setErrorMessage
+    // );
+    // if (status === 200) {
+    //   setEndTransactionOpen(false);
 
-      if (brokers.length > 0) {
-        setOpenRate(true);
-      }
-    }
+    //   if (brokers.length > 0) {
+    //     setOpenRate(true);
+    //   }
+    // }
     console.log(data);
   };
 
@@ -1193,7 +1221,7 @@ const FormEndTransaction = ({
         />
         <Form.Checkbox
           name="provideInfo"
-          label="Cung cấp thông tin bất động sản"
+          label={`Cung cấp thông tin bất động sản (Hoàn tiền %)`}
           onClick={(e, { name, checked }) => {
             setValue(name, checked);
           }}
@@ -1209,11 +1237,16 @@ const FormEndTransaction = ({
                 label="Tên chủ hộ"
                 name="owner"
                 {...register("owner", {
-                  validate: (value) =>
-                    (getValues("provideInfo") === true &&
-                      !value &&
-                      "Nhập tên chủ hộ") ||
-                    true,
+                  validate: {
+                    checkNull: (value) =>
+                      (getValues("provideInfo") === true &&
+                        !value &&
+                        "Nhập tên chủ hộ") ||
+                      true,
+                    checkValid: (value) =>
+                      !/[$&+,:;=\\\\?@#|/'<>.^*()%!-1234567890]/.test(value) ||
+                      "Họ và tên không hợp lệ",
+                  },
                 })}
                 placeholder="Nhập tên chủ hộ"
                 onChange={handleChange}
@@ -1226,16 +1259,25 @@ const FormEndTransaction = ({
                 label="Số điện thoại"
                 name="phone"
                 {...register("phone", {
-                  validate: (value) =>
-                    (getValues("provideInfo") === true &&
-                      !/^(84|0[3|5|7|8|9])+([0-9]{8})$/.test(value) &&
-                      "Nhập đúng định dạng số điện thoại") ||
-                    true,
+                  validate: {
+                    checkNull: (value) =>
+                      (getValues("provideInfo") === true &&
+                        !value &&
+                        "Số điện thoại không được để trống") ||
+                      true,
+                    checkValid: (value) =>
+                      (getValues("provideInfo") === true &&
+                        !/^(84|0[3|5|7|8|9])+([0-9]{8})$/.test(value) &&
+                        "Số điện thoại là số Việt Nam và có 10 chữ số") ||
+                      true,
+                  },
                 })}
                 placeholder="Nhập số điện thoại"
                 value={watch("phone")}
                 defaultValue={post.phone}
-                onChange={handleChange}
+                onChange={(e, { name, value }) =>
+                  setValue(name, value.replace(/[^0-9]/g, ""))
+                }
                 error={errors.phone}
                 requiredField
               />
@@ -1247,13 +1289,22 @@ const FormEndTransaction = ({
                 name="barcode"
                 placeholder="Nhập mã vạch"
                 {...register("barcode", {
-                  validate: (value) =>
-                    (getValues("provideInfo") === true &&
-                      !/^(^\d{13}$)|(^\d{15}$)$/.test(value) &&
-                      "Nhập mã vạch gồm 13 hoặc 15 số") ||
-                    true,
+                  validate: {
+                    checkNull: (value) =>
+                      (getValues("provideInfo") === true &&
+                        !value &&
+                        "Mã vạch không được để trống") ||
+                      true,
+                    checkValid: (value) =>
+                      (getValues("provideInfo") === true &&
+                        !/^(^\d{13}$)|(^\d{15}$)$/.test(value) &&
+                        "Nhập mã vạch gồm 13 hoặc 15 số") ||
+                      true,
+                  },
                 })}
-                onChange={handleChange}
+                onChange={(e, { name, value }) =>
+                  setValue(name, value.replace(/[^0-9]/g, ""))
+                }
                 value={watch("barcode")}
                 defaultValue={post.barcode}
                 error={errors.barcode}
@@ -1262,7 +1313,6 @@ const FormEndTransaction = ({
 
               <InputField
                 label="Số thửa"
-                type="number"
                 name="plotNumber"
                 placeholder="Nhập số thửa"
                 {...register("plotNumber", {
@@ -1273,7 +1323,9 @@ const FormEndTransaction = ({
                     true,
                 })}
                 defaultValue={post.plotNumber}
-                onChange={handleChange}
+                onChange={(e, { name, value }) =>
+                  setValue(name, value.replace(/[^0-9]/g, ""))
+                }
                 value={watch("plotNumber")}
                 error={errors.plotNumber}
                 maxLength={5}
@@ -1291,7 +1343,14 @@ const FormEndTransaction = ({
                   defaultValue={post.buildingName}
                   error={errors.buildingName}
                   requiredField
-                  {...register("buildingName")}
+                  {...register("buildingName", {
+                    validate: (value) =>
+                      (getValues("provideInfo") === true &&
+                        post.propertyType.id === 2 &&
+                        !value &&
+                        "Tên toà nhà không được để trống") ||
+                      true,
+                  })}
                 />
 
                 <InputField
@@ -1302,7 +1361,14 @@ const FormEndTransaction = ({
                   onChange={handleChange}
                   error={errors.roomNumber}
                   requiredField
-                  {...register("roomNumber")}
+                  {...register("roomNumber", {
+                    validate: (value) =>
+                      (getValues("provideInfo") === true &&
+                        post.propertyType.id === 2 &&
+                        !value &&
+                        "Số phòng không được để trống") ||
+                      true,
+                  })}
                 />
               </Form.Group>
             )}
@@ -1319,7 +1385,9 @@ const FormEndTransaction = ({
                 color: "#fff",
               }}
             >
-              Kết thúc giao dịch
+              {watch("provideInfo") === true
+                ? "Tiếp tục"
+                : "Xác nhận là đã bán"}
             </Button>
           </Grid.Column>
         </Grid>
@@ -1416,6 +1484,94 @@ const FormHistory = ({ post, historyData }) => {
     </>
   );
 };
+
+// const OtpEndTransaction = ({ transferData, setOpenOtpTransfer, toast }) => {
+//   const [transfer, setTransfer] = useState(transferData.transferData);
+//   const [counter, setCounter] = useState(transferData.tokenTime * 60);
+//   const [errorMessage, setErrorMessage] = useState(null);
+
+//   useEffect(() => {
+//     const timer =
+//       counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+//     return () => clearInterval(timer);
+//   }, [counter]);
+
+//   const handleChange = (value) => {
+//     setTransfer((prev) => ({ ...prev, token: value }));
+//   };
+
+//   const handleResentOtp = async () => {
+//     const data = await otpTransfer(transfer, setErrorMessage);
+//     console.log(data);
+//     if (data) {
+//       setTransfer(data.transferData);
+//       setCounter(data.tokenTime * 60);
+//       setTransfer((prev) => ({ ...prev, token: "" }));
+//     }
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     await handleTransfer(transfer, setErrorMessage);
+//   };
+
+//   return (
+//     <div>
+//       <Form onSubmit={handleSubmit} error={errorMessage !== null}>
+//         <Message
+//           error
+//           content={errorMessage}
+//           onDismiss={() => setErrorMessage(null)}
+//         />
+//         <Form.Field>
+//           <label>Nhập mã OTP được gửi về số điện thoại</label>
+//           <OtpInput
+//             value={transfer.token}
+//             onChange={handleChange}
+//             numInputs={6}
+//             isInputNum={true}
+//             separator={<span>&nbsp;</span>}
+//             containerStyle={{ justifyContent: "center" }}
+//             inputStyle={{ width: "3em", height: "3.5em", fontSize: "1.2em" }}
+//           />
+//         </Form.Field>
+//         <Grid>
+//           <Grid.Row>
+//             <Grid.Column textAlign="center">
+//               <CustomButton type="submit">Xác nhận</CustomButton>
+//             </Grid.Column>
+//           </Grid.Row>
+//           <Grid.Row>
+//             <Grid.Column textAlign="center">
+//               {counter > 0 ? (
+//                 <>
+//                   Gửi lại mã OTP trong{" "}
+//                   <span style={{ color: "#ff9219" }}>
+//                     {counter / 60 >= 10 ? "" : "0"}
+//                     {Math.floor(counter / 60)}:{counter % 60 >= 10 ? "" : "0"}
+//                     {counter % 60}
+//                   </span>
+//                 </>
+//               ) : (
+//                 <div
+//                   style={{
+//                     color: "#ff9219",
+//                     cursor: "pointer",
+//                     fontWeight: "bold",
+//                   }}
+//                   onClick={handleResentOtp}
+//                 >
+//                   {" "}
+//                   Gửi lại mã OTP{" "}
+//                 </div>
+//               )}
+//             </Grid.Column>
+//           </Grid.Row>
+//         </Grid>
+//       </Form>
+//     </div>
+//   );
+// };
 
 const config = {
   format: "CODE128B",

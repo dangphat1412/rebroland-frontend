@@ -17,6 +17,7 @@ const HandleContactBackRequest = ({ user, contactList }) => {
       <HandleContactBackRequestPage
         user={user}
         contactList={contactList}
+        totalResult={totalResult}
         setTotalResult={setTotalResult}
       />
     </div>

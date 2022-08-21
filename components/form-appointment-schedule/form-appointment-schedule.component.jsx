@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Button, Form, Grid } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Grid, Message } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
 import { useForm } from "react-hook-form";
 import options from "../../utils/forewarnedOptions";
@@ -30,18 +30,26 @@ const AppointmentScheduleForm = ({
     register("description", { required: "Mô tả không được để trống" });
   }, [register]);
 
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const onSubmit = async (data, e) => {
     await addAppointment(
       userCareId,
       data,
       setOpenAppointmentSchedule,
       setTimeline,
-      timeline
+      timeline,
+      setErrorMessage
     );
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)} error={errorMessage !== null}>
+      <Message
+        error
+        list={errorMessage}
+        onDismiss={() => setErrorMessage(null)}
+      />
       <Form.Group widths="equal">
         <InputField
           type="date"
@@ -88,6 +96,8 @@ const AppointmentScheduleForm = ({
         }}
         error={errors.description}
         requiredField
+        sublabel="Tối đa 200 ký tự"
+        maxLength={200}
       />
       <Grid>
         <Grid.Column textAlign="right">

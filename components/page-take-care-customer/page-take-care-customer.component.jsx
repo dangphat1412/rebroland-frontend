@@ -274,10 +274,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                           <Table.Cell>
                             <Header as="h4" image>
                               <Image
-                                src={
-                                  care.user.avatar ||
-                                  "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                                }
+                                src={care.user.avatar || "/default-avatar.png"}
                                 avatar
                                 className="user-avatar-small"
                               />
@@ -362,7 +359,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                   alt="image"
                                   src={
                                     customerDetail.user.user.avatar ||
-                                    "https://react.semantic-ui.com/images/avatar/large/jenny.jpg"
+                                    "/default-avatar.png"
                                   }
                                   className="user-avatar"
                                 />
@@ -386,23 +383,27 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                 <div>
                                   <Icon name="content" />
                                 </div>
-                                <div>
-                                  {customerDetail.user.summarize ? (
-                                    customerDetail.user.summarize
-                                  ) : (
-                                    <b>Không có mô tả nào</b>
-                                  )}
-                                  <Icon
-                                    name="pencil alternate"
-                                    color="yellow"
-                                    style={{
-                                      paddingLeft: "10px",
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={() => {
-                                      setOpenEditSummarize(true);
-                                    }}
-                                  />
+                                <div style={{ width: "95%" }}>
+                                  <pre>
+                                    {customerDetail.user.summarize ? (
+                                      <span>
+                                        {customerDetail.user.summarize}
+                                      </span>
+                                    ) : (
+                                      <b>Không có mô tả nào</b>
+                                    )}
+                                    <Icon
+                                      name="pencil alternate"
+                                      color="yellow"
+                                      style={{
+                                        paddingLeft: "10px",
+                                        cursor: "pointer",
+                                      }}
+                                      onClick={() => {
+                                        setOpenEditSummarize(true);
+                                      }}
+                                    />
+                                  </pre>
                                 </div>
                               </Header>
                             </Item.Group>
@@ -418,7 +419,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                           size="small"
                                           src={
                                             post.thumbnail ||
-                                            "https://react.semantic-ui.com/images/wireframe/image.png"
+                                            "/default-thumbnail.png"
                                           }
                                         />
 
@@ -579,6 +580,8 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
               setValue(name, value);
             }}
             defaultValue={customerDetail && customerDetail.user.summarize}
+            sublabel="Tối đa 200 ký tự"
+            maxLength={200}
           />
           <Button type="submit" fluid>
             Tạo mới
@@ -594,6 +597,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
         }}
       >
         <FormCreateCustomer
+          user={user}
           cares={cares}
           setCares={setCares}
           toast={toast}

@@ -10,6 +10,7 @@ export const FormRatingContainer = styled.div`
   img {
     height: 50px !important;
     width: 50px !important;
+    object-fit: cover;
   }
   .button {
     background: #ff9219;
