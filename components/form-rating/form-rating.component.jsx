@@ -81,6 +81,7 @@ const RatingForm = ({
         });
       }, 100);
       setRating(ratingData.starRate);
+      console.log(ratingData);
       setOpenRating(false);
       fetchRateListAPI && fetchRateListAPI(0);
     } else {

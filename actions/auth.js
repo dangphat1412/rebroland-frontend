@@ -141,7 +141,9 @@ export const forgotPasswordUser = async (user, setErrorMessage) => {
 export const otpForgotPasswordUser = async (
   user,
   setErrorMessage,
-  handleOpenLogin
+  handleOpenLogin,
+  setRemainTime,
+  remainTime
 ) => {
   try {
     const res = await axios.put(`${API_URL}/api/users/forgot-password`, user);
@@ -151,6 +153,7 @@ export const otpForgotPasswordUser = async (
     }
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
+    setRemainTime(remainTime - 1);
     setErrorMessage(messages);
     console.log(error);
   }

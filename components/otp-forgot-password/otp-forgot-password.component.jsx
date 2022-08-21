@@ -7,6 +7,7 @@ import CustomButton from "../custom-button/custom-button.component";
 const OtpForgotPassword = ({ forgotPasswordData, handleOpenLogin }) => {
   const [user, setUser] = useState(forgotPasswordData.user);
   const [counter, setCounter] = useState(forgotPasswordData.tokenTime * 60);
+  const [remainTime, setRemainTime] = useState(forgotPasswordData.remainTime);
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
@@ -25,68 +26,84 @@ const OtpForgotPassword = ({ forgotPasswordData, handleOpenLogin }) => {
       console.log(data);
       setUser(data.user);
       setCounter(data.tokenTime * 60);
+      setRemainTime(data.remainTime);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await otpForgotPasswordUser(user, setErrorMessage, handleOpenLogin);
+    await otpForgotPasswordUser(
+      user,
+      setErrorMessage,
+      handleOpenLogin,
+      setRemainTime,
+      remainTime
+    );
   };
 
   return (
     <div>
-      <Form onSubmit={handleSubmit} error={errorMessage !== null}>
-        <Message
-          error
-          content={errorMessage}
-          onDismiss={() => setErrorMessage(null)}
-        />
-        <Form.Field>
-          <label>Nhập mã OTP được gửi về số điện thoại</label>
-          <OtpInput
-            value={user.token}
-            onChange={handleChange}
-            numInputs={6}
-            isInputNum={true}
-            separator={<span>&nbsp;</span>}
-            containerStyle={{ justifyContent: "center" }}
-            inputStyle={{ width: "3em", height: "3.5em", fontSize: "1.2em" }}
+      {remainTime && remainTime > 0 ? (
+        <Form onSubmit={handleSubmit} error={errorMessage !== null}>
+          <Message
+            error
+            content={errorMessage}
+            onDismiss={() => setErrorMessage(null)}
           />
-        </Form.Field>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column textAlign="center">
-              <CustomButton type="submit">Xác nhận</CustomButton>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column textAlign="center">
-              {counter > 0 ? (
-                <>
-                  Gửi lại mã OTP trong{" "}
-                  <span style={{ color: "#ff9219" }}>
-                    {counter / 60 >= 10 ? "" : "0"}
-                    {Math.floor(counter / 60)}:{counter % 60 >= 10 ? "" : "0"}
-                    {counter % 60}
-                  </span>
-                </>
-              ) : (
-                <div
-                  style={{
-                    color: "#ff9219",
-                    cursor: "pointer",
-                    fontWeight: "bold",
-                  }}
-                  onClick={handleResentOtp}
-                >
-                  {" "}
-                  Gửi lại mã OTP{" "}
-                </div>
-              )}
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Form>
+          <Form.Field>
+            <label>Nhập mã OTP được gửi về số điện thoại</label>
+            <OtpInput
+              value={user.token}
+              onChange={handleChange}
+              numInputs={6}
+              isInputNum={true}
+              separator={<span>&nbsp;</span>}
+              containerStyle={{ justifyContent: "center" }}
+              inputStyle={{ width: "3em", height: "3.5em", fontSize: "1.2em" }}
+            />
+          </Form.Field>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column textAlign="center">
+                <CustomButton type="submit">Xác nhận</CustomButton>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column textAlign="center">
+                Số lần nhập còn lại: {remainTime}
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column textAlign="center">
+                {counter > 0 ? (
+                  <>
+                    Gửi lại mã OTP trong{" "}
+                    <span style={{ color: "#ff9219" }}>
+                      {counter / 60 >= 10 ? "" : "0"}
+                      {Math.floor(counter / 60)}:{counter % 60 >= 10 ? "" : "0"}
+                      {counter % 60}
+                    </span>
+                  </>
+                ) : (
+                  <div
+                    style={{
+                      color: "#ff9219",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                    }}
+                    onClick={handleResentOtp}
+                  >
+                    {" "}
+                    Gửi lại mã OTP{" "}
+                  </div>
+                )}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Form>
+      ) : (
+        <>Bạn nhập sai</>
+      )}
     </div>
   );
 };

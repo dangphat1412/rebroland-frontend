@@ -105,7 +105,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
         user.currentRole === 1 &&
         !protectedAdminRoutes.includes(ctx.pathname)
       )
-        redirectUser(ctx, "/admin/quan-ly-bai-dang");
+        redirectUser(ctx, "/admin/quan-ly-nguoi-dung");
     } catch (error) {
       destroyCookie(ctx, "token");
       redirectUser(ctx, "/");
@@ -121,4 +121,12 @@ const protectedAdminRoutes = [
   "/admin/quan-ly-nguoi-dung",
   "/admin/quan-ly-tai-chinh",
   "/admin/quan-ly-rut-tien",
+];
+
+const protectedGuestRoutes = [
+  "/",
+  "/admin/quan-ly-bao-cao",
+  "/bat-dong-san",
+  "/danh-sach-nha-moi-gioi",
+  "/lien-he",
 ];
