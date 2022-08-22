@@ -43,8 +43,6 @@ const CreateDerivativePost = ({ user, post }) => {
       buildingName: post.buildingName,
       owner: post.owner,
       ownerPhone: post.ownerPhone,
-      // parentBarcode: undefined,
-      // parentPlotNumber: undefined,
       directionId: post.direction && post.direction.id,
       frontispiece: post.frontispiece,
       additionalDescription: post.additionalDescription,
@@ -63,15 +61,16 @@ const CreateDerivativePost = ({ user, post }) => {
   const [images, setImages] = useState([]);
 
   const onSubmit = async (data, e) => {
-    let mediaUrl;
-    if (images.length !== 0) {
-      mediaUrl = await uploadMultipleMedia(images);
-      if (!mediaUrl) {
-        console.log("ERROR UPLOAD");
-        return;
-      }
-    }
-    await createDerivativePost(post.postId, data, mediaUrl);
+    // let mediaUrl;
+    // if (images.length !== 0) {
+    //   mediaUrl = await uploadMultipleMedia(images);
+    //   if (!mediaUrl) {
+    //     console.log("ERROR UPLOAD");
+    //     return;
+    //   }
+    // }
+    // await createDerivativePost(post.postId, data, mediaUrl);
+    console.log(data);
   };
   return (
     <CreateDerivativePostContainer>
@@ -102,7 +101,11 @@ const CreateDerivativePost = ({ user, post }) => {
                 control={control}
                 post={post}
               />
-              <ImageInformationForm images={images} setImages={setImages} />
+              <ImageInformationForm
+                images={images}
+                setImages={setImages}
+                post={post}
+              />
               <ContactInformationForm
                 register={register}
                 setValue={setValue}

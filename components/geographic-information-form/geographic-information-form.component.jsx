@@ -22,11 +22,19 @@ const GeographicInformationForm = ({
     fields: coordinatesFields,
     append: coordinatesAppend,
     remove: coordinatesRemove,
-  } = useFieldArray({ control, name: "coordinates", rules: { minLength: 4 } });
+  } = useFieldArray({ control, name: "coordinates" });
 
   const [position, setPosition] = useState([
     { lat: 21.01286, lng: 105.526657 },
   ]);
+
+  const [options, setOptions] = useState({
+    strokeColor: "#FF0000",
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: "#FF0000",
+    fillOpacity: 0.35,
+  });
 
   const handleCheck = () => {
     setPosition(
@@ -41,20 +49,43 @@ const GeographicInformationForm = ({
 
   const handleChange = (e, { name, value }) => {
     if (name === "province") {
-      setValue(name, e.target.innerText);
-      fetchDistrictAPI(value);
-    } else if (name === "district") {
-      setValue(name, e.target.innerText);
-      fetchWardsAPI(value);
-    } else if (name === "ward") {
-      setValue(name, e.target.innerText);
-    } else {
-      setValue(name, value);
+      const provinceId = dataProvinces.provinces.filter(
+        (province) => province.value === value
+      )[0].key;
+      fetchDistrictAPI(provinceId);
     }
+    if (name === "district") {
+      const districtId = dataProvinces.districts.filter(
+        (district) => district.value === value
+      )[0].key;
+      fetchWardsAPI(districtId);
+    }
+    setValue(name, value);
   };
 
   useEffect(() => {
     fetchProvinceAPI();
+    if (post) {
+      const fetchProvinces = async () => {
+        let provinceId;
+
+        if (post.province) {
+          const provincesData = await getProvinces();
+          provinceId = provincesData.filter(
+            (province) => province.name === post.province
+          )[0].code;
+          fetchDistrictAPI(provinceId);
+        }
+        if (post.district) {
+          const districtsData = await getDistricts(provinceId);
+          const districtId = districtsData.districts.filter(
+            (district) => district.name === post.district
+          )[0].code;
+          fetchWardsAPI(districtId);
+        }
+      };
+      fetchProvinces();
+    }
   }, []);
 
   const [dataProvinces, setDataProvinces] = useState({
@@ -71,7 +102,7 @@ const GeographicInformationForm = ({
         return {
           key: province.code,
           text: province.name,
-          value: province.code,
+          value: province.name,
         };
       }),
     }));
@@ -85,7 +116,7 @@ const GeographicInformationForm = ({
         return {
           key: district.code,
           text: district.name,
-          value: district.code,
+          value: district.name,
         };
       }),
     }));
@@ -93,8 +124,8 @@ const GeographicInformationForm = ({
       ...prev,
       wards: [],
     }));
-    setValue("district", undefined);
-    setValue("ward", undefined);
+    setValue("district", post ? post.district : null);
+    setValue("ward", post ? post.ward : null);
   };
 
   const fetchWardsAPI = async (id) => {
@@ -102,99 +133,75 @@ const GeographicInformationForm = ({
     setDataProvinces((prev) => ({
       ...prev,
       wards: wardsData.wards.map((w) => {
-        return { key: w.code, text: w.name, value: w.code };
+        return { key: w.code, text: w.name, value: w.name };
       }),
     }));
-    setValue("ward", undefined);
+    setValue("ward", post ? post.ward : null);
   };
 
   return (
     <FormGeographicInformationContainer size="large">
       <Header as="h1">Thông tin địa lý</Header>
       <Form.Group widths={2}>
-        {!post ? (
-          <InputField
-            {...register("province", {
-              required: "Tỉnh/Thành phố không được để trống",
-            })}
-            fieldType="select"
-            label="Tỉnh/Thành phố"
-            name="province"
-            placeholder="Chọn Tỉnh/Thành phố"
-            options={dataProvinces.provinces}
-            onChange={handleChange}
-            error={errors.province}
-            // clearable
-            requiredField
-          />
-        ) : (
-          <InputField
-            label="Tỉnh/Thành phố"
-            value={getValues("province")}
-            requiredField
-            disabled
-          />
-        )}
-        {!post ? (
-          <InputField
-            {...register("district", {
-              required: "Quận/Huyện không được để trống",
-            })}
-            fieldType="select"
-            label="Quận/Huyện"
-            name="district"
-            placeholder="Chọn Quận/Huyện"
-            options={dataProvinces.districts}
-            onChange={handleChange}
-            error={errors.district}
-            requiredField
-          />
-        ) : (
-          <InputField
-            label="Quận/Huyện"
-            value={getValues("district")}
-            requiredField
-            disabled
-          />
-        )}
+        <InputField
+          {...register("province", {
+            required: "Tỉnh/Thành phố không được để trống",
+          })}
+          fieldType="select"
+          label="Tỉnh/Thành phố"
+          name="province"
+          placeholder="Chọn Tỉnh/Thành phố"
+          options={dataProvinces.provinces}
+          onChange={handleChange}
+          error={errors.province}
+          defaultValue={getValues("province")}
+          requiredField
+        />
+        <InputField
+          {...register("district", {
+            required: "Quận/Huyện không được để trống",
+          })}
+          fieldType="select"
+          label="Quận/Huyện"
+          name="district"
+          placeholder="Chọn Quận/Huyện"
+          options={dataProvinces.districts}
+          onChange={handleChange}
+          defaultValue={getValues("district")}
+          error={errors.district}
+          requiredField
+        />
       </Form.Group>
       <Form.Group widths={2}>
-        {!post ? (
-          <InputField
-            {...register("ward", { required: "Xã/Phường không được để trống" })}
-            fieldType="select"
-            label="Phường/Xã"
-            name="ward"
-            placeholder="Chọn Phường/Xã"
-            options={dataProvinces.wards}
-            onChange={handleChange}
-            error={errors.ward}
-            requiredField
-          />
-        ) : (
-          <InputField
-            label="Phường/Xã"
-            value={getValues("ward")}
-            requiredField
-            disabled
-          />
-        )}
-        {!post ? (
-          <InputField
-            {...register("address")}
-            label="Địa chỉ"
-            name="address"
-            placeholder="Nhập địa chỉ"
-            onChange={handleChange}
-          />
-        ) : (
-          <InputField label="Địa chỉ" value={getValues("address")} disabled />
-        )}
+        <InputField
+          {...register("ward", { required: "Xã/Phường không được để trống" })}
+          fieldType="select"
+          label="Phường/Xã"
+          name="ward"
+          placeholder="Chọn Phường/Xã"
+          options={dataProvinces.wards}
+          onChange={handleChange}
+          defaultValue={getValues("ward")}
+          error={errors.ward}
+          requiredField
+        />
+
+        <InputField
+          {...register("address")}
+          label="Địa chỉ"
+          name="address"
+          placeholder="Nhập địa chỉ"
+          onChange={handleChange}
+          defaultValue={getValues("address")}
+          onFocus={(e) => {
+            setValue("address", getValues("address"));
+          }}
+        />
       </Form.Group>
       {/* missing loading */}
       <Form.Field>
         <label>Vị trí trên bản đồ</label>
-        <Map position={position} />
+        <Map position={position} options={options} />
         <Grid>
           <Grid.Row>
             <Grid.Column>
@@ -223,6 +230,13 @@ const GeographicInformationForm = ({
                           e.target.value
                         );
                       }}
+                      value={getValues(`coordinates[${index}].latitude`)}
+                      onFocus={(e) => {
+                        setValue(
+                          `coordinates[${index}].latitude`,
+                          getValues(`coordinates[${index}].latitude`)
+                        );
+                      }}
                       error={
                         errors.coordinates && errors.coordinates[index].latitude
                       }
@@ -248,8 +262,13 @@ const GeographicInformationForm = ({
                           `coordinates[${index}].longitude`,
                           e.target.value
                         );
-                        // getValues("coordinates")[index].longitude =
-                        //   e.target.value;
+                      }}
+                      value={getValues(`coordinates[${index}].longitude`)}
+                      onFocus={(e) => {
+                        setValue(
+                          `coordinates[${index}].longitude`,
+                          getValues(`coordinates[${index}].longitude`)
+                        );
                       }}
                       error={
                         errors.coordinates &&

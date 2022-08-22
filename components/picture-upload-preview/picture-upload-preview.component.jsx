@@ -7,8 +7,14 @@ import {
   RemoveIcon,
 } from "./picture-upload-preview.styles";
 
-const PictureUploadPreview = ({ images, setImages }) => {
-  const [imagesPreview, setImagesPreview] = useState([]);
+const PictureUploadPreview = ({ images, setImages, post }) => {
+  const [imagesPreview, setImagesPreview] = useState(
+    (post &&
+      post.images.map((image) => {
+        return image.image;
+      })) ||
+      []
+  );
   const mediaRef = useRef(null);
 
   const handleChange = (e) => {

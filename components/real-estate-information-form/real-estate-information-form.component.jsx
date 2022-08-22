@@ -109,6 +109,9 @@ const RealEstateInformationForm = ({
           placeholder="Chọn loại bất động sản"
           options={propertyTypes}
           onChange={handleChange}
+          onFocus={(e) => {
+            setValue("propertyTypeId", e.target.value);
+          }}
           error={errors.propertyTypeId}
           requiredField
         />
@@ -116,6 +119,10 @@ const RealEstateInformationForm = ({
         <InputField
           label="Loại bất động sản"
           value={post.propertyType.name}
+          onFocus={(e) => {
+            setValue("propertyTypeId", getValues("propertyTypeId"));
+          }}
+          disabled
           requiredField
         />
       )}
@@ -143,6 +150,9 @@ const RealEstateInformationForm = ({
           maxLength={7}
           onChange={(e, { name, value }) => {
             (/\d*\.?\d*/.test(value) || !value) && setValue(name, value);
+          }}
+          onFocus={(e) => {
+            setValue("area", e.target.value);
           }}
           value={watch("area")}
           defaultValue={getValues("area")}
@@ -176,6 +186,9 @@ const RealEstateInformationForm = ({
           defaultValue={""}
           onChange={(e, { name, value }) => {
             setValue(name, value.replace(/[^0-9]/g, ""));
+          }}
+          onFocus={(e) => {
+            setValue("price", getValues("price"));
           }}
           value={
             watch("price") && new Intl.NumberFormat().format(watch("price"))
@@ -227,6 +240,9 @@ const RealEstateInformationForm = ({
               onBlur={(e) => {
                 !e.target.value && setValue(e.target.name, 0);
               }}
+              onFocus={(e) => {
+                setValue("numberOfBedroom", getValues("numberOfBedroom"));
+              }}
               value={watch("numberOfBedroom")}
               defaultValue={getValues("numberOfBedroom") || 0}
             />
@@ -248,6 +264,9 @@ const RealEstateInformationForm = ({
               placeholder="Nhập số phòng tắm, vệ sinh"
               onChange={(e, { name, value }) => {
                 setValue(name, value.replace(/[^0-9]/g, ""));
+              }}
+              onFocus={(e) => {
+                setValue("numberOfBathroom", getValues("numberOfBathroom"));
               }}
               onBlur={(e) => {
                 !e.target.value && setValue(e.target.name, 0);
@@ -274,6 +293,9 @@ const RealEstateInformationForm = ({
                 onChange={(e, { name, value }) => {
                   setValue(name, value.replace(/[^0-9]/g, ""));
                 }}
+                onFocus={(e) => {
+                  setValue("numberOfFloor", getValues("numberOfFloor"));
+                }}
                 onBlur={(e) => {
                   !e.target.value && setValue(e.target.name, 0);
                 }}
@@ -298,6 +320,9 @@ const RealEstateInformationForm = ({
                 placeholder="Nhập tầng"
                 onChange={(e, { name, value }) => {
                   setValue(name, value.replace(/[^0-9]/g, ""));
+                }}
+                onFocus={(e) => {
+                  setValue("floorNumber", getValues("floorNumber"));
                 }}
                 onBlur={(e) => {
                   !e.target.value && setValue(e.target.name, 0);
@@ -359,6 +384,9 @@ const RealEstateInformationForm = ({
                             placeholder="Nhập mã vạch"
                             error={errors.barcode}
                             onChange={handleChange}
+                            onFocus={(e) => {
+                              setValue("barcode", getValues("barcode"));
+                            }}
                             value={watch("barcode")}
                             defaultValue={getValues("barcode")}
                           />
@@ -389,6 +417,9 @@ const RealEstateInformationForm = ({
                             onChange={(e, { name, value }) =>
                               setValue(name, value.replace(/[^0-9]/g, ""))
                             }
+                            onFocus={(e) => {
+                              setValue("plotNumber", getValues("plotNumber"));
+                            }}
                             value={watch("plotNumber")}
                             defaultValue={getValues("plotNumber")}
                           />
@@ -417,6 +448,9 @@ const RealEstateInformationForm = ({
                             placeholder="Nhập mã vạch"
                             error={errors.barcode}
                             onChange={handleChange}
+                            onFocus={(e) => {
+                              setValue("barcode", getValues("barcode"));
+                            }}
                             value={watch("barcode")}
                             defaultValue={getValues("barcode")}
                           />
@@ -447,6 +481,9 @@ const RealEstateInformationForm = ({
                             onChange={(e, { name, value }) =>
                               setValue(name, value.replace(/[^0-9]/g, ""))
                             }
+                            onFocus={(e) => {
+                              setValue("plotNumber", getValues("plotNumber"));
+                            }}
                             value={watch("plotNumber")}
                             defaultValue={getValues("plotNumber")}
                           />
@@ -468,6 +505,12 @@ const RealEstateInformationForm = ({
                             onChange={handleChange}
                             value={watch("buildingName")}
                             error={errors.buildingName}
+                            onFocus={(e) => {
+                              setValue(
+                                "buildingName",
+                                getValues("buildingName")
+                              );
+                            }}
                             defaultValue={getValues("buildingName")}
                             maxLength={50}
                           />
@@ -488,6 +531,9 @@ const RealEstateInformationForm = ({
                             name="roomNumber"
                             placeholder="Nhập tên phòng"
                             onChange={handleChange}
+                            onFocus={(e) => {
+                              setValue("roomNumber", getValues("roomNumber"));
+                            }}
                             value={watch("roomNumber")}
                             error={errors.roomNumber}
                             defaultValue={getValues("roomNumber")}
@@ -519,6 +565,9 @@ const RealEstateInformationForm = ({
                         name="owner"
                         placeholder="Nhập tên chủ hộ"
                         onChange={handleChange}
+                        onFocus={(e) => {
+                          setValue("owner", getValues("owner"));
+                        }}
                         value={watch("owner")}
                         error={errors.owner}
                         defaultValue={getValues("owner")}
@@ -547,6 +596,9 @@ const RealEstateInformationForm = ({
                         onChange={(e, { name, value }) =>
                           setValue(name, value.replace(/[^0-9]/g, ""))
                         }
+                        onFocus={(e) => {
+                          setValue("ownerPhone", getValues("ownerPhone"));
+                        }}
                         value={watch("ownerPhone")}
                         defaultValue={getValues("ownerPhone")}
                       />
@@ -594,6 +646,9 @@ const RealEstateInformationForm = ({
           onChange={(e, { name, value }) => {
             setValue(name, value ? (value >= 0 ? Math.abs(value) : 0) : null);
           }}
+          onFocus={(e) => {
+            setValue("frontispiece", getValues("frontispiece"));
+          }}
           value={watch("frontispiece")}
           defaultValue={getValues("frontispiece")}
         >
@@ -610,6 +665,9 @@ const RealEstateInformationForm = ({
         name="additionalDescription"
         placeholder="Nhập mô tả bổ sung"
         onChange={handleChange}
+        onFocus={(e) => {
+          setValue("additionalDescription", getValues("additionalDescription"));
+        }}
         defaultValue={getValues("additionalDescription")}
         maxLength={200}
         sublabel="Tối đa 200 kí tự"

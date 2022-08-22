@@ -23,6 +23,9 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
           placeholder="Nhập tên liên hệ"
           defaultValue={getValues("contactName")}
           onChange={handleChange}
+          onFocus={(e) => {
+            setValue("contactName", getValues("contactName"));
+          }}
           error={errors.contactName}
           requiredField
         />
@@ -39,6 +42,9 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
           placeholder="Nhập số điện thoại"
           defaultValue={getValues("contactPhone")}
           onChange={handleChange}
+          onFocus={(e) => {
+            setValue("contactPhone", getValues("contactPhone"));
+          }}
           error={errors.contactPhone}
           requiredField
         />
@@ -56,6 +62,9 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
           name="contactEmail"
           placeholder="Nhập Email"
           onChange={handleChange}
+          onFocus={(e) => {
+            setValue("contactEmail", getValues("contactEmail"));
+          }}
           error={errors.contactEmail}
           defaultValue={getValues("contactEmail")}
         />
@@ -65,6 +74,9 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
           name="contactAddress"
           placeholder="Nhập địa chỉ"
           onChange={handleChange}
+          onFocus={(e) => {
+            setValue("contactAddress", getValues("contactAddress"));
+          }}
           defaultValue={getValues("contactAddress")}
         />
       </Form.Group>

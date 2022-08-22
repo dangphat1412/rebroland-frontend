@@ -18,6 +18,9 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
         name="title"
         placeholder="Nhập tiêu đề"
         onChange={handleChange}
+        onFocus={(e) => {
+          setValue("title", e.target.value);
+        }}
         defaultValue={getValues("title")}
         error={errors.title}
         requiredField
@@ -30,6 +33,9 @@ const PostInformationForm = ({ register, errors, setValue, getValues }) => {
         rows={5}
         label="Mô tả"
         name="description"
+        onFocus={(e) => {
+          setValue("description", e.target.value);
+        }}
         placeholder="Nhập mô tả chung về bất động sản của bạn"
         onChange={handleChange}
         defaultValue={getValues("description")}

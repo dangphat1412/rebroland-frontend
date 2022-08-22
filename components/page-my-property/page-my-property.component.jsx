@@ -71,7 +71,6 @@ const MyPropertyPage = ({ user, postsData, setTotalResult }) => {
   const fetchAPI = async (propertyType, status, sortValue, pageNo) => {
     setLoading(true);
     const posts = await getPostsByUser(propertyType, status, sortValue, pageNo);
-    console.log(posts);
     setData(posts);
     setTotalResult(posts.totalResult);
     setLoading(false);
@@ -598,6 +597,7 @@ const RealEstateItem = ({
                   setOpenEditPost(true);
                   setEditedLoading(true);
                   const postData = await getPostById(post.postId);
+                  console.log(postData);
                   setEditedPost(postData.post);
                   setEditedLoading(false);
                 }}

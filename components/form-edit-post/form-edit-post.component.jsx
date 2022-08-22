@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Dimmer, Form, Grid, Loader, Message } from "semantic-ui-react";
 import { editPost } from "../../actions/post";
@@ -54,12 +54,16 @@ const EditPostForm = ({
       district: editedPost.district,
       ward: editedPost.ward,
       address: editedPost.address,
-      coordinates: editedPost.coordinates.map((coordinate) => {
-        return {
-          longitude: coordinate.longitude,
-          latitude: coordinate.latitude,
-        };
-      }),
+      coordinates: editedPost.coordinates
+        .sort(function (a, b) {
+          return a.id - b.id;
+        })
+        .map((coordinate) => {
+          return {
+            longitude: coordinate.longitude,
+            latitude: coordinate.latitude,
+          };
+        }),
       images: editedPost.images.map((image) => {
         return image.image;
       }),
@@ -83,8 +87,8 @@ const EditPostForm = ({
         return;
       }
     }
-    console.log(mediaUrl);
     await editPost(data, mediaUrl, setErrorMessage);
+    console.log(data);
   };
 
   return (
@@ -115,12 +119,16 @@ const EditPostForm = ({
               <GeographicInformationForm
                 register={register}
                 errors={errors}
+                control={control}
                 getValues={getValues}
                 setValue={setValue}
-                control={control}
                 post={editedPost}
               />
-              <ImageInformationForm images={images} setImages={setImages} />
+              <ImageInformationForm
+                images={images}
+                setImages={setImages}
+                post={editedPost}
+              />
               <ContactInformationForm
                 register={register}
                 setValue={setValue}
