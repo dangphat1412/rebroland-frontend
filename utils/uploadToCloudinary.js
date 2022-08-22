@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const uploadMedia = async (media) => {
   try {
+    if (media && media.image) return media.image;
     const form = new FormData();
     form.append("file", media);
     form.append("upload_preset", "social_media");

@@ -36,11 +36,12 @@ const BrokerRegisterPage = ({ priceList }) => {
           <Segment>
             <Header as="h1">Tài khoản nhà môi giới</Header>
             <div>
-              Tài khoản Pro là tài khoản cao cấp dành cho nhà môi giới chuyên
-              nghiệp, cung cấp tính năng đăng và quản lý tin nâng cao giúp bạn
-              tăng hiệu suất và tiết kiệm thời gian đăng tin. Tài khoản Pro cũng
-              cung cấp cho bạn các thông tin về thị trường, báo cáo phân tích
-              hiệu quả tin đăng.
+              Tài khoản nhà môi giới là tài khoản dành cho nhà môi giới chuyên
+              nghiệp, cung cấp tính năng đăng bài phái sinh và làm giàu thông
+              tin như vậy có lượng khách hàng tìm tới nhiều hơn và tăng hiệu
+              suất làm việc hơn. Tài khoản nhà môi giới cũng cung cấp cho bạn
+              các thông tin về khách hàng, giúp bạn chăm sóc khách hàng của mình
+              dễ dàng hơn, trực quan hơn.
             </div>
             <br />
             <Form onSubmit={onSubmit} error={errorMessage !== null}>

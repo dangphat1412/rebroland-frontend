@@ -60,8 +60,7 @@ export const createPost = async (post, images, setErrorMessage) => {
 
 export const editPost = async (post, mediaUrl, setErrorMessage) => {
   try {
-    const data = mediaUrl ? { ...post, images: mediaUrl } : { ...post };
-    console.log(data);
+    const data = { ...post, images: mediaUrl };
     const res = await Axios.put(`/${post.postId}`, data);
     res.status === 200 && Router.reload();
   } catch (error) {

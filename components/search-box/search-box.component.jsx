@@ -14,7 +14,7 @@ import { FormSearchContainer, HomeSearchContainer } from "./search-box.styles";
 
 const SearchBox = ({ searchParams }) => {
   const router = useRouter();
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit, setValue, getValues, watch } = useForm({
     defaultValues: {
       key: (searchParams && searchParams.key) || undefined,
       propertyTypes: (searchParams && searchParams.propertyTypes) || undefined,
@@ -112,7 +112,11 @@ const SearchBox = ({ searchParams }) => {
           value: province.name,
         };
       }),
+      districts: [],
+      wards: [],
     }));
+    setValue("district", undefined);
+    setValue("ward", undefined);
   };
 
   const fetchDistrictAPI = async (id) => {
@@ -126,7 +130,9 @@ const SearchBox = ({ searchParams }) => {
           value: district.name,
         };
       }),
+      wards: [],
     }));
+    setValue("ward", undefined);
   };
 
   const fetchWardsAPI = async (id) => {
@@ -141,44 +147,63 @@ const SearchBox = ({ searchParams }) => {
 
   const handleChange = (e, { name, value }) => {
     if (name === "province") {
-      const provinceId = dataProvinces.provinces.filter(
-        (province) => province.value === value
-      )[0].key;
-      fetchDistrictAPI(provinceId);
+      setValue("district", undefined);
+      setValue("ward", undefined);
+      if (value) {
+        const provinceId = dataProvinces.provinces.filter(
+          (province) => province.value === value
+        )[0].key;
+        fetchDistrictAPI(provinceId);
+      } else {
+        setDataProvinces((prev) => ({
+          ...prev,
+          districts: [],
+          wards: [],
+        }));
+      }
     }
     if (name === "district") {
-      const districtId = dataProvinces.districts.filter(
-        (district) => district.value === value
-      )[0].key;
-      fetchWardsAPI(districtId);
+      setValue("ward", undefined);
+      if (value) {
+        const districtId = dataProvinces.districts.filter(
+          (district) => district.value === value
+        )[0].key;
+        fetchWardsAPI(districtId);
+      } else {
+        setDataProvinces((prev) => ({
+          ...prev,
+          wards: [],
+        }));
+      }
     }
-    setValue(name, value);
+    setValue(name, value || undefined);
   };
 
   const onSubmit = async (data, e) => {
-    if (router.pathname === "/" || router.pathname === "/bat-dong-san") {
-      router.push(
-        {
-          pathname: "/bat-dong-san",
-          query: { data: JSON.stringify(data) },
-        },
-        "/bat-dong-san",
-        { scroll: true }
-      );
-    }
-    if (
-      router.pathname === "/nha-moi-gioi" ||
-      router.pathname === "/nha-moi-gioi/bat-dong-san"
-    ) {
-      router.push(
-        {
-          pathname: "/nha-moi-gioi/bat-dong-san",
-          query: { data: JSON.stringify(data) },
-        },
-        "/nha-moi-gioi/bat-dong-san",
-        { scroll: true }
-      );
-    }
+    // if (router.pathname === "/" || router.pathname === "/bat-dong-san") {
+    //   router.push(
+    //     {
+    //       pathname: "/bat-dong-san",
+    //       query: { data: JSON.stringify(data) },
+    //     },
+    //     "/bat-dong-san",
+    //     { scroll: true }
+    //   );
+    // }
+    // if (
+    //   router.pathname === "/nha-moi-gioi" ||
+    //   router.pathname === "/nha-moi-gioi/bat-dong-san"
+    // ) {
+    //   router.push(
+    //     {
+    //       pathname: "/nha-moi-gioi/bat-dong-san",
+    //       query: { data: JSON.stringify(data) },
+    //     },
+    //     "/nha-moi-gioi/bat-dong-san",
+    //     { scroll: true }
+    //   );
+    // }
+    console.log(data);
   };
 
   if (router.pathname === "/" || router.pathname === "/nha-moi-gioi")
@@ -188,7 +213,6 @@ const SearchBox = ({ searchParams }) => {
           <Form.Group widths="equal">
             <InputField
               fieldType="select"
-              // label="Loại bất động sản"
               name="propertyType"
               placeholder="Loại bất động sản"
               options={propertyTypes}
@@ -199,7 +223,6 @@ const SearchBox = ({ searchParams }) => {
               width={3}
             />
             <InputField
-              // label="Tìm kiếm từ khoá"
               name="key"
               placeholder="Tìm kiếm"
               onChange={handleChange}
@@ -212,27 +235,30 @@ const SearchBox = ({ searchParams }) => {
           <Form.Group widths="equal">
             <InputField
               fieldType="select"
-              // label="Tỉnh/Thành phố"
               name="province"
               placeholder="Tỉnh/Thành phố"
               options={dataProvinces.provinces}
               onChange={handleChange}
+              value={watch("province")}
+              clearable
             />
             <InputField
               fieldType="select"
-              // label="Quận/Huyện"
+              clearable
               name="district"
               placeholder="Quận/Huyện"
               options={dataProvinces.districts}
               onChange={handleChange}
+              value={watch("district")}
             />
             <InputField
               fieldType="select"
-              // label="Phường/Xã"
+              clearable
               name="ward"
               placeholder="Phường/Xã"
               options={dataProvinces.wards}
               onChange={handleChange}
+              value={watch("ward")}
             />
             <InputField
               fieldType="dropdown"
@@ -367,7 +393,7 @@ const SearchBox = ({ searchParams }) => {
             />
             <InputField
               fieldType="dropdown"
-              // label="Số phòng ngủ"
+              clearable
               options={numberOfBedrooms}
               name="numberOfBedrooms"
               placeholder="Chọn số phòng ngủ"

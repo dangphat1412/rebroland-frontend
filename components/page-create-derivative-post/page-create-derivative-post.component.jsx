@@ -50,7 +50,23 @@ const CreateDerivativePost = ({ user, post }) => {
       district: post.district,
       ward: post.ward,
       address: post.address,
-      coordinates: [],
+      coordinates: post.coordinates
+        .sort(function (a, b) {
+          return a.id - b.id;
+        })
+        .map((coordinate) => {
+          return {
+            longitude: coordinate.longitude,
+            latitude: coordinate.latitude,
+          };
+        }),
+      images: post.images
+        .sort(function (a, b) {
+          return a.id - b.id;
+        })
+        .map((image) => {
+          return image.image;
+        }),
       contactName: user.fullName,
       contactPhone: user.phone,
       contactEmail: user.email,
@@ -61,15 +77,15 @@ const CreateDerivativePost = ({ user, post }) => {
   const [images, setImages] = useState([]);
 
   const onSubmit = async (data, e) => {
-    // let mediaUrl;
-    // if (images.length !== 0) {
-    //   mediaUrl = await uploadMultipleMedia(images);
-    //   if (!mediaUrl) {
-    //     console.log("ERROR UPLOAD");
-    //     return;
-    //   }
-    // }
-    // await createDerivativePost(post.postId, data, mediaUrl);
+    let mediaUrl;
+    if (images.length !== 0) {
+      mediaUrl = await uploadMultipleMedia(images);
+      if (!mediaUrl) {
+        console.log("ERROR UPLOAD");
+        return;
+      }
+    }
+    await createDerivativePost(post.postId, data, mediaUrl);
     console.log(data);
   };
   return (

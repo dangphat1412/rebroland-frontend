@@ -19,7 +19,9 @@ export const ImageContainer = styled.div`
   flex: 0 0 auto !important;
   padding-left: 0px !important;
   padding-right: 0px !important;
-  & img {
+  width: 240px !important;
+  height: 240px !important;
+  & .ui.medium.image {
     width: 240px !important;
     height: 240px !important;
     padding: 9px;

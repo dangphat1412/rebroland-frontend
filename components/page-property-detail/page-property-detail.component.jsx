@@ -103,12 +103,16 @@ const PagePropertyDetail = ({
 
   useEffect(() => {
     setItems(
-      post.images.map((item) => {
-        return {
-          original: item.image,
-          thumbnail: item.image,
-        };
-      })
+      post.images
+        .sort(function (a, b) {
+          return a.id - b.id;
+        })
+        .map((item) => {
+          return {
+            original: item.image,
+            thumbnail: item.image,
+          };
+        })
     );
   }, [post.images]);
 

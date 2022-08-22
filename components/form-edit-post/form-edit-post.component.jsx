@@ -64,9 +64,13 @@ const EditPostForm = ({
             latitude: coordinate.latitude,
           };
         }),
-      images: editedPost.images.map((image) => {
-        return image.image;
-      }),
+      images: editedPost.images
+        .sort(function (a, b) {
+          return a.id - b.id;
+        })
+        .map((image) => {
+          return image.image;
+        }),
       contactName: editedPost.contactName,
       contactPhone: editedPost.contactPhone,
       contactEmail: editedPost.contactEmail,
@@ -74,7 +78,7 @@ const EditPostForm = ({
     },
   });
 
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState(editedPost.images || []);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (data, e) => {
@@ -88,7 +92,6 @@ const EditPostForm = ({
       }
     }
     await editPost(data, mediaUrl, setErrorMessage);
-    console.log(data);
   };
 
   return (

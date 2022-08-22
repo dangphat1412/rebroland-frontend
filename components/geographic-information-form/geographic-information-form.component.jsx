@@ -230,7 +230,7 @@ const GeographicInformationForm = ({
                           e.target.value
                         );
                       }}
-                      value={getValues(`coordinates[${index}].latitude`)}
+                      defaultValue={getValues(`coordinates[${index}].latitude`)}
                       onFocus={(e) => {
                         setValue(
                           `coordinates[${index}].latitude`,
@@ -263,7 +263,9 @@ const GeographicInformationForm = ({
                           e.target.value
                         );
                       }}
-                      value={getValues(`coordinates[${index}].longitude`)}
+                      defaultValue={getValues(
+                        `coordinates[${index}].longitude`
+                      )}
                       onFocus={(e) => {
                         setValue(
                           `coordinates[${index}].longitude`,
