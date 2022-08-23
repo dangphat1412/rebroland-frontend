@@ -48,6 +48,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openViewPost, setOpenViewPost] = useState(false);
   const [sortValue, setSortValue] = useState(0);
+  const [roleValue, setRoleValue] = useState(0);
   const [keyword, setKeyword] = useState(null);
   const [loading, setLoading] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
@@ -66,21 +67,27 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
 
   const onSubmit = async (data, e) => {
     setSortValue(0);
+    setRoleValue(0);
     setKeyword(data.key);
-    fetchAPI(data.key, 0, 0);
+    fetchAPI(data.key, 0, 0, 0);
   };
 
   const handlePaginationChange = (e, { activePage }) =>
-    fetchAPI(keyword, sortValue, activePage - 1);
+    fetchAPI(keyword, roleValue, sortValue, activePage - 1);
 
   const handleFilterOption = (e, { value }) => {
     setSortValue(value);
-    fetchAPI(keyword, value, 0);
+    fetchAPI(keyword, roleValue, value, 0);
   };
 
-  const fetchAPI = async (keyword, sortValue, pageNo) => {
+  const handleRoleFilterOption = (e, { value }) => {
+    setSortValue(value);
+    fetchAPI(keyword, value, sortValue, 0);
+  };
+
+  const fetchAPI = async (keyword, roleValue, sortValue, pageNo) => {
     setLoading(true);
-    const posts = await searchUsers(keyword, sortValue, pageNo);
+    const posts = await searchUsers(keyword, roleValue, sortValue, pageNo);
     setData(posts);
     setListUser(posts.list);
     setTotalResult(posts.totalResult);
@@ -113,7 +120,30 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
               options={[
                 {
                   key: 0,
-                  text: "Tất cả",
+                  text: "Tất cả người dùng",
+                  value: 0,
+                },
+                {
+                  key: 1,
+                  text: "Người dùng thường",
+                  value: 1,
+                },
+                {
+                  key: 2,
+                  text: "Nhà môi giới",
+                  value: 2,
+                },
+              ]}
+              className="role-filter"
+              value={sortValue}
+              onChange={handleRoleFilterOption}
+            />
+            <Dropdown
+              selection
+              options={[
+                {
+                  key: 0,
+                  text: "Tất cả trạng thái",
                   value: 0,
                 },
                 {
@@ -411,10 +441,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                         <Item>
                           <Item.Image
                             size="medium"
-                            src={
-                              post.thumbnail ||
-                              "https://www.phoenixpropertymaster.com/wp-content/uploads/2021/12/Real-Estate.jpg"
-                            }
+                            src={post.thumbnail || "/default-thumbnail.png"}
                             label={
                               post.originalPost && post.originalPost !== 0
                                 ? {

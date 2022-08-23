@@ -25,6 +25,9 @@ export const UserManagementPageContainer = styled.div`
     object-fit: cover;
     margin-right: 20px;
   }
+  .role-filter {
+    margin-right: 20px;
+  }
   
 `;
 

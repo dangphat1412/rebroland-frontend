@@ -230,7 +230,18 @@ const ContactBackRequestItem = ({
                 src={contact.userRequest.avatar || "/default-avatar.png"}
                 style={{ height: "85px", width: "85px", objectFit: "cover" }}
               />
-              <Card.Header>{contact.userRequest.fullName}</Card.Header>
+              <Link href={`/chi-tiet-nguoi-dung/${contact.userRequest.id}`}>
+                <Card.Header
+                  as="a"
+                  style={{
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                    color: "black",
+                  }}
+                >
+                  {contact.userRequest.fullName}
+                </Card.Header>
+              </Link>
               <Card.Meta textAlign="left">
                 <Icon name="mobile alternate" />
                 {contact.userRequest.phone}

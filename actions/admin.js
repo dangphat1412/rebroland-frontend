@@ -21,11 +21,12 @@ export const getAllUsers = async () => {
   }
 };
 
-export const searchUsers = async (keyword, sortValue, pageNo) => {
+export const searchUsers = async (keyword, roleValue, sortValue, pageNo) => {
   try {
     const res = await Axios.get(`/list-users`, {
       params: {
         keyword: keyword,
+        roleValue: roleValue,
         sortValue: sortValue,
         pageNo: pageNo,
       },

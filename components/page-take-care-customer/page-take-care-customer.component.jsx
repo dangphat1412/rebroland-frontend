@@ -44,6 +44,7 @@ import InputField from "../input-field/input-field.component";
 import { useForm } from "react-hook-form";
 import RatingForm from "../form-rating/form-rating.component";
 import options from "../../utils/takeCareOptions";
+import ReportUserForm from "../form-report-user/form-report-user.component";
 
 const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
   const {
@@ -68,6 +69,8 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
   const [selectedTimeline, setSelectedTimeline] = useState(null);
   const [openEditSummarize, setOpenEditSummarize] = useState(false);
   const [openRating, setOpenRating] = useState(false);
+  const [openReport, setOpenReport] = useState(false);
+
   const [rating, setRating] = useState(
     selectedCustomer && selectedCustomer.user.avgRate
   );
@@ -95,6 +98,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
     setLoading(true);
     const data = await getCustomerDetail(careId);
     setCustomerDetail(data);
+    console.log(data);
     setTimeline(data.timeline);
     setLoading(false);
   };
@@ -368,7 +372,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                     {customerDetail.user.user.fullName}
                                   </Item.Header>
                                   <Item.Description>
-                                    <Icon name="phone" />{" "}
+                                    <Icon name="phone" />
                                     {customerDetail.user.user.phone}
                                   </Item.Description>
                                   <Item.Description>
@@ -378,6 +382,18 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                       : "Đang cập nhật"}
                                   </Item.Description>
                                 </Item.Content>
+                                <Icon
+                                  color="orange"
+                                  name="warning sign"
+                                  size="large"
+                                  style={{
+                                    paddingLeft: "0px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setOpenReport(true);
+                                  }}
+                                />
                               </Item>
                               <Header as="h5" style={{ display: "flex" }}>
                                 <div>
@@ -636,6 +652,21 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
           timeline={timeline}
           userCareId={selectedCustomerIndex}
           setOpenNote={setOpenNote}
+        />
+      </ModalItem>
+
+      <ModalItem
+        header="Báo cáo người dùng"
+        onOpen={openReport}
+        onClose={() => {
+          setOpenReport(false);
+        }}
+      >
+        <ReportUserForm
+          user={user}
+          toast={toast}
+          setReportOpen={setOpenReport}
+          userId={customerDetail && customerDetail.user.userCaredId}
         />
       </ModalItem>
 
