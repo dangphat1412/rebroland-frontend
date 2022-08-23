@@ -180,29 +180,29 @@ const SearchBox = ({ searchParams }) => {
   };
 
   const onSubmit = async (data, e) => {
-    // if (router.pathname === "/" || router.pathname === "/bat-dong-san") {
-    //   router.push(
-    //     {
-    //       pathname: "/bat-dong-san",
-    //       query: { data: JSON.stringify(data) },
-    //     },
-    //     "/bat-dong-san",
-    //     { scroll: true }
-    //   );
-    // }
-    // if (
-    //   router.pathname === "/nha-moi-gioi" ||
-    //   router.pathname === "/nha-moi-gioi/bat-dong-san"
-    // ) {
-    //   router.push(
-    //     {
-    //       pathname: "/nha-moi-gioi/bat-dong-san",
-    //       query: { data: JSON.stringify(data) },
-    //     },
-    //     "/nha-moi-gioi/bat-dong-san",
-    //     { scroll: true }
-    //   );
-    // }
+    if (router.pathname === "/" || router.pathname === "/bat-dong-san") {
+      router.push(
+        {
+          pathname: "/bat-dong-san",
+          query: { data: JSON.stringify(data) },
+        },
+        "/bat-dong-san",
+        { scroll: true }
+      );
+    }
+    if (
+      router.pathname === "/nha-moi-gioi" ||
+      router.pathname === "/nha-moi-gioi/bat-dong-san"
+    ) {
+      router.push(
+        {
+          pathname: "/nha-moi-gioi/bat-dong-san",
+          query: { data: JSON.stringify(data) },
+        },
+        "/nha-moi-gioi/bat-dong-san",
+        { scroll: true }
+      );
+    }
     console.log(data);
   };
 

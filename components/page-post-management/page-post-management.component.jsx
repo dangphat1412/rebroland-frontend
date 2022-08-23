@@ -205,7 +205,7 @@ const PostManagementPage = ({ postsData, setTotalResult }) => {
                             size="medium"
                             src={
                               (post && post.thumbnail) ||
-                              "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
+                              "/default-thumbnail.png"
                             }
                             label={
                               post.originalPost && post.originalPost !== 0

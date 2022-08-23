@@ -31,7 +31,7 @@ import {
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
 import ModalItem from "../modal-item/modal-item.component";
 
-const CashoutManagementPage = ({ withdrawData }) => {
+const CashoutManagementPage = ({ withdrawData, setTotalResult }) => {
   const [directWithdraw, setDirectWithdraw] = useState(withdrawData.direct);
   const [transferWithdraw, setTransferWithdraw] = useState(
     withdrawData.transfer
@@ -45,18 +45,20 @@ const CashoutManagementPage = ({ withdrawData }) => {
   const fetchDirectWithdrawAPI = async () => {
     const data = await getDirectWithdraw();
     setDirectWithdraw(data);
+    setTotalResult(data.totalResult);
     console.log(data);
   };
 
   const fetchBankWithdrawAPI = async () => {
     const data = await getTransferWithdraw();
     setTransferWithdraw(data);
+    setTotalResult(data.totalResult);
     console.log(data);
   };
 
   return (
     <CashoutManagementPageContainer>
-      <SemanticToastContainer position="bottom-right" maxToasts={3} />
+      <SemanticToastContainer position="bottom-right" maxToasts={1} />
       <Tab
         onTabChange={handleOnTabChange}
         menu={{ secondary: true, pointing: true }}
@@ -67,6 +69,7 @@ const CashoutManagementPage = ({ withdrawData }) => {
               <Tab.Pane attached={false} as="div">
                 <DirectWithdrawal
                   directWithdraw={directWithdraw}
+                  setTotalResult={setTotalResult}
                   toast={toast}
                 />
               </Tab.Pane>
@@ -78,6 +81,7 @@ const CashoutManagementPage = ({ withdrawData }) => {
               <Tab.Pane attached={false} as="div">
                 <BankTransfer
                   transferWithdraw={transferWithdraw}
+                  setTotalResult={setTotalResult}
                   toast={toast}
                 />
               </Tab.Pane>
@@ -89,7 +93,7 @@ const CashoutManagementPage = ({ withdrawData }) => {
   );
 };
 
-const DirectWithdrawal = ({ directWithdraw, toast }) => {
+const DirectWithdrawal = ({ directWithdraw, setTotalResult, toast }) => {
   const {
     register,
     handleSubmit,
@@ -348,6 +352,10 @@ const DirectWithdrawal = ({ directWithdraw, toast }) => {
         </Grid.Row>
       </Grid>
       <Confirm
+        cancelButton="Huỷ bỏ"
+        confirmButton="Xác nhận"
+        header="Xác nhận rút tiền"
+        content="Xác nhận khách hàng rút tiền"
         open={openAccepted}
         onCancel={() => {
           setOpenAccepted(false);
@@ -443,7 +451,7 @@ const DeniedForm = ({ toast, setOpenDenied, detail, data, setData }) => {
   );
 };
 
-const BankTransfer = ({ transferWithdraw, toast }) => {
+const BankTransfer = ({ transferWithdraw, toast, setTotalResult }) => {
   const {
     register,
     handleSubmit,

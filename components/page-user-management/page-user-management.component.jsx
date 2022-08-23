@@ -214,10 +214,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                     <Table.Cell singleLine textAlign="center">
                       <Header as="h4" image>
                         <Image
-                          src={
-                            user.avatar ||
-                            "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                          }
+                          src={user.avatar || "/default-avatar.png"}
                           avatar
                           className="user-avatar-small"
                         />
