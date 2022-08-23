@@ -33,6 +33,12 @@ const RealEstateInformationForm = ({
   const handleOnTabChange = (e, { activeIndex }) => {
     setValue("certification", activeIndex === 0 ? true : false);
     resetCertification();
+    console.log(getValues("barcode"));
+    console.log(getValues("plotNumber"));
+    console.log(getValues("buildingName"));
+    console.log(getValues("roomNumber"));
+    console.log(getValues("owner"));
+    console.log(getValues("ownerPhone"));
   };
 
   const resetCertification = () => {
@@ -392,14 +398,14 @@ const RealEstateInformationForm = ({
                           />
                           <InputField
                             {...register("plotNumber", {
-                              min: {
-                                value: 1,
-                                message: "Nhập số thửa hợp lệ",
-                              },
-                              max: {
-                                value: 99999,
-                                message: "Số thửa tối đa 99999",
-                              },
+                              // min: {
+                              //   value: 1,
+                              //   message: "Nhập số thửa hợp lệ",
+                              // },
+                              // max: {
+                              //   value: 99999,
+                              //   message: "Số thửa tối đa 99999",
+                              // },
                               validate: (value) =>
                                 (!value &&
                                   (getValues("barcode") ||
@@ -649,6 +655,7 @@ const RealEstateInformationForm = ({
           onFocus={(e) => {
             setValue("frontispiece", getValues("frontispiece"));
           }}
+          error={errors.frontispiece}
           value={watch("frontispiece")}
           defaultValue={getValues("frontispiece")}
         >

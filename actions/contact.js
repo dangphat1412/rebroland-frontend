@@ -84,7 +84,7 @@ export const searchUserContacts = async (params, pageNo) => {
     return res.data;
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
-    // setErrorMessage(messages);
+    setErrorMessage(messages);
     console.log(error);
   }
 };

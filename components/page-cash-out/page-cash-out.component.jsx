@@ -270,11 +270,9 @@ const CashOutPage = ({ user }) => {
       <Confirm
         open={openConfirm}
         header="Thông báo"
+        confirmButton="Xác nhận"
+        cancelButton={null}
         content={content}
-        onCancel={() => {
-          setOpenConfirm(false);
-          router.reload();
-        }}
         onConfirm={() => {
           setOpenConfirm(false);
           router.reload();

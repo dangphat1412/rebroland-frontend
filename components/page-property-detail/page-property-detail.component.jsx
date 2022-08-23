@@ -805,8 +805,7 @@ const PagePropertyDetail = ({
                               <Image
                                 avatar
                                 src={
-                                  broker.user.avatar ||
-                                  "https://react.semantic-ui.com/images/avatar/small/rachel.png"
+                                  broker.user.avatar || "/default-avatar.png"
                                 }
                                 alt="avatar"
                               />
@@ -817,7 +816,7 @@ const PagePropertyDetail = ({
                                 <List.Description>
                                   <Rating
                                     icon="star"
-                                    defaultRating={broker.user.avgRate}
+                                    defaultRating={broker.user.avgRate.toFixed()}
                                     maxRating={5}
                                     disabled
                                   />
@@ -878,6 +877,8 @@ const PagePropertyDetail = ({
       <Confirm
         open={openDeletePost}
         header="Xác nhận xoá bài viết"
+        confirmButton="Xác nhận"
+        cancelButton="Huỷ bỏ"
         content="Bạn có chắc chắn muốn xoá bài viết không?"
         onCancel={() => {
           setOpenDeletePost(false);
@@ -893,6 +894,8 @@ const PagePropertyDetail = ({
       <Confirm
         open={openReupDerivativePost}
         content="Xác nhận đăng lại bài phái sinh"
+        confirmButton="Xác nhận"
+        cancelButton="Huỷ bỏ"
         onCancel={() => {
           setOpenReupDerivativePost(false);
         }}
@@ -1078,16 +1081,16 @@ const FormRateBroker = ({ user, brokers, setOpenRate, toast }) => {
               <List.Item key={index}>
                 <Image
                   avatar
-                  src={
-                    broker.user.avatar ||
-                    "https://react.semantic-ui.com/images/avatar/small/helen.jpg"
-                  }
+                  src={broker.user.avatar || "/default-avatar.png"}
                 />
                 <List.Content style={{ width: "600px" }}>
                   <List.Header style={{ fontFamily: "Tahoma" }}>
                     {broker.user.fullName}
                   </List.Header>
-                  <b style={{ marginRight: "5px" }}> {broker.user.avgRate}</b>
+                  <b style={{ marginRight: "5px" }}>
+                    {" "}
+                    {broker.user.avgRate.toFixed()}
+                  </b>
                   <Rating
                     maxRating={5}
                     defaultRating={broker.user.avgRate.toFixed()}
@@ -1193,22 +1196,21 @@ const FormEndTransaction = ({
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (data, e) => {
-    // const status = await finishTransaction(
-    //   post.postId,
-    //   {
-    //     ...data,
-    //     typeId: post.propertyTypeId,
-    //   },
-    //   setErrorMessage
-    // );
-    // if (status === 200) {
-    //   setEndTransactionOpen(false);
+    const status = await finishTransaction(
+      post.postId,
+      {
+        ...data,
+        typeId: post.propertyTypeId,
+      },
+      setErrorMessage
+    );
+    if (status === 200) {
+      setEndTransactionOpen(false);
 
-    //   if (brokers.length > 0) {
-    //     setOpenRate(true);
-    //   }
-    // }
-    console.log(data);
+      if (brokers.length > 0) {
+        setOpenRate(true);
+      }
+    }
   };
 
   return (

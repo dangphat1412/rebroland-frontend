@@ -31,6 +31,7 @@ const ChangePhonePage = ({ user }) => {
   const onSubmit = async (data, e) => {
     const dataPhone = await otpChangePhone(data, setErrorMessage);
     if (dataPhone) {
+      console.log(dataPhone);
       setPhoneData(dataPhone);
       setOpenOtpChangePhone(true);
     }

@@ -78,6 +78,8 @@ const EditPostForm = ({
     },
   });
 
+  console.log(editedPost);
+
   const [images, setImages] = useState(editedPost.images || []);
   const [errorMessage, setErrorMessage] = useState(null);
 

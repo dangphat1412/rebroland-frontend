@@ -38,7 +38,7 @@ const ContactRequestPage = ({ user, contactList, setTotalResult }) => {
   const [contacts, setContacts] = useState(contactList.contacts);
   const [data, setData] = useState(contactList);
 
-  const [params, setParams] = useState(null);
+  const [params, setParams] = useState({});
 
   const [loading, setLoading] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -126,7 +126,7 @@ const ContactRequestPage = ({ user, contactList, setTotalResult }) => {
                 )}
               </Card.Content>
             </Card>
-            {data.totalPages > 0 && (
+            {data.totalPages > 1 && (
               <PaginationContainer>
                 <Pagination
                   activePage={data.pageNo}

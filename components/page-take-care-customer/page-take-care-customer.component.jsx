@@ -542,7 +542,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                           setOpenDeleteTimeline(true);
                                         }}
                                       />
-                                      <p>{tl.description}</p>
+                                      <pre>{tl.description}</pre>
                                     </VerticalTimelineElement>
                                   );
                                 })}

@@ -62,7 +62,7 @@ export const editPost = async (post, mediaUrl, setErrorMessage) => {
   try {
     const data = { ...post, images: mediaUrl };
     const res = await Axios.put(`/${post.postId}`, data);
-    res.status === 200 && Router.reload();
+    res.status === 201 && Router.reload();
   } catch (error) {
     const messages = convertToListMessages(error.response.data);
     setErrorMessage(messages);
