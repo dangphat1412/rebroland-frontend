@@ -28,25 +28,18 @@ const ReportManagementPage = ({ postReport, setTotalResult }) => {
     if (activeIndex === 0) {
       const data = await searchPostReport({}, 0, 0);
       setReportPostData(data);
+      setTotalResult(data.totalResult);
     }
     if (activeIndex === 1) {
       const data = await searchUserReport({}, 0, 0);
       setReportUserData(data);
+      setTotalResult(data.totalResult);
     }
     setLoading(false);
   };
 
   return (
     <ReportManagementPageContainer>
-      {showGallaryView === true && (
-        <DisplayGallaryPictures
-          images={images}
-          setShowGallaryView={setShowGallaryView}
-        />
-      )}
-      <Dimmer active={loading} inverted>
-        <Loader>Đang tải dữ liệu</Loader>
-      </Dimmer>
       <Tab
         onTabChange={handleOnTabChange}
         menu={{ secondary: true, pointing: true }}
@@ -79,6 +72,17 @@ const ReportManagementPage = ({ postReport, setTotalResult }) => {
           },
         ]}
       />
+
+      <Dimmer active={loading} inverted>
+        <Loader>Đang tải dữ liệu</Loader>
+      </Dimmer>
+
+      {showGallaryView === true && (
+        <DisplayGallaryPictures
+          images={images}
+          setShowGallaryView={setShowGallaryView}
+        />
+      )}
     </ReportManagementPageContainer>
   );
 };

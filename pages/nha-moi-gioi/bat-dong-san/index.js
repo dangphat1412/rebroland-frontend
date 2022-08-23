@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
-import RealEstatePage from "../../components/page-real-estate/page-real-estate.component";
-import SubHeader from "../../components/sub-header/sub-header.component";
-import API_URL from "../../utils/apiUrl";
+import RealEstatePage from "../../../components/page-real-estate/page-real-estate.component";
+import SubHeader from "../../../components/sub-header/sub-header.component";
+import API_URL from "../../../utils/apiUrl";
 import { parseCookies } from "nookies";
 
 const RealEstateForBroker = ({

@@ -11,9 +11,16 @@ const ListPropertiesRecommend = ({
   user,
   followingPosts,
   setFollowingPosts,
-  outstandingData,
 }) => {
-  const [outstandingList, setOutstandingList] = useState(outstandingData || []);
+  const [outstandingList, setOutstandingList] = useState([]);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      const data = await getOutStandingPost();
+      setOutstandingList(data);
+    };
+    fetchAPI();
+  }, []);
 
   return (
     <ListPropertiesRecommendContainer>

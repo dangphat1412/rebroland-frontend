@@ -153,7 +153,7 @@ const DirectWithdrawal = ({ directWithdraw, setTotalResult, toast }) => {
     console.log(data);
     setDirectWithdrawData(data);
     setData(data.lists);
-    // setTotalResult(posts.totalResult);
+    setTotalResult(data.totalResult);
     setLoading(false);
   };
 
@@ -513,7 +513,7 @@ const BankTransfer = ({ transferWithdraw, toast, setTotalResult }) => {
     console.log(data);
     setTransferWithdrawData(data);
     setData(data.lists);
-    // setTotalResult(posts.totalResult);
+    setTotalResult(data.totalResult);
     setLoading(false);
   };
 

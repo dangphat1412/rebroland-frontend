@@ -51,21 +51,25 @@ export const FormPropertyDetailContainer = styled.div`
     margin-top: 0px !important;
   }
 
-  .image-gallery-slide-wrapper.bottom {
-    height: 500px;
+  .original-images {
+    height: 100px !important;
   }
-  .image-gallery-slides,
-  .image-gallery-swipe,
-  .image-gallery-slide {
-    height: 500px;
-    background: rgba(0, 0, 0, 0.2);
-  }
-  .image-gallery-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    overflow: hidden;
-  }
+
+  // .image-gallery-slide-wrapper.bottom {
+  //   height: 500px;
+  // }
+  // .image-gallery-slides,
+  // .image-gallery-swipe,
+  // .image-gallery-slide {
+  //   height: 500px;
+  //   background: rgba(0, 0, 0, 0.2);
+  // }
+  // .image-gallery-image {
+  //   width: 100%;
+  //   height: 100%;
+  //   object-fit: contain;
+  //   overflow: hidden;
+  // }
 `;
 
 export const ShotInformationContainer = styled(Statistic.Group)`

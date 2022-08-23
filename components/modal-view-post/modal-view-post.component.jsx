@@ -7,12 +7,14 @@ import {
   Grid,
   Header,
   Item,
+  Label,
   Loader,
   Modal,
   Statistic,
 } from "semantic-ui-react";
 import calculatePrice from "../../utils/calculatePrice";
 import Map from "../map/map.component";
+import { ModalViewPostContainer } from "./modal-view-post.styles";
 
 const ViewPostModal = ({ openViewPost, setOpenViewPost, post, loading }) => {
   return (
@@ -25,7 +27,9 @@ const ViewPostModal = ({ openViewPost, setOpenViewPost, post, loading }) => {
     >
       {post ? (
         <>
-          <Modal.Header>Chi tiết bài đăng</Modal.Header>
+          <Modal.Header style={{ fontFamily: "Tahoma" }}>
+            Chi tiết bài đăng
+          </Modal.Header>
           <Modal.Content>
             <DetailPost post={post} />
           </Modal.Content>
@@ -54,29 +58,32 @@ const DetailPost = ({ post }) => {
   }, [post.images]);
 
   return (
-    <>
-      <Header as="h3">{post.title}</Header>
-      <Breadcrumb
-        icon="right angle"
-        sections={[
-          {
-            key: "province",
-            content: `${post.province}`,
-            link: true,
-          },
-          {
-            key: "district",
-            content: `${post.district}`,
-            link: true,
-          },
-          { key: "ward", content: `${post.ward}`, link: true },
-          {
-            key: "address",
-            content: `${post.address}`,
-            active: true,
-          },
-        ]}
-      />
+    <ModalViewPostContainer>
+      <Header as="h3">
+        {post.title}{" "}
+        {post.originalPost && (
+          <Label as="a" color="red" tag>
+            BÀI PHÁI SINH
+          </Label>
+        )}
+      </Header>
+      <Breadcrumb>
+        <Breadcrumb.Section content="province">
+          {post.province}
+        </Breadcrumb.Section>
+        <Breadcrumb.Divider icon="right angle" />
+        <Breadcrumb.Section content="district">
+          {post.district}
+        </Breadcrumb.Section>
+        <Breadcrumb.Divider icon="right angle" />
+        <Breadcrumb.Section content="ward">{post.ward}</Breadcrumb.Section>
+        {post.address && (
+          <>
+            <Breadcrumb.Divider icon="right angle" />
+            <Breadcrumb.Section active>{post.address}</Breadcrumb.Section>
+          </>
+        )}
+      </Breadcrumb>
       <Divider />
       <Grid>
         <Grid.Row>
@@ -102,15 +109,17 @@ const DetailPost = ({ post }) => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Header as="h2">Hình ảnh</Header>
-      {post.images && (
-        <ReactImageGallery
-          items={items}
-          showIndex={true}
-          disableKeyDown={false}
-          originalHeight={200}
-          thumbnailPosition="left"
-        />
+      {post.images && post.images.length > 0 && (
+        <>
+          <Header as="h2">Hình ảnh</Header>
+          <ReactImageGallery
+            items={items}
+            showIndex={true}
+            disableKeyDown={false}
+            originalHeight={200}
+            originalWidth={200}
+          />
+        </>
       )}
       <Header as="h2">Thông tin mô tả</Header>
       <div>
@@ -152,28 +161,28 @@ const DetailPost = ({ post }) => {
               description={post.direction.name}
             />
           )}
-          {post.numberOfBedroom && (
+          {post.numberOfBedroom > 0 && (
             <PropertyItem
               iconClass="kikor kiko-bedroom"
               title="Phòng ngủ"
               description={post.numberOfBedroom}
             />
           )}
-          {post.numberOfBathroom && (
+          {post.numberOfBathroom > 0 && (
             <PropertyItem
               iconClass="kikor kiko-bathroom"
               title="Phòng tắm"
               description={post.numberOfBathroom}
             />
           )}
-          {post.numberOfFloor && (
+          {post.numberOfFloor > 0 && (
             <PropertyItem
               iconClass="kikor kiko-stairs"
               title="Số tầng"
               description={post.numberOfFloor}
             />
           )}
-          {post.frontispiece && (
+          {post.frontispiece > 0 && (
             <PropertyItem
               iconClass="kikor kiko-real-estate-auction"
               title="Mặt tiền"
@@ -182,19 +191,30 @@ const DetailPost = ({ post }) => {
           )}
         </Grid.Row>
       </Grid>
+      {post.additionalDescription && (
+        <Grid.Row>
+          <div style={{ fontSize: "16px" }}>
+            <b>Mô tả bổ sung: </b> {post.additionalDescription}
+          </div>
+        </Grid.Row>
+      )}
 
       <Header as="h2">Xem trên bản đồ</Header>
       {post.coordinates && (
         <Map
-          position={post.coordinates.map((coordinate) => {
-            return {
-              lat: coordinate.latitude,
-              lng: coordinate.longitude,
-            };
-          })}
+          position={post.coordinates
+            .sort(function (a, b) {
+              return a.id - b.id;
+            })
+            .map((coordinate) => {
+              return {
+                lat: coordinate.latitude,
+                lng: coordinate.longitude,
+              };
+            })}
         />
       )}
-    </>
+    </ModalViewPostContainer>
   );
 };
 

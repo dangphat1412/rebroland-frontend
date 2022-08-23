@@ -91,16 +91,16 @@ const ReportPostPage = ({
   };
 
   const handleAcceptReportPost = async () => {
-    // const status = await acceptReportPost(selectedReportIndex);
-    // if (status === 200) {
-    //   const list = [...reportPosts];
-    //   const index = list.findIndex(
-    //     (report) => report.reportId === selectedReportIndex
-    //   );
-    //   list[index].reportStatus = 2;
-    //   setReportPosts(list);
-    // }
-    // setOpenConfirmAccept(false);
+    const status = await acceptReportPost(selectedReportIndex);
+    if (status === 200) {
+      const list = [...reportPosts];
+      const index = list.findIndex(
+        (report) => report.reportId === selectedReportIndex
+      );
+      list[index].reportStatus = 2;
+      setReportPosts(list);
+    }
+    setOpenConfirmAccept(false);
   };
 
   const handleRejectReportPost = async () => {
@@ -124,8 +124,6 @@ const ReportPostPage = ({
           <Dimmer active={loading} inverted>
             <Loader>Đang tải dữ liệu</Loader>
           </Dimmer>
-        </Grid.Row>
-        <Grid.Row>
           <Grid.Column width={4}>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <InputField
@@ -223,7 +221,7 @@ const ReportPostPage = ({
                               size="medium"
                               src={
                                 (post && post.thumbnail) ||
-                                "https://thodiahanoi.com/wp-content/uploads/2021/01/ban-nha-tho-cu-nha-mat-dat-ha-noi-52.jpg"
+                                "/default-thumbnail.png"
                               }
                               label={
                                 post.originalPost && post.originalPost !== 0
@@ -402,7 +400,10 @@ const ReportPostPage = ({
 
       <Confirm
         open={openConfirmCancel}
-        content={`Xác nhận BỎ QUA báo cáo ${selectedReportIndex}`}
+        cancelButton="Huỷ bỏ"
+        confirmButton="Xác nhận"
+        header="Xác nhận huỷ bỏ"
+        content={`Xác nhận BỎ QUA báo cáo bài đăng`}
         onCancel={() => {
           setOpenConfirmCancel(false);
         }}
@@ -457,7 +458,7 @@ const AcceptForm = ({
         (report) => report.reportId === selectedReportIndex
       );
       list[index].reportStatus = 2;
-      list[index].comment = commentData.content;
+      list[index].comment = commentData.comment;
       setReportPosts(list);
       setTimeout(() => {
         toast({
@@ -562,12 +563,13 @@ const DetailPostReportModal = ({
                         <Table.Cell singleLine textAlign="center">
                           <Header as="h4" image>
                             <Image
-                              src={
-                                detail.user.avatar ||
-                                "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                              }
+                              src={detail.user.avatar || "/default-avatar.png"}
                               avatar
-                              className="user-avatar-small"
+                              style={{
+                                height: "40px",
+                                width: "40px",
+                                objectFit: "cover",
+                              }}
                             />
                             <Header.Content>{detail.user.phone}</Header.Content>
                           </Header>
@@ -575,7 +577,14 @@ const DetailPostReportModal = ({
                         <Table.Cell singleLine textAlign="center">
                           {detail.user.fullName}
                         </Table.Cell>
-                        <Table.Cell>{detail.content}</Table.Cell>
+                        <Table.Cell>
+                          {detail.content &&
+                            detail.content
+                              .split(";")
+                              .map((content) => (
+                                <p style={{ marginBottom: "1px" }}>{content}</p>
+                              ))}
+                        </Table.Cell>
                         <Table.Cell singleLine textAlign="center">
                           {detail.startDate}
                         </Table.Cell>

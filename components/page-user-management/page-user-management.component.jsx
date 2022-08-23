@@ -302,10 +302,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
               <Grid.Row>
                 <Grid.Column width={2}>
                   <Image
-                    src={
-                      userDetail.avatar ||
-                      "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                    }
+                    src={userDetail.avatar || "/default-avatar.png"}
                     size="medium"
                     circular
                     className="user-avatar-big"

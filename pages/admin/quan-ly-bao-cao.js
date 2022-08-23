@@ -8,14 +8,16 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 
 const ReportManagement = ({ reportData }) => {
-  const [totalResult, setTotalResult] = useState(reportData.totalResult);
+  const [totalResult, setTotalResult] = useState(
+    reportData && reportData.listPost && reportData.listPost.totalResult
+  );
   return (
     <div style={{ display: "flex" }}>
       <AdminPanel />
       <div style={{ width: "83%" }}>
         <SubHeaderAdmin
           title="Quản lý báo cáo"
-          subtitle={`Có tất cả ${totalResult} bài đăng bị báo cáo`}
+          subtitle={`Có tất cả ${totalResult} báo cáo`}
         />
         <div className="main" style={{ padding: "30px" }}>
           <ReportManagementPage

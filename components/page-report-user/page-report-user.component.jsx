@@ -29,6 +29,7 @@ import {
   ReportUserPageContainer,
 } from "./page-report-user.styles";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
+import ViewUserModal from "../modal-view-user/modal-view-user.component";
 
 const ReportUserPage = ({
   reportData,
@@ -62,6 +63,8 @@ const ReportUserPage = ({
   const [openViewDetailReport, setOpenViewDetailReport] = useState(false);
   const [reportUserLoading, setReportUserLoading] = useState(false);
   const [reportUserDetail, setReportUserDetail] = useState(null);
+
+  const [detailUser, setDetailUser] = useState(null);
 
   const handleRejectReportPost = async () => {
     const status = await cancelReportUser(selectedReportIndex);
@@ -107,8 +110,6 @@ const ReportUserPage = ({
           <Dimmer active={loading} inverted>
             <Loader>Đang tải dữ liệu</Loader>
           </Dimmer>
-        </Grid.Row>
-        <Grid.Row>
           <Grid.Column width={4}>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <InputField
@@ -204,12 +205,13 @@ const ReportUserPage = ({
                       <Table.Cell>
                         <Header as="h4" image>
                           <Image
-                            src={
-                              user.user.avatar ||
-                              "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                            }
+                            src={user.user.avatar || "/default-avatar.png"}
                             avatar
-                            className="user-avatar-small"
+                            style={{
+                              height: "40px",
+                              width: "40px",
+                              objectFit: "cover",
+                            }}
                           />
                           <Header.Content>{user.user.phone}</Header.Content>
                         </Header>
@@ -226,11 +228,12 @@ const ReportUserPage = ({
                           style={{ cursor: "pointer" }}
                           onClick={async (e) => {
                             e.stopPropagation();
-                            // setOpenViewPost(true);
-                            // setLoading(true);
+                            setOpenViewUser(true);
+                            setLoading(true);
+                            setDetailUser(user.user);
                             // const detailPost = await getDetailPost(post.postId);
                             // setDetailPost(detailPost);
-                            // setLoading(false);
+                            setLoading(false);
                           }}
                         />
                       </Table.Cell>
@@ -313,12 +316,20 @@ const ReportUserPage = ({
         </>
       )}
 
-      {/* <ViewPostModal
-        loading={loading}
-        openViewPost={openViewPost}
-        setOpenViewPost={setOpenViewPost}
-        post={detailPost}
-      /> */}
+      <ModalItem
+        header="Chi tiết người dùng"
+        onOpen={openViewUser}
+        onClose={() => {
+          setOpenViewUser(false);
+        }}
+      >
+        <ViewUserModal
+          loading={loading}
+          // openViewPost={openViewPost}
+          // setOpenViewPost={setOpenViewPost}
+          user={detailUser}
+        />
+      </ModalItem>
 
       <DetailPostReportModal
         openViewDetailReport={openViewDetailReport}
@@ -342,7 +353,10 @@ const ReportUserPage = ({
 
       <Confirm
         open={openConfirmCancel}
-        content={`Xác nhận BỎ QUA báo cáo ${selectedReportIndex}`}
+        cancelButton="Huỷ bỏ"
+        confirmButton="Xác nhận"
+        header="Xác nhận huỷ bỏ"
+        content={`Xác nhận BỎ QUA báo cáo người dùng ${selectedReportIndex}`}
         onCancel={() => {
           setOpenConfirmCancel(false);
         }}
@@ -391,9 +405,12 @@ const AcceptForm = ({
     formState: { errors },
   } = useForm({});
 
+  const [submitLoading, setSubmitLoading] = useState(false);
+
   const onSubmit = async (commentData, e) => {
-    console.log(commentData);
+    setSubmitLoading(true);
     const status = await acceptReportUser(selectedReportIndex, commentData);
+    setSubmitLoading(false);
     if (status === 200) {
       const list = [...reportUsers];
       const index = list.findIndex(
@@ -444,7 +461,13 @@ const AcceptForm = ({
               >
                 Huỷ bỏ
               </Button>
-              <Button type="submit">Xác nhận</Button>
+              <Button
+                type="submit"
+                loading={submitLoading}
+                disabled={submitLoading}
+              >
+                Xác nhận
+              </Button>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -505,12 +528,13 @@ const DetailPostReportModal = ({
                         <Table.Cell singleLine textAlign="center">
                           <Header as="h4" image>
                             <Image
-                              src={
-                                detail.user.avatar ||
-                                "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                              }
+                              src={detail.user.avatar || "/default-avatar.png"}
                               avatar
-                              className="user-avatar-small"
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                objectFit: "cover",
+                              }}
                             />
                             <Header.Content>{detail.user.phone}</Header.Content>
                           </Header>
@@ -518,7 +542,14 @@ const DetailPostReportModal = ({
                         <Table.Cell singleLine textAlign="center">
                           {detail.user.fullName}
                         </Table.Cell>
-                        <Table.Cell>{detail.content}</Table.Cell>
+                        <Table.Cell>
+                          {detail.content &&
+                            detail.content
+                              .split(";")
+                              .map((content) => (
+                                <p style={{ marginBottom: "1px" }}>{content}</p>
+                              ))}
+                        </Table.Cell>
                         <Table.Cell singleLine textAlign="center">
                           {detail.startDate}
                         </Table.Cell>

@@ -530,8 +530,7 @@ const PagePropertyDetail = ({
                       items={items}
                       showIndex={true}
                       disableKeyDown={false}
-                      originalHeight={200}
-                      originalWidth={200}
+                      srcSet={""}
                     />
                   </>
                 )}

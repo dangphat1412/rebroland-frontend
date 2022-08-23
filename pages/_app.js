@@ -98,8 +98,24 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       pageProps.followingPosts = following;
       pageProps.isBroker = isBroker;
 
-      if (user && user.currentRole === 3 && ctx.pathname === "/")
+      if (
+        user &&
+        user.currentRole === 3 &&
+        !protectedBrokerRoutes.includes(ctx.pathname) &&
+        (protectedUserRoutes.includes(ctx.pathname) ||
+          protectedAdminRoutes.includes(ctx.pathname))
+      )
         redirectUser(ctx, "/nha-moi-gioi");
+
+      if (
+        user &&
+        user.currentRole === 2 &&
+        !protectedUserRoutes.includes(ctx.pathname) &&
+        (protectedBrokerRoutes.includes(ctx.pathname) ||
+          protectedAdminRoutes.includes(ctx.pathname))
+      )
+        redirectUser(ctx, "/");
+
       if (
         user &&
         user.currentRole === 1 &&
@@ -115,18 +131,63 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   return { pageProps };
 };
 
+const protectedGuestRoutes = [
+  "/",
+  "/bat-dong-san",
+  "/bat-dong-san/[postId]",
+  "/danh-sach-nha-moi-gioi",
+  "/danh-sach-nha-moi-gioi/[brokerId]",
+  "/chi-tiet-nguoi-dung/[userId]",
+  "/lien-he",
+];
+
+const protectedUserRoutes = [
+  "/",
+  "/dang-tin",
+  "/bat-dong-san",
+  "/bat-dong-san/[postId]",
+  "/danh-sach-nha-moi-gioi",
+  "/danh-sach-nha-moi-gioi/[brokerId]",
+  "/nha-moi-gioi/dang-ky",
+  "/trang-ca-nhan/bat-dong-san-cua-toi",
+  "/trang-ca-nhan/bat-dong-san-cua-toi/[postId]",
+  "/trang-ca-nhan/yeu-cau-lien-he-lai",
+  "/chi-tiet-nguoi-dung/[userId]",
+  "/trang-ca-nhan/danh-sach-bat-dong-san-da-luu",
+  "/trang-ca-nhan/chuyen-khoan",
+  "/trang-ca-nhan/nap-tien",
+  "/trang-ca-nhan/rut-tien",
+  "/trang-ca-nhan/thay-doi-mat-khau",
+  "/trang-ca-nhan/thay-doi-so-dien-thoai",
+  "/trang-ca-nhan/thong-tin-ca-nhan",
+  "/lien-he",
+];
+
+const protectedBrokerRoutes = [
+  "/nha-moi-gioi",
+  "/nha-moi-gioi/bat-dong-san",
+  "/nha-moi-gioi/bat-dong-san/[postId]",
+  "/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai",
+  "/chi-tiet-nguoi-dung/[userId]",
+  "/nha-moi-gioi/cham-soc-khach-hang",
+  "/nha-moi-gioi/tao-bai-phai-sinh/[postId]",
+  "/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi",
+  "/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi/[postId]",
+  "/chi-tiet-nguoi-dung/[userId]",
+  "/trang-ca-nhan/danh-sach-bat-dong-san-da-luu",
+  "/trang-ca-nhan/chuyen-khoan",
+  "/trang-ca-nhan/nap-tien",
+  "/trang-ca-nhan/rut-tien",
+  "/trang-ca-nhan/thay-doi-mat-khau",
+  "/trang-ca-nhan/thay-doi-so-dien-thoai",
+  "/trang-ca-nhan/thong-tin-ca-nhan",
+  "/lien-he",
+];
+
 const protectedAdminRoutes = [
   "/admin/quan-ly-bai-dang",
   "/admin/quan-ly-bao-cao",
   "/admin/quan-ly-nguoi-dung",
   "/admin/quan-ly-tai-chinh",
   "/admin/quan-ly-rut-tien",
-];
-
-const protectedGuestRoutes = [
-  "/",
-  "/admin/quan-ly-bao-cao",
-  "/bat-dong-san",
-  "/danh-sach-nha-moi-gioi",
-  "/lien-he",
 ];

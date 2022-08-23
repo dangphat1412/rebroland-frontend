@@ -5,12 +5,7 @@ import ListPropertiesRecommend from "../components/list-properties-recommend/lis
 import API_URL from "../utils/apiUrl";
 import axios from "axios";
 
-export default function Home({
-  user,
-  followingPosts,
-  setFollowingPosts,
-  outstandingData,
-}) {
+export default function Home({ user, followingPosts, setFollowingPosts }) {
   return (
     <div>
       <HomeBackground background="/zyro-image.png" />
@@ -20,7 +15,6 @@ export default function Home({
         user={user}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
-        outstandingData={outstandingData}
       />
     </div>
   );
@@ -28,12 +22,8 @@ export default function Home({
 
 export async function getServerSideProps(context) {
   try {
-    const res = await axios.get(`${API_URL}/api/posts/outstanding`);
-
     return {
-      props: {
-        outstandingData: res.data,
-      },
+      props: {},
     };
   } catch (error) {
     // return { props: { posts: [1, 2, 3] } };
