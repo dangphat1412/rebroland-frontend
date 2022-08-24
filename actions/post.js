@@ -363,6 +363,38 @@ export const deletepPost = async (postId) => {
   }
 };
 
+export const getOtpEndTransaction = async (postId, data, setErrorMessage) => {
+  try {
+    const res = await Axios.post(`/history/send-otp/${postId}`, data);
+    return res.data;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
+    console.log(error);
+  }
+};
+
+export const endTransactionWithInfo = async (
+  postId,
+  data,
+  setTransaction,
+  setErrorMessage,
+  remainTime,
+  setRemainTime
+) => {
+  try {
+    const res = await Axios.post(`/history/${postId}`, data);
+    return res.status;
+  } catch (error) {
+    const messages = convertToListMessages(error.response.data);
+    setErrorMessage(messages);
+    setTransaction((prev) => ({ ...prev, token: undefined }));
+    setRemainTime(remainTime - 1);
+
+    console.log(error);
+  }
+};
+
 export const getOutStandingPost = async () => {
   try {
     const res = await Axios.get(`/outstanding`);

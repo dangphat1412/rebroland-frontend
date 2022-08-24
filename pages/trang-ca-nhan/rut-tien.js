@@ -5,7 +5,11 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 const CashOut = ({ user }) => {
   return (
     <div>
-      <SubHeader title="Rút tiền" background="/zyro-image.png" />
+      <SubHeader title="Rút tiền" background={
+          user && user.currentRole === 3
+            ? "/broker-background.jpg"
+            : "/zyro-image.png"
+        } />
       <CashOutPage user={user} />
     </div>
   );

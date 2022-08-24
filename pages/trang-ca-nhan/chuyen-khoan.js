@@ -5,7 +5,14 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 const Transfer = ({ user }) => {
   return (
     <div>
-      <SubHeader title="Chuyển khoản" background="/zyro-image.png" />
+      <SubHeader
+        title="Chuyển khoản"
+        background={
+          user && user.currentRole === 3
+            ? "/broker-background.jpg"
+            : "/zyro-image.png"
+        }
+      />
       <TransferPage user={user} />
     </div>
   );

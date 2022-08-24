@@ -7,12 +7,20 @@ import {
 import { useEffect, useState } from "react";
 import { MapContainer } from "./map.styles";
 
-const Map = ({ position, options }) => {
+const Map = ({ position }) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyCuih1YVsnPiQJcSVTqM5vSWbPFpOvOric",
   });
 
   const [coordinates, setCoordinates] = useState(position || null);
+
+  const [options, setOptions] = useState({
+    strokeColor: "#FF0000",
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: "#FF0000",
+    fillOpacity: 0.35,
+  });
 
   useEffect(() => {
     setCoordinates(position);

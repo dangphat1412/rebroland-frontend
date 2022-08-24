@@ -19,7 +19,7 @@ const RealEstateForBroker = ({
       <SubHeader
         title="Bất động sản cho Nhà môi giới"
         subtitle={`Có tất cả ${totalResult} bất động sản`}
-        background="/bg-real-estate.jpg"
+        background="/broker-background.jpg"
       />
       <RealEstatePage
         postsData={postsData}

@@ -1,7 +1,7 @@
 import React, { createRef, useState } from "react";
 import { CreateDerivativePostContainer } from "./page-create-derivative-post.styles";
 import { useForm } from "react-hook-form";
-import { Button, Form, Grid } from "semantic-ui-react";
+import { Button, Dimmer, Form, Grid, Loader } from "semantic-ui-react";
 import PostInformationForm from "../post-information-form/post-information-form.component";
 import ContactInformationForm from "../contact-information-form/contact-information-form.component";
 import ImageInformationForm from "../image-information-form/image-information-form.component";
@@ -75,9 +75,11 @@ const CreateDerivativePost = ({ user, post }) => {
   });
 
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data, e) => {
     let mediaUrl;
+    setLoading(true);
     if (images.length !== 0) {
       mediaUrl = await uploadMultipleMedia(images);
       if (!mediaUrl) {
@@ -87,6 +89,7 @@ const CreateDerivativePost = ({ user, post }) => {
     }
     await createDerivativePost(post.postId, data, mediaUrl);
     console.log(data);
+    setLoading(false);
   };
   return (
     <CreateDerivativePostContainer>
@@ -138,6 +141,9 @@ const CreateDerivativePost = ({ user, post }) => {
           </Grid.Row>
         </Grid>
       </Form>
+      <Dimmer active={loading} inverted>
+        <Loader inverted>Đang xử lý</Loader>
+      </Dimmer>
     </CreateDerivativePostContainer>
   );
 };

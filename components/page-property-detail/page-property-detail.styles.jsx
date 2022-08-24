@@ -55,21 +55,11 @@ export const FormPropertyDetailContainer = styled.div`
     height: 100px !important;
   }
 
-  // .image-gallery-slide-wrapper.bottom {
-  //   height: 500px;
-  // }
-  // .image-gallery-slides,
-  // .image-gallery-swipe,
-  // .image-gallery-slide {
-  //   height: 500px;
-  //   background: rgba(0, 0, 0, 0.2);
-  // }
-  // .image-gallery-image {
-  //   width: 100%;
-  //   height: 100%;
-  //   object-fit: contain;
-  //   overflow: hidden;
-  // }
+  .image-gallery-slides,
+  .image-gallery-swipe,
+  .image-gallery-slide {
+    background: rgba(0, 0, 0, 0.2);
+  }
 `;
 
 export const ShotInformationContainer = styled(Statistic.Group)`

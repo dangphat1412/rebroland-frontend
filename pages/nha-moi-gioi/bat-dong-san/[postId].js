@@ -1,4 +1,5 @@
 import axios from "axios";
+import { parseCookies } from "nookies";
 import React from "react";
 import PagePropertyDetail from "../../../components/page-property-detail/page-property-detail.component";
 import SubHeader from "../../../components/sub-header/sub-header.component";
@@ -15,7 +16,10 @@ const DetailRealEstate = ({
 }) => {
   return (
     <>
-      <SubHeader title="Chi tiết bất động sản" background="/zyro-image.png" />
+      <SubHeader
+        title="Chi tiết bất động sản"
+        background="/broker-background.jpg"
+      />
       <PagePropertyDetail
         post={postData.post}
         brokers={postData.brokers}
@@ -33,9 +37,13 @@ const DetailRealEstate = ({
 export async function getServerSideProps(context) {
   try {
     const { postId } = context.query;
+    const { token } = parseCookies(context);
 
     const res = await axios.get(
-      `${API_URL}/api/posts/original-detail/${postId.split("-").pop()}`
+      `${API_URL}/api/posts/original-detail/${postId.split("-").pop()}`,
+      {
+        headers: { Authorization: token },
+      }
     );
 
     return { props: { postData: res.data } };

@@ -12,7 +12,7 @@ const MyDerivativeProperty = ({ user, postsData }) => {
       <SubHeader
         title="Bất động sản phái sinh của tôi"
         subtitle={`Có tất cả ${totalResult} bất động sản`}
-        background="/bg-real-estate.jpg"
+        background="/broker-background.jpg"
       />
       <MyDerivativePropertyPage
         user={user}

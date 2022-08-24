@@ -5,10 +5,17 @@ import API_URL from "../utils/apiUrl";
 import { parseCookies } from "nookies";
 import axios from "axios";
 
-const Notifications = ({ notificationList }) => {
+const Notifications = ({ user, notificationList }) => {
   return (
     <div>
-      <SubHeader title="Thông báo" background="/zyro-image.png" />
+      <SubHeader
+        title="Thông báo"
+        background={
+          user && user.currentRole === 3
+            ? "/broker-background.jpg"
+            : "/zyro-image.png"
+        }
+      />
       <NotificationsPage notificationList={notificationList} />
     </div>
   );

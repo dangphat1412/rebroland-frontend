@@ -1,8 +1,10 @@
 import axios from "axios";
+import { parseCookies } from "nookies";
 import React from "react";
 import CreateDerivativePost from "../../../components/page-create-derivative-post/page-create-derivative-post.component";
 import SubHeader from "../../../components/sub-header/sub-header.component";
 import API_URL from "../../../utils/apiUrl";
+import { redirectUser } from "../../../utils/authUser";
 
 const CreateDerivativePostProperty = ({ user, postData }) => {
   return (
@@ -16,14 +18,18 @@ const CreateDerivativePostProperty = ({ user, postData }) => {
 export async function getServerSideProps(context) {
   try {
     const { postId } = context.query;
+    const { token } = parseCookies(context);
 
     const res = await axios.get(
-      `${API_URL}/api/posts/${postId.split("-").pop()}`
+      `${API_URL}/api/posts/original-detail/${postId.split("-").pop()}`,
+      {
+        headers: { Authorization: token },
+      }
     );
 
     return { props: { postData: res.data } };
   } catch (error) {
-    // return { props: { post: [1, 2, 3] } };
+    redirectUser(context, "/404");
   }
 }
 

@@ -36,9 +36,11 @@ import FormReport from "../form-report/form-report.component";
 import {
   deletepPost,
   dropPost,
+  endTransactionWithInfo,
   extendPost,
   finishTransaction,
   followPost,
+  getOtpEndTransaction,
   getPricePerDay,
   historyPost,
   reupPost,
@@ -60,6 +62,8 @@ import { useForm } from "react-hook-form";
 import { ratingListBroker } from "../../actions/rating";
 import PaymentInformationForm from "../payment-information-form/payment-information-form.component";
 import EditPostForm from "../form-edit-post/form-edit-post.component";
+import OtpInput from "react-otp-input";
+import CustomButton from "../custom-button/custom-button.component";
 
 const PagePropertyDetail = ({
   post,
@@ -112,6 +116,9 @@ const PagePropertyDetail = ({
           return {
             original: item.image,
             thumbnail: item.image,
+            srcSet: item.image,
+            originalHeight: 500,
+            thumbnailHeight: 50,
           };
         })
     );
@@ -723,7 +730,7 @@ const PagePropertyDetail = ({
                       setEndTransactionOpen(true);
                     }}
                   >
-                    Kết thúc giao dịch
+                    Đánh dấu là đã bán
                   </Button>
                 )}
 
@@ -754,17 +761,20 @@ const PagePropertyDetail = ({
                     Tạo bài phái sinh
                   </Button>
                 )}
-              {post.originalPost !== null && user && user.id === post.user.id && (
-                <Link
-                  href={`/bat-dong-san/${convertToSlug(post.title)}-${
-                    post.originalPost
-                  }`}
-                >
-                  <Button fluid size="big" color="green">
-                    Xem bài viết gốc
-                  </Button>
-                </Link>
-              )}
+              {post.originalPost !== null &&
+                user &&
+                user.currentRole === 3 &&
+                user.id === post.user.id && (
+                  <Link
+                    href={`/nha-moi-gioi/bat-dong-san/${convertToSlug(
+                      post.title
+                    )}-${post.originalPost}`}
+                  >
+                    <Button fluid size="big" color="green">
+                      Xem bài viết gốc
+                    </Button>
+                  </Link>
+                )}
 
               {user && post.user.id === user.id && post.originalPost === null && (
                 <Segment>
@@ -972,7 +982,7 @@ const PagePropertyDetail = ({
         />
       </ModalItem>
       <ModalItem
-        header="Kết thúc giao dịch"
+        header="Đánh dấu là đã bán"
         size="small"
         onOpen={endTransactionOpen}
         onClose={() => {
@@ -1199,6 +1209,9 @@ const FormEndTransaction = ({
     },
   });
 
+  const [transactionData, setTransactionData] = useState(null);
+  const [openOtpEndTransaction, setOpenOtpEndTransaction] = useState(false);
+
   const handleChange = (e, { name, value }) => {
     setValue(name, value);
   };
@@ -1206,19 +1219,36 @@ const FormEndTransaction = ({
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (data, e) => {
-    const status = await finishTransaction(
-      post.postId,
-      {
-        ...data,
-        typeId: post.propertyTypeId,
-      },
-      setErrorMessage
-    );
-    if (status === 200) {
-      setEndTransactionOpen(false);
+    console.log(post);
+    if (getValues("provideInfo") === false) {
+      const status = await finishTransaction(
+        post.postId,
+        {
+          ...data,
+          typeId: post.propertyType.id,
+        },
+        setErrorMessage
+      );
+      if (status === 201) {
+        setEndTransactionOpen(false);
 
-      if (brokers.length > 0) {
-        setOpenRate(true);
+        if (brokers.length > 0) {
+          setOpenRate(true);
+        }
+      }
+    } else {
+      const transactionData = await getOtpEndTransaction(
+        post.postId,
+        {
+          ...data,
+          typeId: post.propertyType.id,
+        },
+        setErrorMessage
+      );
+      if (transactionData) {
+        console.log(transactionData);
+        setTransactionData(transactionData);
+        setOpenOtpEndTransaction(true);
       }
     }
   };
@@ -1245,7 +1275,7 @@ const FormEndTransaction = ({
           style={{ marginBottom: "10px" }}
           defaultChecked={getValues("provideInfo")}
         />
-        {watch("provideInfo") === true && (
+        {getValues("provideInfo") === true && (
           <>
             <Form.Group widths={2}>
               <InputField
@@ -1267,6 +1297,7 @@ const FormEndTransaction = ({
                 placeholder="Nhập tên chủ hộ"
                 onChange={handleChange}
                 defaultValue={post.owner}
+                value={watch("owner")}
                 error={errors.owner}
                 requiredField
               />
@@ -1354,11 +1385,6 @@ const FormEndTransaction = ({
                   fluid
                   label="Tên toà nhà"
                   name="buildingName"
-                  placeholder="Nhập tên toà nhà"
-                  onChange={handleChange}
-                  defaultValue={post.buildingName}
-                  error={errors.buildingName}
-                  requiredField
                   {...register("buildingName", {
                     validate: (value) =>
                       (getValues("provideInfo") === true &&
@@ -1367,16 +1393,20 @@ const FormEndTransaction = ({
                         "Tên toà nhà không được để trống") ||
                       true,
                   })}
+                  placeholder="Nhập tên toà nhà"
+                  onChange={(e, { name, value }) => {
+                    setValue(name, value);
+                    console.log(value);
+                  }}
+                  value={watch("buildingName")}
+                  defaultValue={post.buildingName}
+                  error={errors.buildingName}
+                  requiredField
                 />
 
                 <InputField
                   label="Phòng số"
                   name="roomNumber"
-                  placeholder="Nhập số phòng"
-                  defaultValue={post.roomNumber}
-                  onChange={handleChange}
-                  error={errors.roomNumber}
-                  requiredField
                   {...register("roomNumber", {
                     validate: (value) =>
                       (getValues("provideInfo") === true &&
@@ -1385,6 +1415,11 @@ const FormEndTransaction = ({
                         "Số phòng không được để trống") ||
                       true,
                   })}
+                  placeholder="Nhập số phòng"
+                  defaultValue={post.roomNumber}
+                  onChange={handleChange}
+                  error={errors.roomNumber}
+                  requiredField
                 />
               </Form.Group>
             )}
@@ -1408,6 +1443,23 @@ const FormEndTransaction = ({
           </Grid.Column>
         </Grid>
       </Form>
+      <ModalItem
+        header="Xác nhận mã OTP"
+        size="mini"
+        onOpen={openOtpEndTransaction}
+        onClose={() => {
+          setOpenOtpEndTransaction(false);
+        }}
+      >
+        <OtpEndTransaction
+          post={post}
+          transactionData={transactionData}
+          setOpenOtpEndTransaction={setOpenOtpEndTransaction}
+          setEndTransactionOpen={setEndTransactionOpen}
+          setOpenRate={setOpenRate}
+          brokers={brokers}
+        />
+      </ModalItem>
     </>
   );
 };
@@ -1501,93 +1553,158 @@ const FormHistory = ({ post, historyData }) => {
   );
 };
 
-// const OtpEndTransaction = ({ transferData, setOpenOtpTransfer, toast }) => {
-//   const [transfer, setTransfer] = useState(transferData.transferData);
-//   const [counter, setCounter] = useState(transferData.tokenTime * 60);
-//   const [errorMessage, setErrorMessage] = useState(null);
+const OtpEndTransaction = ({
+  post,
+  transactionData,
+  setOpenOtpEndTransaction,
+  setOpenRate,
+  brokers,
+  setEndTransactionOpen,
+}) => {
+  const [transaction, setTransaction] = useState(transactionData.historyData);
+  const [counter, setCounter] = useState(transactionData.tokenTime * 60);
+  const [remainTime, setRemainTime] = useState(transactionData.remainTime);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-//   useEffect(() => {
-//     const timer =
-//       counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
-//     return () => clearInterval(timer);
-//   }, [counter]);
+  useEffect(() => {
+    const timer =
+      counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+    return () => clearInterval(timer);
+  }, [counter]);
 
-//   const handleChange = (value) => {
-//     setTransfer((prev) => ({ ...prev, token: value }));
-//   };
+  const handleChange = (value) => {
+    setTransaction((prev) => ({ ...prev, token: value }));
+  };
 
-//   const handleResentOtp = async () => {
-//     const data = await otpTransfer(transfer, setErrorMessage);
-//     console.log(data);
-//     if (data) {
-//       setTransfer(data.transferData);
-//       setCounter(data.tokenTime * 60);
-//       setTransfer((prev) => ({ ...prev, token: "" }));
-//     }
-//   };
+  const handleResentOtp = async () => {
+    const data = await getOtpEndTransaction(
+      post.postId,
+      transaction,
+      setErrorMessage
+    );
+    console.log(data);
+    if (data) {
+      setTransaction(data.transferData);
+      setCounter(data.tokenTime * 60);
+      setTransaction((prev) => ({ ...prev, token: "" }));
+    }
+  };
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     await handleTransfer(transfer, setErrorMessage);
-//   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const status = await endTransactionWithInfo(
+      post.postId,
+      transaction,
+      setTransaction,
+      setErrorMessage,
+      remainTime,
+      setRemainTime
+    );
+    if (status === 201) {
+      setOpenOtpEndTransaction(false);
+      setEndTransactionOpen(false);
+      if (brokers.length > 0) {
+        setOpenRate(true);
+      }
+    }
+  };
 
-//   return (
-//     <div>
-//       <Form onSubmit={handleSubmit} error={errorMessage !== null}>
-//         <Message
-//           error
-//           content={errorMessage}
-//           onDismiss={() => setErrorMessage(null)}
-//         />
-//         <Form.Field>
-//           <label>Nhập mã OTP được gửi về số điện thoại</label>
-//           <OtpInput
-//             value={transfer.token}
-//             onChange={handleChange}
-//             numInputs={6}
-//             isInputNum={true}
-//             separator={<span>&nbsp;</span>}
-//             containerStyle={{ justifyContent: "center" }}
-//             inputStyle={{ width: "3em", height: "3.5em", fontSize: "1.2em" }}
-//           />
-//         </Form.Field>
-//         <Grid>
-//           <Grid.Row>
-//             <Grid.Column textAlign="center">
-//               <CustomButton type="submit">Xác nhận</CustomButton>
-//             </Grid.Column>
-//           </Grid.Row>
-//           <Grid.Row>
-//             <Grid.Column textAlign="center">
-//               {counter > 0 ? (
-//                 <>
-//                   Gửi lại mã OTP trong{" "}
-//                   <span style={{ color: "#ff9219" }}>
-//                     {counter / 60 >= 10 ? "" : "0"}
-//                     {Math.floor(counter / 60)}:{counter % 60 >= 10 ? "" : "0"}
-//                     {counter % 60}
-//                   </span>
-//                 </>
-//               ) : (
-//                 <div
-//                   style={{
-//                     color: "#ff9219",
-//                     cursor: "pointer",
-//                     fontWeight: "bold",
-//                   }}
-//                   onClick={handleResentOtp}
-//                 >
-//                   {" "}
-//                   Gửi lại mã OTP{" "}
-//                 </div>
-//               )}
-//             </Grid.Column>
-//           </Grid.Row>
-//         </Grid>
-//       </Form>
-//     </div>
-//   );
-// };
+  return (
+    <div>
+      {remainTime && remainTime > 0 ? (
+        <Form onSubmit={handleSubmit} error={errorMessage !== null}>
+          <Message
+            error
+            content={errorMessage}
+            onDismiss={() => setErrorMessage(null)}
+          />
+          <Form.Field>
+            <label>Nhập mã OTP được gửi về số điện thoại</label>
+            <OtpInput
+              value={transaction.token}
+              onChange={handleChange}
+              numInputs={6}
+              isInputNum={true}
+              separator={<span>&nbsp;</span>}
+              containerStyle={{ justifyContent: "center" }}
+              inputStyle={{ width: "3em", height: "3.5em", fontSize: "1.2em" }}
+            />
+          </Form.Field>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column textAlign="center">
+                <Button
+                  type="submit"
+                  disabled={!transaction.token || transaction.token.length < 6}
+                  style={{
+                    color: "#fff",
+                    background: "#ff9219",
+                    fontFamily: "Tahoma",
+                  }}
+                >
+                  Xác nhận
+                </Button>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column textAlign="center">
+                Số lần nhập còn lại:{" "}
+                <span style={{ color: "#ff9219" }}>{remainTime}</span>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column textAlign="center">
+                {counter > 0 ? (
+                  <>
+                    Gửi lại mã OTP trong{" "}
+                    <span style={{ color: "#ff9219" }}>
+                      {counter / 60 >= 10 ? "" : "0"}
+                      {Math.floor(counter / 60)}:{counter % 60 >= 10 ? "" : "0"}
+                      {counter % 60}
+                    </span>
+                  </>
+                ) : (
+                  <div
+                    style={{
+                      color: "#ff9219",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                    }}
+                    onClick={handleResentOtp}
+                  >
+                    {" "}
+                    Gửi lại mã OTP{" "}
+                  </div>
+                )}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Form>
+      ) : (
+        <>
+          <Header as="h3" style={{ fontFamily: "Tahoma" }}>
+            Bạn đã nhập quá số lần quy định.
+            <br /> Hãy thử lại sau.
+          </Header>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column textAlign="center">
+                <CustomButton
+                  type="button"
+                  onClick={() => {
+                    setOpenOtpEndTransaction(false);
+                  }}
+                >
+                  Đóng
+                </CustomButton>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </>
+      )}
+    </div>
+  );
+};
 
 const config = {
   format: "CODE128B",

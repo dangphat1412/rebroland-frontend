@@ -12,7 +12,7 @@ const TakeCareCustomer = ({ user, caringList }) => {
       <SubHeader
         title="Chăm sóc khách hàng"
         subtitle={`Có tất cả ${totalResult} khách hàng`}
-        background="/bg-real-estate.jpg"
+        background="/broker-background.jpg"
       />
       <TakeCareCustomerPage
         user={user}

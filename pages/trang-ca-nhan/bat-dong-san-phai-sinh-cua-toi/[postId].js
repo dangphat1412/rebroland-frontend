@@ -4,6 +4,7 @@ import PagePropertyDetail from "../../../components/page-property-detail/page-pr
 import SubHeader from "../../../components/sub-header/sub-header.component";
 import API_URL from "../../../utils/apiUrl";
 import { parseCookies } from "nookies";
+import { redirectUser } from "../../../utils/authUser";
 
 const DetailMyDerivativeProperty = ({ user, postData }) => {
   return (
@@ -27,7 +28,7 @@ export async function getServerSideProps(context) {
     const { token } = parseCookies(context);
 
     const res = await axios.get(
-      `${API_URL}/api/posts/${postId.split("-").pop()}`,
+      `${API_URL}/api/posts/my-derivative/${postId.split("-").pop()}`,
       {
         headers: { Authorization: token },
       }
@@ -35,7 +36,7 @@ export async function getServerSideProps(context) {
 
     return { props: { postData: res.data } };
   } catch (error) {
-    // return { props: { post: [1, 2, 3] } };
+    redirectUser(context, "/404");
   }
 }
 

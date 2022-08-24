@@ -28,6 +28,8 @@ const RealEstateInformationForm = ({
       resetCertification();
     }
     setValue(name, value);
+    console.log(value);
+    console.log(name);
   };
 
   const handleOnTabChange = (e, { activeIndex }) => {
@@ -434,6 +436,8 @@ const RealEstateInformationForm = ({
                       {watch("propertyTypeId") === 2 && (
                         <>
                           <InputField
+                            label="Mã vạch trên sổ đỏ"
+                            name="barcode"
                             {...register("barcode", {
                               pattern: {
                                 value: /^(^\d{13}$)|(^\d{15}$)$/,
@@ -449,8 +453,6 @@ const RealEstateInformationForm = ({
                                   "Mã vạch không được để trống") ||
                                 true,
                             })}
-                            label="Mã vạch trên sổ đỏ"
-                            name="barcode"
                             placeholder="Nhập mã vạch"
                             error={errors.barcode}
                             onChange={handleChange}
@@ -550,6 +552,8 @@ const RealEstateInformationForm = ({
                     </Form.Group>
                     <Form.Group widths="equal">
                       <InputField
+                        label="Tên chủ hộ"
+                        name="owner"
                         {...register("owner", {
                           validate: {
                             checkNull: (value) =>
@@ -567,8 +571,6 @@ const RealEstateInformationForm = ({
                               ) || "Tên chủ hộ không hợp lệ",
                           },
                         })}
-                        label="Tên chủ hộ"
-                        name="owner"
                         placeholder="Nhập tên chủ hộ"
                         onChange={handleChange}
                         onFocus={(e) => {
@@ -599,9 +601,9 @@ const RealEstateInformationForm = ({
                         name="ownerPhone"
                         placeholder="Nhập số điện thoại"
                         error={errors.ownerPhone}
-                        onChange={(e, { name, value }) =>
-                          setValue(name, value.replace(/[^0-9]/g, ""))
-                        }
+                        onChange={(e, { name, value }) => {
+                          setValue(name, value.replace(/[^0-9]/g, ""));
+                        }}
                         onFocus={(e) => {
                           setValue("ownerPhone", getValues("ownerPhone"));
                         }}

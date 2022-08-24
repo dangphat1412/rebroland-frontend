@@ -348,6 +348,8 @@ const ListProperty = ({ user, data, setData, handlePaginationChange }) => {
         open={openDeletePost}
         header="Xác nhận xoá bài viết"
         content="Bạn có chắc chắn muốn xoá bài viết không?"
+        cancelButton="Huỷ bỏ"
+        confirmButton="Xác nhận"
         onCancel={() => {
           setOpenDeletePost(false);
         }}

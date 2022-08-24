@@ -12,7 +12,7 @@ const HandleContactBackRequest = ({ user, contactList }) => {
       <SubHeader
         title="Xử lý yêu cầu liên hệ lại"
         subtitle={`Có tất cả ${totalResult} yêu cầu liên hệ lại`}
-        background="/bg-real-estate.jpg"
+        background="/broker-background.jpg"
       />
       <HandleContactBackRequestPage
         user={user}

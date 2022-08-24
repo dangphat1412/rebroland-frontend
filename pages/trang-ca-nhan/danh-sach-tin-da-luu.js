@@ -17,7 +17,11 @@ const MyFollowProperties = ({
       <SubHeader
         title="Danh sách tin đã lưu"
         subtitle={`Có tất cả ${totalResult} bất động sản`}
-        background="/zyro-image.png"
+        background={
+          user && user.currentRole === 3
+            ? "/broker-background.jpg"
+            : "/zyro-image.png"
+        }
       />
       <MyFollowingPropertiesPage
         user={user}

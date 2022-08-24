@@ -5,7 +5,11 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 const ChangePassword = ({ user }) => {
   return (
     <div>
-      <SubHeader title="Thay đổi mật khẩu" background="/zyro-image.png" />
+      <SubHeader title="Thay đổi mật khẩu" background={
+          user && user.currentRole === 3
+            ? "/broker-background.jpg"
+            : "/zyro-image.png"
+        } />
       <ChangePasswordPage user={user} />
     </div>
   );

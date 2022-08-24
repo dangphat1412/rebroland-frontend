@@ -28,14 +28,6 @@ const GeographicInformationForm = ({
     { lat: 21.01286, lng: 105.526657 },
   ]);
 
-  const [options, setOptions] = useState({
-    strokeColor: "#FF0000",
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: "#FF0000",
-    fillOpacity: 0.35,
-  });
-
   const handleCheck = () => {
     setPosition(
       getValues("coordinates").map((coordinate) => {
@@ -201,7 +193,7 @@ const GeographicInformationForm = ({
       {/* missing loading */}
       <Form.Field>
         <label>Vị trí trên bản đồ</label>
-        <Map position={position} options={options} />
+        <Map position={position} />
         <Grid>
           <Grid.Row>
             <Grid.Column>

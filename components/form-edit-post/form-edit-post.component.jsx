@@ -78,7 +78,7 @@ const EditPostForm = ({
     },
   });
 
-  console.log(editedPost);
+  console.log("EDITED_POST: ", editedPost);
 
   const [images, setImages] = useState(editedPost.images || []);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -94,6 +94,7 @@ const EditPostForm = ({
       }
     }
     await editPost(data, mediaUrl, setErrorMessage);
+    console.log(data);
   };
 
   return (
@@ -152,11 +153,9 @@ const EditPostForm = ({
           </Button>
         </Grid>
       </Form>
-      {editedLoading && (
-        <Dimmer active={editedLoading} inverted>
-          <Loader>Đang tải</Loader>
-        </Dimmer>
-      )}
+      <Dimmer active={editedLoading || false} inverted>
+        <Loader>Đang tải</Loader>
+      </Dimmer>
     </EditPostFormContainer>
   );
 };

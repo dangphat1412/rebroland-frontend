@@ -5,7 +5,14 @@ import SubHeader from "../../components/sub-header/sub-header.component";
 const MyInformation = ({ user }) => {
   return (
     <div>
-      <SubHeader title="Thông tin cá nhân" background="/zyro-image.png"/>
+      <SubHeader
+        title="Thông tin cá nhân"
+        background={
+          user && user.currentRole === 3
+            ? "/broker-background.jpg"
+            : "/zyro-image.png"
+        }
+      />
       <MyProfilePage user={user} />
     </div>
   );
