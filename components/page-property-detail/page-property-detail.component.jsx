@@ -65,6 +65,7 @@ const PagePropertyDetail = ({
   post,
   user,
   brokers,
+  isAllowDerivative,
   followingPosts,
   setFollowingPosts,
   setLoginOpen,
@@ -530,7 +531,6 @@ const PagePropertyDetail = ({
                       items={items}
                       showIndex={true}
                       disableKeyDown={false}
-                      srcSet={""}
                     />
                   </>
                 )}
@@ -741,7 +741,8 @@ const PagePropertyDetail = ({
                 user.id !== post.user.id &&
                 user.currentRole === 3 &&
                 post.originalPost === null &&
-                post.allowDerivative === true && (
+                post.allowDerivative === true &&
+                isAllowDerivative === true && (
                   <Button
                     fluid
                     size="big"
@@ -885,7 +886,17 @@ const PagePropertyDetail = ({
         onConfirm={async () => {
           const status = await deletepPost(post.postId);
           if (status === 201) {
-            Router.push("/trang-ca-nhan/bat-dong-san-cua-toi");
+            user &&
+              user.currentRole === 2 &&
+              post.user.id === user.id &&
+              post.originalPost === null &&
+              Router.push("/trang-ca-nhan/bat-dong-san-cua-toi");
+
+            user &&
+              user.currentRole === 3 &&
+              post.user.id === user.id &&
+              post.originalPost !== null &&
+              Router.push("/trang-ca-nhan/bat-dong-san-phai-sinh-cua-toi");
           }
         }}
       />

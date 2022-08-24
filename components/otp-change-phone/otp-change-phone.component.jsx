@@ -23,6 +23,7 @@ const OtpChangePhone = ({ phoneData, setOpenOtpChangePhone, toast }) => {
   const handleResentOtp = async () => {
     const data = await otpChangePhone(phone, setErrorMessage);
     if (data) {
+      console.log(data);
       setPhone(data.phoneData);
       setCounter(data.tokenTime * 60);
       setPhone((prev) => ({ ...prev, token: undefined }));

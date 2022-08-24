@@ -3,6 +3,7 @@ import React from "react";
 import PagePropertyDetail from "../../components/page-property-detail/page-property-detail.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
+import { redirectUser } from "../../utils/authUser";
 
 const DetailRealEstate = ({
   postData,
@@ -38,7 +39,7 @@ export async function getServerSideProps(context) {
 
     return { props: { postData: res.data } };
   } catch (error) {
-    // return { props: { post: [1, 2, 3] } };
+    redirectUser(context, "/404");
   }
 }
 

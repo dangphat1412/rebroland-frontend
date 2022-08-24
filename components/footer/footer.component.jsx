@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import {
   Grid,
@@ -11,7 +12,9 @@ import {
 } from "semantic-ui-react";
 import { FooterContainer } from "./footer.styles";
 
-const Footer = () => {
+const Footer = ({ user }) => {
+  console.log(user);
+  const router = useRouter();
   return (
     <FooterContainer>
       <Grid columns="equal" divided inverted padded>
@@ -46,27 +49,74 @@ const Footer = () => {
                   <List.Content>
                     <Header
                       as="h4"
-                      style={{ color: "#fff !important", cursor: "pointer" }}
+                      style={{ color: "#fff", cursor: "pointer" }}
+                      onClick={() => {
+                        router.push(
+                          user && user.currentRole === 3
+                            ? "/nha-moi-gioi/bat-dong-san"
+                            : "/bat-dong-san"
+                        );
+                      }}
                     >
                       Bất động sản
                     </Header>
                   </List.Content>
                 </List.Item>
+                {(!user || (user && user.currentRole === 2)) && (
+                  <List.Item>
+                    <List.Content>
+                      <Header
+                        as="h4"
+                        style={{ color: "#fff", cursor: "pointer" }}
+                        onClick={() => {
+                          router.push("/danh-sach-nha-moi-gioi");
+                        }}
+                      >
+                        Nhà môi giới
+                      </Header>
+                    </List.Content>
+                  </List.Item>
+                )}
+                {user && user.currentRole === 3 && (
+                  <List.Item>
+                    <List.Content>
+                      <Header
+                        as="h4"
+                        style={{ color: "#fff", cursor: "pointer" }}
+                        onClick={() => {
+                          router.push(
+                            "/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai"
+                          );
+                        }}
+                      >
+                        Yêu cầu liên hệ lại
+                      </Header>
+                    </List.Content>
+                  </List.Item>
+                )}
+                {user && user.currentRole === 3 && (
+                  <List.Item>
+                    <List.Content>
+                      <Header
+                        as="h4"
+                        style={{ color: "#fff", cursor: "pointer" }}
+                        onClick={() => {
+                          router.push("/nha-moi-gioi/cham-soc-khach-hang");
+                        }}
+                      >
+                        Chăm sóc khách hàng
+                      </Header>
+                    </List.Content>
+                  </List.Item>
+                )}
                 <List.Item>
                   <List.Content>
                     <Header
                       as="h4"
-                      style={{ color: "#fff !important", cursor: "pointer" }}
-                    >
-                      Nhà môi giới
-                    </Header>
-                  </List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Content>
-                    <Header
-                      as="h4"
-                      style={{ color: "#fff !important", cursor: "pointer" }}
+                      style={{ color: "#fff", cursor: "pointer" }}
+                      onClick={() => {
+                        router.push("/lien-he");
+                      }}
                     >
                       Liên hệ
                     </Header>

@@ -40,11 +40,11 @@ const RealEstateItem = ({
   return (
     <Link
       href={
-        user && user.currentRole === 2
-          ? `/bat-dong-san/${convertToSlug(post.title)}-${post.postId}`
-          : `/nha-moi-gioi/bat-dong-san/${convertToSlug(post.title)}-${
+        user && user.currentRole === 3
+          ? `/nha-moi-gioi/bat-dong-san/${convertToSlug(post.title)}-${
               post.postId
             }`
+          : `/bat-dong-san/${convertToSlug(post.title)}-${post.postId}`
       }
     >
       <RealEstateItemContainer fluid>

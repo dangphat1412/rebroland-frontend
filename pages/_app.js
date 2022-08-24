@@ -53,7 +53,9 @@ export default function MyApp({ Component, pageProps }) {
         setLoginOpen={setLoginOpen}
         setRegisterOpen={setRegisterOpen}
       />
-      {(!pageProps.user || pageProps.user.currentRole !== 1) && <Footer />}
+      {(!pageProps.user || pageProps.user.currentRole !== 1) && (
+        <Footer {...pageProps} />
+      )}
 
       <LoginRegisterModal
         loginOpen={loginOpen}
@@ -80,11 +82,16 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   const { token } = parseCookies(ctx);
   let pageProps = {};
 
-  const protectedRoutes = false;
-
   if (!token) {
     destroyCookie(ctx, "token");
-    protectedRoutes && redirectUser(ctx, "/");
+    if (
+      !protectedGuestRoutes.includes(ctx.pathname) &&
+      (protectedAdminRoutes.includes(ctx.pathname) ||
+        protectedBrokerRoutes.includes(ctx.pathname) ||
+        protectedUserRoutes.includes(ctx.pathname))
+    ) {
+      redirectUser(ctx, "/");
+    }
   } else {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
@@ -94,9 +101,6 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
         headers: { Authorization: token },
       });
       const { user, isBroker, following } = res.data;
-      pageProps.user = user;
-      pageProps.followingPosts = following;
-      pageProps.isBroker = isBroker;
 
       if (
         user &&
@@ -122,6 +126,10 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
         !protectedAdminRoutes.includes(ctx.pathname)
       )
         redirectUser(ctx, "/admin/quan-ly-nguoi-dung");
+
+      pageProps.user = user;
+      pageProps.followingPosts = following;
+      pageProps.isBroker = isBroker;
     } catch (error) {
       destroyCookie(ctx, "token");
       redirectUser(ctx, "/");

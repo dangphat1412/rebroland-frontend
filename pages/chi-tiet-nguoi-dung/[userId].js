@@ -4,6 +4,7 @@ import React from "react";
 import UserDetailPage from "../../components/page-user-detail/page-user-detail.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
+import { redirectUser } from "../../utils/authUser";
 
 const UserDetail = ({
   user,
@@ -37,7 +38,7 @@ export async function getServerSideProps(context) {
 
     return { props: { postsData: res.data, allowRate: allowRate || false } };
   } catch (error) {
-    // return { props: { posts: [1, 2, 3] } };
+    redirectUser(context, "/404");
   }
 }
 

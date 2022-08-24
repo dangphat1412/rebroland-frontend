@@ -231,8 +231,6 @@ const ReportUserPage = ({
                             setOpenViewUser(true);
                             setLoading(true);
                             setDetailUser(user.user);
-                            // const detailPost = await getDetailPost(post.postId);
-                            // setDetailPost(detailPost);
                             setLoading(false);
                           }}
                         />
@@ -318,6 +316,7 @@ const ReportUserPage = ({
 
       <ModalItem
         header="Chi tiết người dùng"
+        size="large"
         onOpen={openViewUser}
         onClose={() => {
           setOpenViewUser(false);

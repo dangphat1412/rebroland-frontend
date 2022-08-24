@@ -3,6 +3,7 @@ import React from "react";
 import PagePropertyDetail from "../../../components/page-property-detail/page-property-detail.component";
 import SubHeader from "../../../components/sub-header/sub-header.component";
 import API_URL from "../../../utils/apiUrl";
+import { redirectUser } from "../../../utils/authUser";
 
 const DetailRealEstate = ({
   postData,
@@ -19,6 +20,7 @@ const DetailRealEstate = ({
         post={postData.post}
         brokers={postData.brokers}
         user={user}
+        isAllowDerivative={postData.isAllowDerivative}
         followingPosts={followingPosts}
         setFollowingPosts={setFollowingPosts}
         setLoginOpen={setLoginOpen}
@@ -33,12 +35,12 @@ export async function getServerSideProps(context) {
     const { postId } = context.query;
 
     const res = await axios.get(
-      `${API_URL}/api/posts/${postId.split("-").pop()}`
+      `${API_URL}/api/posts/original-detail/${postId.split("-").pop()}`
     );
 
     return { props: { postData: res.data } };
   } catch (error) {
-    // return { props: { post: [1, 2, 3] } };
+    redirectUser(context, "/404");
   }
 }
 

@@ -6,24 +6,24 @@ const Milestones = () => {
   return (
     <MilestonesContainer>
       <MilestoneItem
-        icon="home"
+        icon="shield alternate"
         title="tin cậy và an toàn"
-        description="Accusantium natus"
+        description="Uy tín"
       />
       <MilestoneItem
-        icon="money"
-        title="trusted and safe"
-        description="Accusantium natus"
+        icon="stopwatch"
+        title="Nhanh và hiệu quả"
+        description="Chính xác"
       />
       <MilestoneItem
-        icon="phone"
-        title="trusted and safe"
-        description="Accusantium natus"
+        icon="thumbs up"
+        title="Dễ dàng và trực quan"
+        description="Thân thiện"
       />
       <MilestoneItem
-        icon="plane"
-        title="trusted and safe"
-        description="Accusantium natus"
+        icon="home"
+        title="Đa dạng và phong phú"
+        description="Hiện đại"
       />
     </MilestonesContainer>
   );

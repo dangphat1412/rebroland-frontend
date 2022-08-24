@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import DetailBrokerPage from "../../components/page-detail-broker/page-detail-broker.component";
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
+import { redirectUser } from "../../utils/authUser";
 
 const DetailBroker = ({
   postsData,
@@ -56,7 +57,7 @@ export async function getServerSideProps(context) {
       },
     };
   } catch (error) {
-    // return { props: { posts: [1, 2, 3] } };
+    redirectUser(context, "/404");
   }
 }
 

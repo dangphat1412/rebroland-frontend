@@ -244,7 +244,9 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                     <Table.Cell singleLine textAlign="center">
                       <Radio
                         toggle
-                        onChange={() => {
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          setSelectedUserIndex(user.id);
                           setOpenConfirm(true);
                         }}
                         checked={!user.block}
@@ -390,17 +392,25 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                   <div className="user-information">
                     <label>Facebook:</label>
                     <span>
-                      {userDetail.facebookLink
-                        ? userDetail.facebookLink
-                        : "Đang cập nhật"}
+                      {userDetail.facebookLink ? (
+                        <a href={`${userDetail.facebookLink}`} target="_blank">
+                          {userDetail.facebookLink}
+                        </a>
+                      ) : (
+                        "Đang cập nhật"
+                      )}
                     </span>
                   </div>
                   <div className="user-information">
                     <label>Zalo:</label>
                     <span>
-                      {userDetail.zaloLink
-                        ? userDetail.zaloLink
-                        : "Đang cập nhật"}
+                      {userDetail.zaloLink ? (
+                        <a href={`${userDetail.zaloLink}`} target="_blank">
+                          {userDetail.zaloLink}
+                        </a>
+                      ) : (
+                        "Đang cập nhật"
+                      )}
                     </span>
                   </div>
                 </Grid.Column>
