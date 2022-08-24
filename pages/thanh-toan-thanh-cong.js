@@ -2,7 +2,7 @@ import React from "react";
 import PaymentSuccessfullyPage from "../components/page-payment-successfully/page-payment-successfully.component";
 import SubHeader from "../components/sub-header/sub-header.component";
 
-const PaymentSuccessfully = () => {
+const PaymentSuccessfully = ({ user }) => {
   return (
     <div>
       <SubHeader

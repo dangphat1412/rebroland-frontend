@@ -116,7 +116,7 @@ const PagePropertyDetail = ({
           return {
             original: item.image,
             thumbnail: item.image,
-            srcSet: item.image,
+            srcSet: null,
             originalHeight: 500,
             thumbnailHeight: 50,
           };
