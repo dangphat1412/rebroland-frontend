@@ -11,7 +11,7 @@ const DetailMyDerivativeProperty = ({ user, postData }) => {
     <div>
       <SubHeader
         title="Chi tiết Bất động sản phái sinh của tôi"
-        background="/bg-real-estate.jpg"
+        background="/broker-background.jpg"
       />
       <PagePropertyDetail
         post={postData.post}

@@ -60,6 +60,13 @@ export const FormPropertyDetailContainer = styled.div`
   .image-gallery-slide {
     background: rgba(0, 0, 0, 0.2);
   }
+
+  .image-gallery-content.bottom.fullscreen {
+    height: 100vh;
+    & .image-gallery-image {
+      height: 100vh;
+    }
+  }
 `;
 
 export const ShotInformationContainer = styled(Statistic.Group)`
