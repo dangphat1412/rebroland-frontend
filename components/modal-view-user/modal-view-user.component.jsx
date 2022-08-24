@@ -61,7 +61,11 @@ const ViewUserModal = ({ loading, user }) => {
               <label>Facebook:</label>
               <span>
                 {user.facebookLink ? (
-                  <a href={`${user.facebookLink}`} target="_blank">
+                  <a
+                    href={`${user.facebookLink}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     {user.facebookLink}
                   </a>
                 ) : (
@@ -73,7 +77,7 @@ const ViewUserModal = ({ loading, user }) => {
               <label>Zalo:</label>
               <span>
                 {user.zaloLink ? (
-                  <a href={`${user.zaloLink}`} target="_blank">
+                  <a href={`${user.zaloLink}`} target="_blank" rel="noreferrer">
                     {user.zaloLink}
                   </a>
                 ) : (

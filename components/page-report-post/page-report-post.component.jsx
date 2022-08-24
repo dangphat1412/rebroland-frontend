@@ -579,11 +579,11 @@ const DetailPostReportModal = ({
                         </Table.Cell>
                         <Table.Cell>
                           {detail.content &&
-                            detail.content
-                              .split(";")
-                              .map((content) => (
-                                <p style={{ marginBottom: "1px" }}>{content}</p>
-                              ))}
+                            detail.content.split(";").map((content, index) => (
+                              <p key={index} style={{ marginBottom: "1px" }}>
+                                {content}
+                              </p>
+                            ))}
                         </Table.Cell>
                         <Table.Cell singleLine textAlign="center">
                           {detail.startDate}

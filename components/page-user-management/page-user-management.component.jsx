@@ -393,7 +393,11 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                     <label>Facebook:</label>
                     <span>
                       {userDetail.facebookLink ? (
-                        <a href={`${userDetail.facebookLink}`} target="_blank">
+                        <a
+                          href={`${userDetail.facebookLink}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
                           {userDetail.facebookLink}
                         </a>
                       ) : (
@@ -405,7 +409,11 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                     <label>Zalo:</label>
                     <span>
                       {userDetail.zaloLink ? (
-                        <a href={`${userDetail.zaloLink}`} target="_blank">
+                        <a
+                          href={`${userDetail.zaloLink}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
                           {userDetail.zaloLink}
                         </a>
                       ) : (
