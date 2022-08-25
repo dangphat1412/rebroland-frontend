@@ -129,6 +129,7 @@ const EditPostForm = ({
                 getValues={getValues}
                 setValue={setValue}
                 post={editedPost}
+                watch={watch}
               />
               <ImageInformationForm
                 images={images}

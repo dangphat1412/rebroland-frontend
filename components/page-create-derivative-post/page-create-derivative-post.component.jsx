@@ -119,6 +119,7 @@ const CreateDerivativePost = ({ user, post }) => {
                 setValue={setValue}
                 control={control}
                 post={post}
+                watch={watch}
               />
               <ImageInformationForm
                 images={images}

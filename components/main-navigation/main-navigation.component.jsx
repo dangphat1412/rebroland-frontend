@@ -77,7 +77,10 @@ const MainNavigation = ({
         <Menu>
           <Grid>
             <Grid.Column width={4} textAlign="left" verticalAlign="middle">
-              <Link href="/" passHref>
+              <Link
+                href={user && user.currentRole === 3 ? "/nha-moi-gioi" : "/"}
+                passHref
+              >
                 <a>
                   <LogoContainer
                     src="/logo-slogan.png"
@@ -446,40 +449,40 @@ const NotificationList = ({
                     setNotifications(list);
                     setOpenNotification(false);
                     console.log(notifications);
-                    if (data.type === "Contact") {
-                      Router.push("/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai");
-                    }
-                    if (data.type === "Refund") {
-                      Router.push("/trang-ca-nhan/thong-tin-ca-nhan");
-                    }
-                    if (data.type === "Report") {
-                      Router.push(
-                        `/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`
-                      );
-                    }
-                    if (data.type === "PostStatus") {
-                      Router.push(
-                        `/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`
-                      );
-                    }
-                    if (data.type === "FinishTakeCare") {
-                      Router.push(
-                        {
-                          pathname: `/danh-sach-nha-moi-gioi/${data.sender}`,
-                          query: { allowRate: data.unread },
-                        },
-                        `/danh-sach-nha-moi-gioi/${data.sender}`
-                      );
-                    }
-                    if (data.type === "FinishTransaction") {
-                      Router.push(
-                        {
-                          pathname: `/chi-tiet-nguoi-dung/${data.sender}`,
-                          query: { allowRate: data.unread },
-                        },
-                        `/chi-tiet-nguoi-dung/${data.sender}`
-                      );
-                    }
+                    // if (data.type === "Contact") {
+                    //   Router.push("/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai");
+                    // }
+                    // if (data.type === "Refund") {
+                    //   Router.push("/trang-ca-nhan/thong-tin-ca-nhan");
+                    // }
+                    // if (data.type === "Report") {
+                    //   Router.push(
+                    //     `/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`
+                    //   );
+                    // }
+                    // if (data.type === "PostStatus") {
+                    //   Router.push(
+                    //     `/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`
+                    //   );
+                    // }
+                    // if (data.type === "FinishTakeCare") {
+                    //   Router.push(
+                    //     {
+                    //       pathname: `/danh-sach-nha-moi-gioi/${data.sender}`,
+                    //       query: { allowRate: data.unread },
+                    //     },
+                    //     `/danh-sach-nha-moi-gioi/${data.sender}`
+                    //   );
+                    // }
+                    // if (data.type === "FinishTransaction") {
+                    //   Router.push(
+                    //     {
+                    //       pathname: `/chi-tiet-nguoi-dung/${data.sender}`,
+                    //       query: { allowRate: data.unread },
+                    //     },
+                    //     `/chi-tiet-nguoi-dung/${data.sender}`
+                    //   );
+                    // }
                   }
                 }}
               >
@@ -501,7 +504,7 @@ const NotificationList = ({
                   {notification.type === "Report" && (
                     <Item.Description>{notification.content}</Item.Description>
                   )}
-                  {notification.type === "Post Status" && (
+                  {notification.type === "PostStatus" && (
                     <Item.Description>{notification.content}</Item.Description>
                   )}
                   {notification.type === "FinishTakeCare" && (

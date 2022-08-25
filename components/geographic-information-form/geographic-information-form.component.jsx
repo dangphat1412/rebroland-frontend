@@ -9,6 +9,7 @@ import InputField from "../input-field/input-field.component";
 import Map from "../map/map.component";
 import { useFieldArray } from "react-hook-form";
 import { FormGeographicInformationContainer } from "./geographic-information-form.styles";
+import axios from "axios";
 
 const GeographicInformationForm = ({
   register,
@@ -17,6 +18,7 @@ const GeographicInformationForm = ({
   getValues,
   setValue,
   post,
+  watch,
 }) => {
   const {
     fields: coordinatesFields,
@@ -24,9 +26,31 @@ const GeographicInformationForm = ({
     remove: coordinatesRemove,
   } = useFieldArray({ control, name: "coordinates" });
 
-  const [position, setPosition] = useState([
-    { lat: 21.01286, lng: 105.526657 },
-  ]);
+  const [position, setPosition] = useState([]);
+
+  const getCoordinates = async (address) => {
+    const data = await axios.get(
+      "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+        address +
+        "&key=" +
+        "AIzaSyCuih1YVsnPiQJcSVTqM5vSWbPFpOvOric"
+    );
+    const coordinate = {
+      latitude:
+        data.data.results.length > 0 &&
+        data.data.results[0].geometry.location.lat,
+      longitude:
+        data.data.results.length > 0 &&
+        data.data.results[0].geometry.location.lng,
+    };
+
+    setPosition(
+      [
+        data.data.results.length > 0 && data.data.results[0].geometry.location,
+      ] || []
+    );
+    setValue("coordinates", [coordinate]);
+  };
 
   const handleCheck = () => {
     setPosition(
@@ -41,16 +65,51 @@ const GeographicInformationForm = ({
 
   const handleChange = (e, { name, value }) => {
     if (name === "province") {
+      setValue("district", null);
+      setValue("ward", null);
       const provinceId = dataProvinces.provinces.filter(
         (province) => province.value === value
       )[0].key;
       fetchDistrictAPI(provinceId);
+
+      const address =
+        (getValues("address") ? getValues("address") + "," : "") +
+        (getValues("ward") ? getValues("ward") + "," : "") +
+        (getValues("district") ? getValues("district") + "," : "") +
+        (value ? value : "");
+      console.log(address);
+      getCoordinates(address);
     }
     if (name === "district") {
+      setValue("ward", null);
       const districtId = dataProvinces.districts.filter(
         (district) => district.value === value
       )[0].key;
       fetchWardsAPI(districtId);
+
+      const address =
+        (getValues("address") ? getValues("address") + "," : "") +
+        (getValues("ward") ? getValues("ward") + "," : "") +
+        (value ? value + "," : "") +
+        (getValues("province") ? getValues("province") + "," : "");
+      getCoordinates(address);
+    }
+    if (name === "ward") {
+      const address =
+        (getValues("address") ? getValues("address") + "," : "") +
+        (value ? value + "," : "") +
+        (getValues("district") ? getValues("district") + "," : "") +
+        (getValues("province") ? getValues("province") + "," : "");
+
+      getCoordinates(address);
+    }
+    if (name === "address") {
+      const address =
+        (value ? value + "," : "") +
+        (getValues("ward") ? getValues("ward") + "," : "") +
+        (getValues("district") ? getValues("district") + "," : "") +
+        (getValues("province") ? getValues("province") + "," : "");
+      getCoordinates(address);
     }
     setValue(name, value);
   };
@@ -146,7 +205,7 @@ const GeographicInformationForm = ({
           options={dataProvinces.provinces}
           onChange={handleChange}
           error={errors.province}
-          defaultValue={getValues("province")}
+          value={watch("province")}
           requiredField
         />
         <InputField
@@ -159,7 +218,7 @@ const GeographicInformationForm = ({
           placeholder="Chọn Quận/Huyện"
           options={dataProvinces.districts}
           onChange={handleChange}
-          defaultValue={getValues("district")}
+          value={watch("district")}
           error={errors.district}
           requiredField
         />
@@ -173,7 +232,7 @@ const GeographicInformationForm = ({
           placeholder="Chọn Phường/Xã"
           options={dataProvinces.wards}
           onChange={handleChange}
-          defaultValue={getValues("ward")}
+          value={watch("ward")}
           error={errors.ward}
           requiredField
         />
@@ -193,7 +252,7 @@ const GeographicInformationForm = ({
       {/* missing loading */}
       <Form.Field>
         <label>Vị trí trên bản đồ</label>
-        <Map position={position} />
+        <Map position={position} setValue={setValue} />
         <Grid>
           <Grid.Row>
             <Grid.Column>
@@ -203,6 +262,7 @@ const GeographicInformationForm = ({
                     <InputField
                       name={`coordinates[${index}].latitude`}
                       {...register(`coordinates[${index}].latitude`, {
+                        required: "Nhập toạ độ",
                         validate: {
                           isCoordinate: (value) =>
                             !value ||
@@ -230,12 +290,15 @@ const GeographicInformationForm = ({
                         );
                       }}
                       error={
-                        errors.coordinates && errors.coordinates[index].latitude
+                        errors.coordinates &&
+                        errors.coordinates[index] &&
+                        errors.coordinates[index].latitude
                       }
                     />
                     <InputField
                       name={`coordinates.[${index}].longitude`}
                       {...register(`coordinates[${index}].longitude`, {
+                        required: "Nhập toạ độ",
                         validate: {
                           isCoordinate: (value) =>
                             !value ||
@@ -266,6 +329,7 @@ const GeographicInformationForm = ({
                       }}
                       error={
                         errors.coordinates &&
+                        errors.coordinates[index] &&
                         errors.coordinates[index].longitude
                       }
                     />

@@ -81,7 +81,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
   };
 
   const handleRoleFilterOption = (e, { value }) => {
-    setSortValue(value);
+    setRoleValue(value);
     fetchAPI(keyword, value, sortValue, 0);
   };
 
@@ -135,7 +135,7 @@ const UserManagementPage = ({ usersData, setTotalResult }) => {
                 },
               ]}
               className="role-filter"
-              value={sortValue}
+              value={roleValue}
               onChange={handleRoleFilterOption}
             />
             <Dropdown

@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   GoogleMap,
   Marker,
   Polygon,
@@ -7,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { MapContainer } from "./map.styles";
 
-const Map = ({ position }) => {
+const Map = ({ position, setValue }) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyCuih1YVsnPiQJcSVTqM5vSWbPFpOvOric",
   });
@@ -34,7 +35,19 @@ const Map = ({ position }) => {
         center={position[0]}
         mapContainerClassName="map-container"
       >
-        {position.length === 1 && <Marker position={coordinates[0]} />}
+        {position.length === 1 && (
+          <Marker
+            clickable
+            draggable={true}
+            onDragEnd={(e) => {
+              setValue("coordinates", [
+                { latitude: e.latLng.lat(), longitude: e.latLng.lng() },
+              ]);
+              console.log(e.latLng.lat());
+            }}
+            position={coordinates[0]}
+          />
+        )}
         {position.length > 1 && (
           <Polygon path={coordinates} options={options} />
         )}

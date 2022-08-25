@@ -400,23 +400,27 @@ const RealEstateInformationForm = ({
                           />
                           <InputField
                             {...register("plotNumber", {
-                              // min: {
-                              //   value: 1,
-                              //   message: "Nhập số thửa hợp lệ",
-                              // },
-                              // max: {
-                              //   value: 99999,
-                              //   message: "Số thửa tối đa 99999",
-                              // },
-                              validate: (value) =>
-                                (!value &&
-                                  (getValues("barcode") ||
-                                    getValues("buildingName") ||
-                                    getValues("roomNumber") ||
-                                    getValues("owner") ||
-                                    getValues("ownerPhone")) &&
-                                  "Số thửa không được để trống") ||
-                                true,
+                              validate: {
+                                checkNull: (value) =>
+                                  (!value &&
+                                    (getValues("barcode") ||
+                                      getValues("buildingName") ||
+                                      getValues("roomNumber") ||
+                                      getValues("owner") ||
+                                      getValues("ownerPhone")) &&
+                                    "Số thửa không được để trống") ||
+                                  true,
+                                checkMin: (value) =>
+                                  (value &&
+                                    value < 1 &&
+                                    "Số thửa tối thiểu là 1") ||
+                                  true,
+                                checkMax: (value) =>
+                                  (value &&
+                                    value > 99999 &&
+                                    "Số thửa tối đa là 99999") ||
+                                  true,
+                              },
                             })}
                             label="Số thửa"
                             name="plotNumber"
@@ -464,23 +468,27 @@ const RealEstateInformationForm = ({
                           />
                           <InputField
                             {...register("plotNumber", {
-                              min: {
-                                value: 1,
-                                message: "Nhập số thửa hợp lệ",
+                              validate: {
+                                checkNull: (value) =>
+                                  (!value &&
+                                    (getValues("barcode") ||
+                                      getValues("buildingName") ||
+                                      getValues("roomNumber") ||
+                                      getValues("owner") ||
+                                      getValues("ownerPhone")) &&
+                                    "Số thửa không được để trống") ||
+                                  true,
+                                checkMin: (value) =>
+                                  (value &&
+                                    value < 1 &&
+                                    "Số thửa tối thiểu là 1") ||
+                                  true,
+                                checkMax: (value) =>
+                                  (value &&
+                                    value > 99999 &&
+                                    "Số thửa tối đa là 99999") ||
+                                  true,
                               },
-                              max: {
-                                value: 99999,
-                                message: "Số thửa tối đa 99999",
-                              },
-                              validate: (value) =>
-                                (!value &&
-                                  (getValues("barcode") ||
-                                    getValues("buildingName") ||
-                                    getValues("roomNumber") ||
-                                    getValues("owner") ||
-                                    getValues("ownerPhone")) &&
-                                  "Số thửa không được để trống") ||
-                                true,
                             })}
                             label="Số thửa"
                             name="plotNumber"
@@ -652,7 +660,7 @@ const RealEstateInformationForm = ({
           name="frontispiece"
           placeholder="Nhập mặt tiền"
           onChange={(e, { name, value }) => {
-            setValue(name, value ? (value >= 0 ? Math.abs(value) : 0) : null);
+            /\d*\.?\d*/.test(value) && setValue(name, value);
           }}
           onFocus={(e) => {
             setValue("frontispiece", getValues("frontispiece"));

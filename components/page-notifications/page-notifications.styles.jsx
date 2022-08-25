@@ -9,4 +9,7 @@ export const NotificationsContainer = styled.div`
       background: rgba(0, 0, 0, 0.03) !important;
     }
   }
+  .infinite-scroll-component {
+    overflow: hidden !important;
+  }
 `;

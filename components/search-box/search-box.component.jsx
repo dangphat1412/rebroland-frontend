@@ -147,8 +147,8 @@ const SearchBox = ({ searchParams }) => {
 
   const handleChange = (e, { name, value }) => {
     if (name === "province") {
-      setValue("district", undefined);
-      setValue("ward", undefined);
+      setValue("district", null);
+      setValue("ward", null);
       if (value) {
         const provinceId = dataProvinces.provinces.filter(
           (province) => province.value === value
@@ -163,7 +163,7 @@ const SearchBox = ({ searchParams }) => {
       }
     }
     if (name === "district") {
-      setValue("ward", undefined);
+      setValue("ward", null);
       if (value) {
         const districtId = dataProvinces.districts.filter(
           (district) => district.value === value

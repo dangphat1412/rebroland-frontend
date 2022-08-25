@@ -123,19 +123,6 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
       setThreeMonthsDiscount(data.currentPrice[1].discount);
       setSixMonthsDiscount(data.currentPrice[2].discount);
       setTwelveMonthsDiscount(data.currentPrice[3].discount);
-
-      // setRefundWithInfo(data.currentRefundWithInfo.percent);
-      // setRefundWithoutInfo(data.currentRefundWithoutInfo.percent);
-      // setRefundWithInfoOptions(
-      //   data.listRefundWithInfo.map((price) => {
-      //     return { key: price, text: price, value: price };
-      //   })
-      // );
-      // setRefundWithoutInfoOptions(
-      //   data.listRefundWithoutInfo.map((price) => {
-      //     return { key: price, text: price, value: price };
-      //   })
-      // );
     };
     fetchAPI();
   }, []);
@@ -328,15 +315,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                         additionLabel="Thêm mức giá: "
                         value={pricePerDay}
                         onAddItem={handleAddition}
-                        onChange={(e, data) => {
-                          console.log(data);
-                        }}
-                        onSearchChange={(e, data) => {
-                          console.log(data);
-                          // setPricePerDay(
-                          //   value.toString().replace(/[^0-9]/g, "")
-                          // );
-                        }}
+                        onChange={(e, { name, value }) => setPricePerDay(value)}
                       />
                       <InputField
                         type="number"
