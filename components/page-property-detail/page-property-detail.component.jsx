@@ -654,30 +654,39 @@ const PagePropertyDetail = ({
                   verticalAlign="middle"
                 />
                 <p className="prefix-user">Được đăng bởi</p>
-                {user ? (
-                  post.user.id === user.id ? (
-                    <Link href={`/trang-ca-nhan/bat-dong-san-cua-toi`}>
-                      {post.user.fullName}
-                    </Link>
-                  ) : user.broker === true ? (
-                    <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
-                      {post.user.fullName}
-                    </Link>
-                  ) : post.user.broker === true ? (
+                {user && post.user.id === user.id && (
+                  <Link href={`/trang-ca-nhan/bat-dong-san-cua-toi`}>
+                    {post.user.fullName}
+                  </Link>
+                )}
+                {user && post.user.id !== user.id && user.currentRole === 3 && (
+                  <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
+                    {post.user.fullName}
+                  </Link>
+                )}
+                {user &&
+                  post.user.id !== user.id &&
+                  user.currentRole === 2 &&
+                  post.user.broker === true && (
                     <Link href={`/danh-sach-nha-moi-gioi/${post.user.id}`}>
                       {post.user.fullName}
                     </Link>
-                  ) : (
+                  )}
+                {user &&
+                  post.user.id !== user.id &&
+                  user.currentRole === 2 &&
+                  post.user.broker === false && (
                     <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
                       {post.user.fullName}
                     </Link>
-                  )
-                ) : post.user.broker === true ? (
-                  <Link href={`/danh-sach-nha-moi-gioi/${post.user.id}`}>
+                  )}
+                {!user && post.user.broker === false && (
+                  <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
                     {post.user.fullName}
                   </Link>
-                ) : (
-                  <Link href={`/chi-tiet-nguoi-dung/${post.user.id}`}>
+                )}
+                {!user && post.user.broker === true && (
+                  <Link href={`/danh-sach-nha-moi-gioi/${post.user.id}`}>
                     {post.user.fullName}
                   </Link>
                 )}

@@ -15,12 +15,15 @@ import {
 import { NotificationsContainer } from "./page-notifications.styles";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getNotifications } from "../../actions/notifications";
+import NotificationItem from "../item-notification/item-notification.component";
 
-const NotificationsPage = ({ notificationList }) => {
+const NotificationsPage = ({ user, notificationList }) => {
   console.log(notificationList);
   const [notifications, setNotifications] = useState(notificationList || []);
   const [hasMore, setHasMore] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
+
+  const [loading, setLoading] = useState(false);
 
   const fetchNotificationsOnScroll = async () => {
     try {
@@ -36,6 +39,9 @@ const NotificationsPage = ({ notificationList }) => {
   };
   return (
     <NotificationsContainer>
+      <Dimmer active={loading} inverted>
+        <Loader inverted>Loading</Loader>
+      </Dimmer>
       <Grid centered>
         <Grid.Row>
           <Grid.Column width={8}>
@@ -56,49 +62,14 @@ const NotificationsPage = ({ notificationList }) => {
                 <Item.Group divided link>
                   {notifications.map((notification, index) => {
                     return (
-                      <Item key={index}>
-                        <Item.Image
-                          src={
-                            notification.type === "Contact"
-                              ? "https://veganic.vn/images/social/phone.png"
-                              : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkTY0F2IXGOFku2yIu4HOqO6UMaTcke1w33xHRrSPu1dgHbX7amiOvnTu1W-cuSZppuEo&usqp=CAU"
-                          }
-                          size="tiny"
-                        />
-                        <Item.Content>
-                          {notification.type === "Contact" && (
-                            <>
-                              <Item.Description>
-                                Số điện thoại <b>{notification.phone}</b> muốn
-                                liên lạc với bạn
-                              </Item.Description>
-                              <Item.Description>
-                                <b>Nội dung: </b>
-                                {notification.content}
-                              </Item.Description>
-                            </>
-                          )}
-                          {/* {notification.type === "Report" && (
-                            <Item.Description>
-                              {notification.content}
-                            </Item.Description>
-                          )} */}
-                          <Item.Description>
-                            {notification.content}
-                          </Item.Description>
-                          <Item.Extra>{notification.date} </Item.Extra>
-                        </Item.Content>
-                        {notification.unRead === true && (
-                          <Item.Content style={{ position: "relative" }}>
-                            <Label
-                              style={{ position: "absolute", right: "0px" }}
-                              circular
-                              color="blue"
-                              empty
-                            />
-                          </Item.Content>
-                        )}
-                      </Item>
+                      <NotificationItem
+                        key={index}
+                        user={user}
+                        notification={notification}
+                        notifications={notifications}
+                        setNotifications={setNotifications}
+                        setLoading={setLoading}
+                      />
                     );
                   })}
                 </Item.Group>

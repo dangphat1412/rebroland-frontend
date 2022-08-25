@@ -4,6 +4,7 @@ import SubNavigation from "../sub-navigation/sub-navigation.component";
 import { NavigationContainer } from "./navigation.styles";
 import { useRouter } from "next/router";
 import Pusher from "pusher-js";
+import { logoutUser } from "../../actions/auth";
 
 const Navigation = ({
   user,
@@ -35,6 +36,9 @@ const Navigation = ({
     if (user) channel = pusher.subscribe(`my-channel-${user.id}`);
     user &&
       channel.bind("my-event", function (data) {
+        if (data.block && data.block === true) {
+          logoutUser();
+        }
         if (data.message) {
           setUnreadNotification(unreadNotification + 1);
           setTimeout(() => {

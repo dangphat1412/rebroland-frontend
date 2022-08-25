@@ -48,12 +48,15 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
 
   const [pricePerDayData, setPricePerDayData] = useState(null);
   const [pricePerDay, setPricePerDay] = useState(null);
+  const [pricePerDayQuery, setPricePerDayQuery] = useState("");
   const [discountPricePerDay, setDiscountPricePerDay] = useState(null);
   const [pricePerDayOptions, setPricePerDayOptions] = useState([]);
 
   const [refundData, setRefundData] = useState(null);
   const [refundWithInfo, setRefundWithInfo] = useState(null);
+  const [refundWithInfoQuery, setRefundWithInfoQuery] = useState("");
   const [refundWithoutInfo, setRefundWithoutInfo] = useState(null);
+  const [refundWithoutInfoQuery, setRefundWithoutInfoQuery] = useState("");
   const [refundWithoutInfoOptions, setRefundWithoutInfoOptions] =
     useState(null);
   const [refundWithInfoOptions, setRefundWithInfoOptions] = useState(null);
@@ -61,6 +64,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
   const [brokerPriceData, setBrokerPriceData] = useState(null);
   const [brokerPriceOptions, setBrokerPriceOptions] = useState(null);
   const [brokerPrice, setBrokerPrice] = useState(null);
+  const [brokerPriceQuery, setBrokerPriceQuery] = useState("");
   const [oneMonthDiscount, setOneMonthDiscount] = useState(null);
   const [threeMonthsDiscount, setThreeMonthsDiscount] = useState(null);
   const [sixMonthsDiscount, setSixMonthsDiscount] = useState(null);
@@ -316,6 +320,12 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                         value={pricePerDay}
                         onAddItem={handleAddition}
                         onChange={(e, { name, value }) => setPricePerDay(value)}
+                        searchQuery={pricePerDayQuery}
+                        onSearchChange={(e, { searchQuery }) => {
+                          setPricePerDayQuery(
+                            searchQuery.replace(/[^0-9]/g, "")
+                          );
+                        }}
                       />
                       <InputField
                         type="number"
@@ -429,10 +439,16 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                           allowAdditions
                           additionLabel="Thêm mức giá: "
                           value={brokerPrice}
+                          searchQuery={brokerPriceQuery}
                           onAddItem={handleAddition}
                           onChange={(e, { name, value }) =>
                             setBrokerPrice(value)
                           }
+                          onSearchChange={(e, { searchQuery }) => {
+                            setBrokerPriceQuery(
+                              searchQuery.replace(/[^0-9]/g, "")
+                            );
+                          }}
                         />
                         <Form.Group widths={4}>
                           <InputField
@@ -555,10 +571,16 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                           allowAdditions
                           additionLabel="Thêm mức giá: "
                           value={refundWithoutInfo}
+                          searchQuery={refundWithoutInfoQuery}
                           onAddItem={handleAddition}
                           onChange={(e, { name, value }) =>
                             setRefundWithoutInfo(value)
                           }
+                          onSearchChange={(e, { searchQuery }) => {
+                            setRefundWithoutInfoQuery(
+                              searchQuery.replace(/[^0-9]/g, "")
+                            );
+                          }}
                         />
                         <InputField
                           fieldType="dropdown"
@@ -572,10 +594,16 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                           allowAdditions
                           additionLabel="Thêm mức giá: "
                           value={refundWithInfo}
+                          searchQuery={refundWithInfoQuery}
                           onAddItem={handleAddition}
                           onChange={(e, { name, value }) =>
                             setRefundWithInfo(value)
                           }
+                          onSearchChange={(e, { searchQuery }) => {
+                            setRefundWithInfoQuery(
+                              searchQuery.replace(/[^0-9]/g, "")
+                            );
+                          }}
                         />
                         <Button
                           content="Cập nhật"

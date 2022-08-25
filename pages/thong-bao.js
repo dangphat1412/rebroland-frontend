@@ -16,7 +16,7 @@ const Notifications = ({ user, notificationList }) => {
             : "/zyro-image.png"
         }
       />
-      <NotificationsPage notificationList={notificationList} />
+      <NotificationsPage notificationList={notificationList} user={user} />
     </div>
   );
 };

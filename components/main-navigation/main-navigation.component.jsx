@@ -24,6 +24,7 @@ import {
   getNotifications,
   readNotifications,
 } from "../../actions/notifications";
+import NotificationItem from "../item-notification/item-notification.component";
 import { NavContainer, Menu, LogoContainer } from "./main-navigation.styles";
 
 const MainNavigation = ({
@@ -345,7 +346,9 @@ const MainNavigation = ({
                       wide="very"
                       content={
                         <NotificationList
+                          user={user}
                           notifications={notifications}
+                          setLoading={setLoading}
                           setNotifications={setNotifications}
                           hasMore={hasMore}
                           fetchNotificationsOnScroll={
@@ -403,11 +406,13 @@ const MainNavigation = ({
 };
 
 const NotificationList = ({
+  user,
   notifications,
   setNotifications,
   hasMore,
   fetchNotificationsOnScroll,
   setOpenNotification,
+  setLoading,
 }) => {
   return (
     <>
@@ -435,91 +440,15 @@ const NotificationList = ({
         <Item.Group divided link>
           {notifications.map((notification, index) => {
             return (
-              <Item
+              <NotificationItem
                 key={index}
-                onClick={async () => {
-                  const data = await readNotifications(notification.id);
-                  if (data) {
-                    console.log("NOTIFICATION: ", data);
-                    const list = notifications;
-                    const index = list.findIndex(
-                      (n) => n.id === notification.id
-                    );
-                    list[index].unRead = false;
-                    setNotifications(list);
-                    setOpenNotification(false);
-                    console.log(notifications);
-                    // if (data.type === "Contact") {
-                    //   Router.push("/nha-moi-gioi/xu-ly-yeu-cau-lien-he-lai");
-                    // }
-                    // if (data.type === "Refund") {
-                    //   Router.push("/trang-ca-nhan/thong-tin-ca-nhan");
-                    // }
-                    // if (data.type === "Report") {
-                    //   Router.push(
-                    //     `/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`
-                    //   );
-                    // }
-                    // if (data.type === "PostStatus") {
-                    //   Router.push(
-                    //     `/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`
-                    //   );
-                    // }
-                    // if (data.type === "FinishTakeCare") {
-                    //   Router.push(
-                    //     {
-                    //       pathname: `/danh-sach-nha-moi-gioi/${data.sender}`,
-                    //       query: { allowRate: data.unread },
-                    //     },
-                    //     `/danh-sach-nha-moi-gioi/${data.sender}`
-                    //   );
-                    // }
-                    // if (data.type === "FinishTransaction") {
-                    //   Router.push(
-                    //     {
-                    //       pathname: `/chi-tiet-nguoi-dung/${data.sender}`,
-                    //       query: { allowRate: data.unread },
-                    //     },
-                    //     `/chi-tiet-nguoi-dung/${data.sender}`
-                    //   );
-                    // }
-                  }
-                }}
-              >
-                <Item.Image
-                  src={
-                    notification.type === "Contact"
-                      ? "https://veganic.vn/images/social/phone.png"
-                      : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkTY0F2IXGOFku2yIu4HOqO6UMaTcke1w33xHRrSPu1dgHbX7amiOvnTu1W-cuSZppuEo&usqp=CAU"
-                  }
-                  size="tiny"
-                />
-                <Item.Content verticalAlign="middle">
-                  {notification.type === "Contact" && (
-                    <Item.Description>
-                      Số điện thoại <b>{notification.phone}</b> muốn liên lạc
-                      với bạn
-                    </Item.Description>
-                  )}
-                  {notification.type === "Report" && (
-                    <Item.Description>{notification.content}</Item.Description>
-                  )}
-                  {notification.type === "PostStatus" && (
-                    <Item.Description>{notification.content}</Item.Description>
-                  )}
-                  {notification.type === "FinishTakeCare" && (
-                    <Item.Description>{notification.content}</Item.Description>
-                  )}
-                  <Item.Extra>{notification.date}</Item.Extra>
-                </Item.Content>
-                {notification.unRead === true && (
-                  <Item.Content verticalAlign="right" style={{ width: "20px" }}>
-                    <Item.Extra>
-                      <Label floated="right" circular color="blue" empty />
-                    </Item.Extra>
-                  </Item.Content>
-                )}
-              </Item>
+                user={user}
+                notification={notification}
+                notifications={notifications}
+                setNotifications={setNotifications}
+                setOpenNotification={setOpenNotification}
+                setLoading={setLoading}
+              />
             );
           })}
         </Item.Group>

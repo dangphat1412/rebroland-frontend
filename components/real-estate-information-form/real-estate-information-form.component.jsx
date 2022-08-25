@@ -601,7 +601,7 @@ const RealEstateInformationForm = ({
                                 getValues("buildingName") ||
                                 getValues("roomNumber") ||
                                 getValues("plotNumber") ||
-                                getValues("plotNumber")) &&
+                                getValues("owner")) &&
                               "Số điện thoại không được để trống") ||
                             true,
                         })}
@@ -646,7 +646,7 @@ const RealEstateInformationForm = ({
         <InputField
           {...register("frontispiece", {
             min: {
-              value: 1,
+              value: 0,
               message: "Nhập mặt tiền hợp lệ",
             },
             max: {
@@ -654,13 +654,12 @@ const RealEstateInformationForm = ({
               message: "Mặt tiền tối đa 100m",
             },
           })}
-          type="number"
           fluid
           label="Mặt tiền"
           name="frontispiece"
           placeholder="Nhập mặt tiền"
           onChange={(e, { name, value }) => {
-            /\d*\.?\d*/.test(value) && setValue(name, value);
+            setValue(name, value.replace(/[^0-9.]/g, ""));
           }}
           onFocus={(e) => {
             setValue("frontispiece", getValues("frontispiece"));

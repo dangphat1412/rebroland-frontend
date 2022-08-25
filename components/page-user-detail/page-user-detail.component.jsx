@@ -40,6 +40,7 @@ const UserDetailPage = ({
   setLoginOpen,
   setRegisterOpen,
   allowRate,
+  setTotalResult,
 }) => {
   const [data, setData] = useState(postsData.lists || {});
   const [userDetail, setUserDetail] = useState(postsData.user || {});
@@ -92,7 +93,9 @@ const UserDetailPage = ({
       sortValue,
       pageNo
     );
+    console.log(posts);
     setData(posts.lists);
+    setTotalResult(posts.lists.totalResult);
     setUserDetail(posts.user);
     setLoading(false);
     window.scrollTo({

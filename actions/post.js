@@ -250,9 +250,13 @@ export const getOriginalPostsByUserDetail = async (
   pageNo
 ) => {
   try {
-    const res = await axios.get(
-      `${API_URL}/api/posts/original/${userId}?propertyType=${propertyType}&sortValue=${sortValue}&pageNo=${pageNo}`
-    );
+    const res = await Axios.get(`${API_URL}/api/posts/original/${userId}`, {
+      params: {
+        propertyType: propertyType,
+        sortValue: sortValue,
+        pageNo: pageNo,
+      },
+    });
     return res.data;
   } catch (error) {
     console.log(error);
