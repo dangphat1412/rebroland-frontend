@@ -80,7 +80,6 @@ const RatingForm = ({
         });
       }, 100);
       setRating(ratingData.starRate);
-      console.log(ratingData);
       setOpenRating(false);
       fetchRateListAPI && fetchRateListAPI(0);
     } else {
@@ -93,6 +92,8 @@ const RatingForm = ({
       }, 100);
     }
   };
+
+  console.log("RATED: ", ratedUser);
 
   return (
     <FormRatingContainer>
@@ -109,7 +110,7 @@ const RatingForm = ({
             <Header.Subheader>
               <Rating
                 icon="star"
-                defaultRating={rating.toFixed()}
+                // defaultRating={rating.toFixed()}
                 maxRating={5}
                 disabled
               />

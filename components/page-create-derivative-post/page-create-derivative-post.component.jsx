@@ -74,7 +74,7 @@ const CreateDerivativePost = ({ user, post }) => {
     },
   });
 
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState(post.images || []);
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data, e) => {
