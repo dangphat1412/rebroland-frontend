@@ -42,8 +42,7 @@ const RatingForm = ({
   }, [register]);
 
   const handleRate = (e, { rating, maxRating }) => {
-    setValue("starRate", rating);
-    console.log(rating);
+    setValue("starRate", rating === 0 ? undefined : rating);
   };
 
   const handleChange = (e, { name, value }) => {
@@ -131,6 +130,7 @@ const RatingForm = ({
                 icon="star"
                 size="massive"
                 onRate={handleRate}
+                clearable
               />
             </Grid.Column>
           </Grid.Row>
