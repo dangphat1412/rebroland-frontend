@@ -14,6 +14,7 @@ import {
   Item,
   Label,
   Loader,
+  Pagination,
   Segment,
   Tab,
   Table,
@@ -32,11 +33,13 @@ import AppointmentScheduleForm from "../form-appointment-schedule/form-appointme
 import NoteForm from "../form-note/form-note.component";
 import FormCreateCustomer from "../form-create-customer/form-create-customer.component";
 import {
+  confirmFinishAppointment,
   deleteCustomer,
   deleteTimeline,
   editSummarize,
   endCare,
   getCustomerDetail,
+  getDetailPost,
   searchCustomer,
 } from "../../actions/user-care";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
@@ -45,6 +48,7 @@ import { useForm } from "react-hook-form";
 import RatingForm from "../form-rating/form-rating.component";
 import options from "../../utils/takeCareOptions";
 import ReportUserForm from "../form-report-user/form-report-user.component";
+import ViewPostModal from "../modal-view-post/modal-view-post.component";
 
 const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
   const {
@@ -64,6 +68,8 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
   const [openCreateCustomer, setOpenCreateCustomer] = useState(false);
   const [openDeteleCustomer, setOpenDeleteCustomer] = useState(false);
   const [openDeleteTimeline, setOpenDeleteTimeline] = useState(false);
+  const [openChangeStatusTimeline, setOpenChangeStatusTimeline] =
+    useState(false);
   const [selectedCustomerIndex, setSelectedCustomerIndex] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedTimeline, setSelectedTimeline] = useState(null);
@@ -71,9 +77,11 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
   const [openRating, setOpenRating] = useState(false);
   const [openReport, setOpenReport] = useState(false);
 
-  const [rating, setRating] = useState(
-    selectedCustomer && selectedCustomer.user.avgRate
-  );
+  const [openViewDetailPost, setOpenViewDetailPost] = useState(false);
+  const [detailPost, setDetailPost] = useState(null);
+  const [postLoading, setPostLoading] = useState(false);
+
+  const [rating, setRating] = useState(null);
   const [timeline, setTimeline] = useState(null);
   const [loading, setLoading] = useState(false);
   const [customerLoading, setCustomerLoading] = useState(false);
@@ -162,6 +170,24 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
         type: "success",
         title: "Chăm sóc khách hàng",
         description: <p>Hoàn thành kết thúc chăm sóc khách hàng</p>,
+      });
+    }
+  };
+
+  const handleFinishAppointment = async (selectedTimeline) => {
+    const status = await confirmFinishAppointment(selectedTimeline.detailId);
+    if (status === 200) {
+      const tls = [...timeline];
+      const index = tls.findIndex(
+        (tl) => tl.detailId === selectedTimeline.detailId
+      );
+      tls[index].status = true;
+      setTimeline(tls);
+      setOpenChangeStatusTimeline(false);
+      toast({
+        type: "success",
+        title: "Xác nhận hoàn thành lịch hẹn",
+        description: <p>Xác nhận hoàn thành lịch hẹn thành công</p>,
       });
     }
   };
@@ -301,11 +327,15 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                           <Table.Cell singleLine textAlign="center">
                             {care.status === true ? (
                               <Label circular color="green">
-                                Kết thúc tư vấn
+                                <span style={{ textTransform: "uppercase" }}>
+                                  Kết thúc tư vấn
+                                </span>
                               </Label>
                             ) : (
                               <Label circular color="blue">
-                                Đang tư vấn
+                                <span style={{ textTransform: "uppercase" }}>
+                                  Đang tư vấn
+                                </span>
                               </Label>
                             )}
                           </Table.Cell>
@@ -316,10 +346,10 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                   e.stopPropagation();
                                   console.log(care);
                                   setSelectedCustomer(care);
+                                  setRating(care.user.avgRate);
                                   setOpenEndTakeCare(true);
                                 }}
                               >
-                                {/* <Icon name="times" /> */}
                                 Kết thúc
                               </Button>
                             )}
@@ -340,6 +370,23 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                         </Table.Row>
                       ))}
                     </Table.Body>
+                    <Table.Footer>
+                      <Table.Row>
+                        <Table.HeaderCell colSpan="7">
+                          <Pagination
+                            activePage={careData.pageNo}
+                            boundaryRange={1}
+                            siblingRange={1}
+                            ellipsisItem={{
+                              content: <Icon name="ellipsis horizontal" />,
+                              icon: true,
+                            }}
+                            totalPages={careData.totalPages}
+                            onPageChange={handlePaginationChange}
+                          />
+                        </Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Footer>
                   </Table>
                 )}
               </Grid>
@@ -408,17 +455,19 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                     ) : (
                                       <b>Không có mô tả nào</b>
                                     )}
-                                    <Icon
-                                      name="pencil alternate"
-                                      color="yellow"
-                                      style={{
-                                        paddingLeft: "10px",
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={() => {
-                                        setOpenEditSummarize(true);
-                                      }}
-                                    />
+                                    {customerDetail.user.status === false && (
+                                      <Icon
+                                        name="pencil alternate"
+                                        color="yellow"
+                                        style={{
+                                          paddingLeft: "10px",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          setOpenEditSummarize(true);
+                                        }}
+                                      />
+                                    )}
                                   </pre>
                                 </div>
                               </Header>
@@ -430,7 +479,19 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                 <Item.Group divided>
                                   {customerDetail.posts.map((post, index) => {
                                     return (
-                                      <Item key={index}>
+                                      <Item
+                                        key={index}
+                                        style={{ cursor: "pointer" }}
+                                        onClick={async (e) => {
+                                          setPostLoading(true);
+                                          setOpenViewDetailPost(true);
+                                          const p = await getDetailPost(
+                                            post.postId
+                                          );
+                                          setDetailPost(p);
+                                          setPostLoading(false);
+                                        }}
+                                      >
                                         <Item.Image
                                           size="small"
                                           src={
@@ -472,24 +533,26 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                       >
                         {customerDetail ? (
                           <>
-                            <div>
-                              <Button
-                                onClick={() => {
-                                  setOpenAppointmentSchedule(true);
-                                }}
-                              >
-                                <Icon name="calendar alternate outline" />
-                                Thêm lịch
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  setOpenNote(true);
-                                }}
-                              >
-                                <Icon name="pencil" />
-                                Ghi chú
-                              </Button>
-                            </div>
+                            {customerDetail.user.status === false && (
+                              <div>
+                                <Button
+                                  onClick={() => {
+                                    setOpenAppointmentSchedule(true);
+                                  }}
+                                >
+                                  <Icon name="calendar alternate outline" />
+                                  Thêm lịch
+                                </Button>
+                                <Button
+                                  onClick={() => {
+                                    setOpenNote(true);
+                                  }}
+                                >
+                                  <Icon name="pencil" />
+                                  Ghi chú
+                                </Button>
+                              </div>
+                            )}
                             <Divider />
                             <VerticalTimeline
                               layout="1-column-left"
@@ -558,6 +621,37 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                           setOpenDeleteTimeline(true);
                                         }}
                                       />
+                                      {tl.status === false && (
+                                        <Icon
+                                          circular
+                                          color="white"
+                                          name="clipboard"
+                                          style={{
+                                            position: "absolute",
+                                            top: "40px",
+                                            right: "5px",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedTimeline(tl);
+                                            setOpenChangeStatusTimeline(true);
+                                          }}
+                                        />
+                                      )}
+                                      {tl.status === true && (
+                                        <Icon
+                                          circular
+                                          color="white"
+                                          name="check circle outline"
+                                          style={{
+                                            position: "absolute",
+                                            top: "40px",
+                                            right: "5px",
+                                            cursor: "pointer",
+                                          }}
+                                        />
+                                      )}
                                       <pre>{tl.description}</pre>
                                     </VerticalTimelineElement>
                                   );
@@ -580,6 +674,13 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
         </Grid.Row>
       </Grid>
 
+      <ViewPostModal
+        loading={postLoading}
+        openViewPost={openViewDetailPost}
+        setOpenViewPost={setOpenViewDetailPost}
+        post={detailPost}
+      />
+
       <ModalItem
         header="Chỉnh sửa mô tả khách hàng"
         onOpen={openEditSummarize}
@@ -599,7 +700,15 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
             sublabel="Tối đa 200 ký tự"
             maxLength={200}
           />
-          <Button type="submit" fluid>
+          <Button
+            type="submit"
+            fluid
+            style={{
+              fontFamily: "Tahoma",
+              background: "#ff9219",
+              color: "#fff",
+            }}
+          >
             Tạo mới
           </Button>
         </Form>
@@ -682,6 +791,20 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
         cancelButton="Huỷ bỏ"
         confirmButton="Xác nhận"
         content="Bạn có chắc chắn muốn kết thúc quá trình chăm sóc khách hàng với người này?"
+      />
+
+      <Confirm
+        open={openChangeStatusTimeline}
+        header="Xác nhận hoàn thành"
+        onCancel={() => {
+          setOpenChangeStatusTimeline(false);
+        }}
+        onConfirm={() => {
+          handleFinishAppointment(selectedTimeline);
+        }}
+        cancelButton="Huỷ bỏ"
+        confirmButton="Xác nhận"
+        content="Xác nhận hoàn thành lịch hẹn"
       />
 
       <Confirm

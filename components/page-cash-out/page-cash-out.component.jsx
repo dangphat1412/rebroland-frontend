@@ -45,6 +45,9 @@ const CashOutPage = ({ user }) => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [cashoutData, setCashoutData] = useState({});
   const [content, setContent] = useState(null);
+  const [showPhone, setShowPhone] = useState(
+    user.phone.replace(/^(\d{3})\d{4}(\d+)/, "$1****$2")
+  );
 
   const handleChange = (e, { name, value }) => {
     console.log(value);
@@ -265,6 +268,7 @@ const CashOutPage = ({ user }) => {
           setOpenOtpCashout={setOpenOtpCashout}
           setOpenConfirm={setOpenConfirm}
           setContent={setContent}
+          showPhone={showPhone}
         />
       </ModalItem>
       <Confirm
@@ -287,6 +291,7 @@ const OtpCashout = ({
   setOpenOtpCashout,
   setOpenConfirm,
   setContent,
+  showPhone,
 }) => {
   const [cashout, setCashout] = useState(cashoutData.cashoutData);
   const [counter, setCounter] = useState(cashoutData.tokenTime * 60);
@@ -341,7 +346,7 @@ const OtpCashout = ({
             onDismiss={() => setErrorMessage(null)}
           />
           <Form.Field>
-            <label>Nhập mã OTP được gửi về số điện thoại</label>
+            <label>Nhập mã OTP được gửi về số điện thoại {showPhone}</label>
             <OtpInput
               value={cashout.token}
               onChange={handleChange}

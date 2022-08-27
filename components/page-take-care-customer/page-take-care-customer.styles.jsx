@@ -14,6 +14,7 @@ export const TakeCareCustomerContainer = styled.div`
     white-space: pre-wrap;
     word-wrap: break-word;
     margin-top: 0px;
+    width: 95%;
   }
 
   .item,
@@ -35,6 +36,14 @@ export const TakeCareCustomerContainer = styled.div`
     width: 100px !important;
     height: 80px !important;
     object-fit: cover;
+  }
+  .ui.form {
+    margin-top: -4px;
+  }
+  .ui.celled.selectable.sortable.table {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding: 0px;
   }
 `;
 

@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { MapContainer } from "./map.styles";
 
-const Map = ({ position, setValue }) => {
+const Map = ({ position, setValue, isDrag }) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyCuih1YVsnPiQJcSVTqM5vSWbPFpOvOric",
   });
@@ -38,7 +38,7 @@ const Map = ({ position, setValue }) => {
         {position.length === 1 && (
           <Marker
             clickable
-            draggable={true}
+            draggable={isDrag && isDrag === true}
             onDragEnd={(e) => {
               setValue("coordinates", [
                 { latitude: e.latLng.lat(), longitude: e.latLng.lng() },

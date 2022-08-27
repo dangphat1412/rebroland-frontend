@@ -66,7 +66,7 @@ import OtpInput from "react-otp-input";
 import CustomButton from "../custom-button/custom-button.component";
 
 const PagePropertyDetail = ({
-  post,
+  detailPost,
   user,
   brokers,
   isAllowDerivative,
@@ -77,16 +77,18 @@ const PagePropertyDetail = ({
 }) => {
   const router = useRouter();
 
+  const [post, setPost] = useState(detailPost);
+  const [hiddenPhone, setHiddenPhone] = useState(true);
   const [reportOpen, setReportOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [endTransactionOpen, setEndTransactionOpen] = useState(false);
   const [historyData, setHistoryData] = useState();
   const [allowCreateDerivative, setAllowCreateDerivative] = useState(
-    post.allowDerivative
+    detailPost.allowDerivative
   );
   const [openRate, setOpenRate] = useState(false);
-  const { price, pricePerSquare } = calculatePrice(post);
+  const { price, pricePerSquare } = calculatePrice(detailPost);
   const [items, setItems] = useState([]);
 
   const [openEditPost, setOpenEditPost] = useState(false);
@@ -132,6 +134,10 @@ const PagePropertyDetail = ({
 
   const createDerivativePost = (postId) => {
     router.push(`/nha-moi-gioi/tao-bai-phai-sinh/${postId}`);
+  };
+
+  const handleShowPhone = () => {
+    setHiddenPhone(!hiddenPhone);
   };
 
   const handleFollowingPost = async (
@@ -238,7 +244,22 @@ const PagePropertyDetail = ({
                     </Label>
                   )}
                 </Header>
-                {post.status.id !== 1 && (
+                {post.block === true && (
+                  <Label
+                    as="a"
+                    color="red"
+                    ribbon="right"
+                    size="huge"
+                    style={{
+                      position: "absolute",
+                      top: "50px",
+                      left: "1280px",
+                    }}
+                  >
+                    <Icon name="times circle outline" /> Bị chặn
+                  </Label>
+                )}
+                {post.block === false && post.status.id !== 1 && (
                   <Label
                     as="a"
                     color={post.status.id === 3 ? "green" : "orange"}
@@ -613,6 +634,22 @@ const PagePropertyDetail = ({
                         description={`${post.frontispiece} m²`}
                       />
                     )}
+                    {post.longevity && (
+                      <PropertyItem
+                        iconClass="kikor kiko-real-estate-auction"
+                        title="Tuổi nhà"
+                        description={post.longevity.name}
+                      />
+                    )}
+                    <PropertyItem
+                      iconClass="kikor kiko-apartment-ownership"
+                      title="Giấy tờ"
+                      description={
+                        post.certification && post.certification === true
+                          ? "Sổ đỏ/Sổ hồng"
+                          : "Đang chờ sổ"
+                      }
+                    />
                   </Grid.Row>
                 </Grid>
                 {post.additionalDescription && (
@@ -639,6 +676,24 @@ const PagePropertyDetail = ({
                   />
                 )}
               </Segment>
+              <Divider />
+              <ShotInformationContainer floated="left">
+                <Statistic>
+                  <Statistic.Label>Mã bài đăng</Statistic.Label>
+                  <Statistic.Value text>{post.postId}</Statistic.Value>
+                </Statistic>
+                <Statistic>
+                  <Statistic.Label>Ngày đăng</Statistic.Label>
+                  <Statistic.Value text>{post.startDate}</Statistic.Value>
+                </Statistic>
+                <Statistic>
+                  <Statistic.Label>Ngày hết hạn</Statistic.Label>
+                  <Statistic.Value text>
+                    {post.transactionEndDate}
+                  </Statistic.Value>
+                </Statistic>
+              </ShotInformationContainer>
+              <Divider />
             </Grid.Column>
             <Grid.Column width={4}>
               <UserInformationContainer textAlign="center">
@@ -698,7 +753,14 @@ const PagePropertyDetail = ({
                 <div className="information">
                   <div>
                     <Icon name="mobile alternate" />
-                    {post.contactPhone}
+                    <b>
+                      {hiddenPhone
+                        ? post.contactPhone.slice(0, -3) + "***"
+                        : post.contactPhone}
+                    </b>{" "}
+                    <Button color="teal" onClick={handleShowPhone}>
+                      {hiddenPhone ? "Hiện số" : "Ẩn số"}
+                    </Button>
                   </div>
                   {post.contactEmail && (
                     <div>
@@ -1001,6 +1063,7 @@ const PagePropertyDetail = ({
         <FormEndTransaction
           toast={toast}
           post={post}
+          setPost={setPost}
           brokers={brokers}
           setEndTransactionOpen={setEndTransactionOpen}
           setOpenRate={setOpenRate}
@@ -1079,13 +1142,49 @@ const FormReupPost = ({ user, priceData, detailPost }) => {
 const FormRateBroker = ({ user, brokers, setOpenRate, toast }) => {
   const [listRating, setListRating] = useState(
     brokers.map((broker) => {
-      return { userRated: broker.user.id, starRate: null, description: null };
+      return {
+        userRated: broker.user.id,
+        starRate: null,
+        description: null,
+        error: null,
+      };
     })
   );
 
   const [errorMessage, setErrorMessage] = useState(null);
 
   const onSubmit = async (e) => {
+    let error = false;
+
+    listRating.forEach((rate) => {
+      if (rate.description && !rate.starRate) {
+        setListRating(
+          [...listRating].map((object) => {
+            if (object.userRated === rate.userRated) {
+              return {
+                ...object,
+                error: "Đánh giá nhà môi giới để nhập nhận xét",
+              };
+            } else return object;
+          })
+        );
+        error = true;
+      } else {
+        setListRating(
+          [...listRating].map((object) => {
+            if (object.userRated === rate.userRated) {
+              return {
+                ...object,
+                error: null,
+              };
+            } else return object;
+          })
+        );
+      }
+    });
+
+    if (error === true) return;
+
     const data = { lists: listRating };
     console.log(data);
     const status = await ratingListBroker(data, setErrorMessage);
@@ -1133,6 +1232,7 @@ const FormRateBroker = ({ user, brokers, setOpenRate, toast }) => {
                     icon="star"
                     maxRating={5}
                     size="massive"
+                    clearable
                     onRate={(e, { rating }) => {
                       setListRating(
                         [...listRating].map((object) => {
@@ -1148,7 +1248,9 @@ const FormRateBroker = ({ user, brokers, setOpenRate, toast }) => {
                   />
                   <br />
                   <InputField
-                    style={{ width: "100% !important" }}
+                    style={{
+                      width: "100% !important",
+                    }}
                     fieldType="textarea"
                     rows={3}
                     name={`description_${broker.user.id}`}
@@ -1166,6 +1268,16 @@ const FormRateBroker = ({ user, brokers, setOpenRate, toast }) => {
                       );
                     }}
                   />
+                  <b
+                    style={{
+                      color: "red",
+                      fontSize: "12px",
+                      marginTop: "-15px",
+                      display: "block",
+                    }}
+                  >
+                    {listRating[index].error}
+                  </b>
                 </List.Content>
               </List.Item>
             );
@@ -1193,6 +1305,7 @@ const FormRateBroker = ({ user, brokers, setOpenRate, toast }) => {
 const FormEndTransaction = ({
   toast,
   post,
+  setPost,
   setEndTransactionOpen,
   setOpenRate,
   brokers,
@@ -1240,7 +1353,9 @@ const FormEndTransaction = ({
       );
       if (status === 201) {
         setEndTransactionOpen(false);
-
+        const p = post;
+        p.status.id = 3;
+        setPost(p);
         if (brokers.length > 0) {
           setOpenRate(true);
         }
@@ -1462,6 +1577,7 @@ const FormEndTransaction = ({
       >
         <OtpEndTransaction
           post={post}
+          setPost={setPost}
           transactionData={transactionData}
           setOpenOtpEndTransaction={setOpenOtpEndTransaction}
           setEndTransactionOpen={setEndTransactionOpen}
@@ -1483,7 +1599,9 @@ const FormHistory = ({ post, historyData }) => {
               <Grid>
                 <Grid.Row>
                   <Grid.Column width={5}>
-                    <Header as="h5">Mã vạch:</Header>
+                    <Header as="h5" style={{ fontFamily: "Tahoma" }}>
+                      Mã vạch:
+                    </Header>
                   </Grid.Column>
                   <Grid.Column width={5}>
                     <Barcode value={post.barcode} {...config} />
@@ -1493,7 +1611,9 @@ const FormHistory = ({ post, historyData }) => {
                 {post.plotNumber && (
                   <Grid.Row>
                     <Grid.Column width={5}>
-                      <Header as="h5">Số thửa:</Header>
+                      <Header as="h5" style={{ fontFamily: "Tahoma" }}>
+                        Số thửa:
+                      </Header>
                     </Grid.Column>
                     <Grid.Column width={5}>{post.plotNumber}</Grid.Column>
                   </Grid.Row>
@@ -1502,7 +1622,9 @@ const FormHistory = ({ post, historyData }) => {
                 {post.buildingName && (
                   <Grid.Row>
                     <Grid.Column width={5}>
-                      <Header as="h5">Tên toà nhà:</Header>
+                      <Header as="h5" style={{ fontFamily: "Tahoma" }}>
+                        Tên toà nhà:
+                      </Header>
                     </Grid.Column>
                     <Grid.Column width={5}>{post.buildingName}</Grid.Column>
                   </Grid.Row>
@@ -1511,7 +1633,9 @@ const FormHistory = ({ post, historyData }) => {
                 {post.roomNumber && (
                   <Grid.Row>
                     <Grid.Column width={5}>
-                      <Header as="h5">Phòng số:</Header>
+                      <Header as="h5" style={{ fontFamily: "Tahoma" }}>
+                        Phòng số:
+                      </Header>
                     </Grid.Column>
                     <Grid.Column width={5}>{post.roomNumber}</Grid.Column>
                   </Grid.Row>
@@ -1564,6 +1688,7 @@ const FormHistory = ({ post, historyData }) => {
 
 const OtpEndTransaction = ({
   post,
+  setPost,
   transactionData,
   setOpenOtpEndTransaction,
   setOpenRate,
@@ -1574,6 +1699,9 @@ const OtpEndTransaction = ({
   const [counter, setCounter] = useState(transactionData.tokenTime * 60);
   const [remainTime, setRemainTime] = useState(transactionData.remainTime);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [showPhone, setShowPhone] = useState(
+    transactionData.historyData.phone.replace(/^(\d{3})\d{4}(\d+)/, "$1****$2")
+  );
 
   useEffect(() => {
     const timer =
@@ -1612,6 +1740,9 @@ const OtpEndTransaction = ({
     if (status === 201) {
       setOpenOtpEndTransaction(false);
       setEndTransactionOpen(false);
+      const p = post;
+      p.status.id = 3;
+      setPost(p);
       if (brokers.length > 0) {
         setOpenRate(true);
       }
@@ -1628,7 +1759,7 @@ const OtpEndTransaction = ({
             onDismiss={() => setErrorMessage(null)}
           />
           <Form.Field>
-            <label>Nhập mã OTP được gửi về số điện thoại</label>
+            <label>Nhập mã OTP được gửi về số điện thoại {showPhone}</label>
             <OtpInput
               value={transaction.token}
               onChange={handleChange}

@@ -19,6 +19,7 @@ const AppointmentScheduleForm = ({
   } = useForm({
     defaultValues: {
       type: "APPOINTMENT",
+      dateAppointment: new Date().toISOString().slice(0, 10),
     },
   });
 
@@ -57,6 +58,7 @@ const AppointmentScheduleForm = ({
           onChange={async (e, { name, value }) => {
             setValue(name, value);
           }}
+          defaultValue={new Date().toISOString().slice(0, 10)}
           fluid
           label="Ngày hẹn"
           name="dateAppointment"

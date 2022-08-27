@@ -252,7 +252,7 @@ const GeographicInformationForm = ({
       {/* missing loading */}
       <Form.Field>
         <label>Vị trí trên bản đồ</label>
-        <Map position={position} setValue={setValue} />
+        <Map position={position} setValue={setValue} isDrag={true} />
         <Grid>
           <Grid.Row>
             <Grid.Column>

@@ -149,7 +149,7 @@ const RealEstateInformationForm = ({
             },
             validate: (value) =>
               /^[0-9]*(\.[0-9]{0,2})?$/.test(value) ||
-              "Nhập diện tích hợp lệ với tối đa 2 số sau phần thập phân",
+              "Nhập diện tích hợp lệ với tối đa 2 chữ số sau phần thập phân",
           })}
           fluid
           label="Diện tích"
@@ -157,7 +157,7 @@ const RealEstateInformationForm = ({
           placeholder="Nhập diện tích"
           maxLength={7}
           onChange={(e, { name, value }) => {
-            (/\d*\.?\d*/.test(value) || !value) && setValue(name, value);
+            setValue(name, value.replace(/[^0-9.]/g, ""));
           }}
           onFocus={(e) => {
             setValue("area", e.target.value);

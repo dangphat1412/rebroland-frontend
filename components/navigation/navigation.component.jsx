@@ -24,8 +24,6 @@ const Navigation = ({
   const router = useRouter();
 
   useEffect(() => {
-    const sound = new Audio("/light.mp3");
-
     let pusher;
 
     pusher = new Pusher("242a962515021986a8d8", {
@@ -40,15 +38,14 @@ const Navigation = ({
           logoutUser();
         }
         if (data.message) {
+          const sound = new Audio("/light.mp3");
           setUnreadNotification(unreadNotification + 1);
-          setTimeout(() => {
-            sound && sound.play();
-            toast({
-              type: "info",
-              title: "Info Toast",
-              description: <p>{data.message}</p>,
-            });
-          }, 100);
+          sound && sound.play();
+          toast({
+            type: "info",
+            title: "Info Toast",
+            description: <p>{data.message}</p>,
+          });
         }
       });
   });

@@ -2,7 +2,13 @@ import React from "react";
 import { Form, Header, Segment } from "semantic-ui-react";
 import InputField from "../input-field/input-field.component";
 
-const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
+const ContactInformationForm = ({
+  register,
+  errors,
+  setValue,
+  getValues,
+  watch,
+}) => {
   const handleChange = (e, { name, value }) => {
     setValue(name, value);
   };
@@ -30,6 +36,8 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
           requiredField
         />
         <InputField
+          label="Số điện thoại"
+          name="contactPhone"
           {...register("contactPhone", {
             required: "Số điện thoại không được để trống",
             pattern: {
@@ -37,14 +45,16 @@ const ContactInformationForm = ({ register, errors, setValue, getValues }) => {
               message: "Số điện thoại là số Việt Nam và có 10 chữ số",
             },
           })}
-          label="Số điện thoại"
-          name="contactPhone"
-          placeholder="Nhập số điện thoại"
-          defaultValue={getValues("contactPhone")}
-          onChange={handleChange}
+          onChange={(e, { name, value }) => {
+            console.log(value);
+            setValue(name, value.replace(/[^0-9]/g, ""));
+          }}
           onFocus={(e) => {
             setValue("contactPhone", getValues("contactPhone"));
           }}
+          placeholder="Nhập số điện thoại"
+          defaultValue={getValues("contactPhone")}
+          value={watch("contactPhone")}
           error={errors.contactPhone}
           requiredField
         />

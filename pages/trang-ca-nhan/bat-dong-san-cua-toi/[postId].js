@@ -11,7 +11,7 @@ const MyDetailProperty = ({ postData, user }) => {
     <>
       <SubHeader title="Chi tiết bất động sản" background="/zyro-image.png" />
       <PagePropertyDetail
-        post={postData.post}
+        detailPost={postData.post}
         brokers={postData.brokers}
         user={user}
       />

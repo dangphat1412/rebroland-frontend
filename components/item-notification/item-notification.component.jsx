@@ -80,6 +80,30 @@ const NotificationItem = ({
           ) {
             router.push(`/trang-ca-nhan/thong-tin-ca-nhan`);
           }
+          if (data.type === "FinishTakeCare") {
+            if (user.currentRole === 3) {
+              await switchRole(setLoading);
+            }
+            router.push(
+              {
+                pathname: `/danh-sach-nha-moi-gioi/${data.sender}`,
+                query: { allowRate: data.unread },
+              },
+              `/danh-sach-nha-moi-gioi/${data.sender}`
+            );
+          }
+          if (data.type === "FinishTransaction") {
+            // if (user.currentRole === 2) {
+            //   await switchRole(setLoading);
+            // }
+            // router.push(
+            //   {
+            //     pathname: `/chi-tiet-nguoi-dung/${data.sender}`,
+            //     query: { allowRate: data.unread },
+            //   },
+            //   `/chi-tiet-nguoi-dung/${data.sender}`
+            // );
+          }
         }
       }}
     >
@@ -104,6 +128,10 @@ const NotificationItem = ({
         notification.type === "Withdraw" ||
         notification.type === "Refund") && (
         <Item.Image src="/money-icon.jpg" size="tiny" />
+      )}
+      {(notification.type === "FinishTakeCare" ||
+        notification.type === "FinishTransaction") && (
+        <Item.Image src="/finish-transaction.png" size="tiny" />
       )}
 
       <Item.Content>
@@ -188,16 +216,6 @@ const NotificationItem = ({
             </Item.Description>
           </>
         )}
-        {notification.type === "SendMoney" && (
-          <>
-            <Item.Description>
-              <b>Nhận tiền</b>
-            </Item.Description>
-            <Item.Description>
-              <b>Nội dung: </b> <span>{notification.content}</span>
-            </Item.Description>
-          </>
-        )}
         {notification.type === "Withdraw" && (
           <>
             <Item.Description>
@@ -212,6 +230,26 @@ const NotificationItem = ({
           <>
             <Item.Description>
               <b>Hoàn tiền xác nhận Bất động sản đã bán</b>
+            </Item.Description>
+            <Item.Description>
+              <b>Nội dung: </b> <span>{notification.content}</span>
+            </Item.Description>
+          </>
+        )}
+        {notification.type === "FinishTakeCare" && (
+          <>
+            <Item.Description>
+              <b>Hoàn thành quá trình chăm sóc</b>
+            </Item.Description>
+            <Item.Description>
+              <b>Nội dung: </b> <span>{notification.content}</span>
+            </Item.Description>
+          </>
+        )}
+        {notification.type === "FinishTransaction" && (
+          <>
+            <Item.Description>
+              <b>Kết thúc giao dịch</b>
             </Item.Description>
             <Item.Description>
               <b>Nội dung: </b> <span>{notification.content}</span>

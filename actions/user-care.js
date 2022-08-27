@@ -147,3 +147,23 @@ export const endCare = async (userCareId) => {
     console.log(error);
   }
 };
+
+export const getDetailPost = async (postId) => {
+  try {
+    const res = await Axios.get(`/detail-post/${postId}`);
+    return res.data;
+  } catch (error) {
+    // const messages = convertToListMessages(error.response.data);
+    console.log(error);
+  }
+};
+
+export const confirmFinishAppointment = async (detailId) => {
+  try {
+    const res = await Axios.put(`/details/${detailId}`);
+    return res.status;
+  } catch (error) {
+    // const messages = convertToListMessages(error.response.data);
+    console.log(error);
+  }
+};

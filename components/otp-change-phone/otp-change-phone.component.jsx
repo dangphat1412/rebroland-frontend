@@ -9,6 +9,9 @@ const OtpChangePhone = ({ phoneData, setOpenOtpChangePhone, toast }) => {
   const [counter, setCounter] = useState(phoneData.tokenTime * 60);
   const [remainTime, setRemainTime] = useState(phoneData.remainTime);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [showPhone, setShowPhone] = useState(
+    phoneData.phoneData.phone.replace(/^(\d{3})\d{4}(\d+)/, "$1****$2")
+  );
 
   useEffect(() => {
     const timer =
@@ -61,7 +64,7 @@ const OtpChangePhone = ({ phoneData, setOpenOtpChangePhone, toast }) => {
             onDismiss={() => setErrorMessage(null)}
           />
           <Form.Field>
-            <label>Nhập mã OTP được gửi về số điện thoại</label>
+            <label>Nhập mã OTP được gửi về số điện thoại {showPhone}</label>
             <OtpInput
               value={phone.token}
               onChange={handleChange}

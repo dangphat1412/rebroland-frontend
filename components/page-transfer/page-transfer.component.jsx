@@ -146,6 +146,7 @@ const TransferPage = ({ user }) => {
         <OtpTransfer
           transferData={transferData}
           setOpenOtpTransfer={setOpenOtpTransfer}
+          user={user}
           toast={toast}
         />
       </ModalItem>
@@ -153,11 +154,14 @@ const TransferPage = ({ user }) => {
   );
 };
 
-const OtpTransfer = ({ transferData, setOpenOtpTransfer, toast }) => {
+const OtpTransfer = ({ transferData, setOpenOtpTransfer, user, toast }) => {
   const [transfer, setTransfer] = useState(transferData.transferData);
   const [counter, setCounter] = useState(transferData.tokenTime * 60);
   const [remainTime, setRemainTime] = useState(transferData.remainTime);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [showPhone, setShowPhone] = useState(
+    user.phone.replace(/^(\d{3})\d{4}(\d+)/, "$1****$2")
+  );
 
   useEffect(() => {
     const timer =
@@ -201,7 +205,7 @@ const OtpTransfer = ({ transferData, setOpenOtpTransfer, toast }) => {
             onDismiss={() => setErrorMessage(null)}
           />
           <Form.Field>
-            <label>Nhập mã OTP được gửi về số điện thoại</label>
+            <label>Nhập mã OTP được gửi về số điện thoại {showPhone}</label>
             <OtpInput
               value={transfer.token}
               onChange={handleChange}

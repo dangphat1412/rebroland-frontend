@@ -303,13 +303,17 @@ const ListProperty = ({ user, data, handlePaginationChange, setData }) => {
                       <Table.Cell singleLine textAlign="center">
                         {post.block === true && (
                           <Label circular color="red">
-                            Bị chặn
+                            <span style={{ textTransform: "uppercase" }}>
+                              Bị chặn
+                            </span>
                           </Label>
                         )}
                         {post.block === false && post.status.id === 1 && (
                           <>
                             <Label circular color="green">
-                              {post.status.name}
+                              <span style={{ textTransform: "uppercase" }}>
+                                {post.status.name}
+                              </span>
                             </Label>
                             <br />
                             {post.endDate && (
@@ -320,12 +324,14 @@ const ListProperty = ({ user, data, handlePaginationChange, setData }) => {
                         {post.block === false &&
                           (post.status.id === 2 || post.status.id === 5) && (
                             <Label circular color="red">
-                              {post.status.name}
+                              <span style={{ textTransform: "uppercase" }}>
+                                {post.status.name}
+                              </span>
                             </Label>
                           )}
                         {post.block === false && post.status.id === 3 && (
                           <Label circular color="blue">
-                            {post.status.name}
+                            BẤT ĐỘNG SẢN ĐÃ BÁN
                           </Label>
                         )}
                       </Table.Cell>

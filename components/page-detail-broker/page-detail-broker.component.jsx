@@ -64,7 +64,7 @@ const DetailBrokerPage = ({
   }, []);
 
   useEffect(() => {
-    allowRate === "false" && setOpenRating(true);
+    allowRate === "true" && setOpenRating(true);
   }, []);
 
   const fetchRateListAPI = async (pageNo) => {

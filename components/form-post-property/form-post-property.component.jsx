@@ -122,6 +122,7 @@ const FormPostProperty = ({ user, priceData }) => {
                     register={register}
                     setValue={setValue}
                     getValues={getValues}
+                    watch={watch}
                     errors={errors}
                   />
                 </Grid.Column>

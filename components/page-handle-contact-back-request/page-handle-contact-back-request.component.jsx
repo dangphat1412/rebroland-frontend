@@ -162,7 +162,7 @@ const HandleContactBackRequestPage = ({
                 </Dimmer>
               </Card.Content>
             </Card>
-            {data.totalPages > 1 && (
+            {data.totalPages > 0 && (
               <PaginationContainer>
                 <Pagination
                   activePage={data.pageNo}
