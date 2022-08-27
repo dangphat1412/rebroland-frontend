@@ -259,6 +259,7 @@ const MyProfilePage = ({ user }) => {
                             onChange={async (e, { name, value }) => {
                               setValue(name, value);
                             }}
+                            error={errors.email}
                           />
                           <InputField
                             fieldType="datepicker"

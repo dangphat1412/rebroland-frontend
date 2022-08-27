@@ -14,7 +14,7 @@ const DetailMyDerivativeProperty = ({ user, postData }) => {
         background="/broker-background.jpg"
       />
       <PagePropertyDetail
-        post={postData.post}
+        detailPost={postData.post}
         brokers={postData.brokers}
         user={user}
       />

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Card,
   Comment,
   Dimmer,
@@ -52,6 +53,7 @@ const UserDetailPage = ({
   const [rating, setRating] = useState(postsData.user.avgRate);
   const [listRate, setListRate] = useState({});
   const [rateLoading, setRateLoading] = useState(false);
+  const [hiddenPhone, setHiddenPhone] = useState(true);
 
   useEffect(() => {
     fetchRateListAPI(0);
@@ -60,6 +62,10 @@ const UserDetailPage = ({
   useEffect(() => {
     allowRate === "false" && setOpenRating(true);
   }, []);
+
+  const handleShowPhone = () => {
+    setHiddenPhone(!hiddenPhone);
+  };
 
   const fetchRateListAPI = async (pageNo) => {
     setRateLoading(true);
@@ -93,7 +99,6 @@ const UserDetailPage = ({
       sortValue,
       pageNo
     );
-    console.log(posts);
     setData(posts.lists);
     setTotalResult(posts.lists.totalResult);
     setUserDetail(posts.user);
@@ -164,7 +169,19 @@ const UserDetailPage = ({
                 </Card.Description>
                 <Card.Description textAlign="left">
                   <Icon name="mobile alternate" />
-                  {userDetail.phone}
+                  <b>
+                    {hiddenPhone
+                      ? userDetail.phone.slice(0, -3) + "***"
+                      : userDetail.phone}
+                  </b>{" "}
+                  <Button
+                    size="mini"
+                    color="teal"
+                    onClick={handleShowPhone}
+                    style={{ fontFamily: "Tahoma" }}
+                  >
+                    {hiddenPhone ? "Hiện số" : "Ẩn số"}
+                  </Button>
                 </Card.Description>
                 <Card.Description textAlign="left">
                   <Icon name="mail outline" />
@@ -172,13 +189,13 @@ const UserDetailPage = ({
                 </Card.Description>
                 <Card.Description textAlign="left">
                   <Icon name="map marker alternate" />
-                  {userDetail.province && userDetail.district && userDetail.ward
-                    ? userDetail.ward +
-                      ", " +
-                      userDetail.district +
-                      ", " +
-                      userDetail.province
-                    : "Đang cập nhật"}
+                  {userDetail.ward ? userDetail.ward + ", " : null}
+                  {userDetail.district ? userDetail.district + ", " : null}
+                  {userDetail.province ? userDetail.province : null}
+                  {!userDetail.province &&
+                    !userDetail.district &&
+                    !userDetail.ward &&
+                    "Đang cập nhật"}
                 </Card.Description>
                 <Item.Description className="social-media-list">
                   {userDetail.facebookLink && (

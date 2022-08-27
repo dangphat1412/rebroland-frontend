@@ -4,6 +4,7 @@ import ListBrokersPage from "../../components/page-list-brokers/page-list-broker
 import SubHeader from "../../components/sub-header/sub-header.component";
 import API_URL from "../../utils/apiUrl";
 import { parseCookies } from "nookies";
+import { redirectUser } from "../../utils/authUser";
 
 const Broker = ({ brokersData, params }) => {
   console.log(params);
@@ -64,7 +65,7 @@ export async function getServerSideProps(context) {
 
     return { props: { brokersData: res.data, params: params } };
   } catch (error) {
-    // return { props: { post: [1, 2, 3] } };
+    redirectUser(context, "/404");
   }
 }
 

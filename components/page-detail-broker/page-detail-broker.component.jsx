@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Card,
   Comment,
   Dimmer,
@@ -54,6 +55,7 @@ const DetailBrokerPage = ({
   const [rating, setRating] = useState(postsData.user.avgRate);
   const [listRate, setListRate] = useState({});
   const [rateLoading, setRateLoading] = useState(false);
+  const [hiddenPhone, setHiddenPhone] = useState(true);
 
   const [openRating, setOpenRating] = useState(false);
 
@@ -106,6 +108,10 @@ const DetailBrokerPage = ({
       top: 0,
       behavior: "smooth",
     });
+  };
+
+  const handleShowPhone = () => {
+    setHiddenPhone(!hiddenPhone);
   };
 
   return (
@@ -173,7 +179,19 @@ const DetailBrokerPage = ({
                     </Card.Description>
                     <Item.Description>
                       <Icon name="mobile alternate" />
-                      {userDetail.phone}
+                      <b>
+                        {hiddenPhone
+                          ? userDetail.phone.slice(0, -3) + "***"
+                          : userDetail.phone}
+                      </b>{" "}
+                      <Button
+                        size="mini"
+                        color="teal"
+                        onClick={handleShowPhone}
+                        style={{ fontFamily: "Tahoma" }}
+                      >
+                        {hiddenPhone ? "Hiện số" : "Ẩn số"}
+                      </Button>
                     </Item.Description>
                     <Item.Description>
                       <Icon name="mail outline" />
@@ -181,15 +199,13 @@ const DetailBrokerPage = ({
                     </Item.Description>
                     <Item.Description>
                       <Icon name="map marker alternate" />
-                      {userDetail.province &&
-                      userDetail.district &&
-                      userDetail.ward
-                        ? userDetail.ward +
-                          ", " +
-                          userDetail.district +
-                          ", " +
-                          userDetail.province
-                        : "Đang cập nhật"}
+                      {userDetail.ward ? userDetail.ward + ", " : null}
+                      {userDetail.district ? userDetail.district + ", " : null}
+                      {userDetail.province ? userDetail.province : null}
+                      {!userDetail.province &&
+                        !userDetail.district &&
+                        !userDetail.ward &&
+                        "Đang cập nhật"}
                     </Item.Description>
 
                     <Item.Description className="social-media-list">

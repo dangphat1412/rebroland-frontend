@@ -127,8 +127,10 @@ const RealEstateItem = ({
               </List>
               <Card.Description>{post.description}</Card.Description>
 
-              <div>
-                <div>{post.district + ", " + post.province}</div>
+              <div className="description" style={{ marginTop: "10px" }}>
+                <div>
+                  {post.ward + ", " + post.district + ", " + post.province}
+                </div>
 
                 {post.startDate}
                 {(!user || (user && user.id !== post.user.id)) && (

@@ -122,10 +122,7 @@ const BrokerItem = ({ broker, searchParams }) => {
     >
       <Card>
         <Image
-          src={
-            broker.avatar ||
-            "/default-avatar.png"
-          }
+          src={broker.avatar || "/default-avatar.png"}
           wrapped
           alt="broker"
           ui={false}
@@ -153,9 +150,13 @@ const BrokerItem = ({ broker, searchParams }) => {
           </Card.Description>
           <Card.Description>
             <Icon name="map marker alternate" />
-            {broker.province && broker.district && broker.ward
-              ? broker.ward + ", " + broker.district + ", " + broker.province
-              : "Đang cập nhật"}
+            {broker.ward ? broker.ward + ", " : null}
+            {broker.district ? broker.district + ", " : null}
+            {broker.province ? broker.province : null}
+            {!broker.province &&
+              !broker.district &&
+              !broker.ward &&
+              "Đang cập nhật"}
           </Card.Description>
         </Card.Content>
       </Card>

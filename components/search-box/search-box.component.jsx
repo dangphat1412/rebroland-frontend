@@ -180,6 +180,7 @@ const SearchBox = ({ searchParams }) => {
   };
 
   const onSubmit = async (data, e) => {
+    console.log("SEARCH: ", data);
     if (router.pathname === "/" || router.pathname === "/bat-dong-san") {
       router.push(
         {
@@ -203,7 +204,6 @@ const SearchBox = ({ searchParams }) => {
         { scroll: true }
       );
     }
-    console.log(data);
   };
 
   if (router.pathname === "/" || router.pathname === "/nha-moi-gioi")
