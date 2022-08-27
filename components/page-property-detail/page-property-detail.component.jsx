@@ -1698,7 +1698,7 @@ const FormHistory = ({ post, historyData }) => {
   );
 };
 
-const ItemHistory = ({ d }) => {
+const ItemHistory = ({ d, index }) => {
   const [hiddenPhone, setHiddenPhone] = useState(true);
 
   const handleShowPhone = () => {
