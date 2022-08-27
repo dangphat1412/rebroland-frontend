@@ -141,6 +141,7 @@ const EditPostForm = ({
                 setValue={setValue}
                 getValues={getValues}
                 errors={errors}
+                watch={watch}
               />
             </Grid.Column>
           </Grid.Row>

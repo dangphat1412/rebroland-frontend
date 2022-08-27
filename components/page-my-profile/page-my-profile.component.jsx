@@ -48,6 +48,8 @@ const MyProfilePage = ({ user }) => {
     },
   });
 
+  console.log("USER: ", user);
+
   useEffect(() => {
     register("fullName", { required: "Họ và tên không được để trống" });
     register("email", {
@@ -113,6 +115,10 @@ const MyProfilePage = ({ user }) => {
         }
       };
       fetchProvinces();
+
+      setValue("province", user.province);
+      setValue("district", user.district);
+      setValue("ward", user.ward);
     }
   }, []);
 
@@ -188,6 +194,7 @@ const MyProfilePage = ({ user }) => {
   };
 
   const onSubmit = async (data) => {
+    console.log(data);
     const status = await updateUser(data, setErrorMessage);
     if (status === 200) {
       setTimeout(() => {
@@ -303,6 +310,7 @@ const MyProfilePage = ({ user }) => {
                             options={dataProvinces.provinces}
                             onChange={handleChange}
                             defaultValue={user.province}
+                            value={watch("province")}
                           />
                           <InputField
                             fieldType="select"
@@ -312,6 +320,7 @@ const MyProfilePage = ({ user }) => {
                             options={dataProvinces.districts}
                             onChange={handleChange}
                             defaultValue={user.district}
+                            value={watch("district")}
                           />
                         </Form.Group>
                         <Form.Group widths={2}>
@@ -323,6 +332,7 @@ const MyProfilePage = ({ user }) => {
                             options={dataProvinces.wards}
                             onChange={handleChange}
                             defaultValue={user.ward}
+                            value={watch("ward")}
                           />
                           <InputField
                             label="Địa chỉ"

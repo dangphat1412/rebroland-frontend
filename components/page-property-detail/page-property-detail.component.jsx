@@ -892,7 +892,11 @@ const PagePropertyDetail = ({
                               />
                               <List.Content>
                                 <List.Header as="a">
-                                  {broker.user.fullName}
+                                  <Link
+                                    href={`/danh-sach-nha-moi-gioi/${broker.user.id}`}
+                                  >
+                                    {broker.user.fullName}
+                                  </Link>
                                 </List.Header>
                                 <List.Description>
                                   <Rating
@@ -1420,6 +1424,9 @@ const FormEndTransaction = ({
                 })}
                 placeholder="Nhập tên chủ hộ"
                 onChange={handleChange}
+                onFocus={(e) => {
+                  setValue("owner", getValues("owner"));
+                }}
                 defaultValue={post.owner}
                 value={watch("owner")}
                 error={errors.owner}
@@ -1449,6 +1456,9 @@ const FormEndTransaction = ({
                 onChange={(e, { name, value }) =>
                   setValue(name, value.replace(/[^0-9]/g, ""))
                 }
+                onFocus={(e) => {
+                  setValue("phone", getValues("phone"));
+                }}
                 error={errors.phone}
                 requiredField
               />
@@ -1476,6 +1486,9 @@ const FormEndTransaction = ({
                 onChange={(e, { name, value }) =>
                   setValue(name, value.replace(/[^0-9]/g, ""))
                 }
+                onFocus={(e) => {
+                  setValue("barcode", getValues("barcode"));
+                }}
                 value={watch("barcode")}
                 defaultValue={post.barcode}
                 error={errors.barcode}
@@ -1497,6 +1510,9 @@ const FormEndTransaction = ({
                 onChange={(e, { name, value }) =>
                   setValue(name, value.replace(/[^0-9]/g, ""))
                 }
+                onFocus={(e) => {
+                  setValue("plotNumber", getValues("plotNumber"));
+                }}
                 value={watch("plotNumber")}
                 error={errors.plotNumber}
                 maxLength={5}
@@ -1522,6 +1538,9 @@ const FormEndTransaction = ({
                     setValue(name, value);
                     console.log(value);
                   }}
+                  onFocus={(e) => {
+                    setValue("buildingName", getValues("buildingName"));
+                  }}
                   value={watch("buildingName")}
                   defaultValue={post.buildingName}
                   error={errors.buildingName}
@@ -1542,6 +1561,9 @@ const FormEndTransaction = ({
                   placeholder="Nhập số phòng"
                   defaultValue={post.roomNumber}
                   onChange={handleChange}
+                  onFocus={(e) => {
+                    setValue("roomNumber", getValues("roomNumber"));
+                  }}
                   error={errors.roomNumber}
                   requiredField
                 />
@@ -1654,11 +1676,26 @@ const FormHistory = ({ post, historyData }) => {
 
                 <Table.Body>
                   {Object.values(historyData)[0].map((d, index) => {
+                    const [hiddenPhone, setHiddenPhone] = useState(true);
+
+                    const handleShowPhone = () => {
+                      setHiddenPhone(!hiddenPhone);
+                    };
+
                     return (
                       <Table.Row key={index}>
                         <Table.Cell>{index + 1}</Table.Cell>
                         <Table.Cell>{d.owner}</Table.Cell>
-                        <Table.Cell>{d.phone}</Table.Cell>
+                        <Table.Cell>
+                          <b>
+                            {hiddenPhone
+                              ? d.phone.slice(0, -3) + "***"
+                              : d.phone}
+                          </b>{" "}
+                          <Button color="teal" onClick={handleShowPhone}>
+                            {hiddenPhone ? "Hiện số" : "Ẩn số"}
+                          </Button>
+                        </Table.Cell>
                         <Table.Cell>{d.startDate}</Table.Cell>
                         <Table.Cell>
                           <Barcode value={d.barcode} {...config} />

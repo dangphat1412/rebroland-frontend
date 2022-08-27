@@ -63,12 +63,6 @@ const SearchBoxBroker = ({ searchParams }) => {
         }
       };
       fetchProvinces();
-
-      setValue("key", searchParams.key);
-      setValue("propertyTypes", searchParams.propertyTypes);
-      setValue("province", searchParams.province);
-      setValue("district", searchParams.district);
-      setValue("ward", searchParams.ward);
     }
   }, []);
 
@@ -83,7 +77,11 @@ const SearchBoxBroker = ({ searchParams }) => {
           value: province.name,
         };
       }),
+      districts: [],
+      wards: [],
     }));
+    setValue("district", searchParams && searchParams.district);
+    setValue("ward", searchParams && searchParams.ward);
   };
 
   const fetchDistrictAPI = async (id) => {
@@ -97,7 +95,9 @@ const SearchBoxBroker = ({ searchParams }) => {
           value: district.name,
         };
       }),
+      wards: [],
     }));
+    setValue("ward", searchParams && searchParams.ward);
   };
 
   const fetchWardsAPI = async (id) => {
@@ -112,18 +112,36 @@ const SearchBoxBroker = ({ searchParams }) => {
 
   const handleChange = (e, { name, value }) => {
     if (name === "province") {
-      const provinceId = dataProvinces.provinces.filter(
-        (province) => province.value === value
-      )[0].key;
-      fetchDistrictAPI(provinceId);
+      setValue("district", null);
+      setValue("ward", null);
+      if (value) {
+        const provinceId = dataProvinces.provinces.filter(
+          (province) => province.value === value
+        )[0].key;
+        fetchDistrictAPI(provinceId);
+      } else {
+        setDataProvinces((prev) => ({
+          ...prev,
+          districts: [],
+          wards: [],
+        }));
+      }
     }
     if (name === "district") {
-      const districtId = dataProvinces.districts.filter(
-        (district) => district.value === value
-      )[0].key;
-      fetchWardsAPI(districtId);
+      setValue("ward", null);
+      if (value) {
+        const districtId = dataProvinces.districts.filter(
+          (district) => district.value === value
+        )[0].key;
+        fetchWardsAPI(districtId);
+      } else {
+        setDataProvinces((prev) => ({
+          ...prev,
+          wards: [],
+        }));
+      }
     }
-    setValue(name, value);
+    setValue(name, value || undefined);
   };
 
   const onSubmit = async (data, e) => {
@@ -162,6 +180,7 @@ const SearchBoxBroker = ({ searchParams }) => {
       <InputField
         fieldType="select"
         label="Tỉnh/Thành phố"
+        clearable
         name="province"
         placeholder="Tỉnh/Thành phố"
         options={dataProvinces.provinces}
@@ -170,6 +189,7 @@ const SearchBoxBroker = ({ searchParams }) => {
       />
       <InputField
         fieldType="select"
+        clearable
         label="Quận/Huyện"
         name="district"
         placeholder="Quận/Huyện"
@@ -180,6 +200,7 @@ const SearchBoxBroker = ({ searchParams }) => {
       <InputField
         fieldType="select"
         label="Phường/Xã"
+        clearable
         name="ward"
         placeholder="Phường/Xã"
         options={dataProvinces.wards}

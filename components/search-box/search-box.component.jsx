@@ -88,10 +88,6 @@ const SearchBox = ({ searchParams }) => {
         }
       };
       fetchProvinces();
-
-      setValue("province", searchParams.province);
-      setValue("district", searchParams.district);
-      setValue("ward", searchParams.ward);
     }
   }, []);
 
@@ -115,8 +111,8 @@ const SearchBox = ({ searchParams }) => {
       districts: [],
       wards: [],
     }));
-    setValue("district", undefined);
-    setValue("ward", undefined);
+    setValue("district", searchParams && searchParams.district);
+    setValue("ward", searchParams && searchParams.ward);
   };
 
   const fetchDistrictAPI = async (id) => {
@@ -132,7 +128,7 @@ const SearchBox = ({ searchParams }) => {
       }),
       wards: [],
     }));
-    setValue("ward", undefined);
+    setValue("ward", searchParams && searchParams.ward);
   };
 
   const fetchWardsAPI = async (id) => {
@@ -204,6 +200,7 @@ const SearchBox = ({ searchParams }) => {
         { scroll: true }
       );
     }
+    console.log(data);
   };
 
   if (router.pathname === "/" || router.pathname === "/nha-moi-gioi")
@@ -368,14 +365,6 @@ const SearchBox = ({ searchParams }) => {
                     setValue("maxArea", undefined);
                   }}
                 />
-                {/* <Dropdown.Item
-                  text="Thoả thuận"
-                  onClick={() => {
-                    setAreaPlaceholder("Thoả thuận");
-                    setValue("minArea", 0);
-                    setValue("maxArea", 0);
-                  }}
-                /> */}
               </Dropdown.Menu>
             </InputField>
             <InputField
@@ -438,6 +427,7 @@ const SearchBox = ({ searchParams }) => {
         />
         <InputField
           fieldType="select"
+          clearable
           label="Tỉnh/Thành phố"
           name="province"
           placeholder="Tỉnh/Thành phố"
@@ -447,6 +437,7 @@ const SearchBox = ({ searchParams }) => {
         />
         <InputField
           fieldType="select"
+          clearable
           label="Quận/Huyện"
           name="district"
           placeholder="Quận/Huyện"
@@ -456,6 +447,7 @@ const SearchBox = ({ searchParams }) => {
         />
         <InputField
           fieldType="select"
+          clearable
           label="Phường/Xã"
           name="ward"
           placeholder="Phường/Xã"

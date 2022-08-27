@@ -643,36 +643,38 @@ const RealEstateInformationForm = ({
           onChange={handleChange}
           defaultValue={getValues("directionId")}
         />
-        <InputField
-          {...register("frontispiece", {
-            min: {
-              value: 0,
-              message: "Nhập mặt tiền hợp lệ",
-            },
-            max: {
-              value: 100,
-              message: "Mặt tiền tối đa 100m",
-            },
-          })}
-          fluid
-          label="Mặt tiền"
-          name="frontispiece"
-          placeholder="Nhập mặt tiền"
-          onChange={(e, { name, value }) => {
-            setValue(name, value.replace(/[^0-9.]/g, ""));
-          }}
-          onFocus={(e) => {
-            setValue("frontispiece", getValues("frontispiece"));
-          }}
-          error={errors.frontispiece}
-          value={watch("frontispiece")}
-          defaultValue={getValues("frontispiece")}
-        >
-          <input />
-          <Label basic size="big">
-            m
-          </Label>
-        </InputField>
+        {watch("propertyTypeId") !== 2 && (
+          <InputField
+            {...register("frontispiece", {
+              min: {
+                value: 0,
+                message: "Nhập mặt tiền hợp lệ",
+              },
+              max: {
+                value: 100,
+                message: "Mặt tiền tối đa 100m",
+              },
+            })}
+            fluid
+            label="Mặt tiền"
+            name="frontispiece"
+            placeholder="Nhập mặt tiền"
+            onChange={(e, { name, value }) => {
+              setValue(name, value.replace(/[^0-9.]/g, ""));
+            }}
+            onFocus={(e) => {
+              setValue("frontispiece", getValues("frontispiece"));
+            }}
+            error={errors.frontispiece}
+            value={watch("frontispiece")}
+            defaultValue={getValues("frontispiece")}
+          >
+            <input />
+            <Label basic size="big">
+              m
+            </Label>
+          </InputField>
+        )}
       </Form.Group>
       <InputField
         {...register("additionalDescription")}

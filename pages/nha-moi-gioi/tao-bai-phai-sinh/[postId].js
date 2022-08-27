@@ -6,11 +6,21 @@ import SubHeader from "../../../components/sub-header/sub-header.component";
 import API_URL from "../../../utils/apiUrl";
 import { redirectUser } from "../../../utils/authUser";
 
-const CreateDerivativePostProperty = ({ user, postData }) => {
+const CreateDerivativePostProperty = ({
+  user,
+  postData,
+  followingPosts,
+  setFollowingPosts,
+}) => {
   return (
     <div>
       <SubHeader title="Tạo bài phái sinh" background="/bg-real-estate.jpg" />
-      <CreateDerivativePost post={postData.post} user={user} />
+      <CreateDerivativePost
+        post={postData.post}
+        user={user}
+        followingPosts={followingPosts}
+        setFollowingPosts={setFollowingPosts}
+      />
     </div>
   );
 };

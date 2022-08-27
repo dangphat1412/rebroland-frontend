@@ -52,6 +52,9 @@ const DetailPost = ({ post }) => {
         return {
           original: item.image,
           thumbnail: item.image,
+          srcSet: null,
+          originalHeight: 500,
+          thumbnailHeight: 50,
         };
       })
     );

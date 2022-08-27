@@ -301,7 +301,7 @@ const MainNavigation = ({
                                         size="tiny"
                                         src={
                                           post.thumbnail ||
-                                          "https://www.phoenixpropertymaster.com/wp-content/uploads/2021/12/Real-Estate.jpg"
+                                          "/default-thumbnail.png"
                                         }
                                         className="following-image"
                                       />

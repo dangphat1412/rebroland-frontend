@@ -135,6 +135,7 @@ const RealEstateItem = ({
                 {post.startDate}
                 {(!user || (user && user.id !== post.user.id)) && (
                   <Button
+                    type="button"
                     floated="right"
                     icon
                     basic

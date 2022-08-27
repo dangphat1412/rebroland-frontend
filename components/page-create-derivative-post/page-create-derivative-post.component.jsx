@@ -11,7 +11,12 @@ import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
 import RealEstateItem from "../item-real-estate/item-real-estate.component";
 import RealEstateInformationForm from "../real-estate-information-form/real-estate-information-form.component";
 
-const CreateDerivativePost = ({ user, post }) => {
+const CreateDerivativePost = ({
+  user,
+  post,
+  followingPosts,
+  setFollowingPosts,
+}) => {
   const contextRef = createRef();
 
   const {
@@ -135,7 +140,13 @@ const CreateDerivativePost = ({ user, post }) => {
               />
             </Grid.Column>
             <Grid.Column width={6}>
-              <RealEstateItem post={post} type="card" />
+              <RealEstateItem
+                post={post}
+                user={user}
+                followingPosts={followingPosts}
+                setFollowingPosts={setFollowingPosts}
+                type="card"
+              />
               <Button fluid color="red" size="large">
                 Tạo bài phái sinh
               </Button>
