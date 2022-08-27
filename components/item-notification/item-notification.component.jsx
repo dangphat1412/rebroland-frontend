@@ -70,7 +70,7 @@ const NotificationItem = ({
             if (user.currentRole === 3) {
               await switchRole(setLoading);
             }
-            router.push(`/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`);
+            router.push(`/trang-ca-nhan/thong-tin-ca-nhan`);
           }
           if (
             data.type === "ReceiveMoney" ||
@@ -93,16 +93,16 @@ const NotificationItem = ({
             );
           }
           if (data.type === "FinishTransaction") {
-            // if (user.currentRole === 2) {
-            //   await switchRole(setLoading);
-            // }
-            // router.push(
-            //   {
-            //     pathname: `/chi-tiet-nguoi-dung/${data.sender}`,
-            //     query: { allowRate: data.unread },
-            //   },
-            //   `/chi-tiet-nguoi-dung/${data.sender}`
-            // );
+            if (user.currentRole === 2) {
+              await switchRole(setLoading);
+            }
+            router.push(
+              {
+                pathname: `/chi-tiet-nguoi-dung/${data.sender}`,
+                query: { allowRate: data.unread },
+              },
+              `/chi-tiet-nguoi-dung/${data.sender}`
+            );
           }
         }
       }}
