@@ -1676,32 +1676,7 @@ const FormHistory = ({ post, historyData }) => {
 
                 <Table.Body>
                   {Object.values(historyData)[0].map((d, index) => {
-                    const [hiddenPhone, setHiddenPhone] = useState(true);
-
-                    const handleShowPhone = () => {
-                      setHiddenPhone(!hiddenPhone);
-                    };
-
-                    return (
-                      <Table.Row key={index}>
-                        <Table.Cell>{index + 1}</Table.Cell>
-                        <Table.Cell>{d.owner}</Table.Cell>
-                        <Table.Cell>
-                          <b>
-                            {hiddenPhone
-                              ? d.phone.slice(0, -3) + "***"
-                              : d.phone}
-                          </b>{" "}
-                          <Button color="teal" onClick={handleShowPhone}>
-                            {hiddenPhone ? "Hiện số" : "Ẩn số"}
-                          </Button>
-                        </Table.Cell>
-                        <Table.Cell>{d.startDate}</Table.Cell>
-                        <Table.Cell>
-                          <Barcode value={d.barcode} {...config} />
-                        </Table.Cell>
-                      </Table.Row>
-                    );
+                    return <ItemHistory d={d} key={index} index={index} />;
                   })}
                 </Table.Body>
               </Table>
@@ -1720,6 +1695,31 @@ const FormHistory = ({ post, historyData }) => {
         </>
       )}
     </>
+  );
+};
+
+const ItemHistory = ({ d }) => {
+  const [hiddenPhone, setHiddenPhone] = useState(true);
+
+  const handleShowPhone = () => {
+    setHiddenPhone(!hiddenPhone);
+  };
+
+  return (
+    <Table.Row>
+      <Table.Cell>{index + 1}</Table.Cell>
+      <Table.Cell>{d.owner}</Table.Cell>
+      <Table.Cell>
+        <b>{hiddenPhone ? d.phone.slice(0, -3) + "***" : d.phone}</b>{" "}
+        <Button color="teal" onClick={handleShowPhone}>
+          {hiddenPhone ? "Hiện số" : "Ẩn số"}
+        </Button>
+      </Table.Cell>
+      <Table.Cell>{d.startDate}</Table.Cell>
+      <Table.Cell>
+        <Barcode value={d.barcode} {...config} />
+      </Table.Cell>
+    </Table.Row>
   );
 };
 
