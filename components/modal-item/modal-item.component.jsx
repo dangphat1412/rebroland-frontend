@@ -23,7 +23,6 @@ const ModalItem = ({
         open={onOpen}
         onClose={onClose}
         closeIcon
-        dimmer={dimmer || "default"}
       >
         <Modal.Header style={{ fontFamily: "Tahoma, san-serif" }}>
           {header}

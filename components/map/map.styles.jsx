@@ -6,8 +6,4 @@ export const MapContainer = styled.div`
     height: 400px;
     margin-bottom: 15px;
   }
-  // .icon {
-  //   font-size: 38px;
-  //   cursor: pointer;
-  // }
 `;

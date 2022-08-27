@@ -1676,7 +1676,11 @@ const FormHistory = ({ post, historyData }) => {
 
                 <Table.Body>
                   {Object.values(historyData)[0].map((d, index) => {
-                    return <ItemHistory d={d} key={index} index={index} />;
+                    return (
+                      <Table.Row key={index}>
+                        <ItemHistory d={d} index={index} />
+                      </Table.Row>
+                    );
                   })}
                 </Table.Body>
               </Table>
@@ -1706,12 +1710,17 @@ const ItemHistory = ({ d, index }) => {
   };
 
   return (
-    <Table.Row>
+    <>
       <Table.Cell>{index + 1}</Table.Cell>
       <Table.Cell>{d.owner}</Table.Cell>
       <Table.Cell>
         <b>{hiddenPhone ? d.phone.slice(0, -3) + "***" : d.phone}</b>{" "}
-        <Button color="teal" onClick={handleShowPhone}>
+        <Button
+          color="teal"
+          onClick={handleShowPhone}
+          style={{ fontFamily: "Tahoma" }}
+          size="mini"
+        >
           {hiddenPhone ? "Hiện số" : "Ẩn số"}
         </Button>
       </Table.Cell>
@@ -1719,7 +1728,7 @@ const ItemHistory = ({ d, index }) => {
       <Table.Cell>
         <Barcode value={d.barcode} {...config} />
       </Table.Cell>
-    </Table.Row>
+    </>
   );
 };
 
