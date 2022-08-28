@@ -78,8 +78,6 @@ const EditPostForm = ({
     },
   });
 
-  console.log("EDITED_POST: ", editedPost);
-
   const [images, setImages] = useState(editedPost.images || []);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -94,7 +92,6 @@ const EditPostForm = ({
       }
     }
     await editPost(data, mediaUrl, setErrorMessage);
-    console.log(data);
   };
 
   return (

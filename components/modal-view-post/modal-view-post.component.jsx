@@ -35,7 +35,7 @@ const ViewPostModal = ({ openViewPost, setOpenViewPost, post, loading }) => {
           </Modal.Content>
         </>
       ) : (
-        <Dimmer active={loading} inverted>
+        <Dimmer active={true} inverted>
           <Loader>Đang tải dữ liệu</Loader>
         </Dimmer>
       )}
@@ -112,6 +112,7 @@ const DetailPost = ({ post }) => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
+      <Divider />
       {post.images && post.images.length > 0 && (
         <>
           <Header as="h2">Hình ảnh</Header>
@@ -192,6 +193,22 @@ const DetailPost = ({ post }) => {
               description={`${post.frontispiece} m²`}
             />
           )}
+          {post.longevity && (
+            <PropertyItem
+              iconClass="kikor kiko-real-estate-auction"
+              title="Tuổi nhà"
+              description={post.longevity.name}
+            />
+          )}
+          <PropertyItem
+            iconClass="kikor kiko-apartment-ownership"
+            title="Giấy tờ"
+            description={
+              post.certification && post.certification === true
+                ? "Sổ đỏ/Sổ hồng"
+                : "Đang chờ sổ"
+            }
+          />
         </Grid.Row>
       </Grid>
       {post.additionalDescription && (

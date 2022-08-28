@@ -28,8 +28,9 @@ import Pagination from "../pagination/pagination.component";
 import calculatePrice from "../../utils/calculatePrice";
 import Link from "next/link";
 import convertToSlug from "../../utils/convertToSlug";
-import { addCustomer } from "../../actions/user-care";
+import { addCustomer, getDetailPost } from "../../actions/user-care";
 import { SemanticToastContainer, toast } from "react-semantic-toasts";
+import ViewPostModal from "../modal-view-post/modal-view-post.component";
 
 const HandleContactBackRequestPage = ({
   user,
@@ -44,6 +45,10 @@ const HandleContactBackRequestPage = ({
   const [selectedContactId, setSelectedContactId] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
+  const [openViewDetailPost, setOpenViewDetailPost] = useState(false);
+  const [detailPost, setDetailPost] = useState(null);
+  const [postLoading, setPostLoading] = useState(false);
+
   const [params, setParams] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -56,19 +61,25 @@ const HandleContactBackRequestPage = ({
   const handleAccept = async () => {
     const status = await addCustomer(selectedContactId);
     if (status === 201) {
-      setContacts(
-        contacts.filter((contact) => {
-          return contact.contactId !== selectedContactId;
-        })
-      );
-      setTotalResult(totalResult - 1);
       toast({
         type: "success",
         title: "Thêm khách hàng",
         description: <p>Thêm khách hàng thành công</p>,
       });
       setOpenAcceptConfirm(false);
+    } else {
+      toast({
+        type: "error",
+        title: "Thêm khách hàng thất bại",
+        description: <p>Khách hàng không tồn tại</p>,
+      });
     }
+    setContacts(
+      contacts.filter((contact) => {
+        return contact.contactId !== selectedContactId;
+      })
+    );
+    setTotalResult(totalResult - 1);
   };
 
   const handleRefuse = async (contactId) => {
@@ -148,6 +159,12 @@ const HandleContactBackRequestPage = ({
                         setOpenAcceptConfirm={setOpenAcceptConfirm}
                         setSelectedContactId={setSelectedContactId}
                         setSelectedCustomer={setSelectedCustomer}
+                        openViewDetailPost={openViewDetailPost}
+                        setOpenViewDetailPost={setOpenViewDetailPost}
+                        detailPost={detailPost}
+                        setDetailPost={setDetailPost}
+                        postLoading={postLoading}
+                        setPostLoading={setPostLoading}
                       />
                     );
                   })
@@ -206,6 +223,12 @@ const HandleContactBackRequestPage = ({
         cancelButton="Huỷ bỏ"
         confirmButton="Xác nhận"
       />
+      <ViewPostModal
+        loading={postLoading}
+        openViewPost={openViewDetailPost}
+        setOpenViewPost={setOpenViewDetailPost}
+        post={detailPost}
+      />
     </HandleContactBackRequestContainer>
   );
 };
@@ -216,6 +239,9 @@ const ContactBackRequestItem = ({
   setOpenAcceptConfirm,
   setSelectedContactId,
   setSelectedCustomer,
+  setOpenViewDetailPost,
+  setDetailPost,
+  setPostLoading,
 }) => {
   return (
     <Card fluid>
@@ -230,18 +256,23 @@ const ContactBackRequestItem = ({
                 src={contact.userRequest.avatar || "/default-avatar.png"}
                 style={{ height: "85px", width: "85px", objectFit: "cover" }}
               />
-              <Link href={`/chi-tiet-nguoi-dung/${contact.userRequest.id}`}>
+              <Link
+                href={`/chi-tiet-nguoi-dung/${contact.userRequest.id}`}
+                passHref
+              >
                 <Card.Header
                   as="a"
                   style={{
                     cursor: "pointer",
                     fontWeight: "bold",
-                    color: "black",
                   }}
                 >
+                  {/* <a target="_blank" rel="noreferrer"> */}
                   {contact.userRequest.fullName}
+                  {/* </a> */}
                 </Card.Header>
               </Link>
+
               <Card.Meta textAlign="left">
                 <Icon name="mobile alternate" />
                 {contact.userRequest.phone}
@@ -300,74 +331,71 @@ const ContactBackRequestItem = ({
           </Grid.Column>
           <Grid.Column>
             {contact.shortPost && (
-              <Link
-                target="_blank"
-                href={`/bat-dong-san/${convertToSlug(
-                  contact.shortPost.title
-                )}-${contact.shortPost.postId}`}
-                passHref
+              <Item.Group
+                style={{ cursor: "pointer" }}
+                onClick={async (e) => {
+                  console.log(e);
+                  setPostLoading(true);
+                  setOpenViewDetailPost(true);
+                  const p = await getDetailPost(contact.shortPost.postId);
+                  setDetailPost(p);
+                  setPostLoading(false);
+                }}
               >
-                <a target="_blank">
-                  <Item.Group>
-                    <Item>
-                      <Item.Image
-                        size="medium"
-                        src={
-                          contact.shortPost.thumbnail ||
-                          "/default-thumbnail.png"
-                        }
-                        label={
-                          contact.shortPost.originalPost &&
-                          contact.shortPost.originalPost !== 0
-                            ? {
-                                color: "red",
-                                content: "Bài phái sinh",
-                                icon: "copy outline",
-                                ribbon: true,
-                              }
-                            : null
-                        }
-                      />
-                      <Item.Content className="item-content">
-                        <Item.Header>{contact.shortPost.title}</Item.Header>
-                        <List horizontal>
-                          <List.Item>
-                            <List.Content>
-                              <List.Header>
-                                {calculatePrice(contact.shortPost).price}
-                              </List.Header>
-                            </List.Content>
-                          </List.Item>
-                          <List.Item>
-                            <List.Content>
-                              <List.Header>
-                                {contact.shortPost.unitPrice.id === 3
-                                  ? ""
-                                  : calculatePrice(contact.shortPost)
-                                      .pricePerSquare}
-                              </List.Header>
-                            </List.Content>
-                          </List.Item>
-                          <List.Item>
-                            <List.Content>
-                              <List.Header>
-                                {contact.shortPost.area}m²
-                              </List.Header>
-                            </List.Content>
-                          </List.Item>
-                        </List>
-                        <Item.Description>
-                          {contact.shortPost.description}
-                        </Item.Description>
-                        <Item.Extra>
-                          {contact.shortPost.ward}, {contact.shortPost.district}
-                          , {contact.shortPost.province}
-                        </Item.Extra>
-                      </Item.Content>
-                    </Item>
-                  </Item.Group>
-                </a>
-              </Link>
+                <Item>
+                  <Item.Image
+                    size="medium"
+                    src={
+                      contact.shortPost.thumbnail || "/default-thumbnail.png"
+                    }
+                    label={
+                      contact.shortPost.originalPost &&
+                      contact.shortPost.originalPost !== 0
+                        ? {
+                            color: "red",
+                            content: "Bài phái sinh",
+                            icon: "copy outline",
+                            ribbon: true,
+                          }
+                        : null
+                    }
+                  />
+                  <Item.Content className="item-content">
+                    <Item.Header>{contact.shortPost.title}</Item.Header>
+                    <List horizontal>
+                      <List.Item>
+                        <List.Content>
+                          <List.Header>
+                            {calculatePrice(contact.shortPost).price}
+                          </List.Header>
+                        </List.Content>
+                      </List.Item>
+                      <List.Item>
+                        <List.Content>
+                          <List.Header>
+                            {contact.shortPost.unitPrice.id === 3
+                              ? ""
+                              : calculatePrice(contact.shortPost)
+                                  .pricePerSquare}
+                          </List.Header>
+                        </List.Content>
+                      </List.Item>
+                      <List.Item>
+                        <List.Content>
+                          <List.Header>{contact.shortPost.area}m²</List.Header>
+                        </List.Content>
+                      </List.Item>
+                    </List>
+                    <Item.Description>
+                      {contact.shortPost.description}
+                    </Item.Description>
+                    <Item.Extra>
+                      {contact.shortPost.ward}, {contact.shortPost.district},{" "}
+                      {contact.shortPost.province}
+                    </Item.Extra>
+                  </Item.Content>
+                </Item>
+              </Item.Group>
             )}
           </Grid.Column>
         </Grid.Row>

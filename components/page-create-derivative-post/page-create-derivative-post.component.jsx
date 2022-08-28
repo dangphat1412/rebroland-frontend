@@ -147,7 +147,14 @@ const CreateDerivativePost = ({
                 setFollowingPosts={setFollowingPosts}
                 type="card"
               />
-              <Button fluid color="red" size="large">
+              <Button
+                fluid
+                color="red"
+                size="large"
+                style={{ fontFamily: "Tahoma" }}
+                disabled={loading}
+                loading={loading}
+              >
                 Tạo bài phái sinh
               </Button>
             </Grid.Column>

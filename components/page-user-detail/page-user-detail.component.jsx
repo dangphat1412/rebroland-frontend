@@ -32,6 +32,7 @@ import {
   checkAllowRatingUser,
   getListRateByUserId,
 } from "../../actions/rating";
+import Link from "next/link";
 
 const UserDetailPage = ({
   user,
@@ -123,10 +124,7 @@ const UserDetailPage = ({
               </Card.Content>
               <Card.Content textAlign="center" className="user-information">
                 <Image
-                  src={
-                    userDetail.avatar ||
-                    "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                  }
+                  src={userDetail.avatar || "/default-avatar.png"}
                   circular
                   alt="avatar"
                   verticalAlign="middle"
@@ -340,10 +338,15 @@ const UserDetailPage = ({
                 listRate.lists.length > 0 &&
                 listRate.lists.map((rate, index) => (
                   <Comment key={index}>
-                    <Comment.Avatar
-                      className="rater-avatar"
-                      src={rate.user.avatar}
-                    />
+                    <Link
+                      href={`/chi-tiet-nguoi-dung/${rate.user.id}`}
+                      passHref
+                    >
+                      <Comment.Avatar
+                        className="rater-avatar"
+                        src={rate.user.avatar}
+                      />
+                    </Link>
                     <Comment.Content>
                       <Comment.Author as="a">
                         {rate.user.fullName}

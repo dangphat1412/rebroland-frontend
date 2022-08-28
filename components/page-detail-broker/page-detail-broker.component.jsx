@@ -34,6 +34,7 @@ import {
   getListRateByBrokerId,
 } from "../../actions/rating";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const DetailBrokerPage = ({
   user,
@@ -368,9 +369,14 @@ const DetailBrokerPage = ({
                       src={rate.user.avatar || "/default-avatar.png"}
                     />
                     <Comment.Content>
-                      <Comment.Author as="a">
-                        {rate.user.fullName}
-                      </Comment.Author>
+                      <Link
+                        href={`/chi-tiet-nguoi-dung/${rate.user.id}`}
+                        passHref
+                      >
+                        <Comment.Author as="a">
+                          {rate.user.fullName}
+                        </Comment.Author>
+                      </Link>
                       <Comment.Metadata>
                         <div>{rate.startDate}</div>
                       </Comment.Metadata>

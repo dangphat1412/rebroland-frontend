@@ -69,8 +69,8 @@ const ReportUserForm = ({
         setTimeout(() => {
           toast({
             type: "success",
-            title: "Báo cáo bài viết",
-            description: <p>Báo cáo bài viết thành công</p>,
+            title: "Báo cáo người dùng",
+            description: <p>Báo cáo người dùng thành công</p>,
           });
         }, 100);
         setReportOpen(false);

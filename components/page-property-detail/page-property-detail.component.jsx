@@ -99,6 +99,8 @@ const PagePropertyDetail = ({
   const [priceData, setPriceData] = useState(null);
   const [openReupDerivativePost, setOpenReupDerivativePost] = useState(false);
 
+  const [editedLoading, setEditedLoading] = useState(false);
+
   useEffect(() => {
     const fetchAPI = async () => {
       const data = await getPricePerDay();
@@ -833,6 +835,7 @@ const PagePropertyDetail = ({
                   </Button>
                 )}
               {post.originalPost !== null &&
+                post.block === false &&
                 user &&
                 user.currentRole === 3 &&
                 user.id === post.user.id && (
@@ -939,7 +942,12 @@ const PagePropertyDetail = ({
           setOpenEditPost(false);
         }}
       >
-        <EditPostForm user={user} editedPost={post} />
+        <EditPostForm
+          user={user}
+          editedPost={post}
+          setEditedLoading={setEditedLoading}
+          editedLoading={editedLoading}
+        />
       </ModalItem>
 
       <Confirm
@@ -1666,11 +1674,21 @@ const FormHistory = ({ post, historyData }) => {
               <Table celled>
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell>Số thứ tự</Table.HeaderCell>
-                    <Table.HeaderCell>Họ và tên chủ hộ</Table.HeaderCell>
-                    <Table.HeaderCell>Số điện thoại</Table.HeaderCell>
-                    <Table.HeaderCell>Sở hữu từ</Table.HeaderCell>
-                    <Table.HeaderCell>Mã vạch</Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Số thứ tự
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Họ và tên chủ hộ
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Số điện thoại
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Sở hữu từ
+                    </Table.HeaderCell>
+                    <Table.HeaderCell singleLine textAlign="center">
+                      Mã vạch
+                    </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
 
@@ -1711,9 +1729,11 @@ const ItemHistory = ({ d, index }) => {
 
   return (
     <>
-      <Table.Cell>{index + 1}</Table.Cell>
+      <Table.Cell singleLine textAlign="center">
+        {index + 1}
+      </Table.Cell>
       <Table.Cell>{d.owner}</Table.Cell>
-      <Table.Cell>
+      <Table.Cell singleLine textAlign="center">
         {d.phone && (
           <>
             <b>{hiddenPhone ? d.phone.slice(0, -3) + "***" : d.phone}</b>{" "}
@@ -1728,7 +1748,9 @@ const ItemHistory = ({ d, index }) => {
           </>
         )}
       </Table.Cell>
-      <Table.Cell>{d.startDate}</Table.Cell>
+      <Table.Cell singleLine textAlign="center">
+        {d.startDate}
+      </Table.Cell>
       <Table.Cell>
         <Barcode value={d.barcode} {...config} />
       </Table.Cell>

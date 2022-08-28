@@ -317,14 +317,17 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                         fluid
                         allowAdditions
                         additionLabel="Thêm mức giá: "
-                        value={pricePerDay}
+                        value={
+                          pricePerDay && Intl.NumberFormat().format(pricePerDay)
+                        }
                         onAddItem={handleAddition}
                         onChange={(e, { name, value }) => setPricePerDay(value)}
                         searchQuery={pricePerDayQuery}
                         onSearchChange={(e, { searchQuery }) => {
-                          setPricePerDayQuery(
-                            searchQuery.replace(/[^0-9]/g, "")
-                          );
+                          searchQuery.length <= 7 &&
+                            setPricePerDayQuery(
+                              searchQuery.replace(/[^0-9]/g, "")
+                            );
                         }}
                       />
                       <InputField
@@ -445,9 +448,10 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                             setBrokerPrice(value)
                           }
                           onSearchChange={(e, { searchQuery }) => {
-                            setBrokerPriceQuery(
-                              searchQuery.replace(/[^0-9]/g, "")
-                            );
+                            searchQuery.length <= 7 &&
+                              setBrokerPriceQuery(
+                                searchQuery.replace(/[^0-9]/g, "")
+                              );
                           }}
                         />
                         <Form.Group widths={4}>
@@ -577,9 +581,10 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                             setRefundWithoutInfo(value)
                           }
                           onSearchChange={(e, { searchQuery }) => {
-                            setRefundWithoutInfoQuery(
-                              searchQuery.replace(/[^0-9]/g, "")
-                            );
+                            searchQuery.length <= 2 &&
+                              setRefundWithoutInfoQuery(
+                                searchQuery.replace(/[^0-9]/g, "")
+                              );
                           }}
                         />
                         <InputField
@@ -600,9 +605,10 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                             setRefundWithInfo(value)
                           }
                           onSearchChange={(e, { searchQuery }) => {
-                            setRefundWithInfoQuery(
-                              searchQuery.replace(/[^0-9]/g, "")
-                            );
+                            searchQuery.length <= 2 &&
+                              setRefundWithInfoQuery(
+                                searchQuery.replace(/[^0-9]/g, "")
+                              );
                           }}
                         />
                         <Button
