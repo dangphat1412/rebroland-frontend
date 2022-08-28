@@ -1714,15 +1714,19 @@ const ItemHistory = ({ d, index }) => {
       <Table.Cell>{index + 1}</Table.Cell>
       <Table.Cell>{d.owner}</Table.Cell>
       <Table.Cell>
-        <b>{hiddenPhone ? d.phone.slice(0, -3) + "***" : d.phone}</b>{" "}
-        <Button
-          color="teal"
-          onClick={handleShowPhone}
-          style={{ fontFamily: "Tahoma" }}
-          size="mini"
-        >
-          {hiddenPhone ? "Hiện số" : "Ẩn số"}
-        </Button>
+        {d.phone && (
+          <>
+            <b>{hiddenPhone ? d.phone.slice(0, -3) + "***" : d.phone}</b>{" "}
+            <Button
+              color="teal"
+              onClick={handleShowPhone}
+              style={{ fontFamily: "Tahoma" }}
+              size="mini"
+            >
+              {hiddenPhone ? "Hiện số" : "Ẩn số"}
+            </Button>
+          </>
+        )}
       </Table.Cell>
       <Table.Cell>{d.startDate}</Table.Cell>
       <Table.Cell>
