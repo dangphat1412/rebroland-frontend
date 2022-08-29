@@ -23,6 +23,8 @@ const AppointmentScheduleForm = ({
     },
   });
 
+  console.log(new Date().toISOString().slice(0, 10));
+
   useEffect(() => {
     register("dateAppointment", { required: "Chọn ngày hẹn" });
     register("timeAppointment", { required: "Chọn giờ hẹn" });

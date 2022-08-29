@@ -73,6 +73,7 @@ const HandleContactBackRequestPage = ({
         title: "Thêm khách hàng thất bại",
         description: <p>Khách hàng không tồn tại</p>,
       });
+      setOpenAcceptConfirm(false);
     }
     setContacts(
       contacts.filter((contact) => {

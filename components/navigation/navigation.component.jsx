@@ -38,9 +38,7 @@ const Navigation = ({
           logoutUser();
         }
         if (data.message) {
-          const sound = new Audio("/light.mp3");
           setUnreadNotification(unreadNotification + 1);
-          sound && sound.play();
           toast({
             type: "info",
             title: "Info Toast",

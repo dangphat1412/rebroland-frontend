@@ -349,9 +349,6 @@ const DetailBrokerPage = ({
               />
             </div>
             <Comment.Group>
-              {/* <Dimmer active={rateLoading} inverted>
-                <Loader inverted content="Đang tải" />
-              </Dimmer> */}
               <Header as="h3" dividing>
                 Đánh giá{" "}
                 <span style={{ fontSize: "13px" }}>
@@ -369,14 +366,9 @@ const DetailBrokerPage = ({
                       src={rate.user.avatar || "/default-avatar.png"}
                     />
                     <Comment.Content>
-                      <Link
-                        href={`/chi-tiet-nguoi-dung/${rate.user.id}`}
-                        passHref
-                      >
-                        <Comment.Author as="a">
-                          {rate.user.fullName}
-                        </Comment.Author>
-                      </Link>
+                      <Comment.Author as="span">
+                        {rate.user.fullName}
+                      </Comment.Author>
                       <Comment.Metadata>
                         <div>{rate.startDate}</div>
                       </Comment.Metadata>

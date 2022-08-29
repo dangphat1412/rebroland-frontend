@@ -873,19 +873,24 @@ const PagePropertyDetail = ({
                         {brokers.map((broker, index) => {
                           return (
                             <List.Item key={index}>
-                              <List.Content floated="right">
-                                <Button
-                                  primary
-                                  className="btn-view-derivative"
-                                  onClick={() => {
-                                    router.push(
-                                      `/bat-dong-san/${broker.postId}`
-                                    );
-                                  }}
-                                >
-                                  Xem bài phái sinh
-                                </Button>
-                              </List.Content>
+                              {((post.status.id === 1 &&
+                                post.block === false) ||
+                                (post.status.id === 3 &&
+                                  post.block === false)) && (
+                                <List.Content floated="right">
+                                  <Button
+                                    primary
+                                    className="btn-view-derivative"
+                                    onClick={() => {
+                                      router.push(
+                                        `/bat-dong-san/${broker.postId}`
+                                      );
+                                    }}
+                                  >
+                                    Xem bài phái sinh
+                                  </Button>
+                                </List.Content>
+                              )}
                               <Image
                                 avatar
                                 src={
@@ -894,13 +899,15 @@ const PagePropertyDetail = ({
                                 alt="avatar"
                               />
                               <List.Content>
-                                <List.Header as="a">
-                                  <Link
-                                    href={`/danh-sach-nha-moi-gioi/${broker.user.id}`}
-                                  >
+                                <Link
+                                  href={`/danh-sach-nha-moi-gioi/${broker.user.id}`}
+                                  passHref
+                                >
+                                  <List.Header as="a">
                                     {broker.user.fullName}
-                                  </Link>
-                                </List.Header>
+                                  </List.Header>
+                                </Link>
+
                                 <List.Description>
                                   <Rating
                                     icon="star"

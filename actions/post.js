@@ -82,7 +82,7 @@ export const createDerivativePost = async (postId, post, images) => {
 
 export const getPostById = async (postId) => {
   try {
-    const res = await Axios.get(`/${postId}`);
+    const res = await Axios.get(`/all/detail/${postId}`);
     return res.data;
   } catch (error) {
     console.log(error);

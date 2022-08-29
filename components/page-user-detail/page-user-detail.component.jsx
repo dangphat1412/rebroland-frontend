@@ -61,7 +61,7 @@ const UserDetailPage = ({
   }, []);
 
   useEffect(() => {
-    allowRate === "false" && setOpenRating(true);
+    allowRate === "true" && setOpenRating(true);
   }, []);
 
   const handleShowPhone = () => {
@@ -338,19 +338,12 @@ const UserDetailPage = ({
                 listRate.lists.length > 0 &&
                 listRate.lists.map((rate, index) => (
                   <Comment key={index}>
-                    <Link
-                      href={`/chi-tiet-nguoi-dung/${rate.user.id}`}
-                      passHref
-                    >
-                      <Comment.Avatar
-                        className="rater-avatar"
-                        src={rate.user.avatar}
-                      />
-                    </Link>
+                    <Comment.Avatar
+                      className="rater-avatar"
+                      src={rate.user.avatar}
+                    />
                     <Comment.Content>
-                      <Comment.Author as="a">
-                        {rate.user.fullName}
-                      </Comment.Author>
+                      <Comment.Author>{rate.user.fullName}</Comment.Author>
                       <Comment.Metadata>
                         <div>{rate.startDate}</div>
                       </Comment.Metadata>

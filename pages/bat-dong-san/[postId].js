@@ -34,7 +34,7 @@ export async function getServerSideProps(context) {
     const { postId } = context.query;
 
     const res = await axios.get(
-      `${API_URL}/api/posts/${postId.split("-").pop()}`
+      `${API_URL}/api/posts/detail/${postId.split("-").pop()}`
     );
 
     return { props: { postData: res.data } };

@@ -580,7 +580,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                             : "7px solid green",
                                         // "7px solid rgb(33, 150, 243)",
                                       }}
-                                      date={tl.dateCreate}
+                                      date={`Ngày đăng: ${tl.dateCreate}`}
                                       iconStyle={{
                                         background: "#ff9219",
                                         color: "#fff",
@@ -602,7 +602,7 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                       >
                                         {tl.type === "NOTE"
                                           ? "Ghi chú"
-                                          : "Lịch hẹn"}
+                                          : `Lịch hẹn - ${tl.appointmentTime}`}
                                       </h3>
                                       <Icon
                                         circular
@@ -621,37 +621,39 @@ const TakeCareCustomerPage = ({ user, caringList, setTotalResult }) => {
                                           setOpenDeleteTimeline(true);
                                         }}
                                       />
-                                      {tl.status === false && (
-                                        <Icon
-                                          circular
-                                          color="white"
-                                          name="clipboard"
-                                          style={{
-                                            position: "absolute",
-                                            top: "40px",
-                                            right: "5px",
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setSelectedTimeline(tl);
-                                            setOpenChangeStatusTimeline(true);
-                                          }}
-                                        />
-                                      )}
-                                      {tl.status === true && (
-                                        <Icon
-                                          circular
-                                          color="white"
-                                          name="check circle outline"
-                                          style={{
-                                            position: "absolute",
-                                            top: "40px",
-                                            right: "5px",
-                                            cursor: "pointer",
-                                          }}
-                                        />
-                                      )}
+                                      {tl.type !== "NOTE" &&
+                                        tl.status === false && (
+                                          <Icon
+                                            circular
+                                            color="white"
+                                            name="clipboard"
+                                            style={{
+                                              position: "absolute",
+                                              top: "40px",
+                                              right: "5px",
+                                              cursor: "pointer",
+                                            }}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setSelectedTimeline(tl);
+                                              setOpenChangeStatusTimeline(true);
+                                            }}
+                                          />
+                                        )}
+                                      {tl.type !== "NOTE" &&
+                                        tl.status === true && (
+                                          <Icon
+                                            circular
+                                            color="white"
+                                            name="check circle outline"
+                                            style={{
+                                              position: "absolute",
+                                              top: "40px",
+                                              right: "5px",
+                                              cursor: "pointer",
+                                            }}
+                                          />
+                                        )}
                                       <pre>{tl.description}</pre>
                                     </VerticalTimelineElement>
                                   );

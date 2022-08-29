@@ -317,9 +317,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                         fluid
                         allowAdditions
                         additionLabel="Thêm mức giá: "
-                        value={
-                          pricePerDay && Intl.NumberFormat().format(pricePerDay)
-                        }
+                        value={pricePerDay}
                         onAddItem={handleAddition}
                         onChange={(e, { name, value }) => setPricePerDay(value)}
                         searchQuery={pricePerDayQuery}
@@ -663,6 +661,16 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                   value: 3,
                 },
                 {
+                  key: 4,
+                  text: "Chuyển tiền",
+                  value: 4,
+                },
+                {
+                  key: 5,
+                  text: "Nhận tiền",
+                  value: 5,
+                },
+                {
                   key: 6,
                   text: "Rút tiền",
                   value: 6,
@@ -710,10 +718,7 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                       <Table.Cell singleLine textAlign="center">
                         <Header as="h4" image>
                           <Image
-                            src={
-                              payment.user.avatar ||
-                              "https://react.semantic-ui.com/images/avatar/large/daniel.jpg"
-                            }
+                            src={payment.user.avatar || "/default-avatar.png"}
                             avatar
                             className="user-avatar-small"
                           />
@@ -732,6 +737,8 @@ const FinancialManagementPage = ({ paymentData, setTotalResult }) => {
                           "Đăng ký trở thành nhà môi giới"}
                         {payment.typeId === 3 && "Nạp tiền vào ví"}
                         {payment.typeId === 6 && "Rút tiền"}
+                        {(payment.typeId === 4 || payment.typeId === 5) &&
+                          payment.description}
                       </Table.Cell>
                       <Table.Cell singleLine textAlign="center">
                         {convertToCurrency(payment.amount)} VNĐ
