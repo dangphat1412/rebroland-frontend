@@ -99,6 +99,7 @@ const MyProfilePage = ({ user }) => {
     if (user) {
       const fetchProvinces = async () => {
         let provinceId;
+
         if (user.province) {
           const provincesData = await getProvinces();
           provinceId = provincesData.filter(
@@ -115,10 +116,6 @@ const MyProfilePage = ({ user }) => {
         }
       };
       fetchProvinces();
-
-      setValue("province", user.province);
-      setValue("district", user.district);
-      setValue("ward", user.ward);
     }
   }, []);
 
@@ -139,7 +136,11 @@ const MyProfilePage = ({ user }) => {
           value: province.name,
         };
       }),
+      districts: [],
+      wards: [],
     }));
+    setValue("district", user.district);
+    setValue("ward", user.ward);
   };
 
   const fetchDistrictAPI = async (id) => {
@@ -153,13 +154,9 @@ const MyProfilePage = ({ user }) => {
           value: district.name,
         };
       }),
-    }));
-    setDataProvinces((prev) => ({
-      ...prev,
       wards: [],
     }));
-    setValue("district", undefined);
-    setValue("ward", undefined);
+    setValue("ward", user.ward);
   };
 
   const fetchWardsAPI = async (id) => {
@@ -170,7 +167,6 @@ const MyProfilePage = ({ user }) => {
         return { key: w.code, text: w.name, value: w.name };
       }),
     }));
-    setValue("ward", undefined);
   };
 
   const handleDateChange = (value) => {
@@ -179,16 +175,34 @@ const MyProfilePage = ({ user }) => {
 
   const handleChange = (e, { name, value }) => {
     if (name === "province") {
-      const provinceId = dataProvinces.provinces.filter(
-        (province) => province.value === value
-      )[0].key;
-      fetchDistrictAPI(provinceId);
+      setValue("district", null);
+      setValue("ward", null);
+      if (value) {
+        const provinceId = dataProvinces.provinces.filter(
+          (province) => province.value === value
+        )[0].key;
+        fetchDistrictAPI(provinceId);
+      } else {
+        setDataProvinces((prev) => ({
+          ...prev,
+          districts: [],
+          wards: [],
+        }));
+      }
     }
     if (name === "district") {
-      const districtId = dataProvinces.districts.filter(
-        (district) => district.value === value
-      )[0].key;
-      fetchWardsAPI(districtId);
+      setValue("ward", null);
+      if (value) {
+        const districtId = dataProvinces.districts.filter(
+          (district) => district.value === value
+        )[0].key;
+        fetchWardsAPI(districtId);
+      } else {
+        setDataProvinces((prev) => ({
+          ...prev,
+          wards: [],
+        }));
+      }
     }
     setValue(name, value);
   };
@@ -311,6 +325,7 @@ const MyProfilePage = ({ user }) => {
                             onChange={handleChange}
                             defaultValue={user.province}
                             value={watch("province")}
+                            clearable
                           />
                           <InputField
                             fieldType="select"
@@ -321,6 +336,7 @@ const MyProfilePage = ({ user }) => {
                             onChange={handleChange}
                             defaultValue={user.district}
                             value={watch("district")}
+                            clearable
                           />
                         </Form.Group>
                         <Form.Group widths={2}>
@@ -333,6 +349,7 @@ const MyProfilePage = ({ user }) => {
                             onChange={handleChange}
                             defaultValue={user.ward}
                             value={watch("ward")}
+                            clearable
                           />
                           <InputField
                             label="Địa chỉ"

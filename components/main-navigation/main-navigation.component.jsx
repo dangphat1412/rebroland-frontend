@@ -228,7 +228,7 @@ const MainNavigation = ({
                           />
                           <Dropdown.Item
                             icon="credit card outline"
-                            text="Chuyển khoản"
+                            text="Chuyển tiền"
                             onClick={() => {
                               Router.push("/trang-ca-nhan/chuyen-khoan");
                             }}

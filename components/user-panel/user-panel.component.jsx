@@ -151,7 +151,7 @@ const UserPanel = ({ user }) => {
             <List.Item>
               <List.Content>
                 <List.Header as="h4">
-                  <span className="kikor kiko-credit-card"></span> Chuyển khoản
+                  <span className="kikor kiko-credit-card"></span> Chuyển tiền
                 </List.Header>
               </List.Content>
             </List.Item>

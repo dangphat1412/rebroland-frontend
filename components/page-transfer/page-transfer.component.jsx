@@ -49,7 +49,7 @@ const TransferPage = ({ user }) => {
           <Grid.Column width={13}>
             <TransferContainer fluid>
               <Card.Content>
-                <Card.Header textAlign="center">Chuyển khoản</Card.Header>
+                <Card.Header textAlign="center">Chuyển tiền</Card.Header>
               </Card.Content>
               <Card.Content>
                 <Grid centered={true}>

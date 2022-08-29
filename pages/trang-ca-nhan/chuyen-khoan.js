@@ -6,7 +6,7 @@ const Transfer = ({ user }) => {
   return (
     <div>
       <SubHeader
-        title="Chuyển khoản"
+        title="Chuyển tiền"
         background={
           user && user.currentRole === 3
             ? "/broker-background.jpg"
