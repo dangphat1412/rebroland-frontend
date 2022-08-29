@@ -48,7 +48,7 @@ export const handleTransfer = async (
           phone: res.data.phone,
           amount: res.data.amount,
           content: res.data.content,
-          payDate: new Date().toISOString(),
+          payDate: formatDate(new Date()),
         },
       });
     }
@@ -94,3 +94,23 @@ export const handleCashout = async (
     console.log(error);
   }
 };
+
+function padTo2Digits(num) {
+  return num.toString().padStart(2, "0");
+}
+
+function formatDate(date) {
+  return (
+    [
+      padTo2Digits(date.getDate()),
+      padTo2Digits(date.getMonth() + 1),
+      date.getFullYear(),
+    ].join("/") +
+    " " +
+    [
+      padTo2Digits(date.getHours()),
+      padTo2Digits(date.getMinutes()),
+      padTo2Digits(date.getSeconds()),
+    ].join(":")
+  );
+}
