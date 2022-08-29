@@ -45,8 +45,6 @@ const FormPostProperty = ({ user, priceData }) => {
       buildingName: undefined,
       owner: undefined,
       ownerPhone: undefined,
-      // parentBarcode: undefined,
-      // parentPlotNumber: undefined,
       directionId: undefined,
       frontispiece: undefined,
       additionalDescription: undefined,

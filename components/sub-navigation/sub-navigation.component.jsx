@@ -19,11 +19,11 @@ const SubNavigation = () => {
           </Grid.Column>
           <Grid.Column width={8} textAlign="right">
             <InfoContainer>
-              <a href="tel://+00123456789">
-                <Icon name="phone" flipped="horizontally" /> +00 123 456 789
+              <a href="tel://+84869009629">
+                <Icon name="phone" flipped="horizontally" /> +84 869009629
               </a>
-              <a href="mailto://demo@example.com">
-                <Icon name="mail" /> demo@example.com
+              <a href="mailto://rebroland@gmail.com">
+                <Icon name="mail" /> rebroland@gmail.com
               </a>
             </InfoContainer>
           </Grid.Column>

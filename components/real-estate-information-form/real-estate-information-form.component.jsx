@@ -365,7 +365,11 @@ const RealEstateInformationForm = ({
                         marginBottom: "5px",
                       }}
                     >
-                      Yêu cầu điền tất cả các trường (Nếu nhập)
+                      Yêu cầu điền mã vạch, số thửa
+                      {watch("propertyTypeId") === 2 && (
+                        <span>, tên toà nhà, tên phòng</span>
+                      )}{" "}
+                      (Nếu nhập)
                     </label>
                     <Form.Group widths="equal">
                       {(watch("propertyTypeId") === 1 ||
@@ -381,9 +385,7 @@ const RealEstateInformationForm = ({
                                 (!value &&
                                   (getValues("plotNumber") ||
                                     getValues("buildingName") ||
-                                    getValues("roomNumber") ||
-                                    getValues("owner") ||
-                                    getValues("ownerPhone")) &&
+                                    getValues("roomNumber")) &&
                                   "Mã vạch không được để trống") ||
                                 true,
                             })}
@@ -405,9 +407,7 @@ const RealEstateInformationForm = ({
                                   (!value &&
                                     (getValues("barcode") ||
                                       getValues("buildingName") ||
-                                      getValues("roomNumber") ||
-                                      getValues("owner") ||
-                                      getValues("ownerPhone")) &&
+                                      getValues("roomNumber")) &&
                                     "Số thửa không được để trống") ||
                                   true,
                                 checkMin: (value) =>
@@ -451,9 +451,7 @@ const RealEstateInformationForm = ({
                                 (!value &&
                                   (getValues("plotNumber") ||
                                     getValues("buildingName") ||
-                                    getValues("roomNumber") ||
-                                    getValues("owner") ||
-                                    getValues("ownerPhone")) &&
+                                    getValues("roomNumber")) &&
                                   "Mã vạch không được để trống") ||
                                 true,
                             })}
@@ -473,9 +471,7 @@ const RealEstateInformationForm = ({
                                   (!value &&
                                     (getValues("barcode") ||
                                       getValues("buildingName") ||
-                                      getValues("roomNumber") ||
-                                      getValues("owner") ||
-                                      getValues("ownerPhone")) &&
+                                      getValues("roomNumber")) &&
                                     "Số thửa không được để trống") ||
                                   true,
                                 checkMin: (value) =>
@@ -509,9 +505,7 @@ const RealEstateInformationForm = ({
                                 (!value &&
                                   (getValues("barcode") ||
                                     getValues("plotNumber") ||
-                                    getValues("roomNumber") ||
-                                    getValues("owner") ||
-                                    getValues("ownerPhone")) &&
+                                    getValues("roomNumber")) &&
                                   "Tên toà nhà không được để trống") ||
                                 true,
                             })}
@@ -537,9 +531,7 @@ const RealEstateInformationForm = ({
                                 (!value &&
                                   (getValues("barcode") ||
                                     getValues("buildingName") ||
-                                    getValues("plotNumber") ||
-                                    getValues("owner") ||
-                                    getValues("ownerPhone")) &&
+                                    getValues("plotNumber")) &&
                                   "Tên phòng không được để trống") ||
                                 true,
                             })}
@@ -564,15 +556,6 @@ const RealEstateInformationForm = ({
                         name="owner"
                         {...register("owner", {
                           validate: {
-                            checkNull: (value) =>
-                              (!value &&
-                                (getValues("barcode") ||
-                                  getValues("buildingName") ||
-                                  getValues("roomNumber") ||
-                                  getValues("plotNumber") ||
-                                  getValues("ownerPhone")) &&
-                                "Tên chủ hộ không được để trống") ||
-                              true,
                             checkValid: (value) =>
                               !/[$&+,:;=\\\\?@#|/'<>.^*()%!-1234567890]/.test(
                                 value
@@ -595,15 +578,6 @@ const RealEstateInformationForm = ({
                             message:
                               "Số điện thoại là số Việt Nam và có 10 chữ số",
                           },
-                          validate: (value) =>
-                            (!value &&
-                              (getValues("barcode") ||
-                                getValues("buildingName") ||
-                                getValues("roomNumber") ||
-                                getValues("plotNumber") ||
-                                getValues("owner")) &&
-                              "Số điện thoại không được để trống") ||
-                            true,
                         })}
                         label="Số điện thoại chủ hộ"
                         name="ownerPhone"
