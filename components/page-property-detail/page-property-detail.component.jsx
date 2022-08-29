@@ -880,7 +880,7 @@ const PagePropertyDetail = ({
                   )}
                   {brokers && brokers.length > 0 && (
                     <>
-                      <Header as="h3">Người môi giới đang theo dõi</Header>
+                      <Header as="h3">Các nhà môi giới đang theo dõi</Header>
                       <List relaxed>
                         {brokers.map((broker, index) => {
                           return (
@@ -1426,8 +1426,8 @@ const FormEndTransaction = ({
           - Sau khi kết thúc giao dịch bạn sẽ được hoàn{" "}
           {refundData.refundWithoutHistory}% tổng số tiền bạn bỏ ra cho bài đăng
           này.
-          <br />- Nếu cung cấp thông tin bất động sản cho Rebroland bạn sẽ
-          được hoàn {refundData.refundWithHistory}%.
+          <br />- Nếu cung cấp thông tin bất động sản cho Rebroland bạn sẽ được
+          hoàn {refundData.refundWithHistory}%.
         </Header>
         <Form.Checkbox
           name="provideInfo"
