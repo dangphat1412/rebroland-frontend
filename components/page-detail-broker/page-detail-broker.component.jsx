@@ -166,7 +166,7 @@ const DetailBrokerPage = ({
                                 title: "Đánh giá thất bại",
                                 description: (
                                   <p>
-                                    Bạn đã đánh giá người này trong vòng 7 ngày
+                                    Bạn đã đánh giá người này trong vòng 30 giây
                                     gần đây
                                   </p>
                                 ),

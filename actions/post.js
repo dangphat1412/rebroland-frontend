@@ -407,3 +407,12 @@ export const getOutStandingPost = async () => {
     console.log(error);
   }
 };
+
+export const getRefundPercent = async () => {
+  try {
+    const res = await Axios.get(`/active-discount`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

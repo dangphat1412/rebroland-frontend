@@ -42,6 +42,7 @@ import {
   followPost,
   getOtpEndTransaction,
   getPricePerDay,
+  getRefundPercent,
   historyPost,
   reupPost,
   switchAllowCreateDerivative,
@@ -99,12 +100,23 @@ const PagePropertyDetail = ({
   const [priceData, setPriceData] = useState(null);
   const [openReupDerivativePost, setOpenReupDerivativePost] = useState(false);
 
+  const [refundData, setRefundData] = useState({});
+
   const [editedLoading, setEditedLoading] = useState(false);
 
   useEffect(() => {
     const fetchAPI = async () => {
       const data = await getPricePerDay();
       setPriceData(data);
+    };
+
+    fetchAPI();
+  }, []);
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      const data = await getRefundPercent();
+      setRefundData(data);
     };
 
     fetchAPI();
@@ -1086,6 +1098,7 @@ const PagePropertyDetail = ({
           brokers={brokers}
           setEndTransactionOpen={setEndTransactionOpen}
           setOpenRate={setOpenRate}
+          refundData={refundData}
         />
       </ModalItem>
       <ModalItem
@@ -1328,6 +1341,7 @@ const FormEndTransaction = ({
   setEndTransactionOpen,
   setOpenRate,
   brokers,
+  refundData,
 }) => {
   const {
     register,
@@ -1408,9 +1422,16 @@ const FormEndTransaction = ({
           list={errorMessage}
           onDismiss={() => setErrorMessage(null)}
         />
+        <Header as="h4" style={{ fontFamily: "Tahoma" }}>
+          - Sau khi kết thúc giao dịch bạn sẽ được hoàn{" "}
+          {refundData.refundWithoutHistory}% tổng số tiền bạn bỏ ra cho bài đăng
+          này.
+          <br />- Nếu cung cấp thông tin bất động sản cho Rebroland bạn sẽ
+          được hoàn {refundData.refundWithHistory}%.
+        </Header>
         <Form.Checkbox
           name="provideInfo"
-          label={`Cung cấp thông tin bất động sản (Hoàn tiền %)`}
+          label={`Cung cấp thông tin bất động sản`}
           onClick={(e, { name, checked }) => {
             setValue(name, checked);
           }}

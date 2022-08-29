@@ -54,7 +54,11 @@ const RealEstatePage = ({
       router.push(
         {
           pathname: "/bat-dong-san",
-          query: { data: JSON.stringify({ propertyTypes: [propertyTypeId] }) },
+          query: {
+            data: JSON.stringify({
+              propertyTypes: [propertyTypeId],
+            }),
+          },
         },
         "/bat-dong-san",
         { scroll: true }
@@ -64,7 +68,11 @@ const RealEstatePage = ({
       router.push(
         {
           pathname: "/nha-moi-gioi/bat-dong-san",
-          query: { data: JSON.stringify({ propertyTypes: [propertyTypeId] }) },
+          query: {
+            data: JSON.stringify({
+              propertyTypes: [propertyTypeId],
+            }),
+          },
         },
         "/nha-moi-gioi/bat-dong-san",
         { scroll: true }
@@ -172,13 +180,7 @@ const RealEstatePage = ({
               {categories && (
                 <List divided verticalAlign="middle" size="large" relaxed>
                   <List.Item>
-                    <List.Content
-                      floated="right"
-                      as="a"
-                      onClick={() => {
-                        handleSearchCategory(1);
-                      }}
-                    >
+                    <List.Content floated="right">
                       {categories.house} bất động sản
                     </List.Content>
                     <List.Content>
@@ -186,13 +188,7 @@ const RealEstatePage = ({
                     </List.Content>
                   </List.Item>
                   <List.Item>
-                    <List.Content
-                      floated="right"
-                      as="a"
-                      onClick={() => {
-                        handleSearchCategory(2);
-                      }}
-                    >
+                    <List.Content floated="right">
                       {categories.apartment} bất động sản
                     </List.Content>
                     <List.Content>
@@ -200,13 +196,7 @@ const RealEstatePage = ({
                     </List.Content>
                   </List.Item>
                   <List.Item>
-                    <List.Content
-                      floated="right"
-                      as="a"
-                      onClick={() => {
-                        handleSearchCategory(3);
-                      }}
-                    >
+                    <List.Content floated="right">
                       {categories.land} bất động sản
                     </List.Content>
                     <List.Content>

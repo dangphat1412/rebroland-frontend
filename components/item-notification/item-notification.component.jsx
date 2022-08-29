@@ -104,6 +104,12 @@ const NotificationItem = ({
               `/chi-tiet-nguoi-dung/${data.sender}`
             );
           }
+          if (data.type === "CreateDerivative") {
+            if (user.currentRole === 3) {
+              await switchRole(setLoading);
+            }
+            router.push(`/trang-ca-nhan/bat-dong-san-cua-toi/${data.postId}`);
+          }
         }
       }}
     >
@@ -132,6 +138,9 @@ const NotificationItem = ({
       {(notification.type === "FinishTakeCare" ||
         notification.type === "FinishTransaction") && (
         <Item.Image src="/finish-transaction.png" size="tiny" />
+      )}
+      {notification.type === "CreateDerivative" && (
+        <Item.Image src="/create-derivative.jpg" size="tiny" />
       )}
 
       <Item.Content>
@@ -250,6 +259,16 @@ const NotificationItem = ({
           <>
             <Item.Description>
               <b>Kết thúc giao dịch</b>
+            </Item.Description>
+            <Item.Description>
+              <b>Nội dung: </b> <span>{notification.content}</span>
+            </Item.Description>
+          </>
+        )}
+        {notification.type === "CreateDerivative" && (
+          <>
+            <Item.Description>
+              <b>Tạo bài phái sinh</b>
             </Item.Description>
             <Item.Description>
               <b>Nội dung: </b> <span>{notification.content}</span>

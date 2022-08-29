@@ -153,7 +153,7 @@ const UserDetailPage = ({
                             title: "Đánh giá thất bại",
                             description: (
                               <p>
-                                Bạn đã đánh giá người này trong vòng 7 ngày gần
+                                Bạn đã đánh giá người này trong vòng 30 giây gần
                                 đây
                               </p>
                             ),
@@ -340,10 +340,12 @@ const UserDetailPage = ({
                   <Comment key={index}>
                     <Comment.Avatar
                       className="rater-avatar"
-                      src={rate.user.avatar}
+                      src={rate.user.avatar || "/default-avatar.png"}
                     />
                     <Comment.Content>
-                      <Comment.Author>{rate.user.fullName}</Comment.Author>
+                      <Comment.Author as="span">
+                        {rate.user.fullName}
+                      </Comment.Author>
                       <Comment.Metadata>
                         <div>{rate.startDate}</div>
                       </Comment.Metadata>

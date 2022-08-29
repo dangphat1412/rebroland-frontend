@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Dropdown, Form } from "semantic-ui-react";
 import { getDirections, getPropertyTypes } from "../../actions/post";
@@ -31,8 +31,13 @@ const SearchBox = ({ searchParams }) => {
     },
   });
 
+  console.log("SEARCH PARAMS: ", searchParams);
+
   const [pricePlaceholder, setPricePlaceholder] = useState("Tất cả mức giá");
   const [areaPlaceholder, setAreaPlaceholder] = useState("Tất cả diện tích");
+
+  const firstPriceUpdate = useRef(true);
+  const firstAreaUpdate = useRef(true);
 
   const [directions, setDirections] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
@@ -88,6 +93,64 @@ const SearchBox = ({ searchParams }) => {
         }
       };
       fetchProvinces();
+
+      setValue("minPrice", searchParams.minPrice);
+      setValue("maxPrice", searchParams.maxPrice);
+      if (
+        searchParams.minPrice === undefined &&
+        searchParams.maxPrice === undefined
+      ) {
+        setPricePlaceholder("Tất cả mức giá");
+      }
+      if (
+        searchParams.minPrice >= 1000000000 &&
+        searchParams.maxPrice <= 30000000000
+      ) {
+        setPricePlaceholder(
+          `${searchParams.minPrice / 1000000000} tỷ - ${
+            searchParams.maxPrice / 1000000000
+          } tỷ`
+        );
+      }
+      if (
+        searchParams.minPrice >= 800000000 &&
+        searchParams.maxPrice <= 1000000000
+      ) {
+        setPricePlaceholder(
+          `${searchParams.minPrice / 1000000} triệu - ${
+            searchParams.maxPrice / 1000000000
+          } tỷ`
+        );
+      }
+      if (searchParams.minPrice >= 0 && searchParams.maxPrice <= 800000000) {
+        setPricePlaceholder("≤ 800 triệu");
+      }
+      if (
+        searchParams.minPrice >= 30000000000 &&
+        searchParams.maxPrice === undefined
+      ) {
+        setPricePlaceholder("≥ 30 tỷ");
+      }
+      if (searchParams.minPrice === 0 && searchParams.maxPrice === 0) {
+        setPricePlaceholder("Thoả thuận");
+      }
+
+      setValue("minArea", searchParams.minArea);
+      setValue("maxArea", searchParams.maxArea);
+      if (
+        searchParams.minArea === undefined &&
+        searchParams.maxArea === undefined
+      ) {
+        setAreaPlaceholder("Tất cả diện tích");
+      }
+      if (searchParams.minArea >= 0 && searchParams.maxArea <= 1000) {
+        setAreaPlaceholder(
+          `${searchParams.minArea} m² - ${searchParams.maxArea} m²`
+        );
+      }
+      if (searchParams.minArea >= 1000 && searchParams.maxArea === undefined) {
+        setAreaPlaceholder("≥ 1000 m²");
+      }
     }
   }, []);
 
@@ -275,9 +338,16 @@ const SearchBox = ({ searchParams }) => {
                     min={1}
                     max={30}
                     onChange={({ min, max }) => {
-                      setPricePlaceholder(`${min} tỷ - ${max} tỷ`);
-                      setValue("minPrice", min * 1000000000);
-                      setValue("maxPrice", max * 1000000000);
+                      if (firstPriceUpdate.current === true) {
+                        setPricePlaceholder("Tất cả mức giá");
+                        setValue("minPrice", undefined);
+                        setValue("maxPrice", undefined);
+                        firstPriceUpdate.current = false;
+                      } else {
+                        setPricePlaceholder(`${min} tỷ - ${max} tỷ`);
+                        setValue("minPrice", min * 1000000000);
+                        setValue("maxPrice", max * 1000000000);
+                      }
                     }}
                     unit="tỷ"
                   />
@@ -342,9 +412,16 @@ const SearchBox = ({ searchParams }) => {
                     min={0}
                     max={1000}
                     onChange={({ min, max }) => {
-                      setAreaPlaceholder(`${min} m² - ${max} m²`);
-                      setValue("minArea", min);
-                      setValue("maxArea", max);
+                      if (firstAreaUpdate.current === true) {
+                        setAreaPlaceholder("Tất cả diện tích");
+                        setValue("minArea", undefined);
+                        setValue("maxArea", undefined);
+                        firstAreaUpdate.current = false;
+                      } else {
+                        setAreaPlaceholder(`${min} m² - ${max} m²`);
+                        setValue("minArea", min);
+                        setValue("maxArea", max);
+                      }
                     }}
                     unit="m²"
                   />
@@ -474,9 +551,16 @@ const SearchBox = ({ searchParams }) => {
                   min={1}
                   max={30}
                   onChange={({ min, max }) => {
-                    setPricePlaceholder(`${min} tỷ - ${max} tỷ`);
-                    setValue("minPrice", min * 1000000000);
-                    setValue("maxPrice", max * 1000000000);
+                    if (firstPriceUpdate.current === true) {
+                      setPricePlaceholder("Tất cả mức giá");
+                      setValue("minPrice", undefined);
+                      setValue("maxPrice", undefined);
+                      firstPriceUpdate.current = false;
+                    } else {
+                      setPricePlaceholder(`${min} tỷ - ${max} tỷ`);
+                      setValue("minPrice", min * 1000000000);
+                      setValue("maxPrice", max * 1000000000);
+                    }
                   }}
                   unit="tỷ"
                 />
@@ -541,9 +625,16 @@ const SearchBox = ({ searchParams }) => {
                   min={0}
                   max={1000}
                   onChange={({ min, max }) => {
-                    setAreaPlaceholder(`${min} m² - ${max} m²`);
-                    setValue("minArea", min);
-                    setValue("maxArea", max);
+                    if (firstAreaUpdate.current === true) {
+                      setAreaPlaceholder("Tất cả diện tích");
+                      setValue("minArea", undefined);
+                      setValue("maxArea", undefined);
+                      firstAreaUpdate.current = false;
+                    } else {
+                      setAreaPlaceholder(`${min} m² - ${max} m²`);
+                      setValue("minArea", min);
+                      setValue("maxArea", max);
+                    }
                   }}
                   unit="m²"
                 />
@@ -598,6 +689,7 @@ const SearchBox = ({ searchParams }) => {
           onChange={handleChange}
           compact
           selection
+          clearable
           defaultValue={searchParams && searchParams.numberOfBedrooms}
         />
         <Button
