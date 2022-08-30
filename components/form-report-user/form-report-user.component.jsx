@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Button, Form, Image, Message } from "semantic-ui-react";
+import { Button, Confirm, Form, Image, Message } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
 import { reportUser } from "../../actions/report";
 import {
@@ -26,6 +26,28 @@ const ReportUserForm = ({
     formState: { errors },
   } = useForm();
 
+  const [pictureError, setPictureError] = useState(false);
+
+  const imageFileExtensions = [
+    "image/tif",
+    "image/pjp",
+    "image/xbm",
+    "image/jxl",
+    "image/svgz",
+    "image/jpg",
+    "image/jpeg",
+    "image/ico",
+    "image/tiff",
+    "image/gif",
+    "image/svg",
+    "image/jfif",
+    "image/webp",
+    "image/png",
+    "image/bmp",
+    "image/pjpeg",
+    "image/avif",
+  ];
+
   const mediaRef = useRef(null);
 
   const [errorMessage, setErrorMessage] = useState({});
@@ -42,6 +64,16 @@ const ReportUserForm = ({
 
   const handleMediaChange = (e) => {
     const { files } = e.target;
+    let isImage = true;
+    Object.values(files).forEach((file) => {
+      if (!imageFileExtensions.includes(file.type)) {
+        isImage = false;
+      }
+    });
+    if (isImage === false) {
+      setPictureError(true);
+      return;
+    }
     setImages([...images, ...files]);
     setImagesPreview([
       ...imagesPreview,
@@ -190,6 +222,19 @@ const ReportUserForm = ({
           </div>
         </div>
       )}
+      <Confirm
+        open={pictureError}
+        header="Không thể đọc file"
+        content="Định dạng ảnh không đúng"
+        cancelButton={null}
+        confirmButton="Đóng"
+        onCancel={() => {
+          setPictureError(false);
+        }}
+        onConfirm={() => {
+          setPictureError(false);
+        }}
+      />
     </FormReportContainer>
   );
 };

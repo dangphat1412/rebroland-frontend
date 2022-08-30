@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Form, Image } from "semantic-ui-react";
+import { Button, Confirm, Form, Image } from "semantic-ui-react";
 import { reportPost } from "../../actions/report";
 import { uploadMultipleMedia } from "../../utils/uploadToCloudinary";
 import {
@@ -22,6 +22,28 @@ const FormReport = ({ toast, setReportOpen, postId }) => {
 
   const mediaRef = useRef(null);
 
+  const imageFileExtensions = [
+    "image/tif",
+    "image/pjp",
+    "image/xbm",
+    "image/jxl",
+    "image/svgz",
+    "image/jpg",
+    "image/jpeg",
+    "image/ico",
+    "image/tiff",
+    "image/gif",
+    "image/svg",
+    "image/jfif",
+    "image/webp",
+    "image/png",
+    "image/bmp",
+    "image/pjpeg",
+    "image/avif",
+  ];
+
+  const [pictureError, setPictureError] = useState(false);
+
   const [images, setImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
 
@@ -34,6 +56,16 @@ const FormReport = ({ toast, setReportOpen, postId }) => {
 
   const handleMediaChange = (e) => {
     const { files } = e.target;
+    let isImage = true;
+    Object.values(files).forEach((file) => {
+      if (!imageFileExtensions.includes(file.type)) {
+        isImage = false;
+      }
+    });
+    if (isImage === false) {
+      setPictureError(true);
+      return;
+    }
     setImages([...images, ...files]);
     setImagesPreview([
       ...imagesPreview,
@@ -156,6 +188,19 @@ const FormReport = ({ toast, setReportOpen, postId }) => {
           Gửi báo cáo
         </Button>
       </Form>
+      <Confirm
+        open={pictureError}
+        header="Không thể đọc file"
+        content="Định dạng ảnh không đúng"
+        cancelButton={null}
+        confirmButton="Đóng"
+        onCancel={() => {
+          setPictureError(false);
+        }}
+        onConfirm={() => {
+          setPictureError(false);
+        }}
+      />
     </FormReportContainer>
   );
 };

@@ -342,7 +342,9 @@ const DirectWithdrawal = ({ directWithdraw, setTotalResult, toast }) => {
               </Table>
             ) : (
               <>
-                <Header as="h4">Không có yêu cầu nào</Header>
+                <Header as="h4" style={{ fontFamily: "Tahoma" }}>
+                  Không có yêu cầu nào
+                </Header>
               </>
             )}
             <Dimmer active={loading} inverted>
@@ -719,7 +721,9 @@ const BankTransfer = ({ transferWithdraw, toast, setTotalResult }) => {
                 </Table.Footer>
               </Table>
             ) : (
-              <Header as="h4">Không có yêu cầu nào</Header>
+              <Header as="h4" style={{ fontFamily: "Tahoma" }}>
+                Không có yêu cầu nào
+              </Header>
             )}
             <Dimmer active={loading} inverted>
               <Loader>Đang tải dữ liệu</Loader>

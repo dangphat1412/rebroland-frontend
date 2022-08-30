@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import {
   Button,
   Card,
+  Confirm,
   Header,
   Icon,
   Image,
@@ -21,8 +22,38 @@ const UserPanel = ({ user }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [imagePreview, setImagePreview] = useState(user.avatar);
 
+  const [pictureError, setPictureError] = useState(false);
+
+  const imageFileExtensions = [
+    "image/tif",
+    "image/pjp",
+    "image/xbm",
+    "image/jxl",
+    "image/svgz",
+    "image/jpg",
+    "image/jpeg",
+    "image/ico",
+    "image/tiff",
+    "image/gif",
+    "image/svg",
+    "image/jfif",
+    "image/webp",
+    "image/png",
+    "image/bmp",
+    "image/pjpeg",
+    "image/avif",
+  ];
+
   const handleMediaChange = async (e) => {
     const { name, value, files } = e.target;
+    let isImage = true;
+    if (!imageFileExtensions.includes(files[0].type)) {
+      isImage = false;
+    }
+    if (isImage === false) {
+      setPictureError(true);
+      return;
+    }
     const mediaUrl = await uploadMedia(files[0]);
     if (!mediaUrl) {
       console.log("ERROR UPLOAD");
@@ -210,6 +241,19 @@ const UserPanel = ({ user }) => {
           </List.Item>
         </List>
       </Segment>
+      <Confirm
+        open={pictureError}
+        header="Không thể đọc file"
+        content="Định dạng ảnh không đúng"
+        cancelButton={null}
+        confirmButton="Đóng"
+        onCancel={() => {
+          setPictureError(false);
+        }}
+        onConfirm={() => {
+          setPictureError(false);
+        }}
+      />
     </UserPanelContainer>
   );
 };
