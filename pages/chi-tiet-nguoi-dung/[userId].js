@@ -43,9 +43,14 @@ export async function getServerSideProps(context) {
     const { userId, allowRate } = context.query;
     const { token } = parseCookies(context);
 
-    const res = await axios.get(`${API_URL}/api/posts/original/${userId}`, {
-      headers: { Authorization: token },
-    });
+    let res;
+    if (token) {
+      res = await axios.get(`${API_URL}/api/posts/original/${userId}`, {
+        headers: { Authorization: token },
+      });
+    } else {
+      res = await axios.get(`${API_URL}/api/posts/original/${userId}`);
+    }
 
     return { props: { postsData: res.data, allowRate: allowRate || false } };
   } catch (error) {
